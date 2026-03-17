@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs -I {} basename {})",
+      "Bash(grep -r \"class cls\" Classes/*.cs)",
+      "Bash(find . -name Classes -o -name *.cs -o -name *.sln)",
+      "Bash(grep -r \"Socket\\\\|TCP\\\\|UDP\\\\|CAN\\\\|Serial\" Classes/*.cs)",
+      "Bash(git ls-tree:*)",
+      "Bash(grep -r \"public class\\\\|public struct\\\\|public enum\" PGNs/*.cs)",
+      "Bash(grep -r \"Singleton\\\\|Pattern\\\\|Observer\\\\|Factory\" Classes/*.cs)",
+      "Bash(wc -l RateAppSource/RateController/Classes/*.cs)",
+      "Bash(find . -type f -name *.cs -o -name *.xaml -o -name *.csproj -o -name *.sln)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}
