@@ -13,6 +13,7 @@ namespace YieldFlo.Classes
         public float Altitude { get; set; }     // meters
         public byte FixQuality { get; set; }    // 0=none 1=GPS 2=DGPS 4=RTK
         public bool IsConnected { get; set; }
+        public bool SectionsActive { get; set; } // true when ≥1 section is on (AOG PGN 229)
 
         public void ParseByteData(byte[] data, byte subType)
         {

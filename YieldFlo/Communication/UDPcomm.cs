@@ -129,6 +129,16 @@ namespace YieldFlo.Communication
                                     Core.Collector?.OnGpsUpdate(Core.LastMoisture);
                                     break;
 
+                                case 229:   // Section control — bytes 5-12 are 64 section bits
+                                    if (data.Length >= 13)
+                                    {
+                                        bool any = false;
+                                        for (int i = 5; i <= 12; i++)
+                                            if (data[i] != 0) { any = true; break; }
+                                        Core.GPS.SectionsActive = any;
+                                    }
+                                    break;
+
                                 case 254:   // AutoSteer data — carries speed when not using TwoL
                                     // Bytes 5-6: speed * 10 (uint16, km/h)
                                     if (data.Length >= 7)

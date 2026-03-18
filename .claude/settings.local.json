@@ -13,7 +13,8 @@
       "Bash(dotnet build:*)",
       "Bash(grep:*)",
       "Bash(find F:Documents -maxdepth 3 -name *.sln)",
-      "Bash(ls \"F:\\\\Documents\\\\GitHub\\\\RateControl\\\\AOG_RC\\\\RateControllerApp\"/*Settings*)"
+      "Bash(ls \"F:\\\\Documents\\\\GitHub\\\\RateControl\\\\AOG_RC\\\\RateControllerApp\"/*Settings*)",
+      "Bash(find /f/Documents/GitHub/YieldFlo -type d -name *RC* -o -type d -name *rc*)"
     ]
   }
 }

@@ -239,13 +239,17 @@ namespace YieldFlo.Forms
 
             if (Core.Collector.ActiveJobId > 0)
             {
-                lblStatusJob.Text     = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
-                lblStatusJob.ForeColor = Core.Collector.IsRecording ? Color.LimeGreen : Color.Orange;
+                bool recording = Core.Collector.IsRecording;
+                string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
+                lblStatusJob.Text      = recording ? jobName + " - On" : jobName;
+                lblStatusJob.ForeColor = recording ? Color.LimeGreen : Color.Orange;
+                lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else
             {
                 lblStatusJob.Text      = "No Active Job";
                 lblStatusJob.ForeColor = Color.Silver;
+                lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
             }
         }
 

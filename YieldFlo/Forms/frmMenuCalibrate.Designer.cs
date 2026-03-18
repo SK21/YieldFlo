@@ -22,6 +22,7 @@ namespace YieldFlo.Forms
             this.lblBaseline      = new System.Windows.Forms.Label();
             this.numBaseline      = new System.Windows.Forms.NumericUpDown();
             this.lblBaselineNote  = new System.Windows.Forms.Label();
+            this.btnSetBaseline   = new System.Windows.Forms.Button();
             this.lblFactor        = new System.Windows.Forms.Label();
             this.numFactor        = new System.Windows.Forms.NumericUpDown();
             this.lblFactorNote    = new System.Windows.Forms.Label();
@@ -86,6 +87,13 @@ namespace YieldFlo.Forms
             this.lblBaselineNote.Text = "obstruction ratio with no grain (0–1)";
             this.lblBaselineNote.Font = sf; this.lblBaselineNote.ForeColor = System.Drawing.Color.Silver;
             this.lblBaselineNote.Location = new System.Drawing.Point(8, 80); this.lblBaselineNote.AutoSize = true;
+
+            this.btnSetBaseline.Text      = "Set Baseline";
+            this.btnSetBaseline.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            this.btnSetBaseline.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetBaseline.Size      = new System.Drawing.Size(100, 26);
+            this.btnSetBaseline.Location  = new System.Drawing.Point(262, 54);
+            this.btnSetBaseline.Click    += new System.EventHandler(this.btnSetBaseline_Click);
 
             // Yield Factor
             this.lblFactor.Text = "Yield Factor:"; this.lblFactor.Font = lf;
@@ -165,7 +173,7 @@ namespace YieldFlo.Forms
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblDelay, numDelay, lblDelayUnit,
-                lblBaseline, numBaseline, lblBaselineNote,
+                lblBaseline, numBaseline, lblBaselineNote, btnSetBaseline,
                 lblFactor, numFactor, lblFactorNote,
                 btnSaveCal, btnCalClose, lblHint,
                 lblCalSep,
@@ -203,6 +211,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label         lblBaseline;
         private System.Windows.Forms.NumericUpDown numBaseline;
         private System.Windows.Forms.Label         lblBaselineNote;
+        private System.Windows.Forms.Button        btnSetBaseline;
         private System.Windows.Forms.Label         lblFactor;
         private System.Windows.Forms.NumericUpDown numFactor;
         private System.Windows.Forms.Label         lblFactorNote;

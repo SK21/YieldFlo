@@ -10,6 +10,7 @@ namespace YieldFlo.Classes
     public class clsDataCollector
     {
         public bool IsRecording { get; private set; }
+        public bool IsAutoPaused { get; private set; }  // true only when paused by AOG condition (not manually)
         public int ActiveJobId { get; private set; } = -1;
         public string ActiveJobName { get; private set; } = "";
 
@@ -50,7 +51,11 @@ namespace YieldFlo.Classes
             ActiveJobName = "";
         }
 
-        public void PauseJob() { IsRecording = false; }
+        public void PauseJob() { IsRecording = false; IsAutoPaused = false; }  // manual pause
+
+        private void AutoPause() { IsRecording = false; IsAutoPaused = true; }
+
+        private void AutoResume() { IsRecording = true; IsAutoPaused = false; }
 
         /// <summary>
         /// Saves accumulated totals to the DB but leaves the job status as Active
@@ -91,7 +96,10 @@ namespace YieldFlo.Classes
         /// </summary>
         public void OnGpsUpdate(double moisture)
         {
-            if (!IsRecording || ActiveJobId < 0) return;
+            if (ActiveJobId < 0) return;
+
+            // Allow auto-resume check even when paused — but skip entirely if manually paused.
+            if (!IsRecording && !IsAutoPaused) return;
 
             var gps = Core.GPS;
             if (!gps.IsConnected) return;
@@ -100,6 +108,28 @@ namespace YieldFlo.Classes
 
             // Calculate yield for this GPS position
             yield.Calculate(gps.Speed);
+
+            // Auto-pause/resume based on AOG state: speed > 0 AND at least one section on.
+            // Sections turn off over already-harvested ground even when moving.
+            bool harvestActive = gps.Speed >= 0.5 && gps.SectionsActive;
+
+            if (!harvestActive)
+            {
+                _lastLat = 0;
+                _lastLon = 0;
+                if (!IsAutoPaused)
+                {
+                    AutoPause();
+                    Core.RaiseJobStateChanged();
+                }
+                return;
+            }
+
+            if (IsAutoPaused)
+            {
+                AutoResume();
+                Core.RaiseJobStateChanged();
+            }
 
             // Accumulate acres
             if (_lastLat != 0 && _lastLon != 0)

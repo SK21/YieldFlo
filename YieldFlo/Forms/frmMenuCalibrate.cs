@@ -53,6 +53,8 @@ namespace YieldFlo.Forms
                 if (c is NumericUpDown nd) { nd.BackColor = ctrl; nd.ForeColor = fore; }
                 if (c is Button btn)       { btn.BackColor = ctrl; btn.ForeColor = Color.White; }
             }
+            btnSetBaseline.BackColor = Color.FromArgb(0, 70, 110);
+            btnSetBaseline.ForeColor = Color.White;
             btnSaveCal.BackColor    = Color.FromArgb(0, 90, 0);
             btnStartCal.BackColor   = Color.FromArgb(0, 90, 0);
             btnStopCal.BackColor    = Color.FromArgb(100, 0, 0);
@@ -199,6 +201,24 @@ namespace YieldFlo.Forms
         {
             _calTimer?.Stop();
             base.OnFormClosing(e);
+        }
+
+        private void btnSetBaseline_Click(object sender, EventArgs e)
+        {
+            double live = (Core.LastSensor1 + Core.LastSensor2) / 2.0;
+            live = Math.Round(live, 3);
+
+            var answer = MessageBox.Show(
+                $"Set baseline to {live:F3}?\n\nMake sure the elevator is running with no grain.",
+                "Set Baseline",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != DialogResult.Yes) return;
+
+            decimal clamped = (decimal)Math.Min((double)numBaseline.Maximum,
+                               Math.Max((double)numBaseline.Minimum, live));
+            numBaseline.Value = clamped;
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
