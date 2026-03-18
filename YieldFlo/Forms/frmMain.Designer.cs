@@ -12,13 +12,14 @@ namespace YieldFlo.Forms
 
         private void InitializeComponent()
         {
-            this.pnlToolbar = new System.Windows.Forms.Panel();
-            this.btnMenu = new System.Windows.Forms.Button();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.btnPause = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.btnExit = new System.Windows.Forms.Button();
-            this.lblTitle = new System.Windows.Forms.Label();
+            this.pnlToolbar   = new System.Windows.Forms.Panel();
+            this.btnMenu      = new System.Windows.Forms.Button();
+            this.btnStart     = new System.Windows.Forms.Button();
+            this.btnPause     = new System.Windows.Forms.Button();
+            this.btnStop      = new System.Windows.Forms.Button();
+            this.btnExit      = new System.Windows.Forms.Button();
+            this.btnMinimize  = new System.Windows.Forms.Button();
+            this.lblTitle     = new System.Windows.Forms.Label();
 
             this.pnlGauges = new System.Windows.Forms.Panel();
             this.pnlYield = new System.Windows.Forms.Panel();
@@ -68,7 +69,7 @@ namespace YieldFlo.Forms
             this.pnlToolbar.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlToolbar.Height = 44;
             this.pnlToolbar.Controls.AddRange(new System.Windows.Forms.Control[] {
-                btnMenu, btnStart, btnPause, btnStop, btnExit, lblTitle });
+                btnMenu, btnStart, btnPause, btnStop, btnExit, btnMinimize, lblTitle });
 
             // Buttons: x, y, w=68, h=34
             SetupButton(btnMenu,  "Menu",   4,  5, 60, 34);
@@ -77,12 +78,22 @@ namespace YieldFlo.Forms
             SetupButton(btnStop,  "Stop", 209,  5, 68, 34, System.Drawing.Color.FromArgb(130, 0, 0));
             SetupButton(btnExit,  "Exit", 280,  5, 52, 34, System.Drawing.Color.FromArgb(55, 55, 55));
 
+            this.btnMinimize.Text      = "–";
+            this.btnMinimize.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(90, 90, 90);
+            this.btnMinimize.ForeColor = System.Drawing.Color.White;
+            this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(55, 55, 55);
+            this.btnMinimize.Size      = new System.Drawing.Size(30, 34);
+            this.btnMinimize.Location  = new System.Drawing.Point(464, 5);
+            this.btnMinimize.Click    += new System.EventHandler(this.btnMinimize_Click);
+
             this.lblTitle.Text = "YieldFlo";
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.AutoSize = false;
-            this.lblTitle.Size = new System.Drawing.Size(164, 44);
-            this.lblTitle.Location = new System.Drawing.Point(332, 0);
+            this.lblTitle.Size = new System.Drawing.Size(128, 44);
+            this.lblTitle.Location = new System.Drawing.Point(334, 0);
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
             // ── Gauges ────────────────────────────────────────────────────────
@@ -203,7 +214,7 @@ namespace YieldFlo.Forms
             panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
             titleLbl.Text = titleText;
-            titleLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            titleLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             titleLbl.Dock = System.Windows.Forms.DockStyle.Top;
             titleLbl.Height = 18;
             titleLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -295,6 +306,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Label lblTitle;
 
         private System.Windows.Forms.Panel pnlGauges;

@@ -262,8 +262,7 @@ namespace YieldFlo.Forms
 
         private void btnMenu_Click(object sender, EventArgs e)
         {
-            // Menu form — placeholder until frmMenu is implemented
-            ShowStatusMessage("Menu not yet implemented.", false);
+            FormManager.ShowForm(new frmMenu());
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -274,17 +273,14 @@ namespace YieldFlo.Forms
             {
                 // Resume paused job
                 Core.Collector.ResumeJob();
+                SetJobButtons(true);
+                Core.RaiseJobStateChanged();
             }
             else
             {
-                // Quick-start: create a temp job (proper job setup via menu later)
-                int jobId = Core.Database.Jobs.Create(
-                    "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm"), 1, 1, 1);
-                Core.Collector.StartJob(jobId);
+                // Open Jobs menu to configure and start a new job
+                FormManager.ShowForm(new frmMenuJobs());
             }
-
-            SetJobButtons(true);
-            Core.RaiseJobStateChanged();
         }
 
         private void btnPause_Click(object sender, EventArgs e)
@@ -308,6 +304,13 @@ namespace YieldFlo.Forms
         private void btnExit_Click(object sender, EventArgs e)
         {
             Core.RequestUserExit();
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            var mini = new frmMini();
+            mini.Show();
         }
 
         private void SetJobButtons(bool jobActive)

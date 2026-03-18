@@ -63,13 +63,18 @@ namespace YieldFlo.Classes
 
             var yield = Core.Yield;
 
+            // Calculate yield for this GPS position
+            yield.Calculate(gps.Speed);
+
             // Accumulate acres
             if (_lastLat != 0 && _lastLon != 0)
             {
                 double distM = HaversineMetres(_lastLat, _lastLon, gps.Latitude, gps.Longitude);
                 double acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM);
                 TotalAcres += acresInc;
-                TotalBushels += yield.InstantYield * acresInc;
+                double bushelsInc = yield.InstantYield * acresInc;
+                TotalBushels += bushelsInc;
+                yield.AccumulateCalRun(bushelsInc);
             }
             _lastLat = gps.Latitude;
             _lastLon = gps.Longitude;
@@ -98,7 +103,9 @@ namespace YieldFlo.Classes
                     Heading = gps.Heading,
                     YieldRate = yield.InstantYield,
                     Moisture = moisture,
-                    AcresAccumulated = TotalAcres
+                    AcresAccumulated = TotalAcres,
+                    Sensor1Raw = Core.LastSensor1,
+                    Sensor2Raw = Core.LastSensor2
                 };
 
                 Core.Database?.YieldData.Insert(point);

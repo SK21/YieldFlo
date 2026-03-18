@@ -33,6 +33,40 @@ namespace YieldFlo.Classes
         private const double LBS_PER_KG = 2.20462;
         // 1 lb/ac = 1/(27.215*2.20462) bu/ac  →  use TestWeightLbsBu directly
 
+        // Calibration run accumulators
+        public bool IsCalRunActive { get; private set; }
+        public double CalRunBushels { get; private set; }
+
+        public void StartCalRun()
+        {
+            CalRunBushels = 0;
+            IsCalRunActive = true;
+        }
+
+        public void StopCalRun()
+        {
+            IsCalRunActive = false;
+        }
+
+        /// <summary>Called by DataCollector each GPS tick to accumulate cal-run bushels.</summary>
+        public void AccumulateCalRun(double bushelsInc)
+        {
+            if (IsCalRunActive)
+                CalRunBushels += bushelsInc;
+        }
+
+        /// <summary>
+        /// Computes a corrected YieldFactor from the actual weighed mass.
+        /// actualBushels must be in internal bushels (already converted from display unit).
+        /// Sets YieldFactor in place and returns the new value.
+        /// </summary>
+        public double ComputeNewFactor(double actualBushels)
+        {
+            if (CalRunBushels <= 0) return YieldFactor;
+            YieldFactor = YieldFactor * (actualBushels / CalRunBushels);
+            return YieldFactor;
+        }
+
         private double _smoothAccum = 0;
         private int _smoothCount = 0;
         private const int SmoothWindow = 5;

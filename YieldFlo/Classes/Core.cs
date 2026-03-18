@@ -29,6 +29,11 @@ namespace YieldFlo.Classes
         public static bool ModuleConnected { get; set; }
         public static DateTime LastModuleReceive { get; set; }
 
+        // Active session configuration
+        public static int ActiveProfileId { get; set; } = -1;
+        public static int ActiveCropId    { get; set; } = -1;
+        public static int ActiveHeaderId  { get; set; } = -1;
+
         // Flags
         public static bool IsShuttingDown { get; private set; }
         public static bool IsRestarting { get; private set; }
@@ -61,7 +66,10 @@ namespace YieldFlo.Classes
 
                 // Yield engine
                 Yield = new clsYieldCalculator();
+                Yield.ProcessingDelaySec = Properties.Settings.Default.ProcessingDelaySec;
                 Collector = new clsDataCollector();
+
+                SeedDefaultData();
 
                 // UDP
                 UDPaog = new UDPComm(MainForm, 17777, 15555, 1461, "UDPaog", "127.255.255.255"); // send-from 1461 (RC uses 1460)
@@ -139,6 +147,76 @@ namespace YieldFlo.Classes
         public static void RaiseColorChanged() => SafeEvent.Raise(ColorChanged);
         public static void RaiseJobStateChanged() => SafeEvent.Raise(JobStateChanged);
         public static void RaiseGpsUpdated() => SafeEvent.Raise(GpsUpdated);
+
+        public static void LoadJobConfig(int profileId, int cropId, int headerId)
+        {
+            ActiveProfileId = profileId;
+            ActiveCropId    = cropId;
+            ActiveHeaderId  = headerId;
+
+            if (Database == null || Yield == null) return;
+
+            foreach (var c in Database.Crops.GetAll())
+            {
+                if (c.id != cropId) continue;
+                Yield.TestWeightLbsBu  = c.testWeight;
+                Props.TestWeightKgPerBu = c.testWeight * 0.453592;
+                break;
+            }
+
+            foreach (var h in Database.Headers.GetAll())
+            {
+                if (h.id != headerId) continue;
+                Yield.HeaderWidthM = h.widthM;
+                break;
+            }
+
+            if (profileId > 0 && cropId > 0)
+            {
+                var cal = Database.Calibrations.GetLatest(profileId, cropId);
+                Yield.SensorBaseline     = cal.baseline;
+                Yield.YieldFactor        = cal.yieldFactor;
+                Yield.ProcessingDelaySec = cal.delaySec > 0
+                    ? cal.delaySec
+                    : Properties.Settings.Default.ProcessingDelaySec;
+            }
+        }
+
+        private static void SeedDefaultData()
+        {
+            try
+            {
+                if (Database.Profiles.GetAll().Count == 0)
+                    Database.Profiles.Create("Default", "Combine 1");
+
+                if (Database.Crops.GetAll().Count == 0)
+                {
+                    Database.Crops.Create("Wheat",  "Cereal",  60.0, 14.0, 14.0);
+                    Database.Crops.Create("Canola", "OilSeed", 50.0, 10.0, 10.0);
+                    Database.Crops.Create("Corn",   "Corn",    56.0, 15.5, 15.5);
+                    Database.Crops.Create("Barley", "Cereal",  48.0, 14.0, 14.0);
+                }
+
+                if (Database.Headers.GetAll().Count == 0)
+                    Database.Headers.Create("30ft Draper", "Draper", 9.144);
+
+                // Set active to first available so yield calc has reasonable defaults
+                var profiles = Database.Profiles.GetAll();
+                var crops    = Database.Crops.GetAll();
+                var headers  = Database.Headers.GetAll();
+
+                if (profiles.Count > 0) ActiveProfileId = profiles[0].id;
+                if (crops.Count    > 0) ActiveCropId    = crops[0].id;
+                if (headers.Count  > 0) ActiveHeaderId  = headers[0].id;
+
+                if (ActiveCropId > 0 && ActiveHeaderId > 0)
+                    LoadJobConfig(ActiveProfileId, ActiveCropId, ActiveHeaderId);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("Core/SeedDefaultData: " + ex.Message);
+            }
+        }
 
         public static int UseCanComm(bool enable)
         {

@@ -173,5 +173,23 @@ namespace YieldFlo.Properties
             get { return ((int)(this["MainFormY"])); }
             set { this["MainFormY"] = value; }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int MiniFormX
+        {
+            get { return ((int)(this["MiniFormX"])); }
+            set { this["MiniFormX"] = value; }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int MiniFormY
+        {
+            get { return ((int)(this["MiniFormY"])); }
+            set { this["MiniFormY"] = value; }
+        }
     }
 }

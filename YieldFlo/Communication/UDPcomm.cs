@@ -119,14 +119,20 @@ namespace YieldFlo.Communication
                         {
                             switch (data[3])
                             {
-                                case 100:   // Roll-corrected lat/lon
-                                case 208:   // Dual GPS (TwoL)
+                                case 100:   // Corrected position (lat/lon doubles; speed not present)
+                                case 208:   // Dual GPS / TwoL (lat/lon/speed/elevation doubles)
                                     Core.GPS.ParseByteData(data, data[3]);
                                     Core.RaiseGpsUpdated();
 
                                     // Feed GPS update to data collector
                                     // moisture is supplied by the module (stored in Core later)
                                     Core.Collector?.OnGpsUpdate(Core.LastMoisture);
+                                    break;
+
+                                case 254:   // AutoSteer data — carries speed when not using TwoL
+                                    // Bytes 5-6: speed * 10 (uint16, km/h)
+                                    if (data.Length >= 7)
+                                        Core.GPS.ParseSpeedPgn254(data);
                                     break;
                             }
                         }

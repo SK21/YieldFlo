@@ -24,28 +24,28 @@ namespace YieldFlo.Classes
 
         private void ParsePgn100(byte[] data)
         {
-            // AOG PGN 33152, sub-type 100 (roll-corrected lat/lon)
-            // Bytes 5-8   : latitude  * 10,000,000  (int32, little-endian)
-            // Bytes 9-12  : longitude * 10,000,000  (int32, little-endian)
-            // Bytes 13-14 : heading   * 10          (uint16)
-            // Bytes 15-16 : speed     * 10          (uint16, km/h)
-            // Bytes 17-18 : altitude  * 10          (int16, meters)
-            // Byte  19    : fix quality
-            if (data.Length < 20) return;
+            // AOG PGN 33152, sub-type 100 (corrected position)
+            // Bytes 5-12  : longitude (double)
+            // Bytes 13-20 : latitude  (double)
+            // Bytes 21-28 : Fix2Fix heading (double) — present only in extended variant (length=24)
+            // Speed is NOT in this packet; it arrives via sub-type 254 (AutoSteer)
+            if (data.Length < 21) return;
 
-            int latRaw = System.BitConverter.ToInt32(data, 5);
-            int lonRaw = System.BitConverter.ToInt32(data, 9);
-            ushort hdgRaw = System.BitConverter.ToUInt16(data, 13);
-            ushort spdRaw = System.BitConverter.ToUInt16(data, 15);
-            short altRaw = System.BitConverter.ToInt16(data, 17);
+            Longitude = System.BitConverter.ToDouble(data, 5);
+            Latitude  = System.BitConverter.ToDouble(data, 13);
 
-            Latitude = latRaw / 10_000_000.0;
-            Longitude = lonRaw / 10_000_000.0;
-            Heading = hdgRaw / 10f;
-            Speed = spdRaw / 10f;
-            Altitude = altRaw / 10f;
-            FixQuality = data[19];
-            IsConnected = FixQuality > 0;
+            if (data.Length >= 29)
+                Heading = (float)System.BitConverter.ToDouble(data, 21);
+
+            FixQuality = 1;
+            IsConnected = true;
+        }
+
+        public void ParseSpeedPgn254(byte[] data)
+        {
+            // AOG PGN 33152, sub-type 254 (AutoSteer data)
+            // Bytes 5-6: speed * 10 (uint16, km/h) — only update speed; lat/lon come from sub-type 100
+            Speed = (float)((System.BitConverter.ToUInt16(data, 5)) / 10.0);
         }
 
         private void ParsePgn208(byte[] data)

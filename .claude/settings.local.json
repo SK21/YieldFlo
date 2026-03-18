@@ -10,7 +10,8 @@
       "Bash(grep -r \"Singleton\\\\|Pattern\\\\|Observer\\\\|Factory\" Classes/*.cs)",
       "Bash(wc -l RateAppSource/RateController/Classes/*.cs)",
       "Bash(find . -type f -name *.cs -o -name *.xaml -o -name *.csproj -o -name *.sln)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(grep:*)"
     ]
   }
 }

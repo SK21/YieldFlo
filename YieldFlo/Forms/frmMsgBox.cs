@@ -47,6 +47,7 @@ namespace YieldFlo.Forms
         private void frmMsgBox_Load(object sender, EventArgs e)
         {
             this.TopMost = true;
+            this.ShowInTaskbar = false;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             this.ForeColor = Properties.Settings.Default.MainForeColour;
             label1.ForeColor = Properties.Settings.Default.MainForeColour;

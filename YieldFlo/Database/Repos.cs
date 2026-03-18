@@ -163,6 +163,18 @@ VALUES
             return result;
         }
 
+        public void Update(int id, string name, string combineId)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE profiles SET name=@n, combine_id=@c WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@n",  name);
+            cmd.Parameters.AddWithValue("@c",  combineId);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+        }
+
         public void Delete(int id)
         {
             using var conn = new SQLiteConnection(_cs);
@@ -195,18 +207,35 @@ VALUES
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public List<(int id, string name, string category, double testWeight)> GetAll()
+        public List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture)> GetAll()
         {
-            var result = new List<(int, string, string, double)>();
+            var result = new List<(int, string, string, double, double, double)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "SELECT id, name, category, test_weight FROM crops ORDER BY name", conn);
+                "SELECT id, name, category, test_weight, market_moisture, dry_moisture FROM crops ORDER BY name", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
-                result.Add((reader.GetInt32(0), reader.GetString(1),
-                            reader.GetString(2), reader.GetDouble(3)));
+                result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                            reader.GetDouble(3), reader.GetDouble(4), reader.GetDouble(5)));
             return result;
+        }
+
+        public void Update(int id, string name, string category, double testWeight,
+                           double marketMoisture, double dryMoisture)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE crops SET name=@n, category=@cat, test_weight=@tw, " +
+                "market_moisture=@mm, dry_moisture=@dm WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@n",   name);
+            cmd.Parameters.AddWithValue("@cat", category);
+            cmd.Parameters.AddWithValue("@tw",  testWeight);
+            cmd.Parameters.AddWithValue("@mm",  marketMoisture);
+            cmd.Parameters.AddWithValue("@dm",  dryMoisture);
+            cmd.Parameters.AddWithValue("@id",  id);
+            cmd.ExecuteNonQuery();
         }
 
         public void Delete(int id)
@@ -249,6 +278,28 @@ VALUES
                 result.Add((reader.GetInt32(0), reader.GetString(1),
                             reader.GetString(2), reader.GetDouble(3)));
             return result;
+        }
+
+        public void Update(int id, string name, string headerType, double cutWidthM)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE headers SET name=@n, header_type=@t, cut_width=@w WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@n",  name);
+            cmd.Parameters.AddWithValue("@t",  headerType);
+            cmd.Parameters.AddWithValue("@w",  cutWidthM);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void Delete(int id)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand("DELETE FROM headers WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
         }
     }
 
