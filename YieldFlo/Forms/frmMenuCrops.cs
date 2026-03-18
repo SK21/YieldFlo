@@ -21,9 +21,14 @@ namespace YieldFlo.Forms
         private void frmMenuCrops_Load(object sender, EventArgs e)
         {
             ApplyTheme();
-            pnlTitle.MouseDown += (s, ev) => { if (ev.Button == MouseButtons.Left) { _dragging = true; _dragStart = ev.Location; } };
-            pnlTitle.MouseMove += (s, ev) => { if (_dragging) { Left += ev.X - _dragStart.X; Top += ev.Y - _dragStart.Y; } };
-            pnlTitle.MouseUp   += (s, ev) => _dragging = false;
+            FormPositions.Restore(this);
+            this.FormClosed += (s2, ev2) => FormPositions.Save(this);
+            foreach (Control c in new Control[] { pnlTitle, lblTitle })
+            {
+                c.MouseDown += (s, ev) => { if (ev.Button == MouseButtons.Left) { _dragging = true; _dragStart = ev.Location; } };
+                c.MouseMove += (s, ev) => { if (_dragging) { Left += ev.X - _dragStart.X; Top += ev.Y - _dragStart.Y; } };
+                c.MouseUp   += (s, ev) => _dragging = false;
+            }
             LoadList();
             ClearEdit();
         }

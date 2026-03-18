@@ -9,8 +9,13 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>YieldFlo</AssemblyName>
     <RootNamespace>YieldFlo</RootNamespace>
+    <ApplicationIcon>YieldFlo.ico</ApplicationIcon>
     <!-- <ApplicationIcon>Resources\YieldFlo.ico</ApplicationIcon> -->
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="YieldFlo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119.0" />

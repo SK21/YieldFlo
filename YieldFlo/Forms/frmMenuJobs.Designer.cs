@@ -26,6 +26,7 @@ namespace YieldFlo.Forms
             this.cboProfile    = new System.Windows.Forms.ComboBox();
             this.btnStart      = new System.Windows.Forms.Button();
             this.btnJobsClose  = new System.Windows.Forms.Button();
+            this.btnLoadJob    = new System.Windows.Forms.Button();
             this.lblRecent     = new System.Windows.Forms.Label();
             this.lvJobs        = new System.Windows.Forms.ListView();
 
@@ -106,25 +107,34 @@ namespace YieldFlo.Forms
             this.lvJobs.HeaderStyle   = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvJobs.Font          = inputFont;
             this.lvJobs.Columns.Add("Job Name",  160);
-            this.lvJobs.Columns.Add("Status",     60);
+            this.lvJobs.Columns.Add("Status",     80);
             this.lvJobs.Columns.Add("Date",        90);
             this.lvJobs.Columns.Add("Acres",       70);
+
+            // Load selected job button
+            this.btnLoadJob.Text      = "Load Selected";
+            this.btnLoadJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnLoadJob.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoadJob.Size      = new System.Drawing.Size(180, 34);
+            this.btnLoadJob.Location  = new System.Drawing.Point(8, 378);
+            this.btnLoadJob.Click    += new System.EventHandler(this.btnLoadJob_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblJobName, txtJobName, lblCropLabel, cboCrop,
                 lblHeaderLabel, cboHeader, lblProfileLabel, cboProfile,
-                btnStart, btnJobsClose, lblRecent, lvJobs });
+                btnStart, btnJobsClose, lblRecent, lvJobs, btnLoadJob });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 414);
-            this.MinimumSize     = new System.Drawing.Size(456, 414);
-            this.MaximumSize     = new System.Drawing.Size(456, 414);
+            this.ClientSize      = new System.Drawing.Size(456, 458);
+            this.MinimumSize     = new System.Drawing.Size(456, 458);
+            this.MaximumSize     = new System.Drawing.Size(456, 458);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
             this.TopMost         = true;
             this.ShowInTaskbar   = false;
             this.StartPosition   = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Font            = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Name            = "frmMenuJobs";
             this.Text            = "Start Job";
             this.Controls.Add(this.pnlContent);
@@ -167,6 +177,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.ComboBox cboProfile;
         private System.Windows.Forms.Button   btnStart;
         private System.Windows.Forms.Button   btnJobsClose;
+        private System.Windows.Forms.Button   btnLoadJob;
         private System.Windows.Forms.Label    lblRecent;
         private System.Windows.Forms.ListView lvJobs;
     }

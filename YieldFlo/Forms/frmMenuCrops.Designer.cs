@@ -110,6 +110,7 @@ namespace YieldFlo.Forms
             this.TopMost         = true;
             this.ShowInTaskbar   = false;
             this.StartPosition   = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Font            = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Name            = "frmMenuCrops";
             this.Text            = "Crops";
             this.Controls.Add(this.pnlContent);

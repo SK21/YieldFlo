@@ -52,6 +52,24 @@ namespace YieldFlo.Classes
         public void ResumeJob() { IsRecording = true; }
 
         /// <summary>
+        /// Loads a previously created job, restoring its accumulated totals.
+        /// Used when resuming a job from a prior session.
+        /// </summary>
+        public void LoadJob(int jobId, double existingAcres, double existingBushels)
+        {
+            ActiveJobId = jobId;
+            TotalAcres = existingAcres;
+            TotalBushels = existingBushels;
+            AverageMoisture = 0;
+            _moistureSum = 0;
+            _moistureCount = 0;
+            _lastLat = 0;
+            _lastLon = 0;
+            _lastWriteTime = DateTime.MinValue;
+            IsRecording = true;
+        }
+
+        /// <summary>
         /// Called every GPS update (~10 Hz). Writes to DB once per second.
         /// </summary>
         public void OnGpsUpdate(double moisture)

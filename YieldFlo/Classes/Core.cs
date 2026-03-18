@@ -71,6 +71,12 @@ namespace YieldFlo.Classes
 
                 SeedDefaultData();
 
+                // Load persisted comm settings
+                Props.CanEnabled = Properties.Settings.Default.ModuleCommType == "CAN";
+                if (Enum.TryParse(Properties.Settings.Default.CanDriver, out CanDriver cd))
+                    Props.CurrentCanDriver = cd;
+                Props.CanPort = Properties.Settings.Default.CanPort;
+
                 // UDP
                 UDPaog = new UDPComm(MainForm, 17777, 15555, 1461, "UDPaog", "127.255.255.255"); // send-from 1461 (RC uses 1460)
                 UDPmodule = new UDPComm(MainForm, 30100, 30200, 1500, "UDPmodule");
@@ -128,11 +134,9 @@ namespace YieldFlo.Classes
         {
             if (ModuleConnected)
             {
-                using (var dlg = new frmMsgBox("Confirm Exit?", "Exit", true))
-                {
-                    dlg.ShowDialog();
-                    if (!dlg.Result) return;
-                }
+                var answer = MessageBox.Show("Confirm Exit?", "Exit",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (answer != DialogResult.Yes) return;
             }
             IsUserExitRequested = true;
             Application.Exit();

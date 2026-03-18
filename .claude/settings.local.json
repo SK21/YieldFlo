@@ -11,7 +11,9 @@
       "Bash(wc -l RateAppSource/RateController/Classes/*.cs)",
       "Bash(find . -type f -name *.cs -o -name *.xaml -o -name *.csproj -o -name *.sln)",
       "Bash(dotnet build:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(find F:Documents -maxdepth 3 -name *.sln)",
+      "Bash(ls \"F:\\\\Documents\\\\GitHub\\\\RateControl\\\\AOG_RC\\\\RateControllerApp\"/*Settings*)"
     ]
   }
 }

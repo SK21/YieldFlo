@@ -175,6 +175,7 @@ namespace YieldFlo.Forms
         private void Core_ColorChanged(object sender, EventArgs e)
         {
             ApplyTheme();
+            UpdateGauges();
             this.Invalidate();
         }
 
@@ -211,16 +212,13 @@ namespace YieldFlo.Forms
                 ? Color.FromArgb(50, 150, 220)   // blue for moisture
                 : Color.FromArgb(80, 80, 80);
 
-            if (Core.Collector.IsRecording)
-            {
-                double area  = Props.DisplayArea(Core.Collector.TotalAcres);
-                double total = Props.DisplayMass(Core.Collector.TotalBushels);
-                double avg   = Props.DisplayRate(Core.Collector.AverageYield);
+            double area  = Props.DisplayArea(Core.Collector.TotalAcres);
+            double total = Props.DisplayMass(Core.Collector.TotalBushels);
+            double avg   = Props.DisplayRate(Core.Collector.AverageYield);
 
-                lblTotArea.Text  = $"{area:F2} {Props.AreaUnit}";
-                lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
-                lblTotRate.Text  = $"{avg:F1} {Props.RateUnit}";
-            }
+            lblTotArea.Text  = $"{area:F2} {Props.AreaUnit}";
+            lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
+            lblTotRate.Text  = $"{avg:F1} {Props.RateUnit}";
         }
 
         private void UpdateStatusBar()
@@ -292,9 +290,9 @@ namespace YieldFlo.Forms
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            using var dlg = new frmMsgBox("Stop and close this job?", "Stop Job", true);
-            dlg.ShowDialog();
-            if (!dlg.Result) return;
+            var answer = MessageBox.Show("Stop and close this job?", "Stop Job",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != DialogResult.Yes) return;
 
             Core.Collector.StopJob();
             SetJobButtons(false);

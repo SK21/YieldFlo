@@ -35,13 +35,13 @@ namespace YieldFlo.Forms
         private void btnOK_Click(object sender, EventArgs e)
         {
             Result = true;
-            this.Hide();
+            this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Result = false;
-            this.Hide();
+            this.Close();
         }
 
         private void frmMsgBox_Load(object sender, EventArgs e)

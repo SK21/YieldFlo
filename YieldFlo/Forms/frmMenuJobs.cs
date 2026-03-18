@@ -14,6 +14,10 @@ namespace YieldFlo.Forms
         private readonly List<int> _headerIds  = new List<int>();
         private readonly List<int> _profileIds = new List<int>();
 
+        // Parallel list to lvJobs — stores per-job IDs and totals for Load action
+        private readonly List<(int jobId, int profileId, int cropId, int headerId, double acres, double volume)> _jobData
+            = new List<(int, int, int, int, double, double)>();
+
         public frmMenuJobs()
         {
             InitializeComponent();
@@ -22,9 +26,14 @@ namespace YieldFlo.Forms
         private void frmMenuJobs_Load(object sender, EventArgs e)
         {
             ApplyTheme();
-            pnlTitle.MouseDown += (s, ev) => { if (ev.Button == MouseButtons.Left) { _dragging = true; _dragStart = ev.Location; } };
-            pnlTitle.MouseMove += (s, ev) => { if (_dragging) { Left += ev.X - _dragStart.X; Top += ev.Y - _dragStart.Y; } };
-            pnlTitle.MouseUp   += (s, ev) => _dragging = false;
+            FormPositions.Restore(this);
+            this.FormClosed += (s2, ev2) => FormPositions.Save(this);
+            foreach (Control c in new Control[] { pnlTitle, lblTitle })
+            {
+                c.MouseDown += (s, ev) => { if (ev.Button == MouseButtons.Left) { _dragging = true; _dragStart = ev.Location; } };
+                c.MouseMove += (s, ev) => { if (_dragging) { Left += ev.X - _dragStart.X; Top += ev.Y - _dragStart.Y; } };
+                c.MouseUp   += (s, ev) => _dragging = false;
+            }
             LoadCombos();
             LoadRecentJobs();
         }
@@ -44,9 +53,10 @@ namespace YieldFlo.Forms
             foreach (Control c in pnlContent.Controls)
             {
                 c.ForeColor = fore;
-                if (c is Button btn)  { btn.BackColor  = ctrl; btn.ForeColor  = Color.White; }
-                if (c is TextBox tb)  { tb.BackColor   = ctrl; tb.ForeColor   = Color.White; }
-                if (c is ComboBox cb) { cb.BackColor   = ctrl; cb.ForeColor   = Color.White; }
+                if (c is Button btn)   { btn.BackColor  = ctrl; btn.ForeColor  = Color.White; }
+                if (c is TextBox tb)   { tb.BackColor   = ctrl; tb.ForeColor   = Color.White; }
+                if (c is ComboBox cb)  { cb.BackColor   = ctrl; cb.ForeColor   = Color.White; }
+                if (c is ListView lv)  { lv.BackColor   = ctrl; lv.ForeColor   = Color.White; }
             }
             btnStart.BackColor = Color.FromArgb(0, 110, 0);
         }
@@ -87,6 +97,7 @@ namespace YieldFlo.Forms
         private void LoadRecentJobs()
         {
             lvJobs.Items.Clear();
+            _jobData.Clear();
             int count = 0;
             foreach (var j in Core.Database.Jobs.GetAll())
             {
@@ -95,6 +106,7 @@ namespace YieldFlo.Forms
                 item.SubItems.Add(j.status);
                 item.SubItems.Add(j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt);
                 item.SubItems.Add(j.acres.ToString("F2") + " ac");
+                _jobData.Add((j.id, j.profileId, j.cropId, j.headerId, j.acres, j.volume));
             }
         }
 
@@ -117,6 +129,26 @@ namespace YieldFlo.Forms
             Core.LoadJobConfig(profileId, cropId, headerId);
             int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId);
             Core.Collector.StartJob(jobId);
+            Core.RaiseJobStateChanged();
+            this.Close();
+        }
+
+        private void btnLoadJob_Click(object sender, EventArgs e)
+        {
+            if (lvJobs.SelectedIndices.Count == 0)
+            { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
+
+            int idx = lvJobs.SelectedIndices[0];
+            if (idx < 0 || idx >= _jobData.Count) return;
+
+            var job = _jobData[idx];
+            int profileId = job.profileId > 0 ? job.profileId : Core.ActiveProfileId;
+            int cropId    = job.cropId    > 0 ? job.cropId    : Core.ActiveCropId;
+            int headerId  = job.headerId  > 0 ? job.headerId  : Core.ActiveHeaderId;
+
+            Core.LoadJobConfig(profileId, cropId, headerId);
+            Core.Database.Jobs.Reopen(job.jobId);
+            Core.Collector.LoadJob(job.jobId, job.acres, job.volume);
             Core.RaiseJobStateChanged();
             this.Close();
         }

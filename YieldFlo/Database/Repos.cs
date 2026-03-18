@@ -48,18 +48,31 @@ namespace YieldFlo.Database
             cmd.ExecuteNonQuery();
         }
 
-        public List<(int id, string name, string status, string startedAt, double acres, double volume)> GetAll()
+        public List<(int id, string name, string status, string startedAt, double acres, double volume, int profileId, int cropId, int headerId)> GetAll()
         {
-            var result = new List<(int, string, string, string, double, double)>();
+            var result = new List<(int, string, string, string, double, double, int, int, int)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "SELECT id, name, status, started_at, total_acres, total_volume FROM jobs ORDER BY id DESC", conn);
+                "SELECT id, name, status, started_at, total_acres, total_volume, profile_id, crop_id, header_id FROM jobs ORDER BY id DESC", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
                 result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
-                            reader.GetString(3), reader.GetDouble(4), reader.GetDouble(5)));
+                            reader.GetString(3), reader.GetDouble(4), reader.GetDouble(5),
+                            reader.IsDBNull(6) ? -1 : reader.GetInt32(6),
+                            reader.IsDBNull(7) ? -1 : reader.GetInt32(7),
+                            reader.IsDBNull(8) ? -1 : reader.GetInt32(8)));
             return result;
+        }
+
+        public void Reopen(int jobId)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE jobs SET status='Active', ended_at=NULL WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@id", jobId);
+            cmd.ExecuteNonQuery();
         }
     }
 

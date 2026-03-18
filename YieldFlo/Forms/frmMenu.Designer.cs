@@ -22,6 +22,8 @@ namespace YieldFlo.Forms
             this.btnProfiles  = new System.Windows.Forms.Button();
             this.btnCalibrate = new System.Windows.Forms.Button();
             this.btnSettings  = new System.Windows.Forms.Button();
+            this.btnReports   = new System.Windows.Forms.Button();
+            this.btnYieldMap  = new System.Windows.Forms.Button();
             this.btnClose     = new System.Windows.Forms.Button();
 
             this.SuspendLayout();
@@ -57,6 +59,8 @@ namespace YieldFlo.Forms
             SetMenuButton(btnProfiles,  "Profiles",  238, 68);
             SetMenuButton(btnCalibrate, "Calibrate", 8,   128);
             SetMenuButton(btnSettings,  "Settings",  238, 128);
+            SetMenuButton(btnReports,   "Reports",   8,   188);
+            SetMenuButton(btnYieldMap,  "Yield Map", 238, 188);
 
             btnJobs.Click      += new System.EventHandler(this.btnJobs_Click);
             btnCrops.Click     += new System.EventHandler(this.btnCrops_Click);
@@ -64,27 +68,31 @@ namespace YieldFlo.Forms
             btnProfiles.Click  += new System.EventHandler(this.btnProfiles_Click);
             btnCalibrate.Click += new System.EventHandler(this.btnCalibrate_Click);
             btnSettings.Click  += new System.EventHandler(this.btnSettings_Click);
+            btnReports.Click   += new System.EventHandler(this.btnReports_Click);
+            btnYieldMap.Click  += new System.EventHandler(this.btnYieldMap_Click);
 
             this.btnClose.Text      = "Close";
             this.btnClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Size      = new System.Drawing.Size(120, 40);
-            this.btnClose.Location  = new System.Drawing.Point(168, 196);
+            this.btnClose.Location  = new System.Drawing.Point(168, 256);
             this.btnClose.Click    += new System.EventHandler(this.btnClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
-                btnJobs, btnCrops, btnHeaders, btnProfiles, btnCalibrate, btnSettings, btnClose });
+                btnJobs, btnCrops, btnHeaders, btnProfiles, btnCalibrate, btnSettings,
+                btnReports, btnYieldMap, btnClose });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize          = new System.Drawing.Size(456, 284);
-            this.MinimumSize         = new System.Drawing.Size(456, 284);
-            this.MaximumSize         = new System.Drawing.Size(456, 284);
+            this.ClientSize          = new System.Drawing.Size(456, 350);
+            this.MinimumSize         = new System.Drawing.Size(456, 350);
+            this.MaximumSize         = new System.Drawing.Size(456, 350);
             this.FormBorderStyle     = System.Windows.Forms.FormBorderStyle.None;
             this.Padding             = new System.Windows.Forms.Padding(2);
             this.BackColor           = System.Drawing.Color.White;
             this.TopMost             = true;
             this.ShowInTaskbar       = false;
             this.StartPosition       = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Font                = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Name                = "frmMenu";
             this.Text                = "Menu";
             this.Controls.Add(this.pnlContent);
@@ -113,6 +121,8 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button btnProfiles;
         private System.Windows.Forms.Button btnCalibrate;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnReports;
+        private System.Windows.Forms.Button btnYieldMap;
         private System.Windows.Forms.Button btnClose;
     }
 }
