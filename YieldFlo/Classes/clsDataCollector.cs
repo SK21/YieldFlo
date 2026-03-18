@@ -52,6 +52,19 @@ namespace YieldFlo.Classes
 
         public void PauseJob() { IsRecording = false; }
 
+        /// <summary>
+        /// Saves accumulated totals to the DB but leaves the job status as Active
+        /// so it can be auto-resumed on the next app start.
+        /// </summary>
+        public void SuspendJob()
+        {
+            IsRecording = false;
+            if (ActiveJobId > 0 && Core.Database != null)
+                Core.Database.Jobs.UpdateTotals(ActiveJobId, TotalAcres, TotalBushels);
+            ActiveJobId   = -1;
+            ActiveJobName = "";
+        }
+
         public void ResumeJob() { IsRecording = true; }
 
         /// <summary>

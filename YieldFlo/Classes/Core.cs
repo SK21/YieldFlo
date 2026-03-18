@@ -70,6 +70,7 @@ namespace YieldFlo.Classes
                 Collector = new clsDataCollector();
 
                 SeedDefaultData();
+                TryResumeLastJob();
 
                 // Load persisted comm settings
                 Props.CanEnabled = Properties.Settings.Default.ModuleCommType == "CAN";
@@ -122,7 +123,10 @@ namespace YieldFlo.Classes
                 SafeTry(() => MainTimer.Enabled = false);
                 SafeTry(() => UDPaog?.Stop());
                 SafeTry(() => UDPmodule?.Stop());
-                SafeTry(() => Collector?.StopJob());
+                if (Properties.Settings.Default.ResumeJobOnStart && Collector?.ActiveJobId > 0)
+                    SafeTry(() => Collector?.SuspendJob());
+                else
+                    SafeTry(() => Collector?.StopJob());
                 SafeTry(() => Database?.Close());
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => LogRunTime());
@@ -219,6 +223,28 @@ namespace YieldFlo.Classes
             catch (Exception ex)
             {
                 Props.WriteErrorLog("Core/SeedDefaultData: " + ex.Message);
+            }
+        }
+
+        private static void TryResumeLastJob()
+        {
+            if (!Properties.Settings.Default.ResumeJobOnStart) return;
+            try
+            {
+                foreach (var j in Database.Jobs.GetAll())
+                {
+                    if (j.status != "Active") continue;
+                    int profileId = j.profileId > 0 ? j.profileId : ActiveProfileId;
+                    int cropId    = j.cropId    > 0 ? j.cropId    : ActiveCropId;
+                    int headerId  = j.headerId  > 0 ? j.headerId  : ActiveHeaderId;
+                    LoadJobConfig(profileId, cropId, headerId);
+                    Collector.LoadJob(j.id, j.name, j.acres, j.volume);
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("Core/TryResumeLastJob: " + ex.Message);
             }
         }
 

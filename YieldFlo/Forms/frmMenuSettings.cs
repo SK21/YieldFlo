@@ -82,6 +82,10 @@ namespace YieldFlo.Forms
             bool isEthernet = Properties.Settings.Default.ModuleCommType != "CAN";
             SetToggle(btnEthernet, btnCAN, isEthernet);
 
+            // Resume Job on Start
+            bool resume = Properties.Settings.Default.ResumeJobOnStart;
+            SetToggle(btnResumeOn, btnResumeOff, resume);
+
             // Subnet combo — enumerate active adapters
             LoadSubnetCombo();
             string savedEP = Properties.Settings.Default.NetworkEndPoint;
@@ -161,10 +165,12 @@ namespace YieldFlo.Forms
             inactive.BackColor = firstActive ? InactiveColour : ActiveColour;
         }
 
-        private void btnImperial_Click(object sender, EventArgs e) => SetToggle(btnImperial, btnMetric, true);
-        private void btnMetric_Click(object sender, EventArgs e)   => SetToggle(btnImperial, btnMetric, false);
-        private void btnDark_Click(object sender, EventArgs e)     => SetToggle(btnDark, btnLight, true);
-        private void btnLight_Click(object sender, EventArgs e)    => SetToggle(btnDark, btnLight, false);
+        private void btnImperial_Click(object sender, EventArgs e)  => SetToggle(btnImperial, btnMetric, true);
+        private void btnMetric_Click(object sender, EventArgs e)    => SetToggle(btnImperial, btnMetric, false);
+        private void btnDark_Click(object sender, EventArgs e)      => SetToggle(btnDark, btnLight, true);
+        private void btnLight_Click(object sender, EventArgs e)     => SetToggle(btnDark, btnLight, false);
+        private void btnResumeOn_Click(object sender, EventArgs e)  => SetToggle(btnResumeOn, btnResumeOff, true);
+        private void btnResumeOff_Click(object sender, EventArgs e) => SetToggle(btnResumeOn, btnResumeOff, false);
 
         private void btnEthernet_Click(object sender, EventArgs e)
         {
@@ -223,6 +229,10 @@ namespace YieldFlo.Forms
             }
 
             Props.CanEnabled = !isEthernet;
+
+            // Resume Job on Start
+            Properties.Settings.Default.ResumeJobOnStart = btnResumeOn.BackColor == ActiveColour;
+
             Properties.Settings.Default.Save();
             Core.RaiseColorChanged();
             Props.ShowMessage("Settings saved.");

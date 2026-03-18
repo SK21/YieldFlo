@@ -176,6 +176,15 @@ namespace YieldFlo.Properties
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ResumeJobOnStart
+        {
+            get { return ((bool)(this["ResumeJobOnStart"])); }
+            set { this["ResumeJobOnStart"] = value; }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public int MiniFormX
         {

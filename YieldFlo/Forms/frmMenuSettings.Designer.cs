@@ -31,6 +31,9 @@ namespace YieldFlo.Forms
             this.cbCanDriver      = new System.Windows.Forms.ComboBox();
             this.lblCanPort       = new System.Windows.Forms.Label();
             this.cbCanPort        = new System.Windows.Forms.ComboBox();
+            this.lblResumeJob     = new System.Windows.Forms.Label();
+            this.btnResumeOn      = new System.Windows.Forms.Button();
+            this.btnResumeOff     = new System.Windows.Forms.Button();
             this.btnSaveSettings  = new System.Windows.Forms.Button();
             this.btnSettingsClose = new System.Windows.Forms.Button();
 
@@ -146,13 +149,27 @@ namespace YieldFlo.Forms
             this.cbCanPort.Size          = new System.Drawing.Size(210, 26);
             this.cbCanPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
+            // Resume Job on Start
+            this.lblResumeJob.Text      = "Resume Job on Start";
+            this.lblResumeJob.Font      = lf;
+            this.lblResumeJob.ForeColor = System.Drawing.Color.Silver;
+            this.lblResumeJob.AutoSize  = false;
+            this.lblResumeJob.Location  = new System.Drawing.Point(8, 284);
+            this.lblResumeJob.Size      = new System.Drawing.Size(300, 16);
+
+            this.btnResumeOn.Text = "On"; this.btnResumeOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnResumeOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnResumeOn.FlatAppearance.BorderSize = 0; this.btnResumeOn.Size = new System.Drawing.Size(210, 44); this.btnResumeOn.Location = new System.Drawing.Point(8, 302); this.btnResumeOn.ForeColor = System.Drawing.Color.White;
+            this.btnResumeOn.Click += new System.EventHandler(this.btnResumeOn_Click);
+
+            this.btnResumeOff.Text = "Off"; this.btnResumeOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnResumeOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnResumeOff.FlatAppearance.BorderSize = 0; this.btnResumeOff.Size = new System.Drawing.Size(210, 44); this.btnResumeOff.Location = new System.Drawing.Point(226, 302); this.btnResumeOff.ForeColor = System.Drawing.Color.White;
+            this.btnResumeOff.Click += new System.EventHandler(this.btnResumeOff_Click);
+
             // Save & Apply button
             this.btnSaveSettings.Text      = "Save && Apply";
             this.btnSaveSettings.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveSettings.FlatAppearance.BorderSize = 0;
             this.btnSaveSettings.Size      = new System.Drawing.Size(160, 36);
-            this.btnSaveSettings.Location  = new System.Drawing.Point(8, 284);
+            this.btnSaveSettings.Location  = new System.Drawing.Point(8, 362);
             this.btnSaveSettings.Click    += new System.EventHandler(this.btnSaveSettings_Click);
 
             // Close button
@@ -161,7 +178,7 @@ namespace YieldFlo.Forms
             this.btnSettingsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettingsClose.FlatAppearance.BorderSize = 0;
             this.btnSettingsClose.Size      = new System.Drawing.Size(112, 36);
-            this.btnSettingsClose.Location  = new System.Drawing.Point(336, 284);
+            this.btnSettingsClose.Location  = new System.Drawing.Point(336, 362);
             this.btnSettingsClose.Click    += new System.EventHandler(this.btnSettingsClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
@@ -171,12 +188,13 @@ namespace YieldFlo.Forms
                 lblSubnet, cbSubnet,
                 lblCanDriver, cbCanDriver,
                 lblCanPort, cbCanPort,
+                lblResumeJob, btnResumeOn, btnResumeOff,
                 btnSaveSettings, btnSettingsClose });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 364);
-            this.MinimumSize     = new System.Drawing.Size(456, 364);
-            this.MaximumSize     = new System.Drawing.Size(456, 364);
+            this.ClientSize      = new System.Drawing.Size(456, 480);
+            this.MinimumSize     = new System.Drawing.Size(456, 480);
+            this.MaximumSize     = new System.Drawing.Size(456, 480);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
@@ -212,6 +230,9 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.ComboBox cbCanDriver;
         private System.Windows.Forms.Label    lblCanPort;
         private System.Windows.Forms.ComboBox cbCanPort;
+        private System.Windows.Forms.Label    lblResumeJob;
+        private System.Windows.Forms.Button   btnResumeOn;
+        private System.Windows.Forms.Button   btnResumeOff;
         private System.Windows.Forms.Button   btnSaveSettings;
         private System.Windows.Forms.Button   btnSettingsClose;
     }
