@@ -70,11 +70,11 @@ namespace YieldFlo.Forms
             this.lblReportJobName.Size      = new System.Drawing.Size(440, 20);
             this.lblReportJobName.Text      = "--";
 
-            SetSummaryLabel(this.lblReportArea,     "Area: --",          8, 164);
-            SetSummaryLabel(this.lblReportTotal,    "Total: --",         8, 186);
-            SetSummaryLabel(this.lblReportAvgYield, "Avg Yield: --",     8, 208);
-            SetSummaryLabel(this.lblReportAvgMoist, "Avg Moisture: --",  8, 230);
-            SetSummaryLabel(this.lblReportPoints,   "Data Points: --",   8, 252);
+            this.lblReportArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F); this.lblReportArea.AutoSize = false; this.lblReportArea.Location = new System.Drawing.Point(8, 164); this.lblReportArea.Size = new System.Drawing.Size(440, 18); this.lblReportArea.Text = "Area: --";
+            this.lblReportTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F); this.lblReportTotal.AutoSize = false; this.lblReportTotal.Location = new System.Drawing.Point(8, 186); this.lblReportTotal.Size = new System.Drawing.Size(440, 18); this.lblReportTotal.Text = "Total: --";
+            this.lblReportAvgYield.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F); this.lblReportAvgYield.AutoSize = false; this.lblReportAvgYield.Location = new System.Drawing.Point(8, 208); this.lblReportAvgYield.Size = new System.Drawing.Size(440, 18); this.lblReportAvgYield.Text = "Avg Yield: --";
+            this.lblReportAvgMoist.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F); this.lblReportAvgMoist.AutoSize = false; this.lblReportAvgMoist.Location = new System.Drawing.Point(8, 230); this.lblReportAvgMoist.Size = new System.Drawing.Size(440, 18); this.lblReportAvgMoist.Text = "Avg Moisture: --";
+            this.lblReportPoints.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F); this.lblReportPoints.AutoSize = false; this.lblReportPoints.Location = new System.Drawing.Point(8, 252); this.lblReportPoints.Size = new System.Drawing.Size(440, 18); this.lblReportPoints.Text = "Data Points: --";
 
             // Export CSV button
             this.btnExportCsv.Text      = "Export CSV";
@@ -117,15 +117,6 @@ namespace YieldFlo.Forms
             this.Load += new System.EventHandler(this.frmJobReport_Load);
 
             this.ResumeLayout(false);
-        }
-
-        private void SetSummaryLabel(System.Windows.Forms.Label lbl, string text, int x, int y)
-        {
-            lbl.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            lbl.AutoSize  = false;
-            lbl.Location  = new System.Drawing.Point(x, y);
-            lbl.Size      = new System.Drawing.Size(440, 18);
-            lbl.Text      = text;
         }
 
         private System.Windows.Forms.Panel   pnlTitle;

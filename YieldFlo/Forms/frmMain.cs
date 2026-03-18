@@ -237,14 +237,16 @@ namespace YieldFlo.Forms
             lblStatusComm.Text = commType;
             lblStatusComm.ForeColor = Color.Silver;
 
-            if (Core.Collector.IsRecording && Core.Collector.ActiveJobId > 0)
-                lblStatusJob.Text = "Job Active";
-            else if (!Core.Collector.IsRecording && Core.Collector.ActiveJobId > 0)
-                lblStatusJob.Text = "Job Paused";
+            if (Core.Collector.ActiveJobId > 0)
+            {
+                lblStatusJob.Text     = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
+                lblStatusJob.ForeColor = Core.Collector.IsRecording ? Color.LimeGreen : Color.Orange;
+            }
             else
-                lblStatusJob.Text = "No Active Job";
-
-            lblStatusJob.ForeColor = Core.Collector.IsRecording ? Color.LimeGreen : Color.Silver;
+            {
+                lblStatusJob.Text      = "No Active Job";
+                lblStatusJob.ForeColor = Color.Silver;
+            }
         }
 
         private void CheckModuleTimeout()

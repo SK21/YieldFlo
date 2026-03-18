@@ -12,36 +12,32 @@ namespace YieldFlo.Forms
 
         private void InitializeComponent()
         {
-            this.pnlToolbar   = new System.Windows.Forms.Panel();
-            this.btnMenu      = new System.Windows.Forms.Button();
-            this.btnStart     = new System.Windows.Forms.Button();
-            this.btnPause     = new System.Windows.Forms.Button();
-            this.btnStop      = new System.Windows.Forms.Button();
-            this.btnExit      = new System.Windows.Forms.Button();
-            this.btnMinimize  = new System.Windows.Forms.Button();
-            this.lblTitle     = new System.Windows.Forms.Label();
-
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            this.pnlToolbar = new System.Windows.Forms.Panel();
+            this.btnMenu = new System.Windows.Forms.Button();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.btnPause = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.btnMinimize = new System.Windows.Forms.Button();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.pnlGauges = new System.Windows.Forms.Panel();
             this.pnlYield = new System.Windows.Forms.Panel();
-            this.lblYieldTitle = new System.Windows.Forms.Label();
-            this.lblYield = new System.Windows.Forms.Label();
             this.lblYieldUnit = new System.Windows.Forms.Label();
-
+            this.lblYield = new System.Windows.Forms.Label();
+            this.lblYieldTitle = new System.Windows.Forms.Label();
             this.pnlMoisture = new System.Windows.Forms.Panel();
-            this.lblMoistureTitle = new System.Windows.Forms.Label();
-            this.lblMoisture = new System.Windows.Forms.Label();
             this.lblMoistureUnit = new System.Windows.Forms.Label();
-
+            this.lblMoisture = new System.Windows.Forms.Label();
+            this.lblMoistureTitle = new System.Windows.Forms.Label();
             this.pnlSpeedPanel = new System.Windows.Forms.Panel();
-            this.lblSpeedTitle = new System.Windows.Forms.Label();
-            this.lblSpeed = new System.Windows.Forms.Label();
             this.lblSpeedUnit = new System.Windows.Forms.Label();
-
+            this.lblSpeed = new System.Windows.Forms.Label();
+            this.lblSpeedTitle = new System.Windows.Forms.Label();
             this.pnlTotals = new System.Windows.Forms.Panel();
-            this.lblTotArea  = new System.Windows.Forms.Label();
+            this.lblTotRate = new System.Windows.Forms.Label();
             this.lblTotTotal = new System.Windows.Forms.Label();
-            this.lblTotRate  = new System.Windows.Forms.Label();
-
+            this.lblTotArea = new System.Windows.Forms.Label();
             this.pnlSensors = new System.Windows.Forms.Panel();
             this.lblSensorHeader = new System.Windows.Forms.Label();
             this.lblSensor1Title = new System.Windows.Forms.Label();
@@ -52,7 +48,6 @@ namespace YieldFlo.Forms
             this.pnlSensor2 = new System.Windows.Forms.Panel();
             this.pnlSensor2Fill = new System.Windows.Forms.Panel();
             this.lblSensor2Value = new System.Windows.Forms.Label();
-
             this.pnlStatus = new System.Windows.Forms.Panel();
             this.lblStatusGPS = new System.Windows.Forms.Label();
             this.lblStatusModule = new System.Windows.Forms.Label();
@@ -60,254 +55,545 @@ namespace YieldFlo.Forms
             this.lblStatusJob = new System.Windows.Forms.Label();
             this.lblStatusMsg = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
-
             this.pnlToolbar.SuspendLayout();
             this.pnlGauges.SuspendLayout();
+            this.pnlYield.SuspendLayout();
+            this.pnlMoisture.SuspendLayout();
+            this.pnlSpeedPanel.SuspendLayout();
+            this.pnlTotals.SuspendLayout();
+            this.pnlSensors.SuspendLayout();
+            this.pnlSensor1.SuspendLayout();
+            this.pnlSensor2.SuspendLayout();
+            this.pnlStatus.SuspendLayout();
             this.SuspendLayout();
-
-            // ── Toolbar (drag handle + buttons) ───────────────────────────────
+            // 
+            // pnlToolbar
+            // 
+            this.pnlToolbar.Controls.Add(this.btnMenu);
+            this.pnlToolbar.Controls.Add(this.btnStart);
+            this.pnlToolbar.Controls.Add(this.btnPause);
+            this.pnlToolbar.Controls.Add(this.btnStop);
+            this.pnlToolbar.Controls.Add(this.btnExit);
+            this.pnlToolbar.Controls.Add(this.btnMinimize);
+            this.pnlToolbar.Controls.Add(this.lblTitle);
             this.pnlToolbar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlToolbar.Height = 44;
-            this.pnlToolbar.Controls.AddRange(new System.Windows.Forms.Control[] {
-                btnMenu, btnStart, btnPause, btnStop, btnExit, btnMinimize, lblTitle });
-
-            // Buttons: x, y, w=68, h=34
-            SetupButton(btnMenu,  "Menu",   4,  5, 60, 34);
-            SetupButton(btnStart, "Start", 67,  5, 68, 34, System.Drawing.Color.FromArgb(0, 110, 0));
-            SetupButton(btnPause, "Pause",138,  5, 68, 34, System.Drawing.Color.FromArgb(110, 88, 0));
-            SetupButton(btnStop,  "Stop", 209,  5, 68, 34, System.Drawing.Color.FromArgb(130, 0, 0));
-            SetupButton(btnExit,  "Exit", 280,  5, 52, 34, System.Drawing.Color.FromArgb(55, 55, 55));
-
-            this.btnMinimize.Text      = "–";
-            this.btnMinimize.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.pnlToolbar.Location = new System.Drawing.Point(2, 2);
+            this.pnlToolbar.Name = "pnlToolbar";
+            this.pnlToolbar.Size = new System.Drawing.Size(496, 44);
+            this.pnlToolbar.TabIndex = 3;
+            // 
+            // btnMenu
+            // 
+            this.btnMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btnMenu.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.btnMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMenu.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnMenu.ForeColor = System.Drawing.Color.White;
+            this.btnMenu.Location = new System.Drawing.Point(4, 5);
+            this.btnMenu.Name = "btnMenu";
+            this.btnMenu.Size = new System.Drawing.Size(60, 34);
+            this.btnMenu.TabIndex = 0;
+            this.btnMenu.Text = "Menu";
+            this.btnMenu.UseVisualStyleBackColor = false;
+            this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
+            // 
+            // btnStart
+            // 
+            this.btnStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(110)))), ((int)(((byte)(0)))));
+            this.btnStart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnStart.ForeColor = System.Drawing.Color.White;
+            this.btnStart.Location = new System.Drawing.Point(67, 5);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(68, 34);
+            this.btnStart.TabIndex = 1;
+            this.btnStart.Text = "Start";
+            this.btnStart.UseVisualStyleBackColor = false;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
+            // btnPause
+            // 
+            this.btnPause.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(88)))), ((int)(((byte)(0)))));
+            this.btnPause.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.btnPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnPause.ForeColor = System.Drawing.Color.White;
+            this.btnPause.Location = new System.Drawing.Point(138, 5);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(68, 34);
+            this.btnPause.TabIndex = 2;
+            this.btnPause.Text = "Pause";
+            this.btnPause.UseVisualStyleBackColor = false;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            // 
+            // btnStop
+            // 
+            this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnStop.ForeColor = System.Drawing.Color.White;
+            this.btnStop.Location = new System.Drawing.Point(209, 5);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(68, 34);
+            this.btnStop.TabIndex = 3;
+            this.btnStop.Text = "Stop";
+            this.btnStop.UseVisualStyleBackColor = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // btnExit
+            // 
+            this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.btnExit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnExit.ForeColor = System.Drawing.Color.White;
+            this.btnExit.Location = new System.Drawing.Point(280, 5);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(52, 34);
+            this.btnExit.TabIndex = 4;
+            this.btnExit.Text = "Exit";
+            this.btnExit.UseVisualStyleBackColor = false;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
+            // btnMinimize
+            // 
+            this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.btnMinimize.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(90, 90, 90);
+            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             this.btnMinimize.ForeColor = System.Drawing.Color.White;
-            this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(55, 55, 55);
-            this.btnMinimize.Size      = new System.Drawing.Size(30, 34);
-            this.btnMinimize.Location  = new System.Drawing.Point(464, 5);
-            this.btnMinimize.Click    += new System.EventHandler(this.btnMinimize_Click);
-
-            this.lblTitle.Text = "YieldFlo";
+            this.btnMinimize.Location = new System.Drawing.Point(464, 5);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(30, 34);
+            this.btnMinimize.TabIndex = 5;
+            this.btnMinimize.Text = "–";
+            this.btnMinimize.UseVisualStyleBackColor = false;
+            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
+            // 
+            // lblTitle
+            // 
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
-            this.lblTitle.AutoSize = false;
-            this.lblTitle.Size = new System.Drawing.Size(128, 44);
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(200)))), ((int)(((byte)(220)))));
             this.lblTitle.Location = new System.Drawing.Point(334, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(128, 44);
+            this.lblTitle.TabIndex = 6;
+            this.lblTitle.Text = "YieldFlo";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
-            // ── Gauges ────────────────────────────────────────────────────────
+            // 
+            // pnlGauges
+            // 
+            this.pnlGauges.Controls.Add(this.pnlYield);
+            this.pnlGauges.Controls.Add(this.pnlMoisture);
+            this.pnlGauges.Controls.Add(this.pnlSpeedPanel);
             this.pnlGauges.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlGauges.Height = 148;
-
-            // col widths inside 500px form (minus 2px border each side = 496)
-            // Yield: 0–188, Moisture: 190–369, Speed: 371–495
-            SetupGaugePanel(pnlYield,     pnlGauges,   2,  2, 188, 144,
-                lblYieldTitle, "YIELD",    lblYield,    "--.-", lblYieldUnit,    "bu/ac");
-            SetupGaugePanel(pnlMoisture,  pnlGauges, 192,  2, 154, 144,
-                lblMoistureTitle, "MOISTURE", lblMoisture, "--.-", lblMoistureUnit, "%");
-            SetupGaugePanel(pnlSpeedPanel,pnlGauges, 348,  2, 148, 144,
-                lblSpeedTitle, "SPEED",    lblSpeed,    "--.-", lblSpeedUnit,    "km/h");
-
-            // ── Totals ────────────────────────────────────────────────────────
+            this.pnlGauges.Location = new System.Drawing.Point(2, 46);
+            this.pnlGauges.Name = "pnlGauges";
+            this.pnlGauges.Size = new System.Drawing.Size(496, 148);
+            this.pnlGauges.TabIndex = 2;
+            // 
+            // pnlYield
+            // 
+            this.pnlYield.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlYield.Controls.Add(this.lblYieldUnit);
+            this.pnlYield.Controls.Add(this.lblYield);
+            this.pnlYield.Controls.Add(this.lblYieldTitle);
+            this.pnlYield.Location = new System.Drawing.Point(2, 2);
+            this.pnlYield.Name = "pnlYield";
+            this.pnlYield.Size = new System.Drawing.Size(188, 144);
+            this.pnlYield.TabIndex = 0;
+            // 
+            // lblYieldUnit
+            // 
+            this.lblYieldUnit.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblYieldUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.lblYieldUnit.ForeColor = System.Drawing.Color.White;
+            this.lblYieldUnit.Location = new System.Drawing.Point(0, 120);
+            this.lblYieldUnit.Name = "lblYieldUnit";
+            this.lblYieldUnit.Size = new System.Drawing.Size(186, 22);
+            this.lblYieldUnit.TabIndex = 0;
+            this.lblYieldUnit.Text = "bu/ac";
+            this.lblYieldUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblYield
+            // 
+            this.lblYield.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblYield.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.lblYield.Location = new System.Drawing.Point(0, 18);
+            this.lblYield.Name = "lblYield";
+            this.lblYield.Size = new System.Drawing.Size(186, 124);
+            this.lblYield.TabIndex = 1;
+            this.lblYield.Text = "--.-";
+            this.lblYield.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblYieldTitle
+            // 
+            this.lblYieldTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblYieldTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblYieldTitle.Location = new System.Drawing.Point(0, 0);
+            this.lblYieldTitle.Name = "lblYieldTitle";
+            this.lblYieldTitle.Size = new System.Drawing.Size(186, 18);
+            this.lblYieldTitle.TabIndex = 2;
+            this.lblYieldTitle.Text = "YIELD";
+            this.lblYieldTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlMoisture
+            // 
+            this.pnlMoisture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMoisture.Controls.Add(this.lblMoistureUnit);
+            this.pnlMoisture.Controls.Add(this.lblMoisture);
+            this.pnlMoisture.Controls.Add(this.lblMoistureTitle);
+            this.pnlMoisture.Location = new System.Drawing.Point(192, 2);
+            this.pnlMoisture.Name = "pnlMoisture";
+            this.pnlMoisture.Size = new System.Drawing.Size(154, 144);
+            this.pnlMoisture.TabIndex = 1;
+            // 
+            // lblMoistureUnit
+            // 
+            this.lblMoistureUnit.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblMoistureUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.lblMoistureUnit.ForeColor = System.Drawing.Color.White;
+            this.lblMoistureUnit.Location = new System.Drawing.Point(0, 120);
+            this.lblMoistureUnit.Name = "lblMoistureUnit";
+            this.lblMoistureUnit.Size = new System.Drawing.Size(152, 22);
+            this.lblMoistureUnit.TabIndex = 0;
+            this.lblMoistureUnit.Text = "%";
+            this.lblMoistureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMoisture
+            // 
+            this.lblMoisture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMoisture.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.lblMoisture.Location = new System.Drawing.Point(0, 18);
+            this.lblMoisture.Name = "lblMoisture";
+            this.lblMoisture.Size = new System.Drawing.Size(152, 124);
+            this.lblMoisture.TabIndex = 1;
+            this.lblMoisture.Text = "--.-";
+            this.lblMoisture.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMoistureTitle
+            // 
+            this.lblMoistureTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblMoistureTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblMoistureTitle.Location = new System.Drawing.Point(0, 0);
+            this.lblMoistureTitle.Name = "lblMoistureTitle";
+            this.lblMoistureTitle.Size = new System.Drawing.Size(152, 18);
+            this.lblMoistureTitle.TabIndex = 2;
+            this.lblMoistureTitle.Text = "MOISTURE";
+            this.lblMoistureTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlSpeedPanel
+            // 
+            this.pnlSpeedPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlSpeedPanel.Controls.Add(this.lblSpeedUnit);
+            this.pnlSpeedPanel.Controls.Add(this.lblSpeed);
+            this.pnlSpeedPanel.Controls.Add(this.lblSpeedTitle);
+            this.pnlSpeedPanel.Location = new System.Drawing.Point(348, 2);
+            this.pnlSpeedPanel.Name = "pnlSpeedPanel";
+            this.pnlSpeedPanel.Size = new System.Drawing.Size(148, 144);
+            this.pnlSpeedPanel.TabIndex = 2;
+            // 
+            // lblSpeedUnit
+            // 
+            this.lblSpeedUnit.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblSpeedUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.lblSpeedUnit.ForeColor = System.Drawing.Color.White;
+            this.lblSpeedUnit.Location = new System.Drawing.Point(0, 120);
+            this.lblSpeedUnit.Name = "lblSpeedUnit";
+            this.lblSpeedUnit.Size = new System.Drawing.Size(146, 22);
+            this.lblSpeedUnit.TabIndex = 0;
+            this.lblSpeedUnit.Text = "km/h";
+            this.lblSpeedUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblSpeed
+            // 
+            this.lblSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
+            this.lblSpeed.Location = new System.Drawing.Point(0, 18);
+            this.lblSpeed.Name = "lblSpeed";
+            this.lblSpeed.Size = new System.Drawing.Size(146, 124);
+            this.lblSpeed.TabIndex = 1;
+            this.lblSpeed.Text = "--.-";
+            this.lblSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblSpeedTitle
+            // 
+            this.lblSpeedTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblSpeedTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblSpeedTitle.Location = new System.Drawing.Point(0, 0);
+            this.lblSpeedTitle.Name = "lblSpeedTitle";
+            this.lblSpeedTitle.Size = new System.Drawing.Size(146, 18);
+            this.lblSpeedTitle.TabIndex = 2;
+            this.lblSpeedTitle.Text = "SPEED";
+            this.lblSpeedTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlTotals
+            // 
+            this.pnlTotals.Controls.Add(this.lblTotRate);
+            this.pnlTotals.Controls.Add(this.lblTotTotal);
+            this.pnlTotals.Controls.Add(this.lblTotArea);
             this.pnlTotals.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTotals.Height = 26;
-            SetupTotalsLabel(lblTotRate,    "0.0 bu/ac",   0, 166);
-            SetupTotalsLabel(lblTotTotal,   "0 bu",      166, 166);
-            SetupTotalsLabel(lblTotArea,    "0.00 ac",   332, 164);
-            this.pnlTotals.Controls.AddRange(new System.Windows.Forms.Control[] {
-                lblTotArea, lblTotTotal, lblTotRate });
-
-            // ── Sensor bars ───────────────────────────────────────────────────
+            this.pnlTotals.Location = new System.Drawing.Point(2, 194);
+            this.pnlTotals.Name = "pnlTotals";
+            this.pnlTotals.Size = new System.Drawing.Size(496, 26);
+            this.pnlTotals.TabIndex = 1;
+            // 
+            // lblTotRate
+            // 
+            this.lblTotRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblTotRate.ForeColor = System.Drawing.Color.Silver;
+            this.lblTotRate.Location = new System.Drawing.Point(0, 0);
+            this.lblTotRate.Name = "lblTotRate";
+            this.lblTotRate.Size = new System.Drawing.Size(166, 26);
+            this.lblTotRate.TabIndex = 0;
+            this.lblTotRate.Text = "0.0 bu/ac";
+            this.lblTotRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTotTotal
+            // 
+            this.lblTotTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblTotTotal.ForeColor = System.Drawing.Color.Silver;
+            this.lblTotTotal.Location = new System.Drawing.Point(166, 0);
+            this.lblTotTotal.Name = "lblTotTotal";
+            this.lblTotTotal.Size = new System.Drawing.Size(166, 26);
+            this.lblTotTotal.TabIndex = 1;
+            this.lblTotTotal.Text = "0 bu";
+            this.lblTotTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTotArea
+            // 
+            this.lblTotArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblTotArea.ForeColor = System.Drawing.Color.Silver;
+            this.lblTotArea.Location = new System.Drawing.Point(332, 0);
+            this.lblTotArea.Name = "lblTotArea";
+            this.lblTotArea.Size = new System.Drawing.Size(164, 26);
+            this.lblTotArea.TabIndex = 2;
+            this.lblTotArea.Text = "0.00 ac";
+            this.lblTotArea.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlSensors
+            // 
+            this.pnlSensors.Controls.Add(this.lblSensorHeader);
+            this.pnlSensors.Controls.Add(this.lblSensor1Title);
+            this.pnlSensors.Controls.Add(this.pnlSensor1);
+            this.pnlSensors.Controls.Add(this.lblSensor1Value);
+            this.pnlSensors.Controls.Add(this.lblSensor2Title);
+            this.pnlSensors.Controls.Add(this.pnlSensor2);
+            this.pnlSensors.Controls.Add(this.lblSensor2Value);
             this.pnlSensors.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSensors.Height = 52;
-
-            this.lblSensorHeader.Text = "Sensors:";
+            this.pnlSensors.Location = new System.Drawing.Point(2, 220);
+            this.pnlSensors.Name = "pnlSensors";
+            this.pnlSensors.Size = new System.Drawing.Size(496, 52);
+            this.pnlSensors.TabIndex = 0;
+            // 
+            // lblSensorHeader
+            // 
+            this.lblSensorHeader.AutoSize = true;
             this.lblSensorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
             this.lblSensorHeader.ForeColor = System.Drawing.Color.Silver;
             this.lblSensorHeader.Location = new System.Drawing.Point(4, 2);
-            this.lblSensorHeader.AutoSize = true;
-            this.pnlSensors.Controls.Add(lblSensorHeader);
-
-            // bar track width = form(498) - label(62) - value(38) - margins
-            SetupSensorBar(pnlSensor1, pnlSensor1Fill, lblSensor1Value, pnlSensors,
-                lblSensor1Title, "Elev Flow", 4, 14, 358, 15);
-            SetupSensorBar(pnlSensor2, pnlSensor2Fill, lblSensor2Value, pnlSensors,
-                lblSensor2Title, "Moisture ", 4, 33, 358, 15);
-
-            // ── Status bar ────────────────────────────────────────────────────
+            this.lblSensorHeader.Name = "lblSensorHeader";
+            this.lblSensorHeader.Size = new System.Drawing.Size(56, 13);
+            this.lblSensorHeader.TabIndex = 0;
+            this.lblSensorHeader.Text = "Sensors:";
+            // 
+            // lblSensor1Title
+            // 
+            this.lblSensor1Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblSensor1Title.ForeColor = System.Drawing.Color.Silver;
+            this.lblSensor1Title.Location = new System.Drawing.Point(4, 15);
+            this.lblSensor1Title.Name = "lblSensor1Title";
+            this.lblSensor1Title.Size = new System.Drawing.Size(62, 23);
+            this.lblSensor1Title.TabIndex = 1;
+            this.lblSensor1Title.Text = "Elev Flow";
+            // 
+            // pnlSensor1
+            // 
+            this.pnlSensor1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.pnlSensor1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlSensor1.Controls.Add(this.pnlSensor1Fill);
+            this.pnlSensor1.Location = new System.Drawing.Point(70, 14);
+            this.pnlSensor1.Name = "pnlSensor1";
+            this.pnlSensor1.Size = new System.Drawing.Size(358, 15);
+            this.pnlSensor1.TabIndex = 2;
+            // 
+            // pnlSensor1Fill
+            // 
+            this.pnlSensor1Fill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(200)))), ((int)(((byte)(50)))));
+            this.pnlSensor1Fill.Location = new System.Drawing.Point(0, 0);
+            this.pnlSensor1Fill.Name = "pnlSensor1Fill";
+            this.pnlSensor1Fill.Size = new System.Drawing.Size(0, 15);
+            this.pnlSensor1Fill.TabIndex = 0;
+            // 
+            // lblSensor1Value
+            // 
+            this.lblSensor1Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblSensor1Value.ForeColor = System.Drawing.Color.White;
+            this.lblSensor1Value.Location = new System.Drawing.Point(431, 15);
+            this.lblSensor1Value.Name = "lblSensor1Value";
+            this.lblSensor1Value.Size = new System.Drawing.Size(38, 23);
+            this.lblSensor1Value.TabIndex = 3;
+            this.lblSensor1Value.Text = "0%";
+            // 
+            // lblSensor2Title
+            // 
+            this.lblSensor2Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblSensor2Title.ForeColor = System.Drawing.Color.Silver;
+            this.lblSensor2Title.Location = new System.Drawing.Point(4, 34);
+            this.lblSensor2Title.Name = "lblSensor2Title";
+            this.lblSensor2Title.Size = new System.Drawing.Size(62, 23);
+            this.lblSensor2Title.TabIndex = 4;
+            this.lblSensor2Title.Text = "Moisture";
+            // 
+            // pnlSensor2
+            // 
+            this.pnlSensor2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.pnlSensor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlSensor2.Controls.Add(this.pnlSensor2Fill);
+            this.pnlSensor2.Location = new System.Drawing.Point(70, 33);
+            this.pnlSensor2.Name = "pnlSensor2";
+            this.pnlSensor2.Size = new System.Drawing.Size(358, 15);
+            this.pnlSensor2.TabIndex = 5;
+            // 
+            // pnlSensor2Fill
+            // 
+            this.pnlSensor2Fill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(200)))), ((int)(((byte)(50)))));
+            this.pnlSensor2Fill.Location = new System.Drawing.Point(0, 0);
+            this.pnlSensor2Fill.Name = "pnlSensor2Fill";
+            this.pnlSensor2Fill.Size = new System.Drawing.Size(0, 15);
+            this.pnlSensor2Fill.TabIndex = 0;
+            // 
+            // lblSensor2Value
+            // 
+            this.lblSensor2Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblSensor2Value.ForeColor = System.Drawing.Color.White;
+            this.lblSensor2Value.Location = new System.Drawing.Point(431, 34);
+            this.lblSensor2Value.Name = "lblSensor2Value";
+            this.lblSensor2Value.Size = new System.Drawing.Size(38, 23);
+            this.lblSensor2Value.TabIndex = 6;
+            this.lblSensor2Value.Text = "0%";
+            // 
+            // pnlStatus
+            // 
+            this.pnlStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
+            this.pnlStatus.Controls.Add(this.lblStatusGPS);
+            this.pnlStatus.Controls.Add(this.lblStatusModule);
+            this.pnlStatus.Controls.Add(this.lblStatusComm);
+            this.pnlStatus.Controls.Add(this.lblStatusJob);
+            this.pnlStatus.Controls.Add(this.lblStatusMsg);
+            this.pnlStatus.Controls.Add(this.lblVersion);
             this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlStatus.Height = 22;
-            this.pnlStatus.BackColor = System.Drawing.Color.FromArgb(28, 28, 28);
-
-            SetupStatusLabel(lblStatusGPS,    "GPS",      4,  4, 36);
-            SetupStatusLabel(lblStatusModule, "Module",  44,  4, 54);
-            SetupStatusLabel(lblStatusComm,   "UDP",    102,  4, 36);
-            SetupStatusLabel(lblStatusJob,    "No Job", 142,  4, 150);
-            SetupStatusLabel(lblStatusMsg,    "",       296,  4, 170);
-
-            this.lblVersion.Text = "v1.0";
-            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(160, 160, 160);
+            this.pnlStatus.Location = new System.Drawing.Point(2, 270);
+            this.pnlStatus.Name = "pnlStatus";
+            this.pnlStatus.Size = new System.Drawing.Size(496, 22);
+            this.pnlStatus.TabIndex = 4;
+            // 
+            // lblStatusGPS
+            // 
+            this.lblStatusGPS.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblStatusGPS.ForeColor = System.Drawing.Color.Silver;
+            this.lblStatusGPS.Location = new System.Drawing.Point(4, 4);
+            this.lblStatusGPS.Name = "lblStatusGPS";
+            this.lblStatusGPS.Size = new System.Drawing.Size(36, 23);
+            this.lblStatusGPS.TabIndex = 0;
+            this.lblStatusGPS.Text = "GPS";
+            // 
+            // lblStatusModule
+            // 
+            this.lblStatusModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblStatusModule.ForeColor = System.Drawing.Color.Silver;
+            this.lblStatusModule.Location = new System.Drawing.Point(44, 4);
+            this.lblStatusModule.Name = "lblStatusModule";
+            this.lblStatusModule.Size = new System.Drawing.Size(54, 23);
+            this.lblStatusModule.TabIndex = 1;
+            this.lblStatusModule.Text = "Module";
+            // 
+            // lblStatusComm
+            // 
+            this.lblStatusComm.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblStatusComm.ForeColor = System.Drawing.Color.Silver;
+            this.lblStatusComm.Location = new System.Drawing.Point(102, 4);
+            this.lblStatusComm.Name = "lblStatusComm";
+            this.lblStatusComm.Size = new System.Drawing.Size(36, 23);
+            this.lblStatusComm.TabIndex = 2;
+            this.lblStatusComm.Text = "UDP";
+            // 
+            // lblStatusJob
+            // 
+            this.lblStatusJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblStatusJob.ForeColor = System.Drawing.Color.Silver;
+            this.lblStatusJob.Location = new System.Drawing.Point(142, 4);
+            this.lblStatusJob.Name = "lblStatusJob";
+            this.lblStatusJob.Size = new System.Drawing.Size(150, 23);
+            this.lblStatusJob.TabIndex = 3;
+            this.lblStatusJob.Text = "No Job";
+            // 
+            // lblStatusMsg
+            // 
+            this.lblStatusMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+            this.lblStatusMsg.ForeColor = System.Drawing.Color.Silver;
+            this.lblStatusMsg.Location = new System.Drawing.Point(296, 4);
+            this.lblStatusMsg.Name = "lblStatusMsg";
+            this.lblStatusMsg.Size = new System.Drawing.Size(170, 23);
+            this.lblStatusMsg.TabIndex = 4;
+            // 
+            // lblVersion
+            // 
             this.lblVersion.AutoSize = true;
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.lblVersion.Location = new System.Drawing.Point(468, 6);
-            this.pnlStatus.Controls.Add(lblVersion);
-            this.pnlStatus.Controls.AddRange(new System.Windows.Forms.Control[] {
-                lblStatusGPS, lblStatusModule, lblStatusComm,
-                lblStatusJob, lblStatusMsg, lblVersion });
-
-            // ── frmMain ───────────────────────────────────────────────────────
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(28, 13);
+            this.lblVersion.TabIndex = 5;
+            this.lblVersion.Text = "v1.0";
+            // 
+            // frmMain
+            // 
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(500, 294);
-            this.MinimumSize = new System.Drawing.Size(500, 294);
-            this.MaximumSize = new System.Drawing.Size(500, 294);
+            this.Controls.Add(this.pnlSensors);
+            this.Controls.Add(this.pnlTotals);
+            this.Controls.Add(this.pnlGauges);
+            this.Controls.Add(this.pnlToolbar);
+            this.Controls.Add(this.pnlStatus);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Padding = new System.Windows.Forms.Padding(2);  // shows as border
-            this.BackColor = System.Drawing.Color.White;          // border color
-            this.TopMost = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(500, 294);
+            this.MinimumSize = new System.Drawing.Size(500, 294);
             this.Name = "frmMain";
+            this.Padding = new System.Windows.Forms.Padding(2);
             this.Text = "YieldFlo";
-            this.Controls.Add(pnlSensors);
-            this.Controls.Add(pnlTotals);
-            this.Controls.Add(pnlGauges);
-            this.Controls.Add(pnlToolbar);
-            this.Controls.Add(pnlStatus);
-            this.Load += new System.EventHandler(this.frmMain_Load);
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
-
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.pnlToolbar.ResumeLayout(false);
             this.pnlGauges.ResumeLayout(false);
+            this.pnlYield.ResumeLayout(false);
+            this.pnlMoisture.ResumeLayout(false);
+            this.pnlSpeedPanel.ResumeLayout(false);
+            this.pnlTotals.ResumeLayout(false);
+            this.pnlSensors.ResumeLayout(false);
+            this.pnlSensors.PerformLayout();
+            this.pnlSensor1.ResumeLayout(false);
+            this.pnlSensor2.ResumeLayout(false);
+            this.pnlStatus.ResumeLayout(false);
+            this.pnlStatus.PerformLayout();
             this.ResumeLayout(false);
-        }
 
-        // ── Helpers ───────────────────────────────────────────────────────────
-
-        private void SetupButton(System.Windows.Forms.Button btn, string text,
-            int x, int y, int w, int h,
-            System.Drawing.Color? backColor = null)
-        {
-            btn.Text = text;
-            btn.Location = new System.Drawing.Point(x, y);
-            btn.Size = new System.Drawing.Size(w, h);
-            btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btn.ForeColor = System.Drawing.Color.White;
-            btn.BackColor = backColor ?? System.Drawing.Color.FromArgb(60, 60, 60);
-            btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(90, 90, 90);
-
-            if (btn == btnMenu)  btn.Click += new System.EventHandler(this.btnMenu_Click);
-            else if (btn == btnStart) btn.Click += new System.EventHandler(this.btnStart_Click);
-            else if (btn == btnPause) btn.Click += new System.EventHandler(this.btnPause_Click);
-            else if (btn == btnStop)  btn.Click += new System.EventHandler(this.btnStop_Click);
-            else if (btn == btnExit)  btn.Click += new System.EventHandler(this.btnExit_Click);
-        }
-
-        private void SetupGaugePanel(
-            System.Windows.Forms.Panel panel,
-            System.Windows.Forms.Panel parent,
-            int x, int y, int w, int h,
-            System.Windows.Forms.Label titleLbl, string titleText,
-            System.Windows.Forms.Label valueLbl, string valueText,
-            System.Windows.Forms.Label unitLbl,  string unitText)
-        {
-            panel.Location = new System.Drawing.Point(x, y);
-            panel.Size = new System.Drawing.Size(w, h);
-            panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-
-            titleLbl.Text = titleText;
-            titleLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            titleLbl.Dock = System.Windows.Forms.DockStyle.Top;
-            titleLbl.Height = 18;
-            titleLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
-            valueLbl.Text = valueText;
-            valueLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
-            valueLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            valueLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
-            panel.Controls.Add(valueLbl);
-            panel.Controls.Add(titleLbl);
-
-            if (unitLbl != null)
-            {
-                unitLbl.Text = unitText;
-                unitLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
-                unitLbl.ForeColor = System.Drawing.Color.White;
-                unitLbl.Dock = System.Windows.Forms.DockStyle.Bottom;
-                unitLbl.Height = 22;
-                unitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-                panel.Controls.Add(unitLbl);
-            }
-
-            parent.Controls.Add(panel);
-        }
-
-        private void SetupSensorBar(
-            System.Windows.Forms.Panel track,
-            System.Windows.Forms.Panel fill,
-            System.Windows.Forms.Label valueLbl,
-            System.Windows.Forms.Panel parent,
-            System.Windows.Forms.Label lbl,
-            string labelText, int x, int y, int w, int h)
-        {
-            lbl.Text = labelText;
-            lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
-            lbl.ForeColor = System.Drawing.Color.Silver;
-            lbl.Location = new System.Drawing.Point(x, y + 1);
-            lbl.AutoSize = false;
-            lbl.Width = 62;
-
-            track.Location = new System.Drawing.Point(x + 66, y);
-            track.Size = new System.Drawing.Size(w, h);
-            track.BackColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            track.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-
-            fill.Location = new System.Drawing.Point(0, 0);
-            fill.Size = new System.Drawing.Size(0, h);
-            fill.BackColor = System.Drawing.Color.FromArgb(50, 200, 50);
-            track.Controls.Add(fill);
-
-            valueLbl.Text = "0%";
-            valueLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
-            valueLbl.ForeColor = System.Drawing.Color.White;
-            valueLbl.Location = new System.Drawing.Point(x + 66 + w + 3, y + 1);
-            valueLbl.Width = 38;
-
-            parent.Controls.Add(lbl);
-            parent.Controls.Add(track);
-            parent.Controls.Add(valueLbl);
-        }
-
-        private void SetupTotalsLabel(System.Windows.Forms.Label lbl, string text, int x, int w)
-        {
-            lbl.Text = text;
-            lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            lbl.ForeColor = System.Drawing.Color.Silver;
-            lbl.Location = new System.Drawing.Point(x, 0);
-            lbl.Size = new System.Drawing.Size(w, 26);
-            lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            lbl.AutoSize = false;
-        }
-
-        private void SetupStatusLabel(System.Windows.Forms.Label lbl, string text,
-            int x, int y, int width = 60)
-        {
-            lbl.Text = text;
-            lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
-            lbl.ForeColor = System.Drawing.Color.Silver;
-            lbl.Location = new System.Drawing.Point(x, y);
-            lbl.Width = width;
-            lbl.AutoSize = false;
         }
 
         // ── Controls ──────────────────────────────────────────────────────────
-        private System.Windows.Forms.Panel pnlToolbar;
+        private System.Windows.Forms.Panel  pnlToolbar;
         private System.Windows.Forms.Button btnMenu;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnMinimize;
-        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label  lblTitle;
 
         private System.Windows.Forms.Panel pnlGauges;
         private System.Windows.Forms.Panel pnlYield;

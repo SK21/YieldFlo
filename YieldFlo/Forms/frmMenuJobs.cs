@@ -15,8 +15,8 @@ namespace YieldFlo.Forms
         private readonly List<int> _profileIds = new List<int>();
 
         // Parallel list to lvJobs — stores per-job IDs and totals for Load action
-        private readonly List<(int jobId, int profileId, int cropId, int headerId, double acres, double volume)> _jobData
-            = new List<(int, int, int, int, double, double)>();
+        private readonly List<(int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume)> _jobData
+            = new List<(int, string, int, int, int, double, double)>();
 
         public frmMenuJobs()
         {
@@ -106,7 +106,7 @@ namespace YieldFlo.Forms
                 item.SubItems.Add(j.status);
                 item.SubItems.Add(j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt);
                 item.SubItems.Add(j.acres.ToString("F2") + " ac");
-                _jobData.Add((j.id, j.profileId, j.cropId, j.headerId, j.acres, j.volume));
+                _jobData.Add((j.id, j.name, j.profileId, j.cropId, j.headerId, j.acres, j.volume));
             }
         }
 
@@ -128,7 +128,7 @@ namespace YieldFlo.Forms
 
             Core.LoadJobConfig(profileId, cropId, headerId);
             int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId);
-            Core.Collector.StartJob(jobId);
+            Core.Collector.StartJob(jobId, name);
             Core.RaiseJobStateChanged();
             this.Close();
         }
@@ -148,9 +148,26 @@ namespace YieldFlo.Forms
 
             Core.LoadJobConfig(profileId, cropId, headerId);
             Core.Database.Jobs.Reopen(job.jobId);
-            Core.Collector.LoadJob(job.jobId, job.acres, job.volume);
+            Core.Collector.LoadJob(job.jobId, job.jobName, job.acres, job.volume);
             Core.RaiseJobStateChanged();
             this.Close();
+        }
+
+        private void btnDeleteJob_Click(object sender, EventArgs e)
+        {
+            if (lvJobs.SelectedIndices.Count == 0)
+            { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
+
+            int idx = lvJobs.SelectedIndices[0];
+            if (idx < 0 || idx >= _jobData.Count) return;
+
+            var job = _jobData[idx];
+            var answer = MessageBox.Show($"Delete job \"{lvJobs.Items[idx].Text}\"?",
+                "Delete Job", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (answer != DialogResult.Yes) return;
+
+            Core.Database.Jobs.Delete(job.jobId);
+            LoadRecentJobs();
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();

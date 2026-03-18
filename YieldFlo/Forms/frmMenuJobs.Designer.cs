@@ -27,6 +27,7 @@ namespace YieldFlo.Forms
             this.btnStart      = new System.Windows.Forms.Button();
             this.btnJobsClose  = new System.Windows.Forms.Button();
             this.btnLoadJob    = new System.Windows.Forms.Button();
+            this.btnDeleteJob  = new System.Windows.Forms.Button();
             this.lblRecent     = new System.Windows.Forms.Label();
             this.lvJobs        = new System.Windows.Forms.ListView();
 
@@ -61,22 +62,22 @@ namespace YieldFlo.Forms
             var inputFont  = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 
             // Job Name
-            SetLabel(lblJobName, "Job Name:", labelFont, 8, 10, 96);
+            this.lblJobName.Text     = "Job Name:"; this.lblJobName.Font = labelFont; this.lblJobName.Location = new System.Drawing.Point(8, 13); this.lblJobName.Size = new System.Drawing.Size(96, 20); this.lblJobName.AutoSize = false;
             this.txtJobName.Font     = inputFont;
             this.txtJobName.Location = new System.Drawing.Point(112, 8);
             this.txtJobName.Size     = new System.Drawing.Size(334, 24);
 
             // Crop
-            SetLabel(lblCropLabel, "Crop:", labelFont, 8, 42, 96);
-            SetCombo(cboCrop, inputFont, 112, 40, 334);
+            this.lblCropLabel.Text = "Crop:"; this.lblCropLabel.Font = labelFont; this.lblCropLabel.Location = new System.Drawing.Point(8, 45); this.lblCropLabel.Size = new System.Drawing.Size(96, 20); this.lblCropLabel.AutoSize = false;
+            this.cboCrop.Font = inputFont; this.cboCrop.Location = new System.Drawing.Point(112, 40); this.cboCrop.Size = new System.Drawing.Size(334, 24); this.cboCrop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
             // Header
-            SetLabel(lblHeaderLabel, "Header:", labelFont, 8, 74, 96);
-            SetCombo(cboHeader, inputFont, 112, 72, 334);
+            this.lblHeaderLabel.Text = "Header:"; this.lblHeaderLabel.Font = labelFont; this.lblHeaderLabel.Location = new System.Drawing.Point(8, 77); this.lblHeaderLabel.Size = new System.Drawing.Size(96, 20); this.lblHeaderLabel.AutoSize = false;
+            this.cboHeader.Font = inputFont; this.cboHeader.Location = new System.Drawing.Point(112, 72); this.cboHeader.Size = new System.Drawing.Size(334, 24); this.cboHeader.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
             // Profile
-            SetLabel(lblProfileLabel, "Profile:", labelFont, 8, 106, 96);
-            SetCombo(cboProfile, inputFont, 112, 104, 334);
+            this.lblProfileLabel.Text = "Profile:"; this.lblProfileLabel.Font = labelFont; this.lblProfileLabel.Location = new System.Drawing.Point(8, 109); this.lblProfileLabel.Size = new System.Drawing.Size(96, 20); this.lblProfileLabel.AutoSize = false;
+            this.cboProfile.Font = inputFont; this.cboProfile.Location = new System.Drawing.Point(112, 104); this.cboProfile.Size = new System.Drawing.Size(334, 24); this.cboProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
             // Buttons
             this.btnStart.Text      = "▶  Start Job";
@@ -119,10 +120,18 @@ namespace YieldFlo.Forms
             this.btnLoadJob.Location  = new System.Drawing.Point(8, 378);
             this.btnLoadJob.Click    += new System.EventHandler(this.btnLoadJob_Click);
 
+            // Delete selected job button
+            this.btnDeleteJob.Text      = "Delete";
+            this.btnDeleteJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnDeleteJob.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteJob.Size      = new System.Drawing.Size(100, 34);
+            this.btnDeleteJob.Location  = new System.Drawing.Point(348, 378);
+            this.btnDeleteJob.Click    += new System.EventHandler(this.btnDeleteJob_Click);
+
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblJobName, txtJobName, lblCropLabel, cboCrop,
                 lblHeaderLabel, cboHeader, lblProfileLabel, cboProfile,
-                btnStart, btnJobsClose, lblRecent, lvJobs, btnLoadJob });
+                btnStart, btnJobsClose, lblRecent, lvJobs, btnLoadJob, btnDeleteJob });
 
             // ── Form ──────────────────────────────────────────────────────────
             this.ClientSize      = new System.Drawing.Size(456, 458);
@@ -144,25 +153,6 @@ namespace YieldFlo.Forms
             this.ResumeLayout(false);
         }
 
-        private void SetLabel(System.Windows.Forms.Label lbl, string text,
-            System.Drawing.Font font, int x, int y, int w)
-        {
-            lbl.Text      = text;
-            lbl.Font      = font;
-            lbl.Location  = new System.Drawing.Point(x, y + 3);
-            lbl.Size      = new System.Drawing.Size(w, 20);
-            lbl.AutoSize  = false;
-        }
-
-        private void SetCombo(System.Windows.Forms.ComboBox cb,
-            System.Drawing.Font font, int x, int y, int w)
-        {
-            cb.Font          = font;
-            cb.Location      = new System.Drawing.Point(x, y);
-            cb.Size          = new System.Drawing.Size(w, 24);
-            cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        }
-
         private System.Windows.Forms.Panel    pnlTitle;
         private System.Windows.Forms.Label    lblTitle;
         private System.Windows.Forms.Button   btnTitleClose;
@@ -178,6 +168,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button   btnStart;
         private System.Windows.Forms.Button   btnJobsClose;
         private System.Windows.Forms.Button   btnLoadJob;
+        private System.Windows.Forms.Button   btnDeleteJob;
         private System.Windows.Forms.Label    lblRecent;
         private System.Windows.Forms.ListView lvJobs;
     }

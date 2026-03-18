@@ -53,14 +53,14 @@ namespace YieldFlo.Forms
             // ── Content ───────────────────────────────────────────────────────
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            SetMenuButton(btnJobs,      "Jobs",      8,   8);
-            SetMenuButton(btnCrops,     "Crops",     238, 8);
-            SetMenuButton(btnHeaders,   "Headers",   8,   68);
-            SetMenuButton(btnProfiles,  "Profiles",  238, 68);
-            SetMenuButton(btnCalibrate, "Calibrate", 8,   128);
-            SetMenuButton(btnSettings,  "Settings",  238, 128);
-            SetMenuButton(btnReports,   "Reports",   8,   188);
-            SetMenuButton(btnYieldMap,  "Yield Map", 238, 188);
+            this.btnJobs.Text = "Jobs"; this.btnJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnJobs.Size = new System.Drawing.Size(210, 52); this.btnJobs.Location = new System.Drawing.Point(8, 8);
+            this.btnCrops.Text = "Crops"; this.btnCrops.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnCrops.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCrops.Size = new System.Drawing.Size(210, 52); this.btnCrops.Location = new System.Drawing.Point(238, 8);
+            this.btnHeaders.Text = "Headers"; this.btnHeaders.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnHeaders.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnHeaders.Size = new System.Drawing.Size(210, 52); this.btnHeaders.Location = new System.Drawing.Point(8, 68);
+            this.btnProfiles.Text = "Profiles"; this.btnProfiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnProfiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnProfiles.Size = new System.Drawing.Size(210, 52); this.btnProfiles.Location = new System.Drawing.Point(238, 68);
+            this.btnCalibrate.Text = "Calibrate"; this.btnCalibrate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnCalibrate.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCalibrate.Size = new System.Drawing.Size(210, 52); this.btnCalibrate.Location = new System.Drawing.Point(8, 128);
+            this.btnSettings.Text = "Settings"; this.btnSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSettings.Size = new System.Drawing.Size(210, 52); this.btnSettings.Location = new System.Drawing.Point(238, 128);
+            this.btnReports.Text = "Reports"; this.btnReports.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnReports.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnReports.Size = new System.Drawing.Size(210, 52); this.btnReports.Location = new System.Drawing.Point(8, 188);
+            this.btnYieldMap.Text = "Yield Map"; this.btnYieldMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold); this.btnYieldMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnYieldMap.Size = new System.Drawing.Size(210, 52); this.btnYieldMap.Location = new System.Drawing.Point(238, 188);
 
             btnJobs.Click      += new System.EventHandler(this.btnJobs_Click);
             btnCrops.Click     += new System.EventHandler(this.btnCrops_Click);
@@ -100,15 +100,6 @@ namespace YieldFlo.Forms
             this.Load += new System.EventHandler(this.frmMenu_Load);
 
             this.ResumeLayout(false);
-        }
-
-        private void SetMenuButton(System.Windows.Forms.Button btn, string text, int x, int y)
-        {
-            btn.Text      = text;
-            btn.Font      = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
-            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btn.Size      = new System.Drawing.Size(210, 52);
-            btn.Location  = new System.Drawing.Point(x, y);
         }
 
         private System.Windows.Forms.Panel  pnlTitle;

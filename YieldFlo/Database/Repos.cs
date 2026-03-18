@@ -74,6 +74,15 @@ namespace YieldFlo.Database
             cmd.Parameters.AddWithValue("@id", jobId);
             cmd.ExecuteNonQuery();
         }
+
+        public void Delete(int jobId)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand("DELETE FROM jobs WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@id", jobId);
+            cmd.ExecuteNonQuery();
+        }
     }
 
     // ── YieldDataRepo ─────────────────────────────────────────────────────────

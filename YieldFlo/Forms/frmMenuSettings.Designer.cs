@@ -72,10 +72,10 @@ namespace YieldFlo.Forms
             this.lblUnits.Location  = new System.Drawing.Point(8, 8);
             this.lblUnits.Size      = new System.Drawing.Size(200, 16);
 
-            SetToggleButton(this.btnImperial, "Imperial", 8, 26);
+            this.btnImperial.Text = "Imperial"; this.btnImperial.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnImperial.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnImperial.FlatAppearance.BorderSize = 0; this.btnImperial.Size = new System.Drawing.Size(210, 44); this.btnImperial.Location = new System.Drawing.Point(8, 26); this.btnImperial.ForeColor = System.Drawing.Color.White;
             this.btnImperial.Click += new System.EventHandler(this.btnImperial_Click);
 
-            SetToggleButton(this.btnMetric, "Metric", 226, 26);
+            this.btnMetric.Text = "Metric"; this.btnMetric.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnMetric.FlatAppearance.BorderSize = 0; this.btnMetric.Size = new System.Drawing.Size(210, 44); this.btnMetric.Location = new System.Drawing.Point(226, 26); this.btnMetric.ForeColor = System.Drawing.Color.White;
             this.btnMetric.Click += new System.EventHandler(this.btnMetric_Click);
 
             // Theme
@@ -86,10 +86,10 @@ namespace YieldFlo.Forms
             this.lblTheme.Location  = new System.Drawing.Point(8, 80);
             this.lblTheme.Size      = new System.Drawing.Size(200, 16);
 
-            SetToggleButton(this.btnDark, "Dark", 8, 98);
+            this.btnDark.Text = "Dark"; this.btnDark.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnDark.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDark.FlatAppearance.BorderSize = 0; this.btnDark.Size = new System.Drawing.Size(210, 44); this.btnDark.Location = new System.Drawing.Point(8, 98); this.btnDark.ForeColor = System.Drawing.Color.White;
             this.btnDark.Click += new System.EventHandler(this.btnDark_Click);
 
-            SetToggleButton(this.btnLight, "Light", 226, 98);
+            this.btnLight.Text = "Light"; this.btnLight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnLight.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnLight.FlatAppearance.BorderSize = 0; this.btnLight.Size = new System.Drawing.Size(210, 44); this.btnLight.Location = new System.Drawing.Point(226, 98); this.btnLight.ForeColor = System.Drawing.Color.White;
             this.btnLight.Click += new System.EventHandler(this.btnLight_Click);
 
             // Module Communication
@@ -100,10 +100,10 @@ namespace YieldFlo.Forms
             this.lblNetwork.Location  = new System.Drawing.Point(8, 152);
             this.lblNetwork.Size      = new System.Drawing.Size(300, 16);
 
-            SetToggleButton(this.btnEthernet, "Ethernet", 8, 170);
+            this.btnEthernet.Text = "Ethernet"; this.btnEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnEthernet.FlatAppearance.BorderSize = 0; this.btnEthernet.Size = new System.Drawing.Size(210, 44); this.btnEthernet.Location = new System.Drawing.Point(8, 170); this.btnEthernet.ForeColor = System.Drawing.Color.White;
             this.btnEthernet.Click += new System.EventHandler(this.btnEthernet_Click);
 
-            SetToggleButton(this.btnCAN, "CAN", 226, 170);
+            this.btnCAN.Text = "CAN"; this.btnCAN.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnCAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCAN.FlatAppearance.BorderSize = 0; this.btnCAN.Size = new System.Drawing.Size(210, 44); this.btnCAN.Location = new System.Drawing.Point(226, 170); this.btnCAN.ForeColor = System.Drawing.Color.White;
             this.btnCAN.Click += new System.EventHandler(this.btnCAN_Click);
 
             // Ethernet: subnet selector
@@ -191,17 +191,6 @@ namespace YieldFlo.Forms
             this.Load += new System.EventHandler(this.frmMenuSettings_Load);
 
             this.ResumeLayout(false);
-        }
-
-        private void SetToggleButton(System.Windows.Forms.Button btn, string text, int x, int y)
-        {
-            btn.Text      = text;
-            btn.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Size      = new System.Drawing.Size(210, 44);
-            btn.Location  = new System.Drawing.Point(x, y);
-            btn.ForeColor = System.Drawing.Color.White;
         }
 
         private System.Windows.Forms.Panel    pnlTitle;

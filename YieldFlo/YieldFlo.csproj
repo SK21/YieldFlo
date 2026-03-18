@@ -9,12 +9,12 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>YieldFlo</AssemblyName>
     <RootNamespace>YieldFlo</RootNamespace>
-    <ApplicationIcon>YieldFlo.ico</ApplicationIcon>
+    <ApplicationIcon>YieldFlo2.ico</ApplicationIcon>
     <!-- <ApplicationIcon>Resources\YieldFlo.ico</ApplicationIcon> -->
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="YieldFlo.ico" />
+    <Content Include="YieldFlo2.ico" />
   </ItemGroup>
 
   <ItemGroup>

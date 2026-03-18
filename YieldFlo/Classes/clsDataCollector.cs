@@ -11,6 +11,7 @@ namespace YieldFlo.Classes
     {
         public bool IsRecording { get; private set; }
         public int ActiveJobId { get; private set; } = -1;
+        public string ActiveJobName { get; private set; } = "";
 
         public double TotalAcres { get; private set; }
         public double TotalBushels { get; private set; }
@@ -22,9 +23,10 @@ namespace YieldFlo.Classes
         private double _moistureSum = 0;
         private int _moistureCount = 0;
 
-        public void StartJob(int jobId)
+        public void StartJob(int jobId, string jobName = "")
         {
             ActiveJobId = jobId;
+            ActiveJobName = jobName;
             TotalAcres = 0;
             TotalBushels = 0;
             AverageMoisture = 0;
@@ -45,6 +47,7 @@ namespace YieldFlo.Classes
                 Core.Database.Jobs.Close(ActiveJobId);
             }
             ActiveJobId = -1;
+            ActiveJobName = "";
         }
 
         public void PauseJob() { IsRecording = false; }
@@ -55,9 +58,10 @@ namespace YieldFlo.Classes
         /// Loads a previously created job, restoring its accumulated totals.
         /// Used when resuming a job from a prior session.
         /// </summary>
-        public void LoadJob(int jobId, double existingAcres, double existingBushels)
+        public void LoadJob(int jobId, string jobName, double existingAcres, double existingBushels)
         {
             ActiveJobId = jobId;
+            ActiveJobName = jobName;
             TotalAcres = existingAcres;
             TotalBushels = existingBushels;
             AverageMoisture = 0;
