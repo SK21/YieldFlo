@@ -111,8 +111,8 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
-            using var dlg = new frmMsgBox("Delete this profile?", "Confirm", true);
-            dlg.ShowDialog();
+            using var dlg = new frmMsgBox("Delete this profile?");
+            dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Profiles.Delete(_editingId);
             LoadList();

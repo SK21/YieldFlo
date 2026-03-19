@@ -17,12 +17,7 @@ namespace YieldFlo.Forms
         private readonly List<(int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume)> _jobData
             = new List<(int, string, int, int, int, double, double)>();
 
-        // Original values of the selected job — for dirty detection
-        private string _origName      = "";
-        private int    _origCropId    = -1;
-        private int    _origHeaderId  = -1;
-        private int    _origProfileId = -1;
-        private bool   _suppressDirty = false;
+        private bool   _suppressSelectionChange = false;
 
         public frmMenuJobs()
         {
@@ -41,13 +36,9 @@ namespace YieldFlo.Forms
                 c.MouseUp   += (s, ev) => _dragging = false;
             }
 
-            txtJobName.TextChanged          += (s, e2) => CheckDirty();
-            cboCrop.SelectedIndexChanged    += (s, e2) => CheckDirty();
-            cboHeader.SelectedIndexChanged  += (s, e2) => CheckDirty();
-            cboProfile.SelectedIndexChanged += (s, e2) => CheckDirty();
-
             LoadCombos();
             LoadRecentJobs();
+            SelectInitialJob();
             this.Shown += frmMenuJobs_Shown;
         }
 
@@ -84,7 +75,7 @@ namespace YieldFlo.Forms
 
         private void LoadCombos()
         {
-            _suppressDirty = true;
+            _suppressSelectionChange = true;
 
             cboCrop.Items.Clear();    _cropIds.Clear();
             cboHeader.Items.Clear();  _headerIds.Clear();
@@ -99,14 +90,14 @@ namespace YieldFlo.Forms
             foreach (var p in Core.Database.Profiles.GetAll())
             { cboProfile.Items.Add(p.name); _profileIds.Add(p.id); }
 
-            _suppressDirty = false;
+            _suppressSelectionChange = false;
 
             SetDefaultSelections();
         }
 
         private void SetDefaultSelections()
         {
-            _suppressDirty = true;
+            _suppressSelectionChange = true;
             int ci = _cropIds.IndexOf(Core.ActiveCropId);
             cboCrop.SelectedIndex = ci >= 0 ? ci : (cboCrop.Items.Count > 0 ? 0 : -1);
             int hi = _headerIds.IndexOf(Core.ActiveHeaderId);
@@ -114,7 +105,7 @@ namespace YieldFlo.Forms
             int pi = _profileIds.IndexOf(Core.ActiveProfileId);
             cboProfile.SelectedIndex = pi >= 0 ? pi : (cboProfile.Items.Count > 0 ? 0 : -1);
             txtJobName.Text = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
-            _suppressDirty = false;
+            _suppressSelectionChange = false;
         }
 
         private void LoadRecentJobs()
@@ -133,6 +124,19 @@ namespace YieldFlo.Forms
             }
         }
 
+        private void SelectInitialJob()
+        {
+            if (_jobData.Count == 0) return;
+
+            // Prefer the currently active job; fall back to the most recent
+            int activeId = Core.Collector.ActiveJobId;
+            int idx = activeId > 0 ? _jobData.FindIndex(j => j.jobId == activeId) : -1;
+            if (idx < 0) idx = 0;
+
+            lvJobs.Items[idx].Selected = true;
+            lvJobs.Items[idx].EnsureVisible();
+        }
+
         private void lvJobs_SelectedIndexChanged(object sender, EventArgs e)
         {
             bool selected = lvJobs.SelectedIndices.Count > 0;
@@ -149,7 +153,7 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobData.Count) return;
 
             var job = _jobData[idx];
-            _suppressDirty = true;
+            _suppressSelectionChange = true;
 
             txtJobName.Text = job.jobName;
 
@@ -162,46 +166,33 @@ namespace YieldFlo.Forms
             int pi = _profileIds.IndexOf(job.profileId);
             if (pi >= 0) cboProfile.SelectedIndex = pi;
 
-            _origName      = job.jobName;
-            _origCropId    = job.cropId;
-            _origHeaderId  = job.headerId;
-            _origProfileId = job.profileId;
-
-            _suppressDirty = false;
-            btnSave.Enabled = false;
-        }
-
-        private void CheckDirty()
-        {
-            if (_suppressDirty) return;
-
-            if (lvJobs.SelectedIndices.Count == 0)
-            {
-                btnSave.Enabled = false;
-                return;
-            }
-
-            int currentCropId    = cboCrop.SelectedIndex    >= 0 ? _cropIds[cboCrop.SelectedIndex]       : -1;
-            int currentHeaderId  = cboHeader.SelectedIndex  >= 0 ? _headerIds[cboHeader.SelectedIndex]   : -1;
-            int currentProfileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : -1;
-
-            bool dirty = txtJobName.Text.Trim() != _origName
-                      || currentCropId    != _origCropId
-                      || currentHeaderId  != _origHeaderId
-                      || currentProfileId != _origProfileId;
-
-            btnSave.Enabled = dirty;
+            _suppressSelectionChange = false;
+            btnSave.Enabled = true;
         }
 
         // ── New ───────────────────────────────────────────────────────────────
         private void btnNew_Click(object sender, EventArgs e)
         {
-            lvJobs.SelectedItems.Clear();
-            SetDefaultSelections();
-            btnSave.Enabled   = false;
-            btnLoad.Enabled   = false;
-            btnDelete.Enabled = false;
-            txtJobName.Focus();
+            if (cboCrop.SelectedIndex < 0 || _cropIds.Count == 0)
+            { Props.ShowMessage("Select a crop first.", "", 3000, true); return; }
+            if (cboHeader.SelectedIndex < 0 || _headerIds.Count == 0)
+            { Props.ShowMessage("Select a header first.", "", 3000, true); return; }
+
+            string name = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
+            int cropId    = _cropIds[cboCrop.SelectedIndex];
+            int headerId  = _headerIds[cboHeader.SelectedIndex];
+            int profileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : 1;
+
+            int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId);
+
+            LoadRecentJobs();
+
+            int idx = _jobData.FindIndex(j => j.jobId == jobId);
+            if (idx >= 0)
+            {
+                lvJobs.Items[idx].Selected = true;
+                lvJobs.Items[idx].EnsureVisible();
+            }
         }
 
         // ── Load (resume selected job and start recording) ────────────────────
@@ -213,7 +204,7 @@ namespace YieldFlo.Forms
             int idx = lvJobs.SelectedIndices[0];
             if (idx < 0 || idx >= _jobData.Count) return;
 
-            StartSelectedJob(_jobData[idx]);
+            StartSelectedJob(_jobData[idx], closeAfter: false);
         }
 
         // ── Save (create new or update existing) ─────────────────────────────
@@ -228,9 +219,10 @@ namespace YieldFlo.Forms
             if (string.IsNullOrEmpty(name))
             { Props.ShowMessage("Enter a job name.", "", 2000, true); return; }
 
-            int cropId    = cboCrop.SelectedIndex    >= 0 ? _cropIds[cboCrop.SelectedIndex]       : _origCropId;
-            int headerId  = cboHeader.SelectedIndex  >= 0 ? _headerIds[cboHeader.SelectedIndex]   : _origHeaderId;
-            int profileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : _origProfileId;
+            var job2      = _jobData[idx];
+            int cropId    = cboCrop.SelectedIndex    >= 0 ? _cropIds[cboCrop.SelectedIndex]       : job2.cropId;
+            int headerId  = cboHeader.SelectedIndex  >= 0 ? _headerIds[cboHeader.SelectedIndex]   : job2.headerId;
+            int profileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : job2.profileId;
 
             int savedJobId = _jobData[idx].jobId;
             Core.Database.Jobs.Update(savedJobId, name, cropId, headerId, profileId);
@@ -258,8 +250,8 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobData.Count) return;
 
             var job = _jobData[idx];
-            using var dlg = new frmMsgBox($"Delete job \"{job.jobName}\"?", "Confirm", true);
-            dlg.ShowDialog();
+            using var dlg = new frmMsgBox($"Delete job \"{job.jobName}\"?");
+            dlg.ShowDialog(this);
             if (!dlg.Result) return;
 
             Core.Database.Jobs.Delete(job.jobId);
@@ -268,43 +260,20 @@ namespace YieldFlo.Forms
             btnSave.Enabled = btnLoad.Enabled = btnDelete.Enabled = false;
         }
 
-        // ── Start Job (create new OR resume selected, then begin recording) ───
+        // ── Start Job (resume selected job and begin recording) ──────────────
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (cboCrop.SelectedIndex < 0 || _cropIds.Count == 0)
-            { Props.ShowMessage("Select a crop first.", "", 3000, true); return; }
-            if (cboHeader.SelectedIndex < 0 || _headerIds.Count == 0)
-            { Props.ShowMessage("Select a header first.", "", 3000, true); return; }
+            if (lvJobs.SelectedIndices.Count == 0)
+            { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
 
-            // If a job is selected in the list, resume it
-            if (lvJobs.SelectedIndices.Count > 0)
-            {
-                int idx = lvJobs.SelectedIndices[0];
-                if (idx >= 0 && idx < _jobData.Count)
-                {
-                    StartSelectedJob(_jobData[idx]);
-                    return;
-                }
-            }
+            int idx = lvJobs.SelectedIndices[0];
+            if (idx < 0 || idx >= _jobData.Count) return;
 
-            // No selection — create and start a new job
-            int cropId    = _cropIds[cboCrop.SelectedIndex];
-            int headerId  = _headerIds[cboHeader.SelectedIndex];
-            int profileId = (_profileIds.Count > 0 && cboProfile.SelectedIndex >= 0)
-                            ? _profileIds[cboProfile.SelectedIndex] : 1;
-
-            string name = txtJobName.Text.Trim();
-            if (string.IsNullOrEmpty(name))
-                name = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
-
-            Core.LoadJobConfig(profileId, cropId, headerId);
-            int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId);
-            Core.Collector.StartJob(jobId, name);
-            Core.RaiseJobStateChanged();
-            this.Close();
+            StartSelectedJob(_jobData[idx]);
         }
 
-        private void StartSelectedJob((int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume) job)
+        private void StartSelectedJob((int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume) job,
+                                      bool closeAfter = true)
         {
             int profileId = job.profileId > 0 ? job.profileId : Core.ActiveProfileId;
             int cropId    = job.cropId    > 0 ? job.cropId    : Core.ActiveCropId;
@@ -314,7 +283,7 @@ namespace YieldFlo.Forms
             Core.Database.Jobs.Reopen(job.jobId);
             Core.Collector.LoadJob(job.jobId, job.jobName, job.acres, job.volume);
             Core.RaiseJobStateChanged();
-            this.Close();
+            if (closeAfter) this.Close();
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();

@@ -43,7 +43,8 @@ namespace YieldFlo.Classes
             _lastLat = 0;
             _lastLon = 0;
             _lastWriteTime = DateTime.MinValue;
-            IsRecording = true;
+            IsRecording  = false;
+            IsAutoPaused = true;   // starts recording when sections come on
         }
 
         public void RenameActiveJob(string name) => ActiveJobName = name;
@@ -79,7 +80,7 @@ namespace YieldFlo.Classes
             ActiveJobName = "";
         }
 
-        public void ResumeJob() { IsRecording = true; }
+        public void ResumeJob() { IsRecording = false; IsAutoPaused = true; }  // re-arms auto-resume; recording starts when sections come on
 
         /// <summary>
         /// Loads a previously created job, restoring its accumulated totals.
@@ -97,7 +98,8 @@ namespace YieldFlo.Classes
             _lastLat = 0;
             _lastLon = 0;
             _lastWriteTime = DateTime.MinValue;
-            IsRecording = true;
+            IsRecording  = false;
+            IsAutoPaused = true;   // auto-resumes once AOG connects and harvesting starts
         }
 
         /// <summary>
@@ -120,7 +122,7 @@ namespace YieldFlo.Classes
 
             // Auto-pause/resume based on AOG state: speed > 0 AND at least one section on.
             // Sections turn off over already-harvested ground even when moving.
-            bool harvestActive = gps.Speed >= 0.5 && gps.SectionsActive;
+            bool harvestActive = gps.SectionsActive;
 
             if (!harvestActive)
             {

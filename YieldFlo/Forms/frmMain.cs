@@ -241,7 +241,7 @@ namespace YieldFlo.Forms
             {
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
-                lblStatusJob.Text      = recording ? jobName + " - On" : jobName;
+                lblStatusJob.Text      = recording ? jobName + " - On" : jobName + " - Off";
                 lblStatusJob.ForeColor = recording ? Color.LimeGreen : Color.Orange;
                 lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }

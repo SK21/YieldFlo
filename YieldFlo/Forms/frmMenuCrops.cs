@@ -123,8 +123,8 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
-            using var dlg = new frmMsgBox("Delete this crop?", "Confirm", true);
-            dlg.ShowDialog();
+            using var dlg = new frmMsgBox("Delete this crop?");
+            dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Crops.Delete(_editingId);
             LoadList();

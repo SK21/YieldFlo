@@ -1,4 +1,4 @@
-using System;
+using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
 
@@ -6,57 +6,45 @@ namespace YieldFlo.Forms
 {
     public partial class frmMsgBox : Form
     {
-        private bool cResult;
+        public bool Result { get; private set; }
 
-        public frmMsgBox(string message, string title = "Help", bool shrink = false)
+        private bool _dragging;
+        private Point _dragStart;
+
+        public frmMsgBox(string message, string title = "Confirm")
         {
+            TopMost = true;
             InitializeComponent();
-            this.Text = title;
-            label1.Text = message;
+            lblTitle.Text = title;
+            lblMsg.Text   = message;
 
-            if (shrink)
+            FormPositions.Restore(this);
+            this.FormClosed += (s, e) => FormPositions.Save(this);
+
+            foreach (var c in new System.Windows.Forms.Control[] { pnlTitle, lblTitle })
             {
-                panel1.Height = 60;
-                this.Height = 198;
-                btnCancel.Top = 78;
-                btnOK.Top = 78;
-            }
-            else
-            {
-                panel1.Height = 200;
-                this.Height = 310;
-                btnCancel.Top = 218;
-                btnOK.Top = 218;
+                c.MouseDown += (s, e) => { if (e.Button == MouseButtons.Left) { _dragging = true; _dragStart = e.Location; } };
+                c.MouseMove += (s, e) => { if (_dragging) { Left += e.X - _dragStart.X; Top += e.Y - _dragStart.Y; } };
+                c.MouseUp   += (s, e) => _dragging = false;
             }
         }
 
-        public bool Result { get => cResult; set => cResult = value; }
-
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnYes_Click(object sender, System.EventArgs e)
         {
             Result = true;
-            this.Close();
+            Close();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnNo_Click(object sender, System.EventArgs e)
         {
             Result = false;
-            this.Close();
+            Close();
         }
 
-        private void frmMsgBox_Load(object sender, EventArgs e)
+        protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            this.TopMost = true;
-            this.ShowInTaskbar = false;
-            this.BackColor = Properties.Settings.Default.MainBackColour;
-            this.ForeColor = Properties.Settings.Default.MainForeColour;
-            label1.ForeColor = Properties.Settings.Default.MainForeColour;
-            btnOK.BackColor = System.Drawing.Color.FromArgb(60, 60, 60);
-            btnOK.ForeColor = System.Drawing.Color.White;
-            btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnCancel.BackColor = System.Drawing.Color.FromArgb(60, 60, 60);
-            btnCancel.ForeColor = System.Drawing.Color.White;
-            btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            base.OnFormClosed(e);
+            Owner?.BringToFront();
         }
     }
 }

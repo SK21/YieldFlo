@@ -31,7 +31,13 @@ namespace YieldFlo.Forms
                 c.MouseUp   += (s, ev) => _dragging = false;
             }
             LoadList();
-            ClearEdit();
+            int activeIdx = _headers?.FindIndex(h => h.id == Core.ActiveHeaderId) ?? -1;
+            if (activeIdx >= 0)
+                lbHeaders.SelectedIndex = activeIdx;
+            else if (lbHeaders.Items.Count > 0)
+                lbHeaders.SelectedIndex = 0;
+            else
+                ClearEdit();
             this.Shown += frmMenuHeaders_Shown;
         }
 
@@ -158,8 +164,8 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
-            using var dlg = new frmMsgBox("Delete this header?", "Confirm", true);
-            dlg.ShowDialog();
+            using var dlg = new frmMsgBox("Delete this header?");
+            dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Headers.Delete(_editingId);
             LoadList();
