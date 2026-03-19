@@ -222,39 +222,13 @@ namespace YieldFlo.Forms
             numBaseline.Value = clamped;
         }
 
-        private bool _numpadOpen = false;
-
         private void frmMenuCalibrate_Shown(object sender, EventArgs e)
         {
-            WireNumpad(numDelay,        0,    60,  0, "Processing Delay (seconds)");
-            WireNumpad(numBaseline,     0,  0.99,  3, "Sensor Baseline");
-            WireNumpad(numFactor,    0.01,   100,  2, "Yield Factor");
-            WireNumpad(numActualWeight, 0, 999999, 0, "Actual Weight");
+            NumpadHelper.Wire(this, numDelay,        0,    60,  0, "Processing Delay (seconds)");
+            NumpadHelper.Wire(this, numBaseline,     0,  0.99,  3, "Sensor Baseline");
+            NumpadHelper.Wire(this, numFactor,    0.01,   100,  2, "Yield Factor");
+            NumpadHelper.Wire(this, numActualWeight, 0, 999999, 1, "Actual Weight");
             btnSaveCal.Focus();
-        }
-
-        private void WireNumpad(System.Windows.Forms.NumericUpDown num, double min, double max, int decimals, string title = "")
-        {
-            void ShowPad(object s, EventArgs e)
-            {
-                if (_numpadOpen) return;
-                _numpadOpen = true;
-                try
-                {
-                    using (var pad = new frmNumpad(min, max, (double)num.Value, decimals, title))
-                    {
-                        if (pad.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-                        {
-                            decimal clamped = (decimal)Math.Min(max, Math.Max(min, pad.ReturnValue));
-                            num.Value = Math.Min(num.Maximum, Math.Max(num.Minimum, clamped));
-                        }
-                    }
-                }
-                finally { _numpadOpen = false; }
-            }
-
-            num.Enter += ShowPad;
-            num.Click += ShowPad;
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();

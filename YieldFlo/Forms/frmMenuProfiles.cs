@@ -31,6 +31,14 @@ namespace YieldFlo.Forms
             }
             LoadList();
             ClearEdit();
+            this.Shown += frmMenuProfiles_Shown;
+        }
+
+        private void frmMenuProfiles_Shown(object sender, EventArgs e)
+        {
+            KeyboardHelper.Wire(this, txtProfileName, "Profile Name");
+            KeyboardHelper.Wire(this, txtCombineId,   "Combine ID");
+            btnSave.Focus();
         }
 
         private void ApplyTheme()

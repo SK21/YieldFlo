@@ -28,6 +28,7 @@ namespace YieldFlo.Forms
             _max      = max;
             _decimals = decimals;
             InitializeComponent();
+            WireButtons();
             lblTitle.Text    = title;
             lblMinMax.Text   = $"Min: {min}   Max: {max}";
             tboxDisplay.Text = current.ToString(CultureInfo.InvariantCulture);
@@ -42,6 +43,26 @@ namespace YieldFlo.Forms
                 ctl.MouseMove += (s, e) => { if (_dragging) { Left += ((MouseEventArgs)e).X - _dragStart.X; Top += ((MouseEventArgs)e).Y - _dragStart.Y; } };
                 ctl.MouseUp   += (s, e) => _dragging = false;
             }
+        }
+
+        private void WireButtons()
+        {
+            btn7.Click     += (s, e) => Append("7");
+            btn8.Click     += (s, e) => Append("8");
+            btn9.Click     += (s, e) => Append("9");
+            btnBack.Click  += (s, e) => Backspace();
+            btn4.Click     += (s, e) => Append("4");
+            btn5.Click     += (s, e) => Append("5");
+            btn6.Click     += (s, e) => Append("6");
+            btnClear.Click += (s, e) => { tboxDisplay.Text = ""; _overwrite = false; };
+            btn1.Click     += (s, e) => Append("1");
+            btn2.Click     += (s, e) => Append("2");
+            btn3.Click     += (s, e) => Append("3");
+            btnNeg.Click   += (s, e) => ToggleNeg();
+            btnDot.Click   += (s, e) => AppendDot();
+            btn0.Click     += (s, e) => Append("0");
+            btnOK.Click    += btnOK_Click;
+            btnCancel.Click += (s, e) => DialogResult = DialogResult.Cancel;
         }
 
         private void Append(string digit)

@@ -32,6 +32,16 @@ namespace YieldFlo.Forms
             }
             LoadList();
             ClearEdit();
+            this.Shown += frmMenuHeaders_Shown;
+        }
+
+        private void frmMenuHeaders_Shown(object sender, EventArgs e)
+        {
+            KeyboardHelper.Wire(this, txtHeaderName, "Header Name");
+            string unit = Props.IsMetric ? "m" : "ft";
+            NumpadHelper.Wire(this, numWidth, (double)numWidth.Minimum, (double)numWidth.Maximum,
+                              1, $"Header Width ({unit})");
+            btnSave.Focus();
         }
 
         private void ApplyUnits()

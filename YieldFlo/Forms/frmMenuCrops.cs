@@ -31,6 +31,15 @@ namespace YieldFlo.Forms
             }
             LoadList();
             ClearEdit();
+            this.Shown += frmMenuCrops_Shown;
+        }
+
+        private void frmMenuCrops_Shown(object sender, EventArgs e)
+        {
+            KeyboardHelper.Wire(this, txtCropName, "Crop Name");
+            NumpadHelper.Wire(this, numTestWeight,     0,  200, 0, "Test Weight (lb/bu)");
+            NumpadHelper.Wire(this, numMarketMoisture, 0,   40, 0, "Market Moisture (%)");
+            btnSave.Focus();
         }
 
         private void ApplyTheme()

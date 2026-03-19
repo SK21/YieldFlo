@@ -228,18 +228,27 @@ namespace YieldFlo.Classes
 
         private static void TryResumeLastJob()
         {
-            if (!Properties.Settings.Default.ResumeJobOnStart) return;
             try
             {
+                bool resumed = false;
                 foreach (var j in Database.Jobs.GetAll())
                 {
                     if (j.status != "Active") continue;
-                    int profileId = j.profileId > 0 ? j.profileId : ActiveProfileId;
-                    int cropId    = j.cropId    > 0 ? j.cropId    : ActiveCropId;
-                    int headerId  = j.headerId  > 0 ? j.headerId  : ActiveHeaderId;
-                    LoadJobConfig(profileId, cropId, headerId);
-                    Collector.LoadJob(j.id, j.name, j.acres, j.volume);
-                    break;
+
+                    if (!resumed && Properties.Settings.Default.ResumeJobOnStart)
+                    {
+                        int profileId = j.profileId > 0 ? j.profileId : ActiveProfileId;
+                        int cropId    = j.cropId    > 0 ? j.cropId    : ActiveCropId;
+                        int headerId  = j.headerId  > 0 ? j.headerId  : ActiveHeaderId;
+                        LoadJobConfig(profileId, cropId, headerId);
+                        Collector.LoadJob(j.id, j.name, j.acres, j.volume);
+                        resumed = true;
+                    }
+                    else
+                    {
+                        // Close any extra stale active jobs
+                        Database.Jobs.Close(j.id);
+                    }
                 }
             }
             catch (Exception ex)

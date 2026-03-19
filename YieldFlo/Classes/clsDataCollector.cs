@@ -26,6 +26,13 @@ namespace YieldFlo.Classes
 
         public void StartJob(int jobId, string jobName = "")
         {
+            // Close any currently active job before starting a new one
+            if (ActiveJobId > 0 && Core.Database != null)
+            {
+                Core.Database.Jobs.UpdateTotals(ActiveJobId, TotalAcres, TotalBushels);
+                Core.Database.Jobs.Close(ActiveJobId);
+            }
+
             ActiveJobId = jobId;
             ActiveJobName = jobName;
             TotalAcres = 0;
@@ -38,6 +45,8 @@ namespace YieldFlo.Classes
             _lastWriteTime = DateTime.MinValue;
             IsRecording = true;
         }
+
+        public void RenameActiveJob(string name) => ActiveJobName = name;
 
         public void StopJob()
         {

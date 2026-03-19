@@ -26,8 +26,10 @@ namespace YieldFlo.Forms
             this.cboProfile    = new System.Windows.Forms.ComboBox();
             this.btnStart      = new System.Windows.Forms.Button();
             this.btnJobsClose  = new System.Windows.Forms.Button();
-            this.btnLoadJob    = new System.Windows.Forms.Button();
-            this.btnDeleteJob  = new System.Windows.Forms.Button();
+            this.btnNew    = new System.Windows.Forms.Button();
+            this.btnLoad   = new System.Windows.Forms.Button();
+            this.btnSave   = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.lblRecent     = new System.Windows.Forms.Label();
             this.lvJobs        = new System.Windows.Forms.ListView();
 
@@ -101,6 +103,7 @@ namespace YieldFlo.Forms
             this.lblRecent.AutoSize  = true;
             this.lblRecent.Location  = new System.Drawing.Point(8, 202);
 
+            this.lvJobs.SelectedIndexChanged += new System.EventHandler(this.lvJobs_SelectedIndexChanged);
             this.lvJobs.Location      = new System.Drawing.Point(4, 222);
             this.lvJobs.Size          = new System.Drawing.Size(448, 150);
             this.lvJobs.View          = System.Windows.Forms.View.Details;
@@ -112,26 +115,43 @@ namespace YieldFlo.Forms
             this.lvJobs.Columns.Add("Date",        90);
             this.lvJobs.Columns.Add("Acres",       70);
 
-            // Load selected job button
-            this.btnLoadJob.Text      = "Load Selected";
-            this.btnLoadJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnLoadJob.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLoadJob.Size      = new System.Drawing.Size(180, 34);
-            this.btnLoadJob.Location  = new System.Drawing.Point(8, 378);
-            this.btnLoadJob.Click    += new System.EventHandler(this.btnLoadJob_Click);
+            // ── Bottom row: New / Load / Save / Delete ────────────────────────
+            this.btnNew.Text      = "New";
+            this.btnNew.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNew.Size      = new System.Drawing.Size(106, 34);
+            this.btnNew.Location  = new System.Drawing.Point(4, 378);
+            this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
-            // Delete selected job button
-            this.btnDeleteJob.Text      = "Delete";
-            this.btnDeleteJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnDeleteJob.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteJob.Size      = new System.Drawing.Size(100, 34);
-            this.btnDeleteJob.Location  = new System.Drawing.Point(348, 378);
-            this.btnDeleteJob.Click    += new System.EventHandler(this.btnDeleteJob_Click);
+            this.btnLoad.Text      = "Load";
+            this.btnLoad.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoad.Size      = new System.Drawing.Size(106, 34);
+            this.btnLoad.Location  = new System.Drawing.Point(114, 378);
+            this.btnLoad.Enabled   = false;
+            this.btnLoad.Click    += new System.EventHandler(this.btnLoad_Click);
+
+            this.btnSave.Text      = "Save";
+            this.btnSave.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Size      = new System.Drawing.Size(106, 34);
+            this.btnSave.Location  = new System.Drawing.Point(224, 378);
+            this.btnSave.Enabled   = false;
+            this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
+
+            this.btnDelete.Text      = "Delete";
+            this.btnDelete.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Size      = new System.Drawing.Size(106, 34);
+            this.btnDelete.Location  = new System.Drawing.Point(334, 378);
+            this.btnDelete.Enabled   = false;
+            this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblJobName, txtJobName, lblCropLabel, cboCrop,
                 lblHeaderLabel, cboHeader, lblProfileLabel, cboProfile,
-                btnStart, btnJobsClose, lblRecent, lvJobs, btnLoadJob, btnDeleteJob });
+                btnStart, btnJobsClose, lblRecent, lvJobs,
+                btnNew, btnLoad, btnSave, btnDelete });
 
             // ── Form ──────────────────────────────────────────────────────────
             this.ClientSize      = new System.Drawing.Size(456, 458);
@@ -167,8 +187,10 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.ComboBox cboProfile;
         private System.Windows.Forms.Button   btnStart;
         private System.Windows.Forms.Button   btnJobsClose;
-        private System.Windows.Forms.Button   btnLoadJob;
-        private System.Windows.Forms.Button   btnDeleteJob;
+        private System.Windows.Forms.Button   btnNew;
+        private System.Windows.Forms.Button   btnLoad;
+        private System.Windows.Forms.Button   btnSave;
+        private System.Windows.Forms.Button   btnDelete;
         private System.Windows.Forms.Label    lblRecent;
         private System.Windows.Forms.ListView lvJobs;
     }

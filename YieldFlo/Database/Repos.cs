@@ -65,6 +65,20 @@ namespace YieldFlo.Database
             return result;
         }
 
+        public void Update(int jobId, string name, int cropId, int headerId, int profileId)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE jobs SET name=@n, crop_id=@c, header_id=@h, profile_id=@p WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@n", name);
+            cmd.Parameters.AddWithValue("@c", cropId);
+            cmd.Parameters.AddWithValue("@h", headerId);
+            cmd.Parameters.AddWithValue("@p", profileId);
+            cmd.Parameters.AddWithValue("@id", jobId);
+            cmd.ExecuteNonQuery();
+        }
+
         public void Reopen(int jobId)
         {
             using var conn = new SQLiteConnection(_cs);
