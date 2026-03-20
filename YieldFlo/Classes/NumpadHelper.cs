@@ -16,26 +16,38 @@ namespace YieldFlo.Classes
         public static void Wire(Form owner, NumericUpDown num, double min, double max,
                                 int decimals, string title = "")
         {
-            void ShowPad(object s, EventArgs e)
-            {
-                if (_open) return;
-                _open = true;
-                try
-                {
-                    using (var pad = new frmNumpad(min, max, (double)num.Value, decimals, title))
-                    {
-                        if (pad.ShowDialog(owner) == DialogResult.OK)
-                        {
-                            decimal clamped = (decimal)Math.Min(max, Math.Max(min, pad.ReturnValue));
-                            num.Value = Math.Min(num.Maximum, Math.Max(num.Minimum, clamped));
-                        }
-                    }
-                }
-                finally { _open = false; }
-            }
-
+            void ShowPad(object s, EventArgs e) => Show(owner, num, min, max, decimals, title);
             num.Enter += ShowPad;
             num.Click  += ShowPad;
+        }
+
+        /// <summary>
+        /// Wires the numpad to Click only — safe for controls where focus may
+        /// arrive programmatically (e.g. after disabling adjacent buttons).
+        /// </summary>
+        public static void WireClickOnly(Form owner, NumericUpDown num, double min, double max,
+                                         int decimals, string title = "")
+        {
+            num.Click += (s, e) => Show(owner, num, min, max, decimals, title);
+        }
+
+        private static void Show(Form owner, NumericUpDown num, double min, double max,
+                                  int decimals, string title)
+        {
+            if (_open) return;
+            _open = true;
+            try
+            {
+                using (var pad = new frmNumpad(min, max, (double)num.Value, decimals, title))
+                {
+                    if (pad.ShowDialog(owner) == DialogResult.OK)
+                    {
+                        decimal clamped = (decimal)Math.Min(max, Math.Max(min, pad.ReturnValue));
+                        num.Value = Math.Min(num.Maximum, Math.Max(num.Minimum, clamped));
+                    }
+                }
+            }
+            finally { _open = false; }
         }
     }
 }

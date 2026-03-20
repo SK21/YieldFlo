@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -27,8 +28,13 @@ namespace ModuleSimulator
             InitializeComponent();
         }
 
+        private static readonly string _posFile =
+            Path.Combine(Application.LocalUserAppDataPath, "simpos.txt");
+
         private void frmSimulator_Load(object sender, EventArgs e)
         {
+            RestorePosition();
+
             try
             {
                 _udp = new UdpClient(SIM_SEND_PORT);
@@ -46,18 +52,61 @@ namespace ModuleSimulator
             lblStatus.Text = "Sending to 127.0.0.1:" + PC_RECV_PORT;
         }
 
+        private void RestorePosition()
+        {
+            try
+            {
+                if (!File.Exists(_posFile)) return;
+                var parts = File.ReadAllText(_posFile).Split(',');
+                if (parts.Length == 2 && int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
+                {
+                    var pt = new System.Drawing.Point(x, y);
+                    foreach (Screen s in Screen.AllScreens)
+                        if (s.WorkingArea.Contains(pt)) { Location = pt; return; }
+                }
+            }
+            catch { }
+        }
+
+        private void SavePosition()
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_posFile));
+                File.WriteAllText(_posFile, $"{Location.X},{Location.Y}");
+            }
+            catch { }
+        }
+
+        private void chkSections_CheckedChanged(object sender, EventArgs e)
+        {
+            chkSections.ForeColor = chkSections.Checked
+                ? System.Drawing.Color.DarkGreen
+                : System.Drawing.Color.Red;
+        }
+
         private void SendTimer_Tick(object sender, EventArgs e)
         {
             _simAngle += 0.05;
 
-            double yieldSlider = trkYield.Value / 100.0;        // 0.0 – 1.0
-            double moistureSlider = trkMoisture.Value / 10.0;   // 0.0 – 30.0 %
+            double yieldSlider    = trkYield.Value / 100.0;        // 0.0 – 1.0
+            double moistureSlider = trkMoisture.Value / 10.0;     // 0.0 – 30.0 %
+            double variation      = trkVariation.Value / 100.0;   // e.g. 0.15 = ±15%
             bool useWave = chkSineWave.Checked;
 
-            // Sensor obstruction ratio (0.0–1.0)
-            double ratio = useWave
-                ? yieldSlider * (0.5 + 0.5 * Math.Sin(_simAngle))
-                : yieldSlider;
+            lblVariationSlider.Text = $"Variation: {trkVariation.Value}%";
+
+            // Sensor obstruction ratio: 0.2 paddle baseline + up to 0.8 grain flow.
+            // Zero when sections off (no harvest).
+            const double SimBaseline = 0.2;
+            double ratio = 0;
+            if (chkSections.Checked)
+            {
+                double flow = useWave
+                    ? yieldSlider * (1.0 + variation * Math.Sin(_simAngle))
+                    : yieldSlider;
+                ratio = SimBaseline + flow * (1.0 - SimBaseline);
+            }
 
             // Convert to uint16 counts (0–1000)
             ushort s1 = (ushort)(ratio * 1000);
@@ -116,6 +165,7 @@ namespace ModuleSimulator
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
+            SavePosition();
             _sendTimer?.Stop();
             _udp?.Close();
             base.OnFormClosed(e);

@@ -114,7 +114,6 @@ namespace YieldFlo.Forms
             btnApplyFactor.Enabled = false;
             _calTimer.Start();
             UpdateCalRunButtons();
-            btnStopCal.Focus();
         }
 
         private void btnStopCal_Click(object sender, EventArgs e)
@@ -173,19 +172,25 @@ namespace YieldFlo.Forms
         private void UpdateCalMeasuredLabel()
         {
             double bushels = Core.Yield?.CalRunBushels ?? 0;
-            double display = Props.DisplayMass(bushels);
-            string unit    = Props.MassUnit;
-            string fmt     = Props.IsMetric ? "F2" : "F0";
-            lblCalMeasured.Text = $"Measured: {display.ToString(fmt)} {unit}";
+            if (Props.IsMetric)
+            {
+                double tonnes = Props.DisplayMass(bushels);
+                lblCalMeasured.Text = $"Measured: {tonnes:F2} t";
+            }
+            else
+            {
+                double lbs = bushels * (Core.Yield?.TestWeightLbsBu ?? 60.0);
+                lblCalMeasured.Text = $"Measured: {bushels:F2} bu ({lbs:F0} lbs)";
+            }
         }
 
         private void UpdateCalRunButtons()
         {
             bool running = Core.Yield?.IsCalRunActive ?? false;
-            numActualWeight.Enabled = !running;   // disable weight entry before focus moves
-            btnStopCal.Enabled      = running;    // enable stop before disabling start
-            btnStartCal.Enabled     = !running;   // disabling this triggers focus move
+            btnStartCal.Enabled     = !running;
             btnStartCal.BackColor   = running ? Color.FromArgb(60, 60, 60) : Color.FromArgb(0, 90, 0);
+            btnStopCal.Enabled      = running;
+            numActualWeight.Enabled = !running;
         }
 
         // Weight entry (kg or lbs) → internal bushels
@@ -226,7 +231,10 @@ namespace YieldFlo.Forms
 
         private void frmMenuCalibrate_Shown(object sender, EventArgs e)
         {
-            NumpadHelper.Wire(this, numActualWeight, 0, 999999, 1, "Actual Weight");
+            NumpadHelper.Wire(this, numDelay,    0,      60,     0, "Processing Delay (s)");
+            NumpadHelper.Wire(this, numBaseline, 0,      0.99,   3, "Sensor Baseline");
+            NumpadHelper.Wire(this, numFactor,   0.01,   100,    2, "Yield Factor");
+            NumpadHelper.WireClickOnly(this, numActualWeight, 0, 999999, 1, "Actual Weight");
             btnSaveCal.Focus();
         }
 

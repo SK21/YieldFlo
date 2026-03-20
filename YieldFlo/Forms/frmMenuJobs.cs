@@ -17,7 +17,6 @@ namespace YieldFlo.Forms
         private readonly List<(int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume)> _jobData
             = new List<(int, string, int, int, int, double, double)>();
 
-        private bool   _suppressSelectionChange = false;
 
         public frmMenuJobs()
         {
@@ -74,8 +73,6 @@ namespace YieldFlo.Forms
 
         private void LoadCombos()
         {
-            _suppressSelectionChange = true;
-
             cboCrop.Items.Clear();    _cropIds.Clear();
             cboHeader.Items.Clear();  _headerIds.Clear();
             cboProfile.Items.Clear(); _profileIds.Clear();
@@ -89,14 +86,11 @@ namespace YieldFlo.Forms
             foreach (var p in Core.Database.Profiles.GetAll())
             { cboProfile.Items.Add(p.name); _profileIds.Add(p.id); }
 
-            _suppressSelectionChange = false;
-
             SetDefaultSelections();
         }
 
         private void SetDefaultSelections()
         {
-            _suppressSelectionChange = true;
             int ci = _cropIds.IndexOf(Core.ActiveCropId);
             cboCrop.SelectedIndex = ci >= 0 ? ci : (cboCrop.Items.Count > 0 ? 0 : -1);
             int hi = _headerIds.IndexOf(Core.ActiveHeaderId);
@@ -104,7 +98,6 @@ namespace YieldFlo.Forms
             int pi = _profileIds.IndexOf(Core.ActiveProfileId);
             cboProfile.SelectedIndex = pi >= 0 ? pi : (cboProfile.Items.Count > 0 ? 0 : -1);
             txtJobName.Text = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
-            _suppressSelectionChange = false;
         }
 
         private void LoadRecentJobs()
@@ -152,7 +145,6 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobData.Count) return;
 
             var job = _jobData[idx];
-            _suppressSelectionChange = true;
 
             txtJobName.Text = job.jobName;
 
@@ -165,7 +157,6 @@ namespace YieldFlo.Forms
             int pi = _profileIds.IndexOf(job.profileId);
             if (pi >= 0) cboProfile.SelectedIndex = pi;
 
-            _suppressSelectionChange = false;
             btnSave.Enabled = true;
         }
 

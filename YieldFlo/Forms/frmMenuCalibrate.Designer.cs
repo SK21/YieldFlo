@@ -97,79 +97,79 @@ namespace YieldFlo.Forms
 
             // Yield Factor
             this.lblFactor.Text = "Yield Factor:"; this.lblFactor.Font = lf;
-            this.lblFactor.Location = new System.Drawing.Point(8, 104); this.lblFactor.AutoSize = false; this.lblFactor.Width = 160;
-            this.numFactor.Font = vf; this.numFactor.Location = new System.Drawing.Point(174, 101);
+            this.lblFactor.Location = new System.Drawing.Point(8, 118); this.lblFactor.AutoSize = false; this.lblFactor.Width = 160;
+            this.numFactor.Font = vf; this.numFactor.Location = new System.Drawing.Point(174, 115);
             this.numFactor.Width = 80; this.numFactor.Minimum = (decimal)0.01; this.numFactor.Maximum = 100;
             this.numFactor.DecimalPlaces = 2; this.numFactor.Increment = (decimal)0.01; this.numFactor.Value = 1;
             this.lblFactorNote.Text = "calibration multiplier — increase to raise yield readings";
             this.lblFactorNote.Font = sf; this.lblFactorNote.ForeColor = System.Drawing.Color.Silver;
-            this.lblFactorNote.Location = new System.Drawing.Point(8, 125); this.lblFactorNote.AutoSize = true;
+            this.lblFactorNote.Location = new System.Drawing.Point(8, 139); this.lblFactorNote.AutoSize = true;
 
             // Save & Apply / Close
-            this.btnSaveCal.Text      = "Save & Apply";
+            this.btnSaveCal.Text      = "Save && Apply";
             this.btnSaveCal.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.btnSaveCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveCal.Size      = new System.Drawing.Size(160, 36);
-            this.btnSaveCal.Location  = new System.Drawing.Point(8, 152);
+            this.btnSaveCal.Location  = new System.Drawing.Point(8, 166);
             this.btnSaveCal.Click    += new System.EventHandler(this.btnSaveCal_Click);
 
             this.btnCalClose.Text      = "Close";
             this.btnCalClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.btnCalClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalClose.Size      = new System.Drawing.Size(100, 36);
-            this.btnCalClose.Location  = new System.Drawing.Point(346, 152);
+            this.btnCalClose.Location  = new System.Drawing.Point(346, 166);
             this.btnCalClose.Click    += new System.EventHandler(this.btnCalClose_Click);
 
             this.lblHint.Text = "Tip: run empty elevator for 10s to find baseline sensor reading.";
             this.lblHint.Font = sf; this.lblHint.ForeColor = System.Drawing.Color.Silver;
-            this.lblHint.Location = new System.Drawing.Point(8, 196); this.lblHint.AutoSize = true;
+            this.lblHint.Location = new System.Drawing.Point(8, 96); this.lblHint.AutoSize = true;
 
             // ── Calibration Run section ───────────────────────────────────────
             this.lblCalSep.Text = "─── Calibration Run ───────────────────────────";
             this.lblCalSep.Font = sf; this.lblCalSep.ForeColor = System.Drawing.Color.FromArgb(120, 140, 160);
-            this.lblCalSep.Location = new System.Drawing.Point(8, 222); this.lblCalSep.AutoSize = true;
+            this.lblCalSep.Location = new System.Drawing.Point(8, 236); this.lblCalSep.AutoSize = true;
 
             this.btnStartCal.Text      = "Start Run";
             this.btnStartCal.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnStartCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStartCal.Size      = new System.Drawing.Size(100, 32);
-            this.btnStartCal.Location  = new System.Drawing.Point(8, 244);
+            this.btnStartCal.Location  = new System.Drawing.Point(8, 258);
             this.btnStartCal.Click    += new System.EventHandler(this.btnStartCal_Click);
 
             this.btnStopCal.Text      = "Stop Run";
             this.btnStopCal.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnStopCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStopCal.Size      = new System.Drawing.Size(100, 32);
-            this.btnStopCal.Location  = new System.Drawing.Point(116, 244);
+            this.btnStopCal.Location  = new System.Drawing.Point(116, 258);
             this.btnStopCal.Enabled   = false;
             this.btnStopCal.Click    += new System.EventHandler(this.btnStopCal_Click);
 
             this.lblCalMeasured.Text     = "Measured: —";
             this.lblCalMeasured.Font     = vf;
-            this.lblCalMeasured.Location = new System.Drawing.Point(228, 252); this.lblCalMeasured.AutoSize = true;
+            this.lblCalMeasured.Location = new System.Drawing.Point(228, 266); this.lblCalMeasured.AutoSize = true;
 
             this.lblActualWeight.Text = "Actual weight:"; this.lblActualWeight.Font = lf;
-            this.lblActualWeight.Location = new System.Drawing.Point(8, 287); this.lblActualWeight.AutoSize = false; this.lblActualWeight.Width = 160;
+            this.lblActualWeight.Location = new System.Drawing.Point(8, 301); this.lblActualWeight.AutoSize = false; this.lblActualWeight.Width = 160;
 
-            this.numActualWeight.Font = vf; this.numActualWeight.Location = new System.Drawing.Point(174, 284);
+            this.numActualWeight.Font = vf; this.numActualWeight.Location = new System.Drawing.Point(174, 298);
             this.numActualWeight.Width = 100; this.numActualWeight.Minimum = 0; this.numActualWeight.Maximum = 999999;
             this.numActualWeight.DecimalPlaces = 1; this.numActualWeight.Increment = 1; this.numActualWeight.Value = 0;
 
             this.lblActualUnit.Text = "lbs"; this.lblActualUnit.Font = vf;
-            this.lblActualUnit.Location = new System.Drawing.Point(282, 287); this.lblActualUnit.AutoSize = true;
+            this.lblActualUnit.Location = new System.Drawing.Point(282, 301); this.lblActualUnit.AutoSize = true;
 
             this.btnApplyFactor.Text      = "Apply Corrected Factor";
             this.btnApplyFactor.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnApplyFactor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyFactor.Size      = new System.Drawing.Size(200, 32);
-            this.btnApplyFactor.Location  = new System.Drawing.Point(8, 322);
+            this.btnApplyFactor.Location  = new System.Drawing.Point(8, 336);
             this.btnApplyFactor.Enabled   = false;
             this.btnApplyFactor.Click    += new System.EventHandler(this.btnApplyFactor_Click);
 
             this.lblCalResult.Text     = "";
             this.lblCalResult.Font     = vf;
             this.lblCalResult.ForeColor = System.Drawing.Color.FromArgb(100, 200, 100);
-            this.lblCalResult.Location = new System.Drawing.Point(220, 330); this.lblCalResult.AutoSize = true;
+            this.lblCalResult.Location = new System.Drawing.Point(220, 344); this.lblCalResult.AutoSize = true;
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblDelay, numDelay, lblDelayUnit,
@@ -182,9 +182,9 @@ namespace YieldFlo.Forms
                 btnApplyFactor, lblCalResult });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 410);
-            this.MinimumSize     = new System.Drawing.Size(456, 410);
-            this.MaximumSize     = new System.Drawing.Size(456, 410);
+            this.ClientSize      = new System.Drawing.Size(456, 420);
+            this.MinimumSize     = new System.Drawing.Size(456, 420);
+            this.MaximumSize     = new System.Drawing.Size(456, 420);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
