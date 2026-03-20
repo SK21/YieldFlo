@@ -30,7 +30,13 @@ namespace YieldFlo.Forms
                 c.MouseUp   += (s, ev) => _dragging = false;
             }
             LoadList();
-            ClearEdit();
+            int activeIdx = _profiles?.FindIndex(p => p.id == Core.ActiveProfileId) ?? -1;
+            if (activeIdx >= 0)
+                lbProfiles.SelectedIndex = activeIdx;
+            else if (lbProfiles.Items.Count > 0)
+                lbProfiles.SelectedIndex = 0;
+            else
+                ClearEdit();
             this.Shown += frmMenuProfiles_Shown;
         }
 

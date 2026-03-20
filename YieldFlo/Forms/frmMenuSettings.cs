@@ -215,8 +215,12 @@ namespace YieldFlo.Forms
             {
                 string ip = cbSubnet.SelectedItem?.ToString() ?? "";
                 Properties.Settings.Default.NetworkEndPoint = ip;
-                if (Core.UDPmodule != null && !string.IsNullOrEmpty(ip))
-                    Core.UDPmodule.NetworkEP = ip;
+                if (!string.IsNullOrEmpty(ip))
+                {
+                    new Communication.PGN32503().Send(ip);
+                    if (Core.UDPmodule != null)
+                        Core.UDPmodule.NetworkEP = ip;
+                }
             }
             else
             {

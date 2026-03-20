@@ -35,6 +35,14 @@ namespace YieldFlo.Forms
                 c.MouseUp   += (s, ev) => _dragging = false;
             }
             LoadJobs();
+            Core.JobStateChanged += Core_JobStateChanged;
+            this.FormClosed      += (s2, ev2) => Core.JobStateChanged -= Core_JobStateChanged;
+        }
+
+        private void Core_JobStateChanged(object sender, EventArgs e)
+        {
+            if (InvokeRequired) { Invoke(new Action(() => Core_JobStateChanged(sender, e))); return; }
+            LoadJobs();
         }
 
         private void ApplyTheme()
@@ -81,6 +89,10 @@ namespace YieldFlo.Forms
                 lbJobs.Items.Add($"{j.name}  |  {date}  |  {j.status}");
                 _jobs.Add((j.id, j.name, j.acres, j.volume));
             }
+
+            int activeId  = Core.Collector?.ActiveJobId ?? -1;
+            int activeIdx = activeId > 0 ? _jobs.FindIndex(j => j.id == activeId) : -1;
+            lbJobs.SelectedIndex = activeIdx >= 0 ? activeIdx : (_jobs.Count > 0 ? 0 : -1);
         }
 
         private void lbJobs_SelectedIndexChanged(object sender, EventArgs e)

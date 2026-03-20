@@ -1,31 +1,45 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Main project settings -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+
     <AssemblyName>YieldFlo</AssemblyName>
     <RootNamespace>YieldFlo</RootNamespace>
     <ApplicationIcon>YieldFlo2.ico</ApplicationIcon>
-    <!-- <ApplicationIcon>Resources\YieldFlo.ico</ApplicationIcon> -->
+
+    <!-- Prevent SDK from adding Debug/net48/ folders -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
+  <!-- Icon file -->
   <ItemGroup>
     <Content Include="YieldFlo2.ico" />
   </ItemGroup>
 
+  <!-- NuGet packages -->
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119.0" />
   </ItemGroup>
 
+  <!-- Settings designer -->
   <ItemGroup>
     <EmbeddedResource Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <!-- Custom output path (must be LAST so it overrides SDK defaults) -->
+  <PropertyGroup>
+    <OutputPath>..\YieldFloApp\</OutputPath>
+  </PropertyGroup>
 
 </Project>

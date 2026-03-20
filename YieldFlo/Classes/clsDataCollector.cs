@@ -88,6 +88,13 @@ namespace YieldFlo.Classes
         /// </summary>
         public void LoadJob(int jobId, string jobName, double existingAcres, double existingBushels)
         {
+            // Close any different active job before loading the new one
+            if (ActiveJobId > 0 && ActiveJobId != jobId && Core.Database != null)
+            {
+                Core.Database.Jobs.UpdateTotals(ActiveJobId, TotalAcres, TotalBushels);
+                Core.Database.Jobs.Close(ActiveJobId);
+            }
+
             ActiveJobId = jobId;
             ActiveJobName = jobName;
             TotalAcres = existingAcres;

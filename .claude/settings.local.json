@@ -14,7 +14,21 @@
       "Bash(grep:*)",
       "Bash(find F:Documents -maxdepth 3 -name *.sln)",
       "Bash(ls \"F:\\\\Documents\\\\GitHub\\\\RateControl\\\\AOG_RC\\\\RateControllerApp\"/*Settings*)",
-      "Bash(find /f/Documents/GitHub/YieldFlo -type d -name *RC* -o -type d -name *rc*)"
+      "Bash(find /f/Documents/GitHub/YieldFlo -type d -name *RC* -o -type d -name *rc*)",
+      "Bash(dotnet clean:*)",
+      "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" YieldFlo/YieldFlo.csproj /p:Configuration=Debug)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" \"F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj\" /p:Configuration=Debug)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" \"F:/Documents/GitHub/YieldFlo/YieldFlo/YieldFlo.csproj\" /p:Configuration=Debug)",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 15\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 10\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 8\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Name YieldFlo -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; & 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 8\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 6\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 5\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Select-Object -Last 4\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Where-Object { $_ -match 'error' }\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Out-File C:\\\\Temp\\\\build.txt; Get-Content C:\\\\Temp\\\\build.txt | Select-String 'error CS'\")",
+      "Bash(powershell.exe -Command \"& 'C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe' 'F:\\\\Documents\\\\GitHub\\\\YieldFlo\\\\YieldFlo\\\\YieldFlo.csproj' /p:Configuration=Debug 2>&1 | Out-File $env:TEMP\\\\build.txt; Get-Content $env:TEMP\\\\build.txt | Select-String 'error CS'\")"
     ]
   }
 }

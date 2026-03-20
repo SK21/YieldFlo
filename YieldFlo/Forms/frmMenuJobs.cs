@@ -45,7 +45,7 @@ namespace YieldFlo.Forms
         private void frmMenuJobs_Shown(object sender, EventArgs e)
         {
             KeyboardHelper.Wire(this, txtJobName, "Job Name");
-            btnStart.Focus();
+            btnJobsClose.Focus();
         }
 
         private void ApplyTheme()
@@ -68,7 +68,6 @@ namespace YieldFlo.Forms
                 if (c is ComboBox cb)  { cb.BackColor   = ctrl; cb.ForeColor   = Color.White; }
                 if (c is ListView lv)  { lv.BackColor   = ctrl; lv.ForeColor   = Color.White; }
             }
-            btnStart.BackColor  = Color.FromArgb(0, 110, 0);
             btnSave.BackColor   = Color.FromArgb(0, 90, 0);
             btnDelete.BackColor = Color.FromArgb(100, 0, 0);
         }
@@ -204,7 +203,7 @@ namespace YieldFlo.Forms
             int idx = lvJobs.SelectedIndices[0];
             if (idx < 0 || idx >= _jobData.Count) return;
 
-            StartSelectedJob(_jobData[idx], closeAfter: false);
+            StartSelectedJob(_jobData[idx]);
         }
 
         // ── Save (create new or update existing) ─────────────────────────────
@@ -260,21 +259,17 @@ namespace YieldFlo.Forms
             btnSave.Enabled = btnLoad.Enabled = btnDelete.Enabled = false;
         }
 
-        // ── Start Job (resume selected job and begin recording) ──────────────
-        private void btnStart_Click(object sender, EventArgs e)
+        private void StartSelectedJob((int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume) job)
         {
-            if (lvJobs.SelectedIndices.Count == 0)
-            { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
+            int activeId = Core.Collector.ActiveJobId;
+            if (activeId > 0 && activeId != job.jobId)
+            {
+                string activeName = Core.Collector.ActiveJobName;
+                using var dlg = new frmMsgBox($"Job \"{activeName}\" is active. Switch to \"{job.jobName}\"?");
+                dlg.ShowDialog(this);
+                if (!dlg.Result) return;
+            }
 
-            int idx = lvJobs.SelectedIndices[0];
-            if (idx < 0 || idx >= _jobData.Count) return;
-
-            StartSelectedJob(_jobData[idx]);
-        }
-
-        private void StartSelectedJob((int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume) job,
-                                      bool closeAfter = true)
-        {
             int profileId = job.profileId > 0 ? job.profileId : Core.ActiveProfileId;
             int cropId    = job.cropId    > 0 ? job.cropId    : Core.ActiveCropId;
             int headerId  = job.headerId  > 0 ? job.headerId  : Core.ActiveHeaderId;
@@ -283,7 +278,21 @@ namespace YieldFlo.Forms
             Core.Database.Jobs.Reopen(job.jobId);
             Core.Collector.LoadJob(job.jobId, job.jobName, job.acres, job.volume);
             Core.RaiseJobStateChanged();
-            if (closeAfter) this.Close();
+            LoadRecentJobs();
+            SelectInitialJob();
+        }
+
+        private void lvJobs_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e) => e.DrawDefault = true;
+
+        private void lvJobs_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            bool selected = e.Item.Selected;
+            Color back = selected ? SystemColors.Highlight : lvJobs.BackColor;
+            Color fore = selected ? SystemColors.HighlightText : lvJobs.ForeColor;
+            using (var brush = new SolidBrush(back))
+                e.Graphics.FillRectangle(brush, e.Bounds);
+            TextRenderer.DrawText(e.Graphics, e.SubItem.Text, lvJobs.Font, e.Bounds, fore,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();
