@@ -114,6 +114,7 @@ namespace YieldFlo.Forms
             btnApplyFactor.Enabled = false;
             _calTimer.Start();
             UpdateCalRunButtons();
+            btnStopCal.Focus();
         }
 
         private void btnStopCal_Click(object sender, EventArgs e)
@@ -181,9 +182,10 @@ namespace YieldFlo.Forms
         private void UpdateCalRunButtons()
         {
             bool running = Core.Yield?.IsCalRunActive ?? false;
-            btnStartCal.Enabled = !running;
-            btnStopCal.Enabled  = running;
-            btnStartCal.BackColor = running ? Color.FromArgb(60, 60, 60) : Color.FromArgb(0, 90, 0);
+            numActualWeight.Enabled = !running;   // disable weight entry before focus moves
+            btnStopCal.Enabled      = running;    // enable stop before disabling start
+            btnStartCal.Enabled     = !running;   // disabling this triggers focus move
+            btnStartCal.BackColor   = running ? Color.FromArgb(60, 60, 60) : Color.FromArgb(0, 90, 0);
         }
 
         // Weight entry (kg or lbs) → internal bushels
@@ -224,9 +226,6 @@ namespace YieldFlo.Forms
 
         private void frmMenuCalibrate_Shown(object sender, EventArgs e)
         {
-            NumpadHelper.Wire(this, numDelay,        0,    60,  0, "Processing Delay (seconds)");
-            NumpadHelper.Wire(this, numBaseline,     0,  0.99,  3, "Sensor Baseline");
-            NumpadHelper.Wire(this, numFactor,    0.01,   100,  2, "Yield Factor");
             NumpadHelper.Wire(this, numActualWeight, 0, 999999, 1, "Actual Weight");
             btnSaveCal.Focus();
         }
