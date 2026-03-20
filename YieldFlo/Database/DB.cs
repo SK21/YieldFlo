@@ -30,6 +30,7 @@ namespace YieldFlo.Database
             {
                 using var conn = OpenConnection();
                 CreateTables(conn);
+                MigrateSchema(conn);
 
                 Jobs = new JobRepo(_connectionString);
                 YieldData = new YieldDataRepo(_connectionString);
@@ -137,6 +138,18 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
 ";
             using var cmd = new SQLiteCommand(sql, conn);
             cmd.ExecuteNonQuery();
+        }
+
+        private void MigrateSchema(SQLiteConnection conn)
+        {
+            // Add columns introduced after initial release — harmless if they already exist.
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE crops ADD COLUMN moisture_offset REAL NOT NULL DEFAULT 0;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
         }
     }
 }

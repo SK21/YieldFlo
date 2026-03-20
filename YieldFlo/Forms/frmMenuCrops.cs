@@ -10,7 +10,7 @@ namespace YieldFlo.Forms
     {
         private bool _dragging;
         private Point _dragStart;
-        private List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture)> _crops;
+        private List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture, double moistureOffset)> _crops;
         private int _editingId = -1;
 
         public frmMenuCrops()
@@ -31,14 +31,20 @@ namespace YieldFlo.Forms
             }
             LoadList();
             ClearEdit();
+            if (Core.ActiveCropId > 0 && _crops != null)
+            {
+                int idx = _crops.FindIndex(c => c.id == Core.ActiveCropId);
+                if (idx >= 0) lbCrops.SelectedIndex = idx;
+            }
             this.Shown += frmMenuCrops_Shown;
         }
 
         private void frmMenuCrops_Shown(object sender, EventArgs e)
         {
             KeyboardHelper.Wire(this, txtCropName, "Crop Name");
-            NumpadHelper.Wire(this, numTestWeight,     0,  200, 0, "Test Weight (lb/bu)");
-            NumpadHelper.Wire(this, numMarketMoisture, 0,   40, 0, "Market Moisture (%)");
+            NumpadHelper.Wire(this, numTestWeight,     0,   200, 0, "Test Weight (lb/bu)");
+            NumpadHelper.Wire(this, numMarketMoisture, 0,    40, 0, "Market Moisture (%)");
+            NumpadHelper.Wire(this, numMoistOffset,   -10,   10, 1, "Moisture Offset (%)");
             btnSave.Focus();
         }
 
@@ -81,8 +87,9 @@ namespace YieldFlo.Forms
             _editingId = -1;
             txtCropName.Text = "";
             cboCropCategory.SelectedIndex = 0;
-            numTestWeight.Value    = 60;
+            numTestWeight.Value     = 60;
             numMarketMoisture.Value = 14;
+            numMoistOffset.Value    = 0;
             lbCrops.ClearSelected();
         }
 
@@ -95,10 +102,12 @@ namespace YieldFlo.Forms
             txtCropName.Text = c.name;
             cboCropCategory.SelectedIndex = cboCropCategory.Items.IndexOf(c.category);
             if (cboCropCategory.SelectedIndex < 0) cboCropCategory.SelectedIndex = 0;
-            numTestWeight.Value     = (decimal)System.Math.Max(numTestWeight.Minimum,
-                                        System.Math.Min(numTestWeight.Maximum, (decimal)c.testWeight));
-            numMarketMoisture.Value = (decimal)System.Math.Max(numMarketMoisture.Minimum,
-                                        System.Math.Min(numMarketMoisture.Maximum, (decimal)c.marketMoisture));
+            numTestWeight.Value     = (decimal)System.Math.Max((double)numTestWeight.Minimum,
+                                        System.Math.Min((double)numTestWeight.Maximum, c.testWeight));
+            numMarketMoisture.Value = (decimal)System.Math.Max((double)numMarketMoisture.Minimum,
+                                        System.Math.Min((double)numMarketMoisture.Maximum, c.marketMoisture));
+            numMoistOffset.Value    = (decimal)System.Math.Max((double)numMoistOffset.Minimum,
+                                        System.Math.Min((double)numMoistOffset.Maximum, c.moistureOffset));
         }
 
         private void btnNew_Click(object sender, EventArgs e)  => ClearEdit();
@@ -110,14 +119,24 @@ namespace YieldFlo.Forms
             string cat = cboCropCategory.SelectedItem?.ToString() ?? "Cereal";
             double tw  = (double)numTestWeight.Value;
             double mm  = (double)numMarketMoisture.Value;
+            double mo  = (double)numMoistOffset.Value;
 
+            int savedId;
             if (_editingId < 0)
-                Core.Database.Crops.Create(name, cat, tw, mm, mm);
+                savedId = Core.Database.Crops.Create(name, cat, tw, mm, mm, mo);
             else
-                Core.Database.Crops.Update(_editingId, name, cat, tw, mm, mm);
+            {
+                Core.Database.Crops.Update(_editingId, name, cat, tw, mm, mm, mo);
+                savedId = _editingId;
+            }
+
+            if (savedId == Core.ActiveCropId)
+                Core.ActiveMoistureOffset = mo;
 
             LoadList();
             ClearEdit();
+            int sel = _crops?.FindIndex(c => c.id == savedId) ?? -1;
+            if (sel >= 0) lbCrops.SelectedIndex = sel;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

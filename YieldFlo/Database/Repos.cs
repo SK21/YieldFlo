@@ -228,48 +228,51 @@ VALUES
         public CropRepo(string connectionString) { _cs = connectionString; }
 
         public int Create(string name, string category, double testWeight,
-                          double marketMoisture, double dryMoisture)
+                          double marketMoisture, double dryMoisture, double moistureOffset = 0)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "INSERT INTO crops (name, category, test_weight, market_moisture, dry_moisture) " +
-                "VALUES (@n, @cat, @tw, @mm, @dm); SELECT last_insert_rowid();", conn);
-            cmd.Parameters.AddWithValue("@n", name);
-            cmd.Parameters.AddWithValue("@cat", category);
-            cmd.Parameters.AddWithValue("@tw", testWeight);
-            cmd.Parameters.AddWithValue("@mm", marketMoisture);
-            cmd.Parameters.AddWithValue("@dm", dryMoisture);
-            return Convert.ToInt32(cmd.ExecuteScalar());
-        }
-
-        public List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture)> GetAll()
-        {
-            var result = new List<(int, string, string, double, double, double)>();
-            using var conn = new SQLiteConnection(_cs);
-            conn.Open();
-            using var cmd = new SQLiteCommand(
-                "SELECT id, name, category, test_weight, market_moisture, dry_moisture FROM crops ORDER BY name", conn);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-                result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
-                            reader.GetDouble(3), reader.GetDouble(4), reader.GetDouble(5)));
-            return result;
-        }
-
-        public void Update(int id, string name, string category, double testWeight,
-                           double marketMoisture, double dryMoisture)
-        {
-            using var conn = new SQLiteConnection(_cs);
-            conn.Open();
-            using var cmd = new SQLiteCommand(
-                "UPDATE crops SET name=@n, category=@cat, test_weight=@tw, " +
-                "market_moisture=@mm, dry_moisture=@dm WHERE id=@id", conn);
+                "INSERT INTO crops (name, category, test_weight, market_moisture, dry_moisture, moisture_offset) " +
+                "VALUES (@n, @cat, @tw, @mm, @dm, @mo); SELECT last_insert_rowid();", conn);
             cmd.Parameters.AddWithValue("@n",   name);
             cmd.Parameters.AddWithValue("@cat", category);
             cmd.Parameters.AddWithValue("@tw",  testWeight);
             cmd.Parameters.AddWithValue("@mm",  marketMoisture);
             cmd.Parameters.AddWithValue("@dm",  dryMoisture);
+            cmd.Parameters.AddWithValue("@mo",  moistureOffset);
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture, double moistureOffset)> GetAll()
+        {
+            var result = new List<(int, string, string, double, double, double, double)>();
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "SELECT id, name, category, test_weight, market_moisture, dry_moisture, moisture_offset FROM crops ORDER BY name", conn);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+                result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                            reader.GetDouble(3), reader.GetDouble(4), reader.GetDouble(5),
+                            reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6)));
+            return result;
+        }
+
+        public void Update(int id, string name, string category, double testWeight,
+                           double marketMoisture, double dryMoisture, double moistureOffset = 0)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE crops SET name=@n, category=@cat, test_weight=@tw, " +
+                "market_moisture=@mm, dry_moisture=@dm, moisture_offset=@mo WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@n",   name);
+            cmd.Parameters.AddWithValue("@cat", category);
+            cmd.Parameters.AddWithValue("@tw",  testWeight);
+            cmd.Parameters.AddWithValue("@mm",  marketMoisture);
+            cmd.Parameters.AddWithValue("@dm",  dryMoisture);
+            cmd.Parameters.AddWithValue("@mo",  moistureOffset);
             cmd.Parameters.AddWithValue("@id",  id);
             cmd.ExecuteNonQuery();
         }

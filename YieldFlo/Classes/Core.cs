@@ -30,9 +30,10 @@ namespace YieldFlo.Classes
         public static DateTime LastModuleReceive { get; set; }
 
         // Active session configuration
-        public static int ActiveProfileId { get; set; } = -1;
-        public static int ActiveCropId    { get; set; } = -1;
-        public static int ActiveHeaderId  { get; set; } = -1;
+        public static int    ActiveProfileId      { get; set; } = -1;
+        public static int    ActiveCropId         { get; set; } = -1;
+        public static int    ActiveHeaderId       { get; set; } = -1;
+        public static double ActiveMoistureOffset { get; set; } = 0;
 
         // Flags
         public static bool IsShuttingDown { get; private set; }
@@ -167,8 +168,9 @@ namespace YieldFlo.Classes
             foreach (var c in Database.Crops.GetAll())
             {
                 if (c.id != cropId) continue;
-                Yield.TestWeightLbsBu  = c.testWeight;
+                Yield.TestWeightLbsBu   = c.testWeight;
                 Props.TestWeightKgPerBu = c.testWeight * 0.453592;
+                ActiveMoistureOffset    = c.moistureOffset;
                 break;
             }
 

@@ -112,8 +112,9 @@ namespace YieldFlo.Classes
         /// <summary>
         /// Called every GPS update (~10 Hz). Writes to DB once per second.
         /// </summary>
-        public void OnGpsUpdate(double moisture)
+        public void OnGpsUpdate(double rawMoisture)
         {
+            double moisture = rawMoisture + Core.ActiveMoistureOffset;
             if (ActiveJobId < 0) return;
 
             // Allow auto-resume check even when paused — but skip entirely if manually paused.
