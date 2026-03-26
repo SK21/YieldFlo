@@ -25,7 +25,7 @@ namespace YieldFlo.Classes
         // Live sensor state (written by UDPComm, read by UI + DataCollector)
         public static double LastMoisture { get; set; }
         public static double LastSensor1 { get; set; }
-        public static double LastSensor2 { get; set; }
+        public static int LastNoiseCount { get; set; }
         public static bool ModuleConnected { get; set; }
         public static DateTime LastModuleReceive { get; set; }
 

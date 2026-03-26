@@ -75,10 +75,9 @@ namespace YieldFlo.Classes
         /// Called each time a sensor packet arrives (~10 Hz).
         /// Pushes the raw reading into the delay buffer.
         /// </summary>
-        public void PushSensorReading(double sensor1Raw, double sensor2Raw)
+        public void PushSensorReading(double sensor1Raw)
         {
-            // Average the two sensors, subtract baseline, clamp to [0,1]
-            double avg = (sensor1Raw + sensor2Raw) / 2.0;
+            double avg = sensor1Raw;
             double ratio = Math.Max(0.0, Math.Min(1.0, avg - SensorBaseline));
             _delayBuffer.Enqueue((DateTime.UtcNow, ratio));
 

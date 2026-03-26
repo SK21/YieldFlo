@@ -213,7 +213,7 @@ namespace YieldFlo.Forms
 
         private void btnSetBaseline_Click(object sender, EventArgs e)
         {
-            double live = (Core.LastSensor1 + Core.LastSensor2) / 2.0;
+            double live = Core.LastSensor1;
             live = Math.Round(live, 3);
 
             var answer = MessageBox.Show(

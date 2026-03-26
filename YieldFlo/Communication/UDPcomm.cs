@@ -175,25 +175,23 @@ namespace YieldFlo.Communication
             if (!Core.Tls.GoodCRC(data)) return;
 
             ushort s1 = BitConverter.ToUInt16(data, 3);
-            ushort s2 = BitConverter.ToUInt16(data, 5);
+            ushort noiseCount = BitConverter.ToUInt16(data, 5);
             ushort moistureRaw = BitConverter.ToUInt16(data, 7);
             byte flags = data[11];
 
             bool s1Ok = (flags & 0x01) != 0;
-            bool s2Ok = (flags & 0x02) != 0;
             bool moistureOk = (flags & 0x04) != 0;
 
             double sensor1 = s1Ok ? s1 / 1000.0 : 0;
-            double sensor2 = s2Ok ? s2 / 1000.0 : 0;
             double moisture = moistureOk ? moistureRaw / 10.0 : 0;
 
             Core.LastMoisture = moisture;
             Core.LastSensor1 = sensor1;
-            Core.LastSensor2 = sensor2;
+            Core.LastNoiseCount = noiseCount;
             Core.ModuleConnected = true;
             Core.LastModuleReceive = DateTime.UtcNow;
 
-            Core.Yield?.PushSensorReading(sensor1, sensor2);
+            Core.Yield?.PushSensorReading(sensor1);
         }
 
         // ── Socket callbacks ──────────────────────────────────────────────────
