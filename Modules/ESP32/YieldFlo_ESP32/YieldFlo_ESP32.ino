@@ -20,15 +20,13 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 26036         // firmware version — update with every build (DDMMY format)
-#define StructVersion 2     // EEPROM layout version — increment ONLY when ModuleData fields change
+#define InoID 27036         // firmware version — update with every build (DDMMY format)
+#define StructVersion 1     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
 const uint16_t EEPROM_SIZE = 512;
 const int16_t ADS1115_Address = 0x48;
-
-const uint16_t ModuleSendPort = 30100;	// PC receive port
 
 // analog
 int16_t MoistureReading = 0;
@@ -82,6 +80,7 @@ WebServer server(80);
 DNSServer dnsServer;
 const byte AP_DNS_PORT = 53;
 const uint16_t ListeningPort = 28001;
+const uint16_t ModuleSendPort = 30100;	// PC receive port
 
 uint8_t DisconnectCount = 0;
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
@@ -118,10 +117,12 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	}
 }
 
-const uint16_t LoopTime = 50;      //in msec = 20hz
-uint32_t LoopLast = LoopTime;
-const uint16_t SendTime = 200;
-uint32_t SendLast = SendTime;
+const uint16_t LoopTime = 50;   // ms = 20 Hz
+uint32_t       LoopLast = LoopTime;
+const uint16_t SendTimePK1 = 200;  // ms = 5 Hz  (main data packet)
+uint32_t       SendLastPK1 = SendTimePK1;
+const uint16_t SendTimePK2 = 1000; // ms = 1 Hz  (temperature packet)
+uint32_t       SendLastPK2 = SendTimePK2;
 
 void setup()
 {
@@ -139,8 +140,15 @@ void loop()
 		ReadAnalog();
 		ReadFlow();
 	}
-	if (MDL.UseCanComm) { CheckCanBus(); SendCAN(); }
-	else                  SendWifi();
+	if (MDL.UseCanComm)
+	{
+		CheckCanBus();
+		SendCAN();
+	}
+	else
+	{
+		SendWifi();
+	}
 	//Blink();
 }
 

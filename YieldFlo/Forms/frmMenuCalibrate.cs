@@ -59,7 +59,7 @@ namespace YieldFlo.Forms
             btnSaveCal.BackColor    = Color.FromArgb(0, 90, 0);
             btnStartCal.BackColor   = Color.FromArgb(0, 90, 0);
             btnStopCal.BackColor    = Color.FromArgb(100, 0, 0);
-            btnApplyFactor.BackColor = Color.FromArgb(0, 60, 120);
+            btnApplyFactor.BackColor = Color.FromArgb(0, 70, 120); btnApplyFactor.ForeColor = Color.White;
         }
 
         private void ApplyUnits()

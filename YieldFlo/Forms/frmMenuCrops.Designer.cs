@@ -28,9 +28,6 @@ namespace YieldFlo.Forms
             this.lblMktMoisture  = new System.Windows.Forms.Label();
             this.numMarketMoisture = new System.Windows.Forms.NumericUpDown();
             this.lblMktMoistureUnit = new System.Windows.Forms.Label();
-            this.lblMoistOffset = new System.Windows.Forms.Label();
-            this.numMoistOffset = new System.Windows.Forms.NumericUpDown();
-            this.lblMoistOffsetUnit = new System.Windows.Forms.Label();
             this.btnNew        = new System.Windows.Forms.Button();
             this.btnSave       = new System.Windows.Forms.Button();
             this.btnDelete     = new System.Windows.Forms.Button();
@@ -68,9 +65,9 @@ namespace YieldFlo.Forms
             this.lbCrops.Font          = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.lbCrops.SelectedIndexChanged += new System.EventHandler(this.lbCrops_SelectedIndexChanged);
 
-            // Edit panel (transparent background, positioned below list)
+            // Edit panel
             this.pnlEdit.Location  = new System.Drawing.Point(0, 160);
-            this.pnlEdit.Size      = new System.Drawing.Size(456, 192);
+            this.pnlEdit.Size      = new System.Drawing.Size(456, 160);
 
             var lf = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             var vf = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -96,20 +93,15 @@ namespace YieldFlo.Forms
             this.numMarketMoisture.Font = vf; this.numMarketMoisture.Location = new System.Drawing.Point(120, 96); this.numMarketMoisture.Width = 80; this.numMarketMoisture.Minimum = 0; this.numMarketMoisture.Maximum = 40; this.numMarketMoisture.Increment = 1; this.numMarketMoisture.Value = 14; this.numMarketMoisture.DecimalPlaces = 0;
             this.lblMktMoistureUnit.Text = "%"; this.lblMktMoistureUnit.Font = vf; this.lblMktMoistureUnit.Location = new System.Drawing.Point(210, 99); this.lblMktMoistureUnit.AutoSize = true;
             pnlEdit.Controls.Add(this.lblMktMoisture); pnlEdit.Controls.Add(this.numMarketMoisture); pnlEdit.Controls.Add(this.lblMktMoistureUnit);
-            // Moisture Offset
-            this.lblMoistOffset.Text = "Moist. Offset:"; this.lblMoistOffset.Font = lf; this.lblMoistOffset.Location = new System.Drawing.Point(8, 131); this.lblMoistOffset.AutoSize = false; this.lblMoistOffset.Width = 108;
-            this.numMoistOffset.Font = vf; this.numMoistOffset.Location = new System.Drawing.Point(120, 128); this.numMoistOffset.Width = 80; this.numMoistOffset.Minimum = -10; this.numMoistOffset.Maximum = 10; this.numMoistOffset.Increment = (decimal)0.1; this.numMoistOffset.Value = 0; this.numMoistOffset.DecimalPlaces = 1;
-            this.lblMoistOffsetUnit.Text = "% (sensor correction)"; this.lblMoistOffsetUnit.Font = vf; this.lblMoistOffsetUnit.Location = new System.Drawing.Point(210, 131); this.lblMoistOffsetUnit.AutoSize = true;
-            pnlEdit.Controls.Add(this.lblMoistOffset); pnlEdit.Controls.Add(this.numMoistOffset); pnlEdit.Controls.Add(this.lblMoistOffsetUnit);
 
             this.pnlContent.Controls.Add(this.lbCrops);
             this.pnlContent.Controls.Add(this.pnlEdit);
 
-            // Buttons row at bottom of pnlContent
-            this.btnNew.Text = "New"; this.btnNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnNew.Location = new System.Drawing.Point(8, 360); this.btnNew.Size = new System.Drawing.Size(80, 36);
-            this.btnSave.Text = "Save"; this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSave.Location = new System.Drawing.Point(96, 360); this.btnSave.Size = new System.Drawing.Size(80, 36);
-            this.btnDelete.Text = "Delete"; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDelete.Location = new System.Drawing.Point(184, 360); this.btnDelete.Size = new System.Drawing.Size(80, 36);
-            this.btnCropsClose.Text = "Close"; this.btnCropsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnCropsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCropsClose.Location = new System.Drawing.Point(368, 360); this.btnCropsClose.Size = new System.Drawing.Size(80, 36);
+            // Buttons row
+            this.btnNew.Text = "New"; this.btnNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnNew.Location = new System.Drawing.Point(8, 328); this.btnNew.Size = new System.Drawing.Size(80, 36);
+            this.btnSave.Text = "Save"; this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSave.Location = new System.Drawing.Point(96, 328); this.btnSave.Size = new System.Drawing.Size(80, 36);
+            this.btnDelete.Text = "Delete"; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDelete.Location = new System.Drawing.Point(184, 328); this.btnDelete.Size = new System.Drawing.Size(80, 36);
+            this.btnCropsClose.Text = "Close"; this.btnCropsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnCropsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCropsClose.Location = new System.Drawing.Point(368, 328); this.btnCropsClose.Size = new System.Drawing.Size(80, 36);
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] { btnNew, btnSave, btnDelete, btnCropsClose });
 
             btnNew.Click        += new System.EventHandler(this.btnNew_Click);
@@ -118,9 +110,9 @@ namespace YieldFlo.Forms
             btnCropsClose.Click += new System.EventHandler(this.btnCropsClose_Click);
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 442);
-            this.MinimumSize     = new System.Drawing.Size(456, 442);
-            this.MaximumSize     = new System.Drawing.Size(456, 442);
+            this.ClientSize      = new System.Drawing.Size(456, 412);
+            this.MinimumSize     = new System.Drawing.Size(456, 412);
+            this.MaximumSize     = new System.Drawing.Size(456, 412);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
@@ -135,46 +127,6 @@ namespace YieldFlo.Forms
             this.Load += new System.EventHandler(this.frmMenuCrops_Load);
 
             this.ResumeLayout(false);
-        }
-
-        private void SetRow(System.Windows.Forms.Panel parent,
-            System.Windows.Forms.Label lbl, string text, System.Drawing.Font lf, int y,
-            System.Windows.Forms.Control input, System.Drawing.Font vf, int ix, int iy, int iw, int ih)
-        {
-            lbl.Text = text; lbl.Font = lf;
-            lbl.Location = new System.Drawing.Point(8, y + 3); lbl.AutoSize = false; lbl.Width = 108;
-            input.Font   = vf;
-            input.Location = new System.Drawing.Point(ix, iy);
-            if (ih > 0) input.Height = ih;
-            input.Width  = iw;
-            parent.Controls.Add(lbl); parent.Controls.Add(input);
-        }
-
-        private void SetNumRow(System.Windows.Forms.Panel parent,
-            System.Windows.Forms.Label lbl, string text, System.Drawing.Font lf, int y,
-            System.Windows.Forms.NumericUpDown num, System.Drawing.Font vf,
-            int nx, int ny, int nw, decimal min, decimal max, decimal inc, decimal def,
-            System.Windows.Forms.Label unitLbl, string unit, int ux, int uy)
-        {
-            lbl.Text = text; lbl.Font = lf;
-            lbl.Location = new System.Drawing.Point(8, y + 3); lbl.AutoSize = false; lbl.Width = 108;
-            num.Font = vf; num.Location = new System.Drawing.Point(nx, ny); num.Width = nw;
-            num.Minimum = min; num.Maximum = max; num.Increment = inc; num.Value = def;
-            num.DecimalPlaces = inc < 1 ? 1 : 0;
-            unitLbl.Text = unit; unitLbl.Font = vf;
-            unitLbl.Location = new System.Drawing.Point(ux, uy + 3); unitLbl.AutoSize = true;
-            parent.Controls.Add(lbl); parent.Controls.Add(num); parent.Controls.Add(unitLbl);
-        }
-
-        private void SetBtn(System.Windows.Forms.Button btn, System.Windows.Forms.Panel parent,
-            string text, int x, int y, int w, int h)
-        {
-            btn.Text = text;
-            btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btn.Location  = new System.Drawing.Point(x, y);
-            btn.Size      = new System.Drawing.Size(w, h);
-            parent.Controls.Add(btn);
         }
 
         private System.Windows.Forms.Panel         pnlTitle;
@@ -193,9 +145,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label         lblMktMoisture;
         private System.Windows.Forms.NumericUpDown numMarketMoisture;
         private System.Windows.Forms.Label         lblMktMoistureUnit;
-        private System.Windows.Forms.Label         lblMoistOffset;
-        private System.Windows.Forms.NumericUpDown numMoistOffset;
-        private System.Windows.Forms.Label         lblMoistOffsetUnit;
         private System.Windows.Forms.Button        btnNew;
         private System.Windows.Forms.Button        btnSave;
         private System.Windows.Forms.Button        btnDelete;

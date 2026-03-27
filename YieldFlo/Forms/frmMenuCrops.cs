@@ -12,6 +12,7 @@ namespace YieldFlo.Forms
         private Point _dragStart;
         private List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture, double moistureOffset)> _crops;
         private int _editingId = -1;
+        private double _editingMoistureOffset = 0;
 
         public frmMenuCrops()
         {
@@ -44,7 +45,6 @@ namespace YieldFlo.Forms
             KeyboardHelper.Wire(this, txtCropName, "Crop Name");
             NumpadHelper.Wire(this, numTestWeight,     0,   200, 0, "Test Weight (lb/bu)");
             NumpadHelper.Wire(this, numMarketMoisture, 0,    40, 0, "Market Moisture (%)");
-            NumpadHelper.Wire(this, numMoistOffset,   -10,   10, 1, "Moisture Offset (%)");
             btnSave.Focus();
         }
 
@@ -85,11 +85,11 @@ namespace YieldFlo.Forms
         private void ClearEdit()
         {
             _editingId = -1;
+            _editingMoistureOffset = 0;
             txtCropName.Text = "";
             cboCropCategory.SelectedIndex = 0;
             numTestWeight.Value     = 60;
             numMarketMoisture.Value = 14;
-            numMoistOffset.Value    = 0;
             lbCrops.ClearSelected();
         }
 
@@ -99,6 +99,7 @@ namespace YieldFlo.Forms
             if (idx < 0 || _crops == null || idx >= _crops.Count) return;
             var c = _crops[idx];
             _editingId = c.id;
+            _editingMoistureOffset = c.moistureOffset;
             txtCropName.Text = c.name;
             cboCropCategory.SelectedIndex = cboCropCategory.Items.IndexOf(c.category);
             if (cboCropCategory.SelectedIndex < 0) cboCropCategory.SelectedIndex = 0;
@@ -106,8 +107,6 @@ namespace YieldFlo.Forms
                                         System.Math.Min((double)numTestWeight.Maximum, c.testWeight));
             numMarketMoisture.Value = (decimal)System.Math.Max((double)numMarketMoisture.Minimum,
                                         System.Math.Min((double)numMarketMoisture.Maximum, c.marketMoisture));
-            numMoistOffset.Value    = (decimal)System.Math.Max((double)numMoistOffset.Minimum,
-                                        System.Math.Min((double)numMoistOffset.Maximum, c.moistureOffset));
         }
 
         private void btnNew_Click(object sender, EventArgs e)  => ClearEdit();
@@ -119,19 +118,15 @@ namespace YieldFlo.Forms
             string cat = cboCropCategory.SelectedItem?.ToString() ?? "Cereal";
             double tw  = (double)numTestWeight.Value;
             double mm  = (double)numMarketMoisture.Value;
-            double mo  = (double)numMoistOffset.Value;
 
             int savedId;
             if (_editingId < 0)
-                savedId = Core.Database.Crops.Create(name, cat, tw, mm, mm, mo);
+                savedId = Core.Database.Crops.Create(name, cat, tw, mm, mm);
             else
             {
-                Core.Database.Crops.Update(_editingId, name, cat, tw, mm, mm, mo);
+                Core.Database.Crops.Update(_editingId, name, cat, tw, mm, mm, _editingMoistureOffset);
                 savedId = _editingId;
             }
-
-            if (savedId == Core.ActiveCropId)
-                Core.ActiveMoistureOffset = mo;
 
             LoadList();
             ClearEdit();

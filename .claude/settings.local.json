@@ -70,7 +70,26 @@
       "Bash(node:*)",
       "Bash(find F:/Documents/GitHub/YieldFlo -type f -name *.ino)",
       "Bash(find F:/Documents/GitHub/YieldFlo -type f \\\\\\(-name *.h -o -name *.hpp \\\\\\))",
-      "Bash(find F:/Documents/GitHub/YieldFlo -type f -name *.ino -o -name *.h -o -name *.cpp)"
+      "Bash(find F:/Documents/GitHub/YieldFlo -type f -name *.ino -o -name *.h -o -name *.cpp)",
+      "WebFetch(domain:www.kcnielsen.com)",
+      "WebFetch(domain:precisionag.sites.clemson.edu)",
+      "WebFetch(domain:projects.sare.org)",
+      "WebFetch(domain:ohioline.osu.edu)",
+      "WebFetch(domain:www.manualslib.com)",
+      "WebFetch(domain:www.horizonequip.com)",
+      "WebFetch(domain:www.agriteer.ag)",
+      "WebFetch(domain:www.canr.msu.edu)",
+      "WebFetch(domain:www.dlg.org)",
+      "WebFetch(domain:www.deere.ca)",
+      "WebFetch(domain:nmsp.cals.cornell.edu)",
+      "WebFetch(domain:www.futurefarming.com)",
+      "WebFetch(domain:digitalag.osu.edu)",
+      "WebFetch(domain:modernaginc.com)",
+      "WebFetch(domain:ask.ifas.ufl.edu)",
+      "WebFetch(domain:farmportal.eu)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.aspexit.com)",
+      "Bash(find /f/Documents/GitHub/YieldFlo -name *.mdb -o -name *.accdb -o -name *.db)"
     ]
   }
 }

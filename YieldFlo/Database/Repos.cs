@@ -187,16 +187,27 @@ VALUES
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public List<(int id, string name, string combineId)> GetAll()
+        public List<(int id, string name, string combineId, double tempOffset)> GetAll()
         {
-            var result = new List<(int, string, string)>();
+            var result = new List<(int, string, string, double)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
-            using var cmd = new SQLiteCommand("SELECT id, name, combine_id FROM profiles ORDER BY name", conn);
+            using var cmd = new SQLiteCommand("SELECT id, name, combine_id, temp_offset FROM profiles ORDER BY name", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
-                result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
+                result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                            reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3)));
             return result;
+        }
+
+        public void UpdateTempOffset(int id, double offset)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand("UPDATE profiles SET temp_offset=@o WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@o",  offset);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
         }
 
         public void Update(int id, string name, string combineId)
@@ -274,6 +285,16 @@ VALUES
             cmd.Parameters.AddWithValue("@dm",  dryMoisture);
             cmd.Parameters.AddWithValue("@mo",  moistureOffset);
             cmd.Parameters.AddWithValue("@id",  id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateMoistureOffset(int id, double offset)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand("UPDATE crops SET moisture_offset=@o WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@o",  offset);
+            cmd.Parameters.AddWithValue("@id", id);
             cmd.ExecuteNonQuery();
         }
 

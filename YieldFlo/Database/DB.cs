@@ -150,6 +150,13 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
                 cmd.ExecuteNonQuery();
             }
             catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE profiles ADD COLUMN temp_offset REAL NOT NULL DEFAULT 0;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
         }
     }
 }

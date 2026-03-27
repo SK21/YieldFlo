@@ -24,11 +24,12 @@ namespace YieldFlo.Classes
         // Shared tools
         public static clsTools Tls = new clsTools();
 
-        // Live sensor state (written by UDPComm, read by UI + DataCollector)
-        public static double LastMoisture { get; set; }
-        public static double LastSensor1 { get; set; }
-        public static int LastNoiseCount { get; set; }
-        public static bool ModuleConnected { get; set; }
+        // Live sensor state (written by UDPComm/CanModuleComm, read by UI + DataCollector)
+        public static double LastMoisture     { get; set; }
+        public static double LastTemperature  { get; set; }
+        public static double LastSensor1      { get; set; }
+        public static int    LastNoiseCount   { get; set; }
+        public static bool   ModuleConnected  { get; set; }
         public static DateTime LastModuleReceive { get; set; }
 
         // Active session configuration
@@ -36,6 +37,7 @@ namespace YieldFlo.Classes
         public static int    ActiveCropId         { get; set; } = -1;
         public static int    ActiveHeaderId       { get; set; } = -1;
         public static double ActiveMoistureOffset { get; set; } = 0;
+        public static double ActiveTempOffset     { get; set; } = 0;
 
         // Flags
         public static bool IsShuttingDown { get; private set; }
@@ -181,6 +183,13 @@ namespace YieldFlo.Classes
             {
                 if (h.id != headerId) continue;
                 Yield.HeaderWidthM = h.widthM;
+                break;
+            }
+
+            foreach (var p in Database.Profiles.GetAll())
+            {
+                if (p.id != profileId) continue;
+                ActiveTempOffset = p.tempOffset;
                 break;
             }
 
