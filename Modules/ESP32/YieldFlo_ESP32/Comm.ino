@@ -22,7 +22,7 @@ static void BuildDataBody(byte body[8])
 	byte flags = 0;
 	if (SensorOK)        flags |= 0x01;  // bit 0 — SensorOK
 	if (MDL.RPMpin < NC) flags |= 0x02;  // bit 1 — RPM sensor present
-	// bit 2 (MoistureOK) not set — calibration pending
+	if (ADSfound)        flags |= 0x04;  // bit 2 — MoistureOK
 
 	body[0] = flags;
 	body[1] = SensorRatio & 0xFF;
