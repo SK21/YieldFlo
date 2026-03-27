@@ -16,6 +16,8 @@
 #include <EEPROM.h> 
 #include <Wire.h>
 
+#include "driver/twai.h"
+
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
 #define InoID 26036         // firmware version — update with every build (DDMMY format)
@@ -67,8 +69,8 @@ struct ModuleConfig
 	uint8_t AlertPin = 16;
 	uint8_t AnalogPin = NC;
 	bool    UseCanComm = false;		// false = WiFi UDP, true = CAN bus
-	uint8_t CanTxPin = 4;			// TWAI TX → MCP2562 TXD
-	uint8_t CanRxPin = 5;			// TWAI RX ← MCP2562 RXD
+	uint8_t CanTxPin = 14;			// TWAI TX → MCP2562 TXD
+	uint8_t CanRxPin = 27;			// TWAI RX ← MCP2562 RXD
 };
 ModuleConfig MDL;
 
@@ -137,8 +139,8 @@ void loop()
 		ReadAnalog();
 		ReadFlow();
 	}
-	if (MDL.UseCanComm) SendCAN();
-	else                SendComm();
+	if (MDL.UseCanComm) { CheckCanBus(); SendCAN(); }
+	else                  SendWifi();
 	//Blink();
 }
 

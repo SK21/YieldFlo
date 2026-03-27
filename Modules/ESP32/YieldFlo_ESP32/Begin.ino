@@ -1,6 +1,4 @@
 
-#include "driver/twai.h"
-
 void DoSetup()
 {
 	uint8_t ErrorCount;
@@ -369,6 +367,6 @@ void LoadDefaults()
 	MDL.AlertPin = 16;
 	MDL.AnalogPin = NC;
 	MDL.UseCanComm = false;
-	MDL.CanTxPin = 4;
-	MDL.CanRxPin = 5;
+	MDL.CanTxPin = 14;
+	MDL.CanRxPin = 27;
 }

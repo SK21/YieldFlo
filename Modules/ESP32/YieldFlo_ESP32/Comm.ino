@@ -35,7 +35,7 @@ static void BuildDataBody(byte body[8])
 }
 
 // ── WiFi UDP send (5 Hz) ─────────────────────────────────────────────────
-void SendComm()
+void SendWifi()
 {
 	if (millis() - SendLast < SendTime) return;
 	SendLast = millis();
@@ -63,11 +63,54 @@ void SendComm()
 	UDP_Wifi.endPacket();
 }
 
+// ── CAN bus health monitoring ─────────────────────────────────────────────
+static uint32_t LastBusOffMs  = 0;
+static uint8_t  BusOffCount   = 0;
+
+// Called every loop() when CAN mode is active.
+// Handles Bus Off recovery and falls back to WiFi after repeated failures.
+void CheckCanBus()
+{
+	twai_status_info_t st;
+	if (twai_get_status_info(&st) != ESP_OK) return;
+
+	if (st.state == TWAI_STATE_BUS_OFF)
+	{
+		if (millis() - LastBusOffMs > 3000)
+		{
+			LastBusOffMs = millis();
+			BusOffCount++;
+			Serial.print("CAN Bus Off. Recovery attempt ");
+			Serial.println(BusOffCount);
+			twai_initiate_recovery();   // waits for 128 × 11 recessive bits, then auto-starts
+		}
+
+		if (BusOffCount > 5)
+		{
+			Serial.println("CAN Bus Off: persistent. Falling back to WiFi.");
+			MDL.UseCanComm = false;     // session only — EEPROM unchanged, reverts on restart
+			BusOffCount    = 0;
+			SendLast       = 0;         // send WiFi immediately on next loop
+		}
+	}
+	else if (st.state == TWAI_STATE_STOPPED)
+	{
+		twai_start();
+	}
+}
+
 // ── CAN bus send (5 Hz) ──────────────────────────────────────────────────
 // Frame ID: 0x18FF00F8 (Extended, Priority=6, PF=0xFF ProprietaryB, PS=0x00, SA=0xF8)
 void SendCAN()
 {
 	if (millis() - SendLast < SendTime) return;
+
+	// Skip transmit if controller is not healthy — avoids driving TEC toward Bus Off
+	twai_status_info_t st;
+	if (twai_get_status_info(&st) != ESP_OK)           return;
+	if (st.state != TWAI_STATE_RUNNING)                return;
+	if (st.tx_error_counter > 96)                      return;  // error-passive threshold
+
 	SendLast = millis();
 
 	byte body[8];
