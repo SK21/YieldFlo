@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using YieldFlo.Communication;
+using YieldFlo.Communication.Can;
 using YieldFlo.Database;
 using YieldFlo.Forms;
 
@@ -9,8 +10,9 @@ namespace YieldFlo.Classes
     public static class Core
     {
         // Subsystems
-        public static UDPComm UDPaog;           // GPS from AOG       recv:17777 send:15555
-        public static UDPComm UDPmodule;        // YieldFlo module    recv:30100 send:30200
+        public static UDPComm UDPaog;                           // GPS from AOG       recv:17777 send:15555
+        public static UDPComm UDPmodule;                        // YieldFlo module    recv:30100 (WiFi mode)
+        public static CanModuleComm CanModule = new CanModuleComm(); // YieldFlo module    CAN mode
         public static clsGPS GPS = new clsGPS();
         public static clsYieldCalculator Yield;
         public static clsDataCollector Collector;
@@ -124,6 +126,7 @@ namespace YieldFlo.Classes
                 SafeTry(() => MainTimer.Enabled = false);
                 SafeTry(() => UDPaog?.Stop());
                 SafeTry(() => UDPmodule?.Stop());
+                SafeTry(() => CanModule?.Stop());
                 if (Properties.Settings.Default.ResumeJobOnStart && Collector?.ActiveJobId > 0)
                     SafeTry(() => Collector?.SuspendJob());
                 else
@@ -261,10 +264,20 @@ namespace YieldFlo.Classes
 
         public static int UseCanComm(bool enable)
         {
-            // Placeholder — CAN bridge implementation added in Phase 2
-            Props.CanEnabled = enable;
-            Props.ShowMessage(enable ? "CAN mode enabled." : "UDP mode enabled.");
-            return enable ? 1 : 0;
+            if (enable)
+            {
+                bool ok = CanModule.Start(Props.CurrentCanDriver, Props.CanPort);
+                Props.CanEnabled = ok;
+                if (!ok)
+                    Props.ShowMessage("CAN failed to start. Check driver and COM port.", "", 5000, true);
+                return ok ? 1 : 2;
+            }
+            else
+            {
+                CanModule?.Stop();
+                Props.CanEnabled = false;
+                return 0;
+            }
         }
 
         private static void MainTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

@@ -49,9 +49,6 @@
     <Setting Name="CurrentJob" Type="System.String" Scope="User">
       <Value Profile="(Default)"></Value>
     </Setting>
-    <Setting Name="NetworkEndPoint" Type="System.String" Scope="User">
-      <Value Profile="(Default)">192.168.1.255</Value>
-    </Setting>
     <Setting Name="ResumeJobOnStart" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>

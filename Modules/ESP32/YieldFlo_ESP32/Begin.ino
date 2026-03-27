@@ -1,4 +1,6 @@
 
+#include "driver/twai.h"
+
 void DoSetup()
 {
 	uint8_t ErrorCount;
@@ -200,6 +202,20 @@ void DoSetup()
 
 	Serial.println("OTA started.");
 
+	// CAN bus (TWAI) — only when configured; WiFi AP stays active for web portal regardless
+	if (MDL.UseCanComm)
+	{
+		Serial.println("Starting TWAI CAN ...");
+		twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(
+			(gpio_num_t)MDL.CanTxPin, (gpio_num_t)MDL.CanRxPin, TWAI_MODE_NORMAL);
+		twai_timing_config_t  t = TWAI_TIMING_CONFIG_250KBITS();
+		twai_filter_config_t  f = TWAI_FILTER_CONFIG_ACCEPT_ALL();
+		if (twai_driver_install(&g, &t, &f) == ESP_OK && twai_start() == ESP_OK)
+			Serial.println("TWAI CAN started at 250kbps.");
+		else
+			Serial.println("TWAI CAN failed to start.");
+	}
+
 	// wifi client mode
 	if (MDL.WifiModeUseStation)
 	{
@@ -352,4 +368,7 @@ void LoadDefaults()
 	MDL.MainPin = 33;
 	MDL.AlertPin = 16;
 	MDL.AnalogPin = NC;
+	MDL.UseCanComm = false;
+	MDL.CanTxPin = 4;
+	MDL.CanRxPin = 5;
 }

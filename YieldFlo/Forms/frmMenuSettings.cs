@@ -1,9 +1,6 @@
 using System;
 using System.Drawing;
 using System.IO.Ports;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Windows.Forms;
 using YieldFlo.Classes;
 
@@ -86,22 +83,6 @@ namespace YieldFlo.Forms
             bool resume = Properties.Settings.Default.ResumeJobOnStart;
             SetToggle(btnResumeOn, btnResumeOff, resume);
 
-            // Subnet combo — enumerate active adapters
-            LoadSubnetCombo();
-            string savedEP = Properties.Settings.Default.NetworkEndPoint;
-            if (IPAddress.TryParse(savedEP, out _))
-            {
-                string[] parts = savedEP.Split('.');
-                string prefix = parts[0] + "." + parts[1] + "." + parts[2] + ".";
-                for (int i = 0; i < cbSubnet.Items.Count; i++)
-                {
-                    if (cbSubnet.Items[i].ToString().StartsWith(prefix.TrimEnd('.')))
-                    { cbSubnet.SelectedIndex = i; break; }
-                }
-            }
-            if (cbSubnet.SelectedIndex < 0 && cbSubnet.Items.Count > 0)
-                cbSubnet.SelectedIndex = 0;
-
             // CAN driver
             cbCanDriver.SelectedIndex = cbCanDriver.FindStringExact(Properties.Settings.Default.CanDriver);
             if (cbCanDriver.SelectedIndex < 0) cbCanDriver.SelectedIndex = 0;
@@ -111,31 +92,6 @@ namespace YieldFlo.Forms
             cbCanPort.SelectedIndex = cbCanPort.FindStringExact(Properties.Settings.Default.CanPort);
 
             UpdateNetworkControls(isEthernet);
-        }
-
-        private void LoadSubnetCombo()
-        {
-            cbSubnet.Items.Clear();
-            try
-            {
-                foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-                {
-                    if ((nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet ||
-                         nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211) &&
-                        nic.OperationalStatus == OperationalStatus.Up)
-                    {
-                        foreach (UnicastIPAddressInformation ip in nic.GetIPProperties().UnicastAddresses)
-                        {
-                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                                cbSubnet.Items.Add(ip.Address.ToString());
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuSettings/LoadSubnetCombo: " + ex.Message);
-            }
         }
 
         private void LoadCanPortCombo()
@@ -149,14 +105,21 @@ namespace YieldFlo.Forms
             catch { }
         }
 
-        private void UpdateNetworkControls(bool isEthernet)
+        private void UpdateNetworkControls(bool isWifi)
         {
-            lblSubnet.Visible    = isEthernet;
-            cbSubnet.Visible     = isEthernet;
-            lblCanDriver.Visible = !isEthernet;
-            cbCanDriver.Visible  = !isEthernet;
-            lblCanPort.Visible   = !isEthernet;
-            cbCanPort.Visible    = !isEthernet;
+            lblWifiInfo.Visible     = isWifi;
+            lblCanDriver.Visible    = !isWifi;
+            cbCanDriver.Visible     = !isWifi;
+            lblCanPort.Visible      = !isWifi;
+            cbCanPort.Visible       = !isWifi;
+            btnRescanPorts.Visible  = !isWifi;
+        }
+
+        private void btnRescanPorts_Click(object sender, EventArgs e)
+        {
+            string current = cbCanPort.SelectedItem?.ToString() ?? "";
+            LoadCanPortCombo();
+            cbCanPort.SelectedIndex = cbCanPort.FindStringExact(current);
         }
 
         private void SetToggle(Button active, Button inactive, bool firstActive)
@@ -213,14 +176,7 @@ namespace YieldFlo.Forms
 
             if (isEthernet)
             {
-                string ip = cbSubnet.SelectedItem?.ToString() ?? "";
-                Properties.Settings.Default.NetworkEndPoint = ip;
-                if (!string.IsNullOrEmpty(ip))
-                {
-                    new Communication.PGN32503().Send(ip);
-                    if (Core.UDPmodule != null)
-                        Core.UDPmodule.NetworkEP = ip;
-                }
+                // WiFi mode — module broadcasts to its own subnet automatically; no endpoint config needed
             }
             else
             {

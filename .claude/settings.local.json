@@ -67,7 +67,10 @@
       "Bash(where python:*)",
       "Bash(where py:*)",
       "Bash(where node:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(find F:/Documents/GitHub/YieldFlo -type f -name *.ino)",
+      "Bash(find F:/Documents/GitHub/YieldFlo -type f \\\\\\(-name *.h -o -name *.hpp \\\\\\))",
+      "Bash(find F:/Documents/GitHub/YieldFlo -type f -name *.ino -o -name *.h -o -name *.cpp)"
     ]
   }
 }

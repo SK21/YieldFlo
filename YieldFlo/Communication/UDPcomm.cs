@@ -162,36 +162,33 @@ namespace YieldFlo.Communication
 
         private void ParseModulePacket(byte[] data)
         {
-            // Module → PC packet (13 bytes):
-            // [0-1] PGN 40001 little-endian
-            // [2]   packet type = 0x01
-            // [3-4] sensor1_count uint16
-            // [5-6] sensor2_count uint16
-            // [7-8] moisture_raw  uint16 (value * 10 = tenths of percent)
-            // [9-10] module_rpm   uint16
-            // [11]  status_flags
-            // [12]  CRC8
-            if (data.Length < 13) return;
+            // Module → PC packet (12 bytes):
+            // [0-1]  PGN 40001 little-endian
+            // [2]    packet type = 0x01
+            // [3]    status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK
+            // [4-5]  sensor_ratio  uint16 LE  (ratio × 1000, 0–1000 = 0.0–100.0%)
+            // [6-7]  moisture_raw  uint16 LE  (value × 10 = tenths of percent)
+            // [8-9]  module_rpm    uint16 LE
+            // [10]   noise_count   uint8  (ISR-rejected edges per 200 ms window)
+            // [11]   CRC8
+            if (data.Length < 12) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
-            ushort s1 = BitConverter.ToUInt16(data, 3);
-            ushort noiseCount = BitConverter.ToUInt16(data, 5);
-            ushort moistureRaw = BitConverter.ToUInt16(data, 7);
-            byte flags = data[11];
+            byte   flags      = data[3];
+            ushort ratio      = BitConverter.ToUInt16(data, 4);
+            ushort moistureRaw = BitConverter.ToUInt16(data, 6);
+            byte   noiseCount = data[10];
 
-            bool s1Ok = (flags & 0x01) != 0;
+            bool s1Ok       = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
 
-            double sensor1 = s1Ok ? s1 / 1000.0 : 0;
-            double moisture = moistureOk ? moistureRaw / 10.0 : 0;
-
-            Core.LastMoisture = moisture;
-            Core.LastSensor1 = sensor1;
-            Core.LastNoiseCount = noiseCount;
-            Core.ModuleConnected = true;
+            Core.LastSensor1       = s1Ok       ? ratio       / 1000.0 : 0;
+            Core.LastMoisture      = moistureOk ? moistureRaw / 10.0   : 0;
+            Core.LastNoiseCount    = noiseCount;
+            Core.ModuleConnected   = true;
             Core.LastModuleReceive = DateTime.UtcNow;
 
-            Core.Yield?.PushSensorReading(sensor1);
+            Core.Yield?.PushSensorReading(Core.LastSensor1);
         }
 
         // ── Socket callbacks ──────────────────────────────────────────────────
@@ -244,18 +241,10 @@ namespace YieldFlo.Communication
 
         private void SetEP(string dest)
         {
-            try
-            {
-                if (IPAddress.TryParse(dest, out _))
-                    NetworkEP = dest;
-                else
-                    NetworkEP = Properties.Settings.Default.NetworkEndPoint;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("UDPComm/SetEP " + ex.Message);
-                NetworkEP = "192.168.1.255";
-            }
+            if (IPAddress.TryParse(dest, out _))
+                NetworkEP = dest;
+            else
+                cNetworkEP = IPAddress.Broadcast;  // 255.255.255.255 fallback
         }
     }
 }

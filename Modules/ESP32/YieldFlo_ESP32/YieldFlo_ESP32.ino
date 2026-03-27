@@ -16,14 +16,10 @@
 #include <EEPROM.h> 
 #include <Wire.h>
 
-#include <SPI.h>
-#include <Ethernet_Generic.h>
-#include <EthernetUdp.h>
-
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
 #define InoID 26036         // firmware version — update with every build (DDMMY format)
-#define StructVersion 1     // EEPROM layout version — increment ONLY when ModuleData fields change
+#define StructVersion 2     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
@@ -61,7 +57,7 @@ struct ModuleConfig
 	uint8_t ID = 0;
 	char APname[ModStringLengths] = "YieldFlo_ESP32";
 	char APpassword[ModStringLengths] = "";
-	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
+	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
 	bool ADS1115Enabled = true;
@@ -70,6 +66,9 @@ struct ModuleConfig
 	uint8_t MainPin = 33;	// main PNP signal from light sensor
 	uint8_t AlertPin = 16;
 	uint8_t AnalogPin = NC;
+	bool    UseCanComm = false;		// false = WiFi UDP, true = CAN bus
+	uint8_t CanTxPin = 4;			// TWAI TX → MCP2562 TXD
+	uint8_t CanRxPin = 5;			// TWAI RX ← MCP2562 RXD
 };
 ModuleConfig MDL;
 
@@ -138,7 +137,8 @@ void loop()
 		ReadAnalog();
 		ReadFlow();
 	}
-	SendComm();
+	if (MDL.UseCanComm) SendCAN();
+	else                SendComm();
 	//Blink();
 }
 
