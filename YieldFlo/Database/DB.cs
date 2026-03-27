@@ -157,6 +157,20 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
                 cmd.ExecuteNonQuery();
             }
             catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE profiles ADD COLUMN temp_scale REAL NOT NULL DEFAULT 0.0125;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE profiles ADD COLUMN moist_scale REAL NOT NULL DEFAULT 0.001;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
         }
     }
 }

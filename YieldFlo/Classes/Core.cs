@@ -37,7 +37,9 @@ namespace YieldFlo.Classes
         public static int    ActiveCropId         { get; set; } = -1;
         public static int    ActiveHeaderId       { get; set; } = -1;
         public static double ActiveMoistureOffset { get; set; } = 0;
+        public static double ActiveMoistScale     { get; set; } = 0.001;
         public static double ActiveTempOffset     { get; set; } = 0;
+        public static double ActiveTempScale      { get; set; } = 0.0125;
 
         // Flags
         public static bool IsShuttingDown { get; private set; }
@@ -189,7 +191,9 @@ namespace YieldFlo.Classes
             foreach (var p in Database.Profiles.GetAll())
             {
                 if (p.id != profileId) continue;
-                ActiveTempOffset = p.tempOffset;
+                ActiveTempOffset  = p.tempOffset;
+                ActiveTempScale   = p.tempScale  > 0 ? p.tempScale  : 0.0125;
+                ActiveMoistScale  = p.moistScale > 0 ? p.moistScale : 0.001;
                 break;
             }
 

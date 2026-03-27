@@ -187,16 +187,18 @@ VALUES
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public List<(int id, string name, string combineId, double tempOffset)> GetAll()
+        public List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale)> GetAll()
         {
-            var result = new List<(int, string, string, double)>();
+            var result = new List<(int, string, string, double, double, double)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
-            using var cmd = new SQLiteCommand("SELECT id, name, combine_id, temp_offset FROM profiles ORDER BY name", conn);
+            using var cmd = new SQLiteCommand("SELECT id, name, combine_id, temp_offset, temp_scale, moist_scale FROM profiles ORDER BY name", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
                 result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
-                            reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3)));
+                            reader.IsDBNull(3) ? 0.0    : reader.GetDouble(3),
+                            reader.IsDBNull(4) ? 0.0125 : reader.GetDouble(4),
+                            reader.IsDBNull(5) ? 0.001  : reader.GetDouble(5)));
             return result;
         }
 
@@ -206,6 +208,26 @@ VALUES
             conn.Open();
             using var cmd = new SQLiteCommand("UPDATE profiles SET temp_offset=@o WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@o",  offset);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateTempScale(int id, double scale)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand("UPDATE profiles SET temp_scale=@s WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@s",  scale);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateMoistScale(int id, double scale)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand("UPDATE profiles SET moist_scale=@s WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@s",  scale);
             cmd.Parameters.AddWithValue("@id", id);
             cmd.ExecuteNonQuery();
         }

@@ -10,7 +10,7 @@ namespace YieldFlo.Forms
     {
         private bool _dragging;
         private Point _dragStart;
-        private List<(int id, string name, string combineId, double tempOffset)> _profiles;
+        private List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale)> _profiles;
         private int _editingId = -1;
 
         public frmMenuProfiles()

@@ -12,7 +12,7 @@ namespace YieldFlo.Forms
         private Point _dragStart;
 
         private List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture, double moistureOffset)> _crops;
-        private List<(int id, string name, string combineId, double tempOffset)> _profiles;
+        private List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale)> _profiles;
 
         private int _selectedCropId    = -1;
         private int _selectedProfileId = -1;
@@ -42,9 +42,11 @@ namespace YieldFlo.Forms
         private void frmMenuSensorCal_Shown(object sender, EventArgs e)
         {
             NumpadHelper.Wire(this, numCalMeter,    0,  40, 1, "Meter Reading (%)");
-            NumpadHelper.Wire(this, numMoistOffset, -25, 25, 1, "Moisture Offset (%)");
-            NumpadHelper.Wire(this, numCalThermo,  -20,  60, 1, "Meter (°C)");
-            NumpadHelper.Wire(this, numTempOffset, -10,  10, 1, "Temp Offset (°C)");
+            NumpadHelper.Wire(this, numMoistOffset, -25,   25,    1, "Moisture Offset (%)");
+            NumpadHelper.Wire(this, numMoistScale,  0.0001, 0.01, 4, "Scale (%/count)");
+            NumpadHelper.Wire(this, numCalThermo,  -20,   60,    1, "Meter (°C)");
+            NumpadHelper.Wire(this, numTempOffset, -10,   10,    1, "Temp Offset (°C)");
+            NumpadHelper.Wire(this, numTempScale,  0.001, 0.1, 4, "Scale (°C/count)");
             tmrLive.Start();
         }
 
@@ -107,9 +109,15 @@ namespace YieldFlo.Forms
             int idx = cboProfile.SelectedIndex;
             if (idx < 0 || _profiles == null || idx >= _profiles.Count) return;
             var p = _profiles[idx];
-            _selectedProfileId = p.id;
+            _selectedProfileId  = p.id;
             numTempOffset.Value = (decimal)System.Math.Max((double)numTempOffset.Minimum,
                                   System.Math.Min((double)numTempOffset.Maximum, p.tempOffset));
+            double tscale = p.tempScale > 0 ? p.tempScale : 0.0125;
+            numTempScale.Value  = (decimal)System.Math.Max((double)numTempScale.Minimum,
+                                  System.Math.Min((double)numTempScale.Maximum, tscale));
+            double mscale = p.moistScale > 0 ? p.moistScale : 0.001;
+            numMoistScale.Value = (decimal)System.Math.Max((double)numMoistScale.Minimum,
+                                  System.Math.Min((double)numMoistScale.Maximum, mscale));
         }
 
         private void tmrLive_Tick(object sender, EventArgs e)
@@ -154,9 +162,17 @@ namespace YieldFlo.Forms
             if (_selectedProfileId > 0)
             {
                 double to = (double)numTempOffset.Value;
+                double ts = (double)numTempScale.Value;
+                double ms = (double)numMoistScale.Value;
                 Core.Database.Profiles.UpdateTempOffset(_selectedProfileId, to);
+                Core.Database.Profiles.UpdateTempScale(_selectedProfileId, ts);
+                Core.Database.Profiles.UpdateMoistScale(_selectedProfileId, ms);
                 if (_selectedProfileId == Core.ActiveProfileId)
+                {
                     Core.ActiveTempOffset = to;
+                    Core.ActiveTempScale  = ts;
+                    Core.ActiveMoistScale = ms;
+                }
             }
 
             Props.ShowMessage("Saved.", "", 1500, true);

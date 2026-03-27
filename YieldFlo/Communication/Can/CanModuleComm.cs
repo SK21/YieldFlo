@@ -11,13 +11,14 @@ namespace YieldFlo.Communication.Can
     /// </summary>
     public class CanModuleComm : IDisposable
     {
-        private const uint ModuleFrameId   = 0x18FF00F8u;
-        private const int  AdapterTimeoutMs = 4000;
-        private const int  ModuleTimeoutMs  = 2000;
+        private const uint ModuleFrameId = 0x18FF00F8u;
+        private const uint TempFrameId = 0x18FF01F8u;
+        private const int AdapterTimeoutMs = 4000;
+        private const int ModuleTimeoutMs = 2000;
 
         private ICanInterface _driver;
         private Timer _timeoutTimer;
-        private DateTime _lastFrameAny    = DateTime.MinValue;
+        private DateTime _lastFrameAny = DateTime.MinValue;
         private DateTime _lastModuleFrame = DateTime.MinValue;
 
         /// <summary>True if the CAN adapter is open and any frame was received within 4 s.</summary>
@@ -36,8 +37,8 @@ namespace YieldFlo.Communication.Can
             switch (driver)
             {
                 case CanDriver.InnoMaker: _driver = new InnoMakerInterface(); break;
-                case CanDriver.PCAN:      _driver = new PcanInterface();      break;
-                default:                  _driver = new SlcanInterface();     break;
+                case CanDriver.PCAN: _driver = new PcanInterface(); break;
+                default: _driver = new SlcanInterface(); break;
             }
 
             _driver.FrameReceived += OnFrameReceived;
@@ -74,17 +75,22 @@ namespace YieldFlo.Communication.Can
         {
             _lastFrameAny = DateTime.UtcNow;
 
-            if (e.Frame.Id != ModuleFrameId || e.Frame.Dlc != 8 || e.Frame.Data == null)
-                return;
+            if (e.Frame.Data == null || e.Frame.Dlc != 8) return;
 
-            _lastModuleFrame = DateTime.UtcNow;
-
-            // Marshal parse to UI thread (same pattern as UDPComm)
-            byte[] data = e.Frame.Data;
             var mf = Core.MainForm;
-            if (mf != null && mf.IsHandleCreated && !mf.IsDisposed && !Core.IsShuttingDown)
+            if (mf == null || !mf.IsHandleCreated || mf.IsDisposed || Core.IsShuttingDown) return;
+
+            if (e.Frame.Id == ModuleFrameId)
             {
+                _lastModuleFrame = DateTime.UtcNow;
+                byte[] data = e.Frame.Data;
                 try { mf.BeginInvoke((Action)(() => ParseModuleData(data))); }
+                catch (InvalidOperationException) { }
+            }
+            else if (e.Frame.Id == TempFrameId)
+            {
+                byte[] data = e.Frame.Data;
+                try { mf.BeginInvoke((Action)(() => ParseTempData(data))); }
                 catch (InvalidOperationException) { }
             }
         }
@@ -97,21 +103,33 @@ namespace YieldFlo.Communication.Can
             // [3-4] moisture_raw  uint16 LE  (value × 10 = tenths of percent)
             // [5-6] module_rpm    uint16 LE
             // [7]   noise_count   uint8  (ISR-rejected edges per 200 ms window)
-            byte   flags    = d[0];
-            ushort ratio    = (ushort)(d[1] | (d[2] << 8));
+            byte flags = d[0];
+            ushort ratio = (ushort)(d[1] | (d[2] << 8));
             ushort moisture = (ushort)(d[3] | (d[4] << 8));
-            byte   noise    = d[7];
+            byte noise = d[7];
 
-            bool s1Ok       = (flags & 0x01) != 0;
+            bool s1Ok = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
 
-            Core.LastSensor1       = s1Ok       ? ratio    / 1000.0 : 0;
-            Core.LastMoisture      = moistureOk ? moisture / 10.0   : 0;
-            Core.LastNoiseCount    = noise;
-            Core.ModuleConnected   = true;
+            Core.LastSensor1  = s1Ok       ? ratio    / 1000.0              : 0;
+            Core.LastMoisture = moistureOk ? moisture * Core.ActiveMoistScale : 0;
+            Core.LastNoiseCount = noise;
+            Core.ModuleConnected = true;
             Core.LastModuleReceive = DateTime.UtcNow;
 
             Core.Yield?.PushSensorReading(Core.LastSensor1);
+        }
+
+        private void ParseTempData(byte[] d)
+        {
+            // Temperature frame (0x18FF01F8), DLC=8:
+            // [0]   flags  bit0=TempOK
+            // [1-2] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
+            // [3-7] reserved / zero
+            bool tempOk = (d[0] & 0x01) != 0;
+            short tempRaw = (short)(d[1] | (d[2] << 8));
+
+            Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)

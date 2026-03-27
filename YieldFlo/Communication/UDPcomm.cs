@@ -152,6 +152,11 @@ namespace YieldFlo.Communication
                     case 40001:
                         ParseModulePacket(data);
                         break;
+
+                    // ── YieldFlo temperature packet (PGN 40002, 1 Hz) ─────────
+                    case 40002:
+                        ParseTempPacket(data);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -182,13 +187,30 @@ namespace YieldFlo.Communication
             bool s1Ok       = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
 
-            Core.LastSensor1       = s1Ok       ? ratio       / 1000.0 : 0;
-            Core.LastMoisture      = moistureOk ? moistureRaw / 10.0   : 0;
+            Core.LastSensor1  = s1Ok       ? ratio       / 1000.0              : 0;
+            Core.LastMoisture = moistureOk ? moistureRaw * Core.ActiveMoistScale : 0;
             Core.LastNoiseCount    = noiseCount;
             Core.ModuleConnected   = true;
             Core.LastModuleReceive = DateTime.UtcNow;
 
             Core.Yield?.PushSensorReading(Core.LastSensor1);
+        }
+
+        private void ParseTempPacket(byte[] data)
+        {
+            // Temperature packet (7 bytes):
+            // [0-1] PGN 40002 little-endian
+            // [2]   packet type = 0x02
+            // [3]   flags  bit0=TempOK
+            // [4-5] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
+            // [6]   CRC8
+            if (data.Length < 7) return;
+            if (!Core.Tls.GoodCRC(data)) return;
+
+            bool tempOk   = (data[3] & 0x01) != 0;
+            short tempRaw = BitConverter.ToInt16(data, 4);
+
+            Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
         }
 
         // ── Socket callbacks ──────────────────────────────────────────────────
