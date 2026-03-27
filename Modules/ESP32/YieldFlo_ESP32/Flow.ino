@@ -16,10 +16,10 @@ void IRAM_ATTR onSensorEdge()
 	uint32_t now = micros();
 	uint32_t delta = now - LastEdgeUs;
 	if (BeamBlocked) BlockedAccum += delta;
-	else             ClearAccum   += delta;
+	else             ClearAccum += delta;
 
 	BeamBlocked = nowBlocked;
-	LastEdgeUs  = now;
+	LastEdgeUs = now;
 }
 
 void IRAM_ATTR onRPMedge()
@@ -40,12 +40,12 @@ void ReadFlow()
 	// Snapshot accumulators and close the in-progress segment.
 	noInterrupts();
 	uint32_t blocked = BlockedAccum;  BlockedAccum = 0;
-	uint32_t clear   = ClearAccum;    ClearAccum   = 0;
-	uint32_t now   = micros();
+	uint32_t clear = ClearAccum;    ClearAccum = 0;
+	uint32_t now = micros();
 	uint32_t delta = now - LastEdgeUs;
 	LastEdgeUs = now;
 	if (BeamBlocked) blocked += delta;
-	else             clear   += delta;
+	else             clear += delta;
 	interrupts();
 
 	uint32_t total = blocked + clear;
