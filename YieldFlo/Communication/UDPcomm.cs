@@ -167,22 +167,21 @@ namespace YieldFlo.Communication
 
         private void ParseModulePacket(byte[] data)
         {
-            // Module → PC packet (12 bytes):
+            // Module → PC packet (11 bytes):
             // [0-1]  PGN 40001 little-endian
-            // [2]    packet type = 0x01
-            // [3]    status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK
-            // [4-5]  sensor_ratio  uint16 LE  (ratio × 1000, 0–1000 = 0.0–100.0%)
-            // [6-7]  moisture_raw  uint16 LE  (value × 10 = tenths of percent)
-            // [8-9]  module_rpm    uint16 LE
-            // [10]   noise_count   uint8  (ISR-rejected edges per 200 ms window)
-            // [11]   CRC8
-            if (data.Length < 12) return;
+            // [2]    status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK
+            // [3-4]  sensor_ratio  uint16 LE  (ratio × 1000, 0–1000 = 0.0–100.0%)
+            // [5-6]  moisture_raw  uint16 LE  (raw ADS1115 AIN0-AIN1 differential count)
+            // [7-8]  module_rpm    uint16 LE
+            // [9]    noise_count   uint8  (ISR-rejected edges per 200 ms window)
+            // [10]   CRC8
+            if (data.Length < 11) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
-            byte   flags      = data[3];
-            ushort ratio      = BitConverter.ToUInt16(data, 4);
-            ushort moistureRaw = BitConverter.ToUInt16(data, 6);
-            byte   noiseCount = data[10];
+            byte   flags      = data[2];
+            ushort ratio      = BitConverter.ToUInt16(data, 3);
+            ushort moistureRaw = BitConverter.ToUInt16(data, 5);
+            byte   noiseCount = data[9];
 
             bool s1Ok       = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
@@ -198,17 +197,16 @@ namespace YieldFlo.Communication
 
         private void ParseTempPacket(byte[] data)
         {
-            // Temperature packet (7 bytes):
+            // Temperature packet (6 bytes):
             // [0-1] PGN 40002 little-endian
-            // [2]   packet type = 0x02
-            // [3]   flags  bit0=TempOK
-            // [4-5] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
-            // [6]   CRC8
-            if (data.Length < 7) return;
+            // [2]   flags  bit0=TempOK
+            // [3-4] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
+            // [5]   CRC8
+            if (data.Length < 6) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
-            bool tempOk   = (data[3] & 0x01) != 0;
-            short tempRaw = BitConverter.ToInt16(data, 4);
+            bool tempOk   = (data[2] & 0x01) != 0;
+            short tempRaw = BitConverter.ToInt16(data, 3);
 
             Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
         }

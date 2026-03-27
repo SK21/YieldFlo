@@ -144,33 +144,31 @@ void SendWifiPK1()
 	byte body[8];
 	BuildDataBody(body);
 
-	// Build 12-byte UDP packet (PGN 40001)
-	byte pkt[12];
+	// Build 11-byte UDP packet (PGN 40001)
+	byte pkt[11];
 	pkt[0] = 0x41;		// PGN 40001 low byte
 	pkt[1] = 0x9C;		// PGN 40001 high byte
-	pkt[2] = 0x01;		// packet type
-	pkt[3] = body[0];	// status_flags
-	pkt[4] = body[1];	// sensor_ratio lo
-	pkt[5] = body[2];	// sensor_ratio hi
-	pkt[6] = body[3];	// moisture_raw lo
-	pkt[7] = body[4];	// moisture_raw hi
-	pkt[8] = body[5];	// module_rpm lo
-	pkt[9] = body[6];	// module_rpm hi
-	pkt[10] = body[7];	// noise_count
-	pkt[11] = CRC(pkt, 11, 0);
+	pkt[2] = body[0];	// status_flags
+	pkt[3] = body[1];	// sensor_ratio lo
+	pkt[4] = body[2];	// sensor_ratio hi
+	pkt[5] = body[3];	// moisture_raw lo
+	pkt[6] = body[4];	// moisture_raw hi
+	pkt[7] = body[5];	// module_rpm lo
+	pkt[8] = body[6];	// module_rpm hi
+	pkt[9] = body[7];	// noise_count
+	pkt[10] = CRC(pkt, 10, 0);
 
 	UDP_Wifi.beginPacket(Wifi_DestinationIP, ModuleSendPort);
-	UDP_Wifi.write(pkt, 12);
+	UDP_Wifi.write(pkt, 11);
 	UDP_Wifi.endPacket();
 }
 
 // ── Second packet: temperature (1 Hz) ────────────────────────────────────
-// UDP  — 7 bytes, PGN 40002
+// UDP  — 6 bytes, PGN 40002
 //   [0-1] PGN 40002 LE  (0x42 0x9C)
-//   [2]   packet type = 0x02
-//   [3]   flags  bit0=TempOK
-//   [4-5] temp_raw int16 LE  (raw ADS1115 AIN2 reading)
-//   [6]   CRC8
+//   [2]   flags  bit0=TempOK
+//   [3-4] temp_raw int16 LE  (raw ADS1115 AIN2 reading)
+//   [5]   CRC8
 // CAN  — ID 0x18FF01F8, DLC=8, [0]=flags, [1-2]=temp_raw, [3-7]=0
 
 void SendWifiPK2()
@@ -181,17 +179,16 @@ void SendWifiPK2()
 		byte flags = ADSfound ? 0x01 : 0x00;
 		int16_t temp = TemperatureReading;
 
-		byte pkt[7];
+		byte pkt[6];
 		pkt[0] = 0x42;
 		pkt[1] = 0x9C;
-		pkt[2] = 0x02;
-		pkt[3] = flags;
-		pkt[4] = (byte)(temp & 0xFF);
-		pkt[5] = (byte)((temp >> 8) & 0xFF);
-		pkt[6] = CRC(pkt, 6, 0);
+		pkt[2] = flags;
+		pkt[3] = (byte)(temp & 0xFF);
+		pkt[4] = (byte)((temp >> 8) & 0xFF);
+		pkt[5] = CRC(pkt, 5, 0);
 
 		UDP_Wifi.beginPacket(Wifi_DestinationIP, ModuleSendPort);
-		UDP_Wifi.write(pkt, 7);
+		UDP_Wifi.write(pkt, 6);
 		UDP_Wifi.endPacket();
 	}
 }
