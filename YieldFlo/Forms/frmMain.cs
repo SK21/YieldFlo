@@ -34,10 +34,10 @@ namespace YieldFlo.Forms
             // Enable drag on toolbar and title label (no title bar)
             pnlToolbar.MouseDown += Drag_MouseDown;
             pnlToolbar.MouseMove += Drag_MouseMove;
-            pnlToolbar.MouseUp   += Drag_MouseUp;
+            pnlToolbar.MouseUp += Drag_MouseUp;
             lblTitle.MouseDown += Drag_MouseDown;
             lblTitle.MouseMove += Drag_MouseMove;
-            lblTitle.MouseUp   += Drag_MouseUp;
+            lblTitle.MouseUp += Drag_MouseUp;
 
             RestorePosition();
             Core.Initialize(this);
@@ -115,9 +115,9 @@ namespace YieldFlo.Forms
             lblYieldTitle.ForeColor = fore;
             lblMoistureTitle.ForeColor = fore;
             lblSpeedTitle.ForeColor = fore;
-            lblTotArea.ForeColor  = fore;
+            lblTotArea.ForeColor = fore;
             lblTotTotal.ForeColor = fore;
-            lblTotRate.ForeColor  = fore;
+            lblTotRate.ForeColor = fore;
             lblMoistureUnit.ForeColor = System.Drawing.Color.White;
             lblMoistureUnit.BackColor = dispBack;
 
@@ -147,7 +147,7 @@ namespace YieldFlo.Forms
             if (_dragging)
             {
                 this.Left += e.X - _dragStart.X;
-                this.Top  += e.Y - _dragStart.Y;
+                this.Top += e.Y - _dragStart.Y;
             }
         }
 
@@ -185,13 +185,13 @@ namespace YieldFlo.Forms
         {
             if (Core.IsShuttingDown) return;
 
-            double yield    = Props.DisplayRate(Core.Yield?.SmoothedYield ?? 0);
+            double yield = Props.DisplayRate(Core.Yield?.SmoothedYield ?? 0);
             double moisture = Core.LastMoisture + Core.ActiveMoistureOffset;
-            double speed    = Props.DisplaySpeed(Core.GPS.Speed);
+            double speed = Props.DisplaySpeed(Core.GPS.Speed);
 
             lblYield.Text = yield.ToString("F1");
             lblYieldUnit.Text = Props.RateUnit;
-            lblMoisture.Text = moisture > 0 ? moisture.ToString("F1") + "%" : "--.-";
+            lblMoisture.Text = moisture > 0 ? moisture.ToString("F1") : "--.-";
             lblSpeed.Text = speed.ToString("F1");
             lblSpeedUnit.Text = Props.SpeedUnit;
 
@@ -212,13 +212,13 @@ namespace YieldFlo.Forms
                 ? Color.FromArgb(50, 150, 220)   // blue for moisture
                 : Color.FromArgb(80, 80, 80);
 
-            double area  = Props.DisplayArea(Core.Collector.TotalAcres);
+            double area = Props.DisplayArea(Core.Collector.TotalAcres);
             double total = Props.DisplayMass(Core.Collector.TotalBushels);
-            double avg   = Props.DisplayRate(Core.Collector.AverageYield);
+            double avg = Props.DisplayRate(Core.Collector.AverageYield);
 
-            lblTotArea.Text  = $"{area:F2} {Props.AreaUnit}";
+            lblTotArea.Text = $"{area:F2} {Props.AreaUnit}";
             lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
-            lblTotRate.Text  = $"{avg:F1} {Props.RateUnit}";
+            lblTotRate.Text = $"{avg:F1} {Props.RateUnit}";
         }
 
         private void UpdateStatusBar()
@@ -241,15 +241,15 @@ namespace YieldFlo.Forms
             {
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
-                lblStatusJob.Text      = recording ? jobName + " - On" : jobName + " - Off";
+                lblStatusJob.Text = recording ? jobName + " - On" : jobName + " - Off";
                 lblStatusJob.ForeColor = recording ? Color.LimeGreen : Color.Orange;
-                lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
+                //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else
             {
-                lblStatusJob.Text      = "No Active Job";
+                lblStatusJob.Text = "No Active Job";
                 lblStatusJob.ForeColor = Color.Silver;
-                lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
+                //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
             }
         }
 
