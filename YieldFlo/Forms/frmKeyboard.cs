@@ -136,6 +136,27 @@ namespace YieldFlo.Forms
             btnShift.BackColor = _shift ? ShiftOn : ShiftOff;
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if      (e.KeyCode == Keys.Back)     Backspace();
+            else if (e.KeyCode == Keys.Enter)    btnOK_Click(null, EventArgs.Empty);
+            else if (e.KeyCode == Keys.Escape)   DialogResult = DialogResult.Cancel;
+            else if (e.KeyCode == Keys.ShiftKey) { _shift = true; UpdateShiftVisual(); }
+            e.Handled = true;
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.ShiftKey) { _shift = false; UpdateShiftVisual(); }
+            e.Handled = true;
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar)) Append(e.KeyChar.ToString());
+            e.Handled = true;
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             ReturnValue  = tboxDisplay.Text;

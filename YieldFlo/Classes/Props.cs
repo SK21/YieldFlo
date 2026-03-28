@@ -146,6 +146,9 @@ namespace YieldFlo.Classes
             {
                 if (Core.MainForm == null || Core.MainForm.IsDisposed) return;
 
+                if (isError)
+                    System.Media.SystemSounds.Exclamation.Play();
+
                 Core.MainForm.BeginInvoke((Action)(() =>
                 {
                     Core.MainForm.ShowStatusMessage(message, isError);

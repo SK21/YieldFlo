@@ -98,6 +98,18 @@ namespace YieldFlo.Forms
                 tboxDisplay.Text = "-" + tboxDisplay.Text;
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if      (e.KeyCode >= Keys.D0      && e.KeyCode <= Keys.D9)      Append(((char)('0' + e.KeyCode - Keys.D0)).ToString());
+            else if (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9) Append(((char)('0' + e.KeyCode - Keys.NumPad0)).ToString());
+            else if (e.KeyCode == Keys.OemPeriod || e.KeyCode == Keys.Decimal) AppendDot();
+            else if (e.KeyCode == Keys.Back)                                  Backspace();
+            else if (e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract) ToggleNeg();
+            else if (e.KeyCode == Keys.Enter)                                 btnOK_Click(null, EventArgs.Empty);
+            else if (e.KeyCode == Keys.Escape)                                DialogResult = DialogResult.Cancel;
+            e.Handled = true;
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (!double.TryParse(tboxDisplay.Text, NumberStyles.Any,

@@ -137,6 +137,7 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
+            if (_crops.Count <= 1) { Props.ShowMessage("Must have at least one crop.", "", 2000, true); return; }
             using var dlg = new frmMsgBox("Delete this crop?");
             dlg.ShowDialog(this);
             if (!dlg.Result) return;

@@ -236,6 +236,8 @@ namespace YieldFlo.Forms
             if (lvJobs.SelectedIndices.Count == 0)
             { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
 
+            if (_jobData.Count <= 1) { Props.ShowMessage("Must have at least one job.", "", 2000, true); return; }
+
             int idx = lvJobs.SelectedIndices[0];
             if (idx < 0 || idx >= _jobData.Count) return;
 

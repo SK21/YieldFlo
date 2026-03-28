@@ -114,7 +114,7 @@ namespace YieldFlo.Classes
         /// </summary>
         public void OnGpsUpdate(double rawMoisture)
         {
-            double moisture = rawMoisture + Core.ActiveMoistureOffset;
+            double moisture = rawMoisture > 0 ? rawMoisture + Core.ActiveMoistureOffset : 0;
             if (ActiveJobId < 0) return;
 
             // Allow auto-resume check even when paused — but skip entirely if manually paused.

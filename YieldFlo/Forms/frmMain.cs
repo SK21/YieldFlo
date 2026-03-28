@@ -186,7 +186,7 @@ namespace YieldFlo.Forms
             if (Core.IsShuttingDown) return;
 
             double yield = Props.DisplayRate(Core.Yield?.SmoothedYield ?? 0);
-            double moisture = Core.LastMoisture + Core.ActiveMoistureOffset;
+            double moisture = Core.LastMoisture > 0 ? Core.LastMoisture + Core.ActiveMoistureOffset : 0;
             double speed = Props.DisplaySpeed(Core.GPS.Speed);
 
             lblYield.Text = yield.ToString("F1");

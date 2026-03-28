@@ -164,6 +164,7 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
+            if (_headers.Count <= 1) { Props.ShowMessage("Must have at least one header.", "", 2000, true); return; }
             using var dlg = new frmMsgBox("Delete this header?");
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
