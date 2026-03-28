@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO.Ports;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -195,7 +196,7 @@ namespace YieldFlo.Forms
 
             Properties.Settings.Default.Save();
             Core.RaiseColorChanged();
-            Props.ShowMessage("Settings saved.");
+            Props.ShowMessage(Lang.lgSettingsSaved);
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e)    => this.Close();

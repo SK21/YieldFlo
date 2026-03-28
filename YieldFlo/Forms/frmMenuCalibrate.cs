@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -102,7 +103,7 @@ namespace YieldFlo.Forms
                     (int)numDelay.Value);
             }
 
-            Props.ShowMessage("Calibration saved and applied.");
+            Props.ShowMessage(Lang.lgCalSaved);
         }
 
         // ── Calibration run ──────────────────────────────────────────────────
@@ -130,12 +131,12 @@ namespace YieldFlo.Forms
             double actualBushels = DisplayMassToInternalBushels((double)numActualWeight.Value);
             if (actualBushels <= 0)
             {
-                Props.ShowMessage("Enter the actual weighed amount.", "", 2000, true);
+                Props.ShowMessage(Lang.lgEnterWeighedAmt, "", 2000, true);
                 return;
             }
             if (Core.Yield.CalRunBushels <= 0)
             {
-                Props.ShowMessage("No measured data — run a calibration pass first.", "", 2000, true);
+                Props.ShowMessage(Lang.lgNoMeasuredData, "", 2000, true);
                 return;
             }
 
@@ -147,7 +148,7 @@ namespace YieldFlo.Forms
                                System.Math.Max((double)numFactor.Minimum, newFactor));
             numFactor.Value = clamped;
 
-            lblCalResult.Text = $"New factor: {newFactor:F3}";
+            lblCalResult.Text = string.Format(Lang.lgNewFactorResult, newFactor);
 
             // Auto-persist
             Properties.Settings.Default.ProcessingDelaySec = (int)numDelay.Value;
@@ -161,7 +162,7 @@ namespace YieldFlo.Forms
                     (int)numDelay.Value);
             }
 
-            Props.ShowMessage($"Factor updated to {newFactor:F3} and saved.");
+            Props.ShowMessage(string.Format(Lang.lgFactorUpdated, newFactor));
         }
 
         private void CalTimer_Tick(object sender, EventArgs e)
@@ -175,12 +176,12 @@ namespace YieldFlo.Forms
             if (Props.IsMetric)
             {
                 double tonnes = Props.DisplayMass(bushels);
-                lblCalMeasured.Text = $"Measured: {tonnes:F2} t";
+                lblCalMeasured.Text = string.Format(Lang.lgMeasuredMetric, tonnes);
             }
             else
             {
                 double lbs = bushels * (Core.Yield?.TestWeightLbsBu ?? 60.0);
-                lblCalMeasured.Text = $"Measured: {bushels:F2} bu ({lbs:F0} lbs)";
+                lblCalMeasured.Text = string.Format(Lang.lgMeasuredImperial, bushels, lbs);
             }
         }
 
@@ -217,8 +218,8 @@ namespace YieldFlo.Forms
             live = Math.Round(live, 3);
 
             var answer = MessageBox.Show(
-                $"Set baseline to {live:F3}?\n\nMake sure the elevator is running with no grain.",
-                "Set Baseline",
+                string.Format(Lang.lgSetBaselineConfirm, live),
+                Lang.lgSetBaseline,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 

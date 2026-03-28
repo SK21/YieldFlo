@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -148,7 +149,7 @@ namespace YieldFlo.Forms
         private void btnSave_Click(object sender, EventArgs e)
         {
             string name = txtHeaderName.Text.Trim();
-            if (string.IsNullOrEmpty(name)) { Props.ShowMessage("Enter a header name.", "", 2000, true); return; }
+            if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterHeaderName, "", 2000, true); return; }
             string type  = cboHeaderType.SelectedItem?.ToString() ?? "Draper";
             double width = DisplayToMetres(numWidth.Value);
 
@@ -165,8 +166,8 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
-            if (_headers.Count <= 1) { Props.ShowMessage("Must have at least one header.", "", 2000, true); return; }
-            using var dlg = new frmMsgBox("Delete this header?");
+            if (_headers.Count <= 1) { Props.ShowMessage(Lang.lgMustHaveOneHeader, "", 2000, true); return; }
+            using var dlg = new frmMsgBox(Lang.lgDeleteHeaderPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Headers.Delete(_editingId);

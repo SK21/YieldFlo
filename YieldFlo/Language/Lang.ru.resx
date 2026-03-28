@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Common -->
+  <data name="lgClose"     xml:space="preserve"><value>Закрыть</value></data>
+  <data name="lgNew"       xml:space="preserve"><value>Новый</value></data>
+  <data name="lgSave"      xml:space="preserve"><value>Сохранить</value></data>
+  <data name="lgDelete"    xml:space="preserve"><value>Удалить</value></data>
+  <data name="lgLoad"      xml:space="preserve"><value>Загрузить</value></data>
+  <data name="lgSaveApply" xml:space="preserve"><value>Сохранить &amp;&amp; Применить</value></data>
+  <data name="lgYes"       xml:space="preserve"><value>Да</value></data>
+  <data name="lgNo"        xml:space="preserve"><value>Нет</value></data>
+  <data name="lgOn"        xml:space="preserve"><value>Вкл</value></data>
+  <data name="lgOff"       xml:space="preserve"><value>Выкл</value></data>
+  <data name="lgRefresh"   xml:space="preserve"><value>Обновить</value></data>
+  <data name="lgNone"      xml:space="preserve"><value>(нет)</value></data>
+  <data name="lgName"      xml:space="preserve"><value>Имя:</value></data>
+  <data name="lgCrop"      xml:space="preserve"><value>Культура:</value></data>
+  <data name="lgHeader"    xml:space="preserve"><value>Жатка:</value></data>
+  <data name="lgProfile"   xml:space="preserve"><value>Профиль:</value></data>
+  <data name="lgField"     xml:space="preserve"><value>Поле:</value></data>
+  <data name="lgOffset"    xml:space="preserve"><value>Смещение:</value></data>
+  <data name="lgScale"     xml:space="preserve"><value>Масштаб:</value></data>
+  <data name="lgAppReads"  xml:space="preserve"><value>Приложение:</value></data>
+  <data name="lgMeter"     xml:space="preserve"><value>Показания:</value></data>
+  <data name="lgApplyCal"  xml:space="preserve"><value>Прим. калиб.</value></data>
+  <data name="lgLanguage"  xml:space="preserve"><value>Язык</value></data>
+  <data name="lgRestart"   xml:space="preserve"><value>Сохранить &amp;&amp; Перезапустить</value></data>
+  <data name="lgLangNote"  xml:space="preserve"><value>Изменение вступит в силу после перезапуска.</value></data>
+
+  <!-- Form titles -->
+  <data name="lgTitleMenu"        xml:space="preserve"><value>Меню</value></data>
+  <data name="lgTitleSettings"    xml:space="preserve"><value>Настройки</value></data>
+  <data name="lgTitleJobs"        xml:space="preserve"><value>Задания</value></data>
+  <data name="lgTitleCrops"       xml:space="preserve"><value>Культуры</value></data>
+  <data name="lgTitleHeaders"     xml:space="preserve"><value>Жатки</value></data>
+  <data name="lgTitleProfiles"    xml:space="preserve"><value>Профили</value></data>
+  <data name="lgTitleFields"      xml:space="preserve"><value>Поля</value></data>
+  <data name="lgTitleYieldCal"    xml:space="preserve"><value>Калибровка урожая</value></data>
+  <data name="lgTitleMoistureCal" xml:space="preserve"><value>Калибровка влажности</value></data>
+  <data name="lgTitleJobReport"   xml:space="preserve"><value>Отчёт по заданию</value></data>
+  <data name="lgTitleYieldMap"    xml:space="preserve"><value>Карта урожайности</value></data>
+  <data name="lgTitleLanguage"    xml:space="preserve"><value>Язык</value></data>
+
+  <!-- Main form -->
+  <data name="lgYield"         xml:space="preserve"><value>УРОЖАЙ</value></data>
+  <data name="lgMoisture"      xml:space="preserve"><value>ВЛАЖНОСТЬ</value></data>
+  <data name="lgSpeed"         xml:space="preserve"><value>СКОРОСТЬ</value></data>
+  <data name="lgSensors"       xml:space="preserve"><value>Датчики:</value></data>
+  <data name="lgElevFlow"      xml:space="preserve"><value>Поток элеватора</value></data>
+  <data name="lgMoistureLabel" xml:space="preserve"><value>Влажность</value></data>
+  <data name="lgGPS"           xml:space="preserve"><value>GPS</value></data>
+  <data name="lgModule"        xml:space="preserve"><value>Модуль</value></data>
+  <data name="lgNoActiveJob"   xml:space="preserve"><value>Нет активного задания</value></data>
+  <data name="lgJobStatusOn"   xml:space="preserve"><value> - Вкл</value></data>
+  <data name="lgJobStatusOff"  xml:space="preserve"><value> - Выкл</value></data>
+  <data name="lgStopJobPrompt" xml:space="preserve"><value>Остановить и закрыть это задание?</value></data>
+  <data name="lgStopJob"       xml:space="preserve"><value>Остановить задание</value></data>
+  <data name="lgMenu"          xml:space="preserve"><value>Меню</value></data>
+  <data name="lgStart"         xml:space="preserve"><value>Старт</value></data>
+  <data name="lgPause"         xml:space="preserve"><value>Пауза</value></data>
+  <data name="lgStop"          xml:space="preserve"><value>Стоп</value></data>
+  <data name="lgExit"          xml:space="preserve"><value>Выход</value></data>
+
+  <!-- Menu form -->
+  <data name="lgReports" xml:space="preserve"><value>Отчёты</value></data>
+
+  <!-- Settings -->
+  <data name="lgUnits"         xml:space="preserve"><value>Единицы</value></data>
+  <data name="lgImperial"      xml:space="preserve"><value>Имперские</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>Метрические</value></data>
+  <data name="lgTheme"         xml:space="preserve"><value>Тема</value></data>
+  <data name="lgDark"          xml:space="preserve"><value>Тёмная</value></data>
+  <data name="lgLight"         xml:space="preserve"><value>Светлая</value></data>
+  <data name="lgModuleComm"    xml:space="preserve"><value>Связь с модулем</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Подключите ПК к точке доступа WiFi модуля или другой WiFi сети.</value></data>
+  <data name="lgCanDriver"     xml:space="preserve"><value>CAN-драйвер</value></data>
+  <data name="lgComPort"       xml:space="preserve"><value>COM-порт</value></data>
+  <data name="lgResumeOnStart" xml:space="preserve"><value>Возобновить задание при запуске</value></data>
+  <data name="lgSettingsSaved" xml:space="preserve"><value>Настройки сохранены.</value></data>
+
+  <!-- Yield Cal form -->
+  <data name="lgProcessingDelay"    xml:space="preserve"><value>Задержка обработки:</value></data>
+  <data name="lgSeconds"            xml:space="preserve"><value>секунд</value></data>
+  <data name="lgSensorBaseline"     xml:space="preserve"><value>Базовое значение датчика:</value></data>
+  <data name="lgBaselineNote"       xml:space="preserve"><value>степень перекрытия без зерна (0–1)</value></data>
+  <data name="lgSetBaseline"        xml:space="preserve"><value>Установить базовое значение</value></data>
+  <data name="lgYieldFactor"        xml:space="preserve"><value>Коэффициент урожайности:</value></data>
+  <data name="lgFactorNote"         xml:space="preserve"><value>калибровочный множитель — увеличьте для повышения показаний</value></data>
+  <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Калибровочный прогон ──────────────────────</value></data>
+  <data name="lgStartRun"           xml:space="preserve"><value>Начать прогон</value></data>
+  <data name="lgStopRun"            xml:space="preserve"><value>Остановить прогон</value></data>
+  <data name="lgMeasuredBlank"      xml:space="preserve"><value>Измерено: —</value></data>
+  <data name="lgActualWeight"       xml:space="preserve"><value>Фактическая масса:</value></data>
+  <data name="lgCalibrationTip"     xml:space="preserve"><value>Совет: запустите пустой элеватор на 10 с для определения базового значения.</value></data>
+  <data name="lgCalSaved"           xml:space="preserve"><value>Калибровка сохранена и применена.</value></data>
+  <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Введите фактическую взвешенную массу.</value></data>
+  <data name="lgNoMeasuredData"     xml:space="preserve"><value>Нет данных — сначала выполните калибровочный прогон.</value></data>
+  <data name="lgNewFactorResult"    xml:space="preserve"><value>Новый коэффициент: {0:F3}</value></data>
+  <data name="lgFactorUpdated"      xml:space="preserve"><value>Коэффициент обновлён до {0:F3} и сохранён.</value></data>
+  <data name="lgSetBaselineConfirm" xml:space="preserve"><value>Установить базовое значение {0:F3}?
+
+Элеватор должен работать без зерна.</value></data>
+  <data name="lgMeasuredMetric"     xml:space="preserve"><value>Измерено: {0:F2} т</value></data>
+  <data name="lgMeasuredImperial"   xml:space="preserve"><value>Измерено: {0:F2} бушелей ({1:F0} фунтов)</value></data>
+
+  <!-- Moisture Cal form -->
+  <data name="lgMoistureSection"    xml:space="preserve"><value>Влажность</value></data>
+  <data name="lgPercentSavedToCrop" xml:space="preserve"><value>% (сохранено в культуре)</value></data>
+  <data name="lgPercentPerCount"    xml:space="preserve"><value>%/импульс (сохранено в профиле)</value></data>
+  <data name="lgTemperatureSection" xml:space="preserve"><value>Температура</value></data>
+  <data name="lgDegCSavedToProfile" xml:space="preserve"><value>°C (сохранено в профиле)</value></data>
+  <data name="lgDegCPerCount"       xml:space="preserve"><value>°C/импульс (сохранено в профиле)</value></data>
+  <data name="lgNoLiveMoistReading" xml:space="preserve"><value>Нет текущих данных влажности.</value></data>
+  <data name="lgNoLiveTempReading"  xml:space="preserve"><value>Нет текущих данных температуры.</value></data>
+  <data name="lgSaved"              xml:space="preserve"><value>Сохранено.</value></data>
+
+  <!-- Jobs form -->
+  <data name="lgJobName"           xml:space="preserve"><value>Название задания:</value></data>
+  <data name="lgColJobName"        xml:space="preserve"><value>Название задания</value></data>
+  <data name="lgColStatus"         xml:space="preserve"><value>Статус</value></data>
+  <data name="lgColDate"           xml:space="preserve"><value>Дата</value></data>
+  <data name="lgColAcres"          xml:space="preserve"><value>Гектары</value></data>
+  <data name="lgColField"          xml:space="preserve"><value>Поле</value></data>
+  <data name="lgSelectCropFirst"   xml:space="preserve"><value>Сначала выберите культуру.</value></data>
+  <data name="lgSelectHeaderFirst" xml:space="preserve"><value>Сначала выберите жатку.</value></data>
+  <data name="lgSelectJobFirst"    xml:space="preserve"><value>Сначала выберите задание из списка.</value></data>
+  <data name="lgEnterJobName"      xml:space="preserve"><value>Введите название задания.</value></data>
+  <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Необходимо хотя бы одно задание.</value></data>
+  <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Удалить задание «{0}»?</value></data>
+  <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Задание «{0}» активно. Переключиться на «{1}»?</value></data>
+
+  <!-- Crops form -->
+  <data name="lgCategoryLabel"    xml:space="preserve"><value>Категория:</value></data>
+  <data name="lgTestWeight"       xml:space="preserve"><value>Удельная масса:</value></data>
+  <data name="lgMktMoisture"      xml:space="preserve"><value>Рыночная влажность:</value></data>
+  <data name="lgEnterCropName"    xml:space="preserve"><value>Введите название культуры.</value></data>
+  <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Необходима хотя бы одна культура.</value></data>
+  <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Удалить эту культуру?</value></data>
+
+  <!-- Headers form -->
+  <data name="lgType"               xml:space="preserve"><value>Тип:</value></data>
+  <data name="lgWidth"              xml:space="preserve"><value>Ширина:</value></data>
+  <data name="lgEnterHeaderName"    xml:space="preserve"><value>Введите название жатки.</value></data>
+  <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Необходима хотя бы одна жатка.</value></data>
+  <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Удалить эту жатку?</value></data>
+
+  <!-- Profiles form -->
+  <data name="lgCombineId"           xml:space="preserve"><value>ID комбайна:</value></data>
+  <data name="lgEnterProfileName"    xml:space="preserve"><value>Введите название профиля.</value></data>
+  <data name="lgMustHaveOneProfile"  xml:space="preserve"><value>Необходим хотя бы один профиль.</value></data>
+  <data name="lgDeleteProfilePrompt" xml:space="preserve"><value>Удалить этот профиль?</value></data>
+
+  <!-- Fields form -->
+  <data name="lgEnterFieldName"    xml:space="preserve"><value>Введите название поля.</value></data>
+  <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Удалить это поле?</value></data>
+
+  <!-- Job Report form -->
+  <data name="lgFieldColon"   xml:space="preserve"><value>Поле:</value></data>
+  <data name="lgAreaColon"    xml:space="preserve"><value>Площадь:</value></data>
+  <data name="lgTotalColon"   xml:space="preserve"><value>Итого:</value></data>
+  <data name="lgAvgYield"     xml:space="preserve"><value>Ср. урожайность:</value></data>
+  <data name="lgAvgMoisture"  xml:space="preserve"><value>Ср. влажность:</value></data>
+  <data name="lgDataPoints"   xml:space="preserve"><value>Точек данных:</value></data>
+  <data name="lgExportCsv"    xml:space="preserve"><value>Экспорт CSV</value></data>
+  <data name="lgExportFailed" xml:space="preserve"><value>Ошибка экспорта — нет данных или ошибка.</value></data>
+  <data name="lgExported"     xml:space="preserve"><value>Экспортировано: {0}</value></data>
+
+  <!-- Yield Map -->
+  <data name="lgLow"    xml:space="preserve"><value>Низкая</value></data>
+  <data name="lgHigh"   xml:space="preserve"><value>Высокая</value></data>
+  <data name="lgNoJobs" xml:space="preserve"><value>Нет заданий</value></data>
+
+</root>

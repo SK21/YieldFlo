@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmMenuFields
@@ -30,7 +32,7 @@ namespace YieldFlo.Forms
             this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Height = 40;
 
-            this.lblTitle.Text      = "Fields";
+            this.lblTitle.Text      = Lang.lgTitleFields;
             this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.AutoSize  = false;
@@ -60,7 +62,7 @@ namespace YieldFlo.Forms
             this.lbFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFields.SelectedIndexChanged += new System.EventHandler(this.lbFields_SelectedIndexChanged);
 
-            this.lblNameLabel.Text      = "Name:";
+            this.lblNameLabel.Text      = Lang.lgName;
             this.lblNameLabel.Font      = labelFont;
             this.lblNameLabel.Location  = new System.Drawing.Point(8, 183);
             this.lblNameLabel.Size      = new System.Drawing.Size(80, 20);
@@ -72,25 +74,25 @@ namespace YieldFlo.Forms
 
             var btnFont = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
 
-            this.btnNew.Text      = "New";    this.btnNew.Font      = btnFont;
+            this.btnNew.Text      = Lang.lgNew;    this.btnNew.Font      = btnFont;
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Size      = new System.Drawing.Size(106, 36);
             this.btnNew.Location  = new System.Drawing.Point(8, 214);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
-            this.btnSave.Text      = "Save";   this.btnSave.Font      = btnFont;
+            this.btnSave.Text      = Lang.lgSave;   this.btnSave.Font      = btnFont;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Size      = new System.Drawing.Size(106, 36);
             this.btnSave.Location  = new System.Drawing.Point(118, 214);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
-            this.btnDelete.Text      = "Delete"; this.btnDelete.Font      = btnFont;
+            this.btnDelete.Text      = Lang.lgDelete; this.btnDelete.Font      = btnFont;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Size      = new System.Drawing.Size(106, 36);
             this.btnDelete.Location  = new System.Drawing.Point(228, 214);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
-            this.btnFieldsClose.Text      = "Close"; this.btnFieldsClose.Font      = btnFont;
+            this.btnFieldsClose.Text      = Lang.lgClose; this.btnFieldsClose.Font      = btnFont;
             this.btnFieldsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFieldsClose.Size      = new System.Drawing.Size(106, 36);
             this.btnFieldsClose.Location  = new System.Drawing.Point(338, 214);

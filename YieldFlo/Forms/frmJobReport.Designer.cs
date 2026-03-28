@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmJobReport
@@ -33,7 +35,7 @@ namespace YieldFlo.Forms
             this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Height = 40;
 
-            this.lblTitle.Text      = "Job Report";
+            this.lblTitle.Text      = Lang.lgTitleJobReport;
             this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.AutoSize  = false;
@@ -79,7 +81,7 @@ namespace YieldFlo.Forms
             this.lblReportPoints.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F); this.lblReportPoints.AutoSize = false; this.lblReportPoints.Location = new System.Drawing.Point(8, 272); this.lblReportPoints.Size = new System.Drawing.Size(440, 18); this.lblReportPoints.Text = "Data Points: --";
 
             // Export CSV button
-            this.btnExportCsv.Text      = "Export CSV";
+            this.btnExportCsv.Text      = Lang.lgExportCsv;
             this.btnExportCsv.Font      = lf;
             this.btnExportCsv.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExportCsv.FlatAppearance.BorderSize = 0;
@@ -88,7 +90,7 @@ namespace YieldFlo.Forms
             this.btnExportCsv.Click    += new System.EventHandler(this.btnExportCsv_Click);
 
             // Close button
-            this.btnReportClose.Text      = "Close";
+            this.btnReportClose.Text      = Lang.lgClose;
             this.btnReportClose.Font      = lf;
             this.btnReportClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReportClose.FlatAppearance.BorderSize = 0;

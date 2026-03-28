@@ -9,6 +9,7 @@ using GMap.NET.WindowsForms;
 using YieldFlo.Classes;
 using YieldFlo.Communication.Map;
 using YieldFlo.Database;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -212,7 +213,7 @@ namespace YieldFlo.Forms
             int sel = cboJob.SelectedIndex;
             lblMiniJob.Text = (sel >= 0 && sel < cboJob.Items.Count)
                 ? (string)cboJob.Items[sel]
-                : "No jobs";
+                : Lang.lgNoJobs;
         }
 
         private void cboJob_SelectedIndexChanged(object sender, EventArgs e)

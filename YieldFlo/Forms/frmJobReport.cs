@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -114,17 +115,17 @@ namespace YieldFlo.Forms
             _selectedName  = job.name;
 
             lblReportJobName.Text  = job.name;
-            lblReportField.Text    = string.IsNullOrEmpty(job.fieldName) ? "Field: --" : $"Field: {job.fieldName}";
+            lblReportField.Text    = string.IsNullOrEmpty(job.fieldName) ? $"{Lang.lgFieldColon} --" : $"{Lang.lgFieldColon} {job.fieldName}";
 
             double displayArea = Props.DisplayArea(job.acres);
-            lblReportArea.Text = $"Area: {displayArea:F2} {Props.AreaUnit}";
+            lblReportArea.Text = $"{Lang.lgAreaColon} {displayArea:F2} {Props.AreaUnit}";
 
             double displayMass = Props.DisplayMass(job.volume);
-            lblReportTotal.Text = $"Total: {displayMass:F1} {Props.MassUnit}";
+            lblReportTotal.Text = $"{Lang.lgTotalColon} {displayMass:F1} {Props.MassUnit}";
 
             double avgYield = job.acres > 0.001 ? job.volume / job.acres : 0;
             double displayRate = Props.DisplayRate(avgYield);
-            lblReportAvgYield.Text = $"Avg Yield: {displayRate:F1} {Props.RateUnit}";
+            lblReportAvgYield.Text = $"{Lang.lgAvgYield} {displayRate:F1} {Props.RateUnit}";
 
             // Get point count and average moisture from database
             int pointCount   = 0;
@@ -142,8 +143,8 @@ namespace YieldFlo.Forms
             }
             catch { }
 
-            lblReportAvgMoist.Text = $"Avg Moisture: {avgMoist:F1} %";
-            lblReportPoints.Text   = $"Data Points: {pointCount}";
+            lblReportAvgMoist.Text = $"{Lang.lgAvgMoisture} {avgMoist:F1} %";
+            lblReportPoints.Text   = $"{Lang.lgDataPoints} {pointCount}";
         }
 
         private void ClearSummary()
@@ -151,27 +152,27 @@ namespace YieldFlo.Forms
             _selectedJobId = -1;
             _selectedName  = "";
             lblReportJobName.Text  = "--";
-            lblReportField.Text    = "Field: --";
-            lblReportArea.Text     = "Area: --";
-            lblReportTotal.Text    = "Total: --";
-            lblReportAvgYield.Text = "Avg Yield: --";
-            lblReportAvgMoist.Text = "Avg Moisture: --";
-            lblReportPoints.Text   = "Data Points: --";
+            lblReportField.Text    = $"{Lang.lgFieldColon} --";
+            lblReportArea.Text     = $"{Lang.lgAreaColon} --";
+            lblReportTotal.Text    = $"{Lang.lgTotalColon} --";
+            lblReportAvgYield.Text = $"{Lang.lgAvgYield} --";
+            lblReportAvgMoist.Text = $"{Lang.lgAvgMoisture} --";
+            lblReportPoints.Text   = $"{Lang.lgDataPoints} --";
         }
 
         private void btnExportCsv_Click(object sender, EventArgs e)
         {
             if (_selectedJobId < 0)
             {
-                Props.ShowMessage("Select a job first.", "", 3000, true);
+                Props.ShowMessage(Lang.lgSelectJobFirst, "", 3000, true);
                 return;
             }
 
             string path = CsvExporter.ExportJob(_selectedJobId, _selectedName);
             if (path != null)
-                Props.ShowMessage($"Exported: {path}");
+                Props.ShowMessage(string.Format(Lang.lgExported, path));
             else
-                Props.ShowMessage("Export failed — no data or error.", "", 3000, true);
+                Props.ShowMessage(Lang.lgExportFailed, "", 3000, true);
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e)    => this.Close();

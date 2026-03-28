@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmYieldMap
@@ -126,7 +128,7 @@ namespace YieldFlo.Forms
             this.btnMinimize.Location  = new System.Drawing.Point(574, 5);  // repositioned by SetMiniMode
             this.btnMinimize.Click    += new System.EventHandler(this.btnMinimize_Click);
 
-            this.btnRefresh.Text      = "Refresh";
+            this.btnRefresh.Text      = Lang.lgRefresh;
             this.btnRefresh.Font      = btnFont;
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.FlatAppearance.BorderSize = 0;
@@ -136,7 +138,7 @@ namespace YieldFlo.Forms
             this.btnRefresh.Location  = new System.Drawing.Point(644, 5);
             this.btnRefresh.Click    += new System.EventHandler(this.btnRefresh_Click);
 
-            this.btnClose.Text      = "Close";
+            this.btnClose.Text      = Lang.lgClose;
             this.btnClose.Font      = btnFont;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.FlatAppearance.BorderSize = 0;
@@ -155,14 +157,14 @@ namespace YieldFlo.Forms
             this.pnlLegend.Visible   = false;
             this.pnlLegend.Paint    += new System.Windows.Forms.PaintEventHandler(this.pnlLegend_Paint);
 
-            this.lblLegendLow.Text      = "Low";
+            this.lblLegendLow.Text      = Lang.lgLow;
             this.lblLegendLow.ForeColor = System.Drawing.Color.White;
             this.lblLegendLow.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.lblLegendLow.AutoSize  = false;
             this.lblLegendLow.Bounds    = new System.Drawing.Rectangle(4, 18, 100, 16);
             this.lblLegendLow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
-            this.lblLegendHigh.Text      = "High";
+            this.lblLegendHigh.Text      = Lang.lgHigh;
             this.lblLegendHigh.ForeColor = System.Drawing.Color.White;
             this.lblLegendHigh.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.lblLegendHigh.AutoSize  = false;

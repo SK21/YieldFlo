@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -132,7 +133,7 @@ namespace YieldFlo.Forms
         private void btnApplyMoist_Click(object sender, EventArgs e)
         {
             double appReading = Core.LastMoisture;
-            if (appReading <= 0) { Props.ShowMessage("No live moisture reading.", "", 2000, true); return; }
+            if (appReading <= 0) { Props.ShowMessage(Lang.lgNoLiveMoistReading, "", 2000, true); return; }
             double offset = System.Math.Round((double)numCalMeter.Value - appReading, 1);
             offset = System.Math.Max((double)numMoistOffset.Minimum,
                      System.Math.Min((double)numMoistOffset.Maximum, offset));
@@ -142,7 +143,7 @@ namespace YieldFlo.Forms
         private void btnApplyTemp_Click(object sender, EventArgs e)
         {
             double appReading = Core.LastTemperature;
-            if (appReading == 0) { Props.ShowMessage("No live temperature reading.", "", 2000, true); return; }
+            if (appReading == 0) { Props.ShowMessage(Lang.lgNoLiveTempReading, "", 2000, true); return; }
             double offset = System.Math.Round((double)numCalThermo.Value - appReading, 1);
             offset = System.Math.Max((double)numTempOffset.Minimum,
                      System.Math.Min((double)numTempOffset.Maximum, offset));
@@ -175,7 +176,7 @@ namespace YieldFlo.Forms
                 }
             }
 
-            Props.ShowMessage("Saved.", "", 1500, true);
+            Props.ShowMessage(Lang.lgSaved, "", 1500, true);
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();

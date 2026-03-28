@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmMenuProfiles
@@ -33,7 +35,7 @@ namespace YieldFlo.Forms
             this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Height = 40;
 
-            this.lblTitle.Text      = "Profiles";
+            this.lblTitle.Text      = Lang.lgTitleProfiles;
             this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.Dock      = System.Windows.Forms.DockStyle.Fill;
@@ -66,13 +68,13 @@ namespace YieldFlo.Forms
             var vf = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 
             // Profile Name
-            this.lblProfileName.Text     = "Name:"; this.lblProfileName.Font = lf;
+            this.lblProfileName.Text     = Lang.lgName; this.lblProfileName.Font = lf;
             this.lblProfileName.Location = new System.Drawing.Point(8, 3); this.lblProfileName.AutoSize = false; this.lblProfileName.Width = 100;
             this.txtProfileName.Font     = vf;
             this.txtProfileName.Location = new System.Drawing.Point(116, 0); this.txtProfileName.Width = 326; this.txtProfileName.Height = 24;
 
             // Combine ID
-            this.lblCombineId.Text     = "Combine ID:"; this.lblCombineId.Font = lf;
+            this.lblCombineId.Text     = Lang.lgCombineId; this.lblCombineId.Font = lf;
             this.lblCombineId.Location = new System.Drawing.Point(8, 35); this.lblCombineId.AutoSize = false; this.lblCombineId.Width = 100;
             this.txtCombineId.Font     = vf;
             this.txtCombineId.Location = new System.Drawing.Point(116, 32); this.txtCombineId.Width = 326; this.txtCombineId.Height = 24;
@@ -86,19 +88,19 @@ namespace YieldFlo.Forms
             // Buttons
             var bf = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
 
-            this.btnNew.Text      = "New";    this.btnNew.Font    = bf; this.btnNew.FlatStyle    = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNew.Text      = Lang.lgNew;    this.btnNew.Font    = bf; this.btnNew.FlatStyle    = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Location  = new System.Drawing.Point(8, 222); this.btnNew.Size = new System.Drawing.Size(106, 36);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
-            this.btnSave.Text      = "Save";   this.btnSave.Font   = bf; this.btnSave.FlatStyle   = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Text      = Lang.lgSave;   this.btnSave.Font   = bf; this.btnSave.FlatStyle   = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Location  = new System.Drawing.Point(118, 222); this.btnSave.Size = new System.Drawing.Size(106, 36);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
-            this.btnDelete.Text      = "Delete"; this.btnDelete.Font = bf; this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Text      = Lang.lgDelete; this.btnDelete.Font = bf; this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Location  = new System.Drawing.Point(228, 222); this.btnDelete.Size = new System.Drawing.Size(106, 36);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
-            this.btnProfilesClose.Text      = "Close"; this.btnProfilesClose.Font = bf; this.btnProfilesClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProfilesClose.Text      = Lang.lgClose; this.btnProfilesClose.Font = bf; this.btnProfilesClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProfilesClose.Location  = new System.Drawing.Point(338, 222); this.btnProfilesClose.Size = new System.Drawing.Size(106, 36);
             this.btnProfilesClose.Click    += new System.EventHandler(this.btnProfilesClose_Click);
 

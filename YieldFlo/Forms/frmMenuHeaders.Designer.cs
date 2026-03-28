@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmMenuHeaders
@@ -36,7 +38,7 @@ namespace YieldFlo.Forms
             this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Height = 40;
 
-            this.lblTitle.Text      = "Headers";
+            this.lblTitle.Text      = Lang.lgTitleHeaders;
             this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.Dock      = System.Windows.Forms.DockStyle.Fill;
@@ -69,13 +71,13 @@ namespace YieldFlo.Forms
             var vf = new System.Drawing.Font("Microsoft Sans Serif", 9F);
 
             // Name
-            this.lblHeaderName.Text     = "Name:"; this.lblHeaderName.Font = lf;
+            this.lblHeaderName.Text     = Lang.lgName; this.lblHeaderName.Font = lf;
             this.lblHeaderName.Location = new System.Drawing.Point(8, 3); this.lblHeaderName.AutoSize = false; this.lblHeaderName.Width = 100;
             this.txtHeaderName.Font     = vf;
             this.txtHeaderName.Location = new System.Drawing.Point(116, 0); this.txtHeaderName.Width = 326; this.txtHeaderName.Height = 24;
 
             // Type
-            this.lblHeaderType.Text     = "Type:"; this.lblHeaderType.Font = lf;
+            this.lblHeaderType.Text     = Lang.lgType; this.lblHeaderType.Font = lf;
             this.lblHeaderType.Location = new System.Drawing.Point(8, 35); this.lblHeaderType.AutoSize = false; this.lblHeaderType.Width = 100;
             this.cboHeaderType.Font          = vf;
             this.cboHeaderType.Location      = new System.Drawing.Point(116, 32);
@@ -85,7 +87,7 @@ namespace YieldFlo.Forms
             this.cboHeaderType.SelectedIndex = 0;
 
             // Width
-            this.lblWidth.Text     = "Width:"; this.lblWidth.Font = lf;
+            this.lblWidth.Text     = Lang.lgWidth; this.lblWidth.Font = lf;
             this.lblWidth.Location = new System.Drawing.Point(8, 67); this.lblWidth.AutoSize = false; this.lblWidth.Width = 100;
             this.numWidth.Font     = vf;
             this.numWidth.Location = new System.Drawing.Point(116, 64); this.numWidth.Width = 80;
@@ -102,22 +104,22 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.pnlEdit);
 
             // Buttons
-            this.btnNew.Text      = "New";    this.btnNew.Font    = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnNew.Text      = Lang.lgNew;    this.btnNew.Font    = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Location  = new System.Drawing.Point(8, 272); this.btnNew.Size = new System.Drawing.Size(106, 36);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
-            this.btnSave.Text      = "Save";   this.btnSave.Font   = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnSave.Text      = Lang.lgSave;   this.btnSave.Font   = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Location  = new System.Drawing.Point(118, 272); this.btnSave.Size = new System.Drawing.Size(106, 36);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
-            this.btnDelete.Text      = "Delete"; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnDelete.Text      = Lang.lgDelete; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Location  = new System.Drawing.Point(228, 272); this.btnDelete.Size = new System.Drawing.Size(106, 36);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
-            this.btnHeadersClose.Text      = "Close"; this.btnHeadersClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnHeadersClose.Text      = Lang.lgClose; this.btnHeadersClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnHeadersClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHeadersClose.Location  = new System.Drawing.Point(338, 272); this.btnHeadersClose.Size = new System.Drawing.Size(106, 36);
             this.btnHeadersClose.Click    += new System.EventHandler(this.btnHeadersClose_Click);

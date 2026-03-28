@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Common -->
+  <data name="lgClose"     xml:space="preserve"><value>Fermer</value></data>
+  <data name="lgNew"       xml:space="preserve"><value>Nouveau</value></data>
+  <data name="lgSave"      xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="lgDelete"    xml:space="preserve"><value>Supprimer</value></data>
+  <data name="lgLoad"      xml:space="preserve"><value>Charger</value></data>
+  <data name="lgSaveApply" xml:space="preserve"><value>Enregistrer &amp;&amp; Appliquer</value></data>
+  <data name="lgYes"       xml:space="preserve"><value>Oui</value></data>
+  <data name="lgNo"        xml:space="preserve"><value>Non</value></data>
+  <data name="lgOn"        xml:space="preserve"><value>Activé</value></data>
+  <data name="lgOff"       xml:space="preserve"><value>Désactivé</value></data>
+  <data name="lgRefresh"   xml:space="preserve"><value>Actualiser</value></data>
+  <data name="lgNone"      xml:space="preserve"><value>(aucun)</value></data>
+  <data name="lgName"      xml:space="preserve"><value>Nom :</value></data>
+  <data name="lgCrop"      xml:space="preserve"><value>Culture :</value></data>
+  <data name="lgHeader"    xml:space="preserve"><value>Coupe :</value></data>
+  <data name="lgProfile"   xml:space="preserve"><value>Profil :</value></data>
+  <data name="lgField"     xml:space="preserve"><value>Parcelle :</value></data>
+  <data name="lgOffset"    xml:space="preserve"><value>Décalage :</value></data>
+  <data name="lgScale"     xml:space="preserve"><value>Échelle :</value></data>
+  <data name="lgAppReads"  xml:space="preserve"><value>App lit :</value></data>
+  <data name="lgMeter"     xml:space="preserve"><value>Mesure :</value></data>
+  <data name="lgApplyCal"  xml:space="preserve"><value>Appliquer cal.</value></data>
+  <data name="lgLanguage"  xml:space="preserve"><value>Langue</value></data>
+  <data name="lgRestart"   xml:space="preserve"><value>Enregistrer &amp;&amp; Redémarrer</value></data>
+  <data name="lgLangNote"  xml:space="preserve"><value>La modification prendra effet après le redémarrage.</value></data>
+
+  <!-- Form titles -->
+  <data name="lgTitleMenu"        xml:space="preserve"><value>Menu</value></data>
+  <data name="lgTitleSettings"    xml:space="preserve"><value>Paramètres</value></data>
+  <data name="lgTitleJobs"        xml:space="preserve"><value>Travaux</value></data>
+  <data name="lgTitleCrops"       xml:space="preserve"><value>Cultures</value></data>
+  <data name="lgTitleHeaders"     xml:space="preserve"><value>Coupes</value></data>
+  <data name="lgTitleProfiles"    xml:space="preserve"><value>Profils</value></data>
+  <data name="lgTitleFields"      xml:space="preserve"><value>Parcelles</value></data>
+  <data name="lgTitleYieldCal"    xml:space="preserve"><value>Calibration Rendement</value></data>
+  <data name="lgTitleMoistureCal" xml:space="preserve"><value>Calibration Humidité</value></data>
+  <data name="lgTitleJobReport"   xml:space="preserve"><value>Rapport de travail</value></data>
+  <data name="lgTitleYieldMap"    xml:space="preserve"><value>Carte de rendement</value></data>
+  <data name="lgTitleLanguage"    xml:space="preserve"><value>Langue</value></data>
+
+  <!-- Main form -->
+  <data name="lgYield"         xml:space="preserve"><value>RENDEMENT</value></data>
+  <data name="lgMoisture"      xml:space="preserve"><value>HUMIDITÉ</value></data>
+  <data name="lgSpeed"         xml:space="preserve"><value>VITESSE</value></data>
+  <data name="lgSensors"       xml:space="preserve"><value>Capteurs :</value></data>
+  <data name="lgElevFlow"      xml:space="preserve"><value>Flux élévateur</value></data>
+  <data name="lgMoistureLabel" xml:space="preserve"><value>Humidité</value></data>
+  <data name="lgGPS"           xml:space="preserve"><value>GPS</value></data>
+  <data name="lgModule"        xml:space="preserve"><value>Module</value></data>
+  <data name="lgNoActiveJob"   xml:space="preserve"><value>Aucun travail actif</value></data>
+  <data name="lgJobStatusOn"   xml:space="preserve"><value> - Actif</value></data>
+  <data name="lgJobStatusOff"  xml:space="preserve"><value> - Inactif</value></data>
+  <data name="lgStopJobPrompt" xml:space="preserve"><value>Arrêter et fermer ce travail ?</value></data>
+  <data name="lgStopJob"       xml:space="preserve"><value>Arrêter le travail</value></data>
+  <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>
+  <data name="lgStart"         xml:space="preserve"><value>Démarrer</value></data>
+  <data name="lgPause"         xml:space="preserve"><value>Pause</value></data>
+  <data name="lgStop"          xml:space="preserve"><value>Arrêter</value></data>
+  <data name="lgExit"          xml:space="preserve"><value>Quitter</value></data>
+
+  <!-- Menu form -->
+  <data name="lgReports" xml:space="preserve"><value>Rapports</value></data>
+
+  <!-- Settings -->
+  <data name="lgUnits"         xml:space="preserve"><value>Unités</value></data>
+  <data name="lgImperial"      xml:space="preserve"><value>Impérial</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>Métrique</value></data>
+  <data name="lgTheme"         xml:space="preserve"><value>Thème</value></data>
+  <data name="lgDark"          xml:space="preserve"><value>Sombre</value></data>
+  <data name="lgLight"         xml:space="preserve"><value>Clair</value></data>
+  <data name="lgModuleComm"    xml:space="preserve"><value>Communication module</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Connecter le PC au point d'accès WiFi du module ou à un autre réseau WiFi.</value></data>
+  <data name="lgCanDriver"     xml:space="preserve"><value>Pilote CAN</value></data>
+  <data name="lgComPort"       xml:space="preserve"><value>Port COM</value></data>
+  <data name="lgResumeOnStart" xml:space="preserve"><value>Reprendre le travail au démarrage</value></data>
+  <data name="lgSettingsSaved" xml:space="preserve"><value>Paramètres enregistrés.</value></data>
+
+  <!-- Yield Cal form -->
+  <data name="lgProcessingDelay"    xml:space="preserve"><value>Délai de traitement :</value></data>
+  <data name="lgSeconds"            xml:space="preserve"><value>secondes</value></data>
+  <data name="lgSensorBaseline"     xml:space="preserve"><value>Valeur de référence :</value></data>
+  <data name="lgBaselineNote"       xml:space="preserve"><value>ratio d'obstruction sans grain (0–1)</value></data>
+  <data name="lgSetBaseline"        xml:space="preserve"><value>Définir la référence</value></data>
+  <data name="lgYieldFactor"        xml:space="preserve"><value>Facteur de rendement :</value></data>
+  <data name="lgFactorNote"         xml:space="preserve"><value>multiplicateur de calibration — augmenter pour hausser les lectures</value></data>
+  <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Passe de calibration ──────────────────────</value></data>
+  <data name="lgStartRun"           xml:space="preserve"><value>Démarrer la passe</value></data>
+  <data name="lgStopRun"            xml:space="preserve"><value>Arrêter la passe</value></data>
+  <data name="lgMeasuredBlank"      xml:space="preserve"><value>Mesuré : —</value></data>
+  <data name="lgActualWeight"       xml:space="preserve"><value>Poids réel :</value></data>
+  <data name="lgCalibrationTip"     xml:space="preserve"><value>Conseil : faire tourner l'élévateur vide 10 s pour trouver la référence.</value></data>
+  <data name="lgCalSaved"           xml:space="preserve"><value>Calibration enregistrée et appliquée.</value></data>
+  <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Entrer le poids réel pesé.</value></data>
+  <data name="lgNoMeasuredData"     xml:space="preserve"><value>Aucune donnée — effectuer d'abord une passe de calibration.</value></data>
+  <data name="lgNewFactorResult"    xml:space="preserve"><value>Nouveau facteur : {0:F3}</value></data>
+  <data name="lgFactorUpdated"      xml:space="preserve"><value>Facteur mis à jour à {0:F3} et enregistré.</value></data>
+  <data name="lgSetBaselineConfirm" xml:space="preserve"><value>Définir la référence à {0:F3} ?
+
+S'assurer que l'élévateur tourne sans grain.</value></data>
+  <data name="lgMeasuredMetric"     xml:space="preserve"><value>Mesuré : {0:F2} t</value></data>
+  <data name="lgMeasuredImperial"   xml:space="preserve"><value>Mesuré : {0:F2} bu ({1:F0} lbs)</value></data>
+
+  <!-- Moisture Cal form -->
+  <data name="lgMoistureSection"    xml:space="preserve"><value>Humidité</value></data>
+  <data name="lgPercentSavedToCrop" xml:space="preserve"><value>% (enregistré dans la culture)</value></data>
+  <data name="lgPercentPerCount"    xml:space="preserve"><value>%/comptage (enregistré dans le profil)</value></data>
+  <data name="lgTemperatureSection" xml:space="preserve"><value>Température</value></data>
+  <data name="lgDegCSavedToProfile" xml:space="preserve"><value>°C (enregistré dans le profil)</value></data>
+  <data name="lgDegCPerCount"       xml:space="preserve"><value>°C/comptage (enregistré dans le profil)</value></data>
+  <data name="lgNoLiveMoistReading" xml:space="preserve"><value>Aucune lecture d'humidité en direct.</value></data>
+  <data name="lgNoLiveTempReading"  xml:space="preserve"><value>Aucune lecture de température en direct.</value></data>
+  <data name="lgSaved"              xml:space="preserve"><value>Enregistré.</value></data>
+
+  <!-- Jobs form -->
+  <data name="lgJobName"           xml:space="preserve"><value>Nom du travail :</value></data>
+  <data name="lgColJobName"        xml:space="preserve"><value>Nom du travail</value></data>
+  <data name="lgColStatus"         xml:space="preserve"><value>Statut</value></data>
+  <data name="lgColDate"           xml:space="preserve"><value>Date</value></data>
+  <data name="lgColAcres"          xml:space="preserve"><value>Hectares</value></data>
+  <data name="lgColField"          xml:space="preserve"><value>Parcelle</value></data>
+  <data name="lgSelectCropFirst"   xml:space="preserve"><value>Sélectionner d'abord une culture.</value></data>
+  <data name="lgSelectHeaderFirst" xml:space="preserve"><value>Sélectionner d'abord une coupe.</value></data>
+  <data name="lgSelectJobFirst"    xml:space="preserve"><value>Sélectionner d'abord un travail dans la liste.</value></data>
+  <data name="lgEnterJobName"      xml:space="preserve"><value>Entrer un nom de travail.</value></data>
+  <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Au moins un travail requis.</value></data>
+  <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Supprimer le travail « {0} » ?</value></data>
+  <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Le travail « {0} » est actif. Passer à « {1} » ?</value></data>
+
+  <!-- Crops form -->
+  <data name="lgCategoryLabel"    xml:space="preserve"><value>Catégorie :</value></data>
+  <data name="lgTestWeight"       xml:space="preserve"><value>Poids test :</value></data>
+  <data name="lgMktMoisture"      xml:space="preserve"><value>Humidité marché :</value></data>
+  <data name="lgEnterCropName"    xml:space="preserve"><value>Entrer un nom de culture.</value></data>
+  <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Au moins une culture requise.</value></data>
+  <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Supprimer cette culture ?</value></data>
+
+  <!-- Headers form -->
+  <data name="lgType"               xml:space="preserve"><value>Type :</value></data>
+  <data name="lgWidth"              xml:space="preserve"><value>Largeur :</value></data>
+  <data name="lgEnterHeaderName"    xml:space="preserve"><value>Entrer un nom de coupe.</value></data>
+  <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Au moins une coupe requise.</value></data>
+  <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Supprimer cette coupe ?</value></data>
+
+  <!-- Profiles form -->
+  <data name="lgCombineId"           xml:space="preserve"><value>ID moissonneuse :</value></data>
+  <data name="lgEnterProfileName"    xml:space="preserve"><value>Entrer un nom de profil.</value></data>
+  <data name="lgMustHaveOneProfile"  xml:space="preserve"><value>Au moins un profil requis.</value></data>
+  <data name="lgDeleteProfilePrompt" xml:space="preserve"><value>Supprimer ce profil ?</value></data>
+
+  <!-- Fields form -->
+  <data name="lgEnterFieldName"    xml:space="preserve"><value>Entrer un nom de parcelle.</value></data>
+  <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Supprimer cette parcelle ?</value></data>
+
+  <!-- Job Report form -->
+  <data name="lgFieldColon"   xml:space="preserve"><value>Parcelle :</value></data>
+  <data name="lgAreaColon"    xml:space="preserve"><value>Surface :</value></data>
+  <data name="lgTotalColon"   xml:space="preserve"><value>Total :</value></data>
+  <data name="lgAvgYield"     xml:space="preserve"><value>Rend. moy. :</value></data>
+  <data name="lgAvgMoisture"  xml:space="preserve"><value>Hum. moy. :</value></data>
+  <data name="lgDataPoints"   xml:space="preserve"><value>Points de données :</value></data>
+  <data name="lgExportCsv"    xml:space="preserve"><value>Exporter CSV</value></data>
+  <data name="lgExportFailed" xml:space="preserve"><value>Échec de l'export — aucune donnée ou erreur.</value></data>
+  <data name="lgExported"     xml:space="preserve"><value>Exporté : {0}</value></data>
+
+  <!-- Yield Map -->
+  <data name="lgLow"    xml:space="preserve"><value>Bas</value></data>
+  <data name="lgHigh"   xml:space="preserve"><value>Haut</value></data>
+  <data name="lgNoJobs" xml:space="preserve"><value>Aucun travail</value></data>
+
+</root>

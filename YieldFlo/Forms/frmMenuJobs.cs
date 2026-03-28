@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -21,7 +22,7 @@ namespace YieldFlo.Forms
         private int  _sortCol = 2;   // Date by default
         private bool _sortAsc = false; // newest first
 
-        private static readonly string[] _colNames = { "Job Name", "Status", "Date", "Acres", "Field" };
+        private string[] _colNames;
 
 
         public frmMenuJobs()
@@ -31,6 +32,7 @@ namespace YieldFlo.Forms
 
         private void frmMenuJobs_Load(object sender, EventArgs e)
         {
+            _colNames = new string[] { Lang.lgColJobName, Lang.lgColStatus, Lang.lgColDate, Lang.lgColAcres, Lang.lgColField };
             ApplyTheme();
             FormPositions.Restore(this);
             this.FormClosed += (s2, ev2) => FormPositions.Save(this);
@@ -289,9 +291,9 @@ namespace YieldFlo.Forms
         private void btnNew_Click(object sender, EventArgs e)
         {
             if (cboCrop.SelectedIndex < 0 || _cropIds.Count == 0)
-            { Props.ShowMessage("Select a crop first.", "", 3000, true); return; }
+            { Props.ShowMessage(Lang.lgSelectCropFirst, "", 3000, true); return; }
             if (cboHeader.SelectedIndex < 0 || _headerIds.Count == 0)
-            { Props.ShowMessage("Select a header first.", "", 3000, true); return; }
+            { Props.ShowMessage(Lang.lgSelectHeaderFirst, "", 3000, true); return; }
 
             string name = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
             int cropId    = _cropIds[cboCrop.SelectedIndex];
@@ -315,7 +317,7 @@ namespace YieldFlo.Forms
         private void btnLoad_Click(object sender, EventArgs e)
         {
             if (lvJobs.SelectedIndices.Count == 0)
-            { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
+            { Props.ShowMessage(Lang.lgSelectJobFirst, "", 3000, true); return; }
 
             int idx = lvJobs.SelectedIndices[0];
             if (idx < 0 || idx >= _jobData.Count) return;
@@ -333,7 +335,7 @@ namespace YieldFlo.Forms
 
             string name = txtJobName.Text.Trim();
             if (string.IsNullOrEmpty(name))
-            { Props.ShowMessage("Enter a job name.", "", 2000, true); return; }
+            { Props.ShowMessage(Lang.lgEnterJobName, "", 2000, true); return; }
 
             var job2      = _jobData[idx];
             int cropId    = cboCrop.SelectedIndex    >= 0 ? _cropIds[cboCrop.SelectedIndex]       : job2.cropId;
@@ -361,15 +363,15 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (lvJobs.SelectedIndices.Count == 0)
-            { Props.ShowMessage("Select a job from the list first.", "", 3000, true); return; }
+            { Props.ShowMessage(Lang.lgSelectJobFirst, "", 3000, true); return; }
 
-            if (_jobData.Count <= 1) { Props.ShowMessage("Must have at least one job.", "", 2000, true); return; }
+            if (_jobData.Count <= 1) { Props.ShowMessage(Lang.lgMustHaveOneJob, "", 2000, true); return; }
 
             int idx = lvJobs.SelectedIndices[0];
             if (idx < 0 || idx >= _jobData.Count) return;
 
             var job = _jobData[idx];
-            using var dlg = new frmMsgBox($"Delete job \"{job.jobName}\"?");
+            using var dlg = new frmMsgBox(string.Format(Lang.lgDeleteJobPrompt, job.jobName));
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
 
@@ -385,7 +387,7 @@ namespace YieldFlo.Forms
             if (activeId > 0 && activeId != job.jobId)
             {
                 string activeName = Core.Collector.ActiveJobName;
-                using var dlg = new frmMsgBox($"Job \"{activeName}\" is active. Switch to \"{job.jobName}\"?");
+                using var dlg = new frmMsgBox(string.Format(Lang.lgSwitchJobPrompt, activeName, job.jobName));
                 dlg.ShowDialog(this);
                 if (!dlg.Result) return;
             }

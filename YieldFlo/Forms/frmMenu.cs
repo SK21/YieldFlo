@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -61,5 +62,6 @@ namespace YieldFlo.Forms
         private void btnReports_Click(object sender, EventArgs e)   => FormManager.ShowForm(new frmJobReport());
         private void btnYieldMap_Click(object sender, EventArgs e)   => FormManager.ShowForm(new frmYieldMap());
         private void btnSensorCal_Click(object sender, EventArgs e) => FormManager.ShowForm(new frmMenuSensorCal());
+        private void btnLanguage_Click(object sender, EventArgs e)  => FormManager.ShowForm(new frmMenuLanguage());
     }
 }

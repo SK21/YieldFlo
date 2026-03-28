@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -227,10 +228,10 @@ namespace YieldFlo.Forms
             bool modOk = Core.ModuleConnected
                 && (DateTime.UtcNow - Core.LastModuleReceive).TotalSeconds < 5;
 
-            lblStatusGPS.Text = "GPS";
+            lblStatusGPS.Text = Lang.lgGPS;
             lblStatusGPS.ForeColor = gpsOk ? Color.LimeGreen : Color.Red;
 
-            lblStatusModule.Text = "Module";
+            lblStatusModule.Text = Lang.lgModule;
             lblStatusModule.ForeColor = modOk ? Color.LimeGreen : Color.Red;
 
             string commType = Properties.Settings.Default.ModuleCommType;
@@ -241,13 +242,13 @@ namespace YieldFlo.Forms
             {
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
-                lblStatusJob.Text = recording ? jobName + " - On" : jobName + " - Off";
+                lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
                 lblStatusJob.ForeColor = recording ? Color.LimeGreen : Color.Orange;
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else
             {
-                lblStatusJob.Text = "No Active Job";
+                lblStatusJob.Text = Lang.lgNoActiveJob;
                 lblStatusJob.ForeColor = Color.Silver;
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
             }
@@ -296,7 +297,7 @@ namespace YieldFlo.Forms
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            var answer = MessageBox.Show("Stop and close this job?", "Stop Job",
+            var answer = MessageBox.Show(Lang.lgStopJobPrompt, Lang.lgStopJob,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (answer != DialogResult.Yes) return;
 

@@ -89,7 +89,8 @@
       "WebFetch(domain:farmportal.eu)",
       "WebFetch(domain:en.wikipedia.org)",
       "WebFetch(domain:www.aspexit.com)",
-      "Bash(find /f/Documents/GitHub/YieldFlo -name *.mdb -o -name *.accdb -o -name *.db)"
+      "Bash(find /f/Documents/GitHub/YieldFlo -name *.mdb -o -name *.accdb -o -name *.db)",
+      "Bash(wc:*)"
     ]
   }
 }

@@ -191,5 +191,14 @@ namespace YieldFlo.Properties
             get { return ((int)(this["MiniFormY"])); }
             set { this["MiniFormY"] = value; }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("en")]
+        public string CurrentLanguage
+        {
+            get { return ((string)(this["CurrentLanguage"])); }
+            set { this["CurrentLanguage"] = value; }
+        }
     }
 }

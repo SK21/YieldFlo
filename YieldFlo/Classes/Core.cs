@@ -45,6 +45,7 @@ namespace YieldFlo.Classes
         public static bool IsShuttingDown { get; private set; }
         public static bool IsRestarting { get; private set; }
         public static bool IsUserExitRequested { get; private set; }
+        public static bool IsRestartedInstance { get; set; }
 
         // Events
         public static event EventHandler UpdateDisplay;
@@ -66,7 +67,7 @@ namespace YieldFlo.Classes
             {
                 MainForm = frm;
 
-                if (Tls.PrevInstance()) Application.Exit();
+                if (!IsRestartedInstance && Tls.PrevInstance()) Application.Exit();
 
                 Props.CheckFolders();
 
@@ -158,10 +159,17 @@ namespace YieldFlo.Classes
             Application.Exit();
         }
 
-        public static void RequestRestart()
+        public static void RequestRestart(string language = null)
         {
             IsRestarting = true;
-            Application.Restart();
+            // Pass language + restarted flag as args so:
+            //   1. Language is received directly (bypasses any settings version-path mismatch)
+            //   2. PrevInstance() check is skipped (old process may still be in cleanup when new one starts)
+            // Start AFTER ApplicationExit so UDP ports are released before new instance binds them.
+            string args = "--restarted" + (language != null ? $" --lang={language}" : "");
+            Application.ApplicationExit += (s, ev) =>
+                System.Diagnostics.Process.Start(Application.ExecutablePath, args);
+            Application.Exit();
         }
 
         public static void RaiseColorChanged() => SafeEvent.Raise(ColorChanged);

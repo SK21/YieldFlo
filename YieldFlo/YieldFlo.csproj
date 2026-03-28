@@ -51,6 +51,38 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- Language resources -->
+  <!-- Neutral English: embedded in main assembly as YieldFlo.Language.Lang.resources -->
+  <ItemGroup>
+    <EmbeddedResource Update="Language\Lang.resx">
+      <LogicalName>YieldFlo.Language.Lang.resources</LogicalName>
+    </EmbeddedResource>
+    <!-- Satellite languages: Culture metadata causes MSBuild to build each into
+         a separate {culture}\YieldFlo.resources.dll satellite assembly,
+         which ResourceManager finds automatically via Thread.CurrentUICulture. -->
+    <EmbeddedResource Update="Language\Lang.de.resx">
+      <Culture>de</Culture>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Language\Lang.fr.resx">
+      <Culture>fr</Culture>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Language\Lang.hu.resx">
+      <Culture>hu</Culture>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Language\Lang.nl.resx">
+      <Culture>nl</Culture>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Language\Lang.pl.resx">
+      <Culture>pl</Culture>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Language\Lang.ru.resx">
+      <Culture>ru</Culture>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Language\Lang.lt.resx">
+      <Culture>lt</Culture>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <!-- Custom output path (must be LAST so it overrides SDK defaults) -->
   <PropertyGroup>
     <OutputPath>..\YieldFloApp\</OutputPath>

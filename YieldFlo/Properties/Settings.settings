@@ -58,5 +58,8 @@
     <Setting Name="MiniFormY" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
+    <Setting Name="CurrentLanguage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

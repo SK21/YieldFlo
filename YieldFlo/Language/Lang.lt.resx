@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Common -->
+  <data name="lgClose"     xml:space="preserve"><value>Uždaryti</value></data>
+  <data name="lgNew"       xml:space="preserve"><value>Naujas</value></data>
+  <data name="lgSave"      xml:space="preserve"><value>Išsaugoti</value></data>
+  <data name="lgDelete"    xml:space="preserve"><value>Ištrinti</value></data>
+  <data name="lgLoad"      xml:space="preserve"><value>Įkelti</value></data>
+  <data name="lgSaveApply" xml:space="preserve"><value>Išsaugoti &amp;&amp; Taikyti</value></data>
+  <data name="lgYes"       xml:space="preserve"><value>Taip</value></data>
+  <data name="lgNo"        xml:space="preserve"><value>Ne</value></data>
+  <data name="lgOn"        xml:space="preserve"><value>Įjungti</value></data>
+  <data name="lgOff"       xml:space="preserve"><value>Išjungti</value></data>
+  <data name="lgRefresh"   xml:space="preserve"><value>Atnaujinti</value></data>
+  <data name="lgNone"      xml:space="preserve"><value>(nėra)</value></data>
+  <data name="lgName"      xml:space="preserve"><value>Pavadinimas:</value></data>
+  <data name="lgCrop"      xml:space="preserve"><value>Kultūra:</value></data>
+  <data name="lgHeader"    xml:space="preserve"><value>Galva:</value></data>
+  <data name="lgProfile"   xml:space="preserve"><value>Profilis:</value></data>
+  <data name="lgField"     xml:space="preserve"><value>Laukas:</value></data>
+  <data name="lgOffset"    xml:space="preserve"><value>Poslinkis:</value></data>
+  <data name="lgScale"     xml:space="preserve"><value>Mastelis:</value></data>
+  <data name="lgAppReads"  xml:space="preserve"><value>Programa skaito:</value></data>
+  <data name="lgMeter"     xml:space="preserve"><value>Matavimas:</value></data>
+  <data name="lgApplyCal"  xml:space="preserve"><value>Taikyti kal.</value></data>
+  <data name="lgLanguage"  xml:space="preserve"><value>Kalba</value></data>
+  <data name="lgRestart"   xml:space="preserve"><value>Išsaugoti &amp;&amp; Paleisti iš naujo</value></data>
+  <data name="lgLangNote"  xml:space="preserve"><value>Pakeitimas įsigalios po paleidimo iš naujo.</value></data>
+
+  <!-- Form titles -->
+  <data name="lgTitleMenu"        xml:space="preserve"><value>Meniu</value></data>
+  <data name="lgTitleSettings"    xml:space="preserve"><value>Nustatymai</value></data>
+  <data name="lgTitleJobs"        xml:space="preserve"><value>Darbai</value></data>
+  <data name="lgTitleCrops"       xml:space="preserve"><value>Kultūros</value></data>
+  <data name="lgTitleHeaders"     xml:space="preserve"><value>Galvos</value></data>
+  <data name="lgTitleProfiles"    xml:space="preserve"><value>Profiliai</value></data>
+  <data name="lgTitleFields"      xml:space="preserve"><value>Laukai</value></data>
+  <data name="lgTitleYieldCal"    xml:space="preserve"><value>Derliaus kalibravimas</value></data>
+  <data name="lgTitleMoistureCal" xml:space="preserve"><value>Drėgmės kalibravimas</value></data>
+  <data name="lgTitleJobReport"   xml:space="preserve"><value>Darbo ataskaita</value></data>
+  <data name="lgTitleYieldMap"    xml:space="preserve"><value>Derliaus žemėlapis</value></data>
+  <data name="lgTitleLanguage"    xml:space="preserve"><value>Kalba</value></data>
+
+  <!-- Main form -->
+  <data name="lgYield"         xml:space="preserve"><value>DERLIUS</value></data>
+  <data name="lgMoisture"      xml:space="preserve"><value>DRĖGMĖ</value></data>
+  <data name="lgSpeed"         xml:space="preserve"><value>GREITIS</value></data>
+  <data name="lgSensors"       xml:space="preserve"><value>Jutikliai:</value></data>
+  <data name="lgElevFlow"      xml:space="preserve"><value>Elevatoriaus srautas</value></data>
+  <data name="lgMoistureLabel" xml:space="preserve"><value>Drėgmė</value></data>
+  <data name="lgGPS"           xml:space="preserve"><value>GPS</value></data>
+  <data name="lgModule"        xml:space="preserve"><value>Modulis</value></data>
+  <data name="lgNoActiveJob"   xml:space="preserve"><value>Nėra aktyvaus darbo</value></data>
+  <data name="lgJobStatusOn"   xml:space="preserve"><value> - Įjungta</value></data>
+  <data name="lgJobStatusOff"  xml:space="preserve"><value> - Išjungta</value></data>
+  <data name="lgStopJobPrompt" xml:space="preserve"><value>Sustabdyti ir uždaryti šį darbą?</value></data>
+  <data name="lgStopJob"       xml:space="preserve"><value>Sustabdyti darbą</value></data>
+  <data name="lgMenu"          xml:space="preserve"><value>Meniu</value></data>
+  <data name="lgStart"         xml:space="preserve"><value>Pradėti</value></data>
+  <data name="lgPause"         xml:space="preserve"><value>Pauzė</value></data>
+  <data name="lgStop"          xml:space="preserve"><value>Sustabdyti</value></data>
+  <data name="lgExit"          xml:space="preserve"><value>Išeiti</value></data>
+
+  <!-- Menu form -->
+  <data name="lgReports" xml:space="preserve"><value>Ataskaitos</value></data>
+
+  <!-- Settings -->
+  <data name="lgUnits"         xml:space="preserve"><value>Vienetai</value></data>
+  <data name="lgImperial"      xml:space="preserve"><value>Imperiniai</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>Metriniai</value></data>
+  <data name="lgTheme"         xml:space="preserve"><value>Tema</value></data>
+  <data name="lgDark"          xml:space="preserve"><value>Tamsi</value></data>
+  <data name="lgLight"         xml:space="preserve"><value>Šviesi</value></data>
+  <data name="lgModuleComm"    xml:space="preserve"><value>Modulio ryšys</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Prijunkite kompiuterį prie modulio WiFi prieigos taško arba kito WiFi tinklo.</value></data>
+  <data name="lgCanDriver"     xml:space="preserve"><value>CAN tvarkyklė</value></data>
+  <data name="lgComPort"       xml:space="preserve"><value>COM prievadas</value></data>
+  <data name="lgResumeOnStart" xml:space="preserve"><value>Tęsti darbą paleidžiant</value></data>
+  <data name="lgSettingsSaved" xml:space="preserve"><value>Nustatymai išsaugoti.</value></data>
+
+  <!-- Yield Cal form -->
+  <data name="lgProcessingDelay"    xml:space="preserve"><value>Apdorojimo vėlinimas:</value></data>
+  <data name="lgSeconds"            xml:space="preserve"><value>sekundės</value></data>
+  <data name="lgSensorBaseline"     xml:space="preserve"><value>Jutiklio bazinė vertė:</value></data>
+  <data name="lgBaselineNote"       xml:space="preserve"><value>užtvėrimo santykis be grūdų (0–1)</value></data>
+  <data name="lgSetBaseline"        xml:space="preserve"><value>Nustatyti bazinę vertę</value></data>
+  <data name="lgYieldFactor"        xml:space="preserve"><value>Derliaus koeficientas:</value></data>
+  <data name="lgFactorNote"         xml:space="preserve"><value>kalibravimo dauginamasis — padidinkite, kad padidintumėte rodmenis</value></data>
+  <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Kalibravimo ciklas ────────────────────────</value></data>
+  <data name="lgStartRun"           xml:space="preserve"><value>Pradėti ciklą</value></data>
+  <data name="lgStopRun"            xml:space="preserve"><value>Sustabdyti ciklą</value></data>
+  <data name="lgMeasuredBlank"      xml:space="preserve"><value>Išmatuota: —</value></data>
+  <data name="lgActualWeight"       xml:space="preserve"><value>Tikrasis svoris:</value></data>
+  <data name="lgCalibrationTip"     xml:space="preserve"><value>Patarimas: paleiskite tuščią elevatorių 10 s bazinei vertei nustatyti.</value></data>
+  <data name="lgCalSaved"           xml:space="preserve"><value>Kalibravimas išsaugotas ir pritaikytas.</value></data>
+  <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Įveskite faktinį pasverto svorio kiekį.</value></data>
+  <data name="lgNoMeasuredData"     xml:space="preserve"><value>Nėra matavimo duomenų — pirmiausia atlikite kalibravimo ciklą.</value></data>
+  <data name="lgNewFactorResult"    xml:space="preserve"><value>Naujas koeficientas: {0:F3}</value></data>
+  <data name="lgFactorUpdated"      xml:space="preserve"><value>Koeficientas atnaujintas į {0:F3} ir išsaugotas.</value></data>
+  <data name="lgSetBaselineConfirm" xml:space="preserve"><value>Nustatyti bazinę vertę {0:F3}?
+
+Įsitikinkite, kad elevatorius veikia be grūdų.</value></data>
+  <data name="lgMeasuredMetric"     xml:space="preserve"><value>Išmatuota: {0:F2} t</value></data>
+  <data name="lgMeasuredImperial"   xml:space="preserve"><value>Išmatuota: {0:F2} bu ({1:F0} lbs)</value></data>
+
+  <!-- Moisture Cal form -->
+  <data name="lgMoistureSection"    xml:space="preserve"><value>Drėgmė</value></data>
+  <data name="lgPercentSavedToCrop" xml:space="preserve"><value>% (išsaugota kultūroje)</value></data>
+  <data name="lgPercentPerCount"    xml:space="preserve"><value>%/impulsas (išsaugota profilyje)</value></data>
+  <data name="lgTemperatureSection" xml:space="preserve"><value>Temperatūra</value></data>
+  <data name="lgDegCSavedToProfile" xml:space="preserve"><value>°C (išsaugota profilyje)</value></data>
+  <data name="lgDegCPerCount"       xml:space="preserve"><value>°C/impulsas (išsaugota profilyje)</value></data>
+  <data name="lgNoLiveMoistReading" xml:space="preserve"><value>Nėra tiesioginių drėgmės rodmenų.</value></data>
+  <data name="lgNoLiveTempReading"  xml:space="preserve"><value>Nėra tiesioginių temperatūros rodmenų.</value></data>
+  <data name="lgSaved"              xml:space="preserve"><value>Išsaugota.</value></data>
+
+  <!-- Jobs form -->
+  <data name="lgJobName"           xml:space="preserve"><value>Darbo pavadinimas:</value></data>
+  <data name="lgColJobName"        xml:space="preserve"><value>Darbo pavadinimas</value></data>
+  <data name="lgColStatus"         xml:space="preserve"><value>Būsena</value></data>
+  <data name="lgColDate"           xml:space="preserve"><value>Data</value></data>
+  <data name="lgColAcres"          xml:space="preserve"><value>Hektarai</value></data>
+  <data name="lgColField"          xml:space="preserve"><value>Laukas</value></data>
+  <data name="lgSelectCropFirst"   xml:space="preserve"><value>Pirmiausia pasirinkite kultūrą.</value></data>
+  <data name="lgSelectHeaderFirst" xml:space="preserve"><value>Pirmiausia pasirinkite galvą.</value></data>
+  <data name="lgSelectJobFirst"    xml:space="preserve"><value>Pirmiausia pasirinkite darbą iš sąrašo.</value></data>
+  <data name="lgEnterJobName"      xml:space="preserve"><value>Įveskite darbo pavadinimą.</value></data>
+  <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Reikalingas bent vienas darbas.</value></data>
+  <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Ištrinti darbą „{0}"?</value></data>
+  <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Darbas „{0}" aktyvus. Perjungti į „{1}"?</value></data>
+
+  <!-- Crops form -->
+  <data name="lgCategoryLabel"    xml:space="preserve"><value>Kategorija:</value></data>
+  <data name="lgTestWeight"       xml:space="preserve"><value>Bandomasis svoris:</value></data>
+  <data name="lgMktMoisture"      xml:space="preserve"><value>Rinkos drėgmė:</value></data>
+  <data name="lgEnterCropName"    xml:space="preserve"><value>Įveskite kultūros pavadinimą.</value></data>
+  <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Reikalinga bent viena kultūra.</value></data>
+  <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Ištrinti šią kultūrą?</value></data>
+
+  <!-- Headers form -->
+  <data name="lgType"               xml:space="preserve"><value>Tipas:</value></data>
+  <data name="lgWidth"              xml:space="preserve"><value>Plotis:</value></data>
+  <data name="lgEnterHeaderName"    xml:space="preserve"><value>Įveskite galvos pavadinimą.</value></data>
+  <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Reikalinga bent viena galva.</value></data>
+  <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Ištrinti šią galvą?</value></data>
+
+  <!-- Profiles form -->
+  <data name="lgCombineId"           xml:space="preserve"><value>Kombainų ID:</value></data>
+  <data name="lgEnterProfileName"    xml:space="preserve"><value>Įveskite profilio pavadinimą.</value></data>
+  <data name="lgMustHaveOneProfile"  xml:space="preserve"><value>Reikalingas bent vienas profilis.</value></data>
+  <data name="lgDeleteProfilePrompt" xml:space="preserve"><value>Ištrinti šį profilį?</value></data>
+
+  <!-- Fields form -->
+  <data name="lgEnterFieldName"    xml:space="preserve"><value>Įveskite lauko pavadinimą.</value></data>
+  <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Ištrinti šį lauką?</value></data>
+
+  <!-- Job Report form -->
+  <data name="lgFieldColon"   xml:space="preserve"><value>Laukas:</value></data>
+  <data name="lgAreaColon"    xml:space="preserve"><value>Plotas:</value></data>
+  <data name="lgTotalColon"   xml:space="preserve"><value>Iš viso:</value></data>
+  <data name="lgAvgYield"     xml:space="preserve"><value>Vid. derlius:</value></data>
+  <data name="lgAvgMoisture"  xml:space="preserve"><value>Vid. drėgmė:</value></data>
+  <data name="lgDataPoints"   xml:space="preserve"><value>Duomenų taškai:</value></data>
+  <data name="lgExportCsv"    xml:space="preserve"><value>Eksportuoti CSV</value></data>
+  <data name="lgExportFailed" xml:space="preserve"><value>Eksportavimas nepavyko — nėra duomenų arba klaida.</value></data>
+  <data name="lgExported"     xml:space="preserve"><value>Eksportuota: {0}</value></data>
+
+  <!-- Yield Map -->
+  <data name="lgLow"    xml:space="preserve"><value>Žemas</value></data>
+  <data name="lgHigh"   xml:space="preserve"><value>Aukštas</value></data>
+  <data name="lgNoJobs" xml:space="preserve"><value>Nėra darbų</value></data>
+
+</root>

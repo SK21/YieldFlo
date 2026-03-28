@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmMenuCalibrate
@@ -65,7 +67,7 @@ namespace YieldFlo.Forms
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(452, 40);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "Yield Cal";
+            this.lblTitle.Text = Lang.lgTitleYieldCal;
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnTitleClose
@@ -117,7 +119,7 @@ namespace YieldFlo.Forms
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(160, 23);
             this.lblDelay.TabIndex = 0;
-            this.lblDelay.Text = "Processing Delay:";
+            this.lblDelay.Text = Lang.lgProcessingDelay;
             // 
             // numDelay
             // 
@@ -145,7 +147,7 @@ namespace YieldFlo.Forms
             this.lblDelayUnit.Name = "lblDelayUnit";
             this.lblDelayUnit.Size = new System.Drawing.Size(53, 15);
             this.lblDelayUnit.TabIndex = 2;
-            this.lblDelayUnit.Text = "seconds";
+            this.lblDelayUnit.Text = Lang.lgSeconds;
             // 
             // lblBaseline
             // 
@@ -154,7 +156,7 @@ namespace YieldFlo.Forms
             this.lblBaseline.Name = "lblBaseline";
             this.lblBaseline.Size = new System.Drawing.Size(160, 23);
             this.lblBaseline.TabIndex = 3;
-            this.lblBaseline.Text = "Sensor Baseline:";
+            this.lblBaseline.Text = Lang.lgSensorBaseline;
             // 
             // numBaseline
             // 
@@ -184,7 +186,7 @@ namespace YieldFlo.Forms
             this.lblBaselineNote.Name = "lblBaselineNote";
             this.lblBaselineNote.Size = new System.Drawing.Size(196, 15);
             this.lblBaselineNote.TabIndex = 5;
-            this.lblBaselineNote.Text = "obstruction ratio with no grain (0–1)";
+            this.lblBaselineNote.Text = Lang.lgBaselineNote;
             // 
             // btnSetBaseline
             // 
@@ -194,7 +196,7 @@ namespace YieldFlo.Forms
             this.btnSetBaseline.Name = "btnSetBaseline";
             this.btnSetBaseline.Size = new System.Drawing.Size(100, 26);
             this.btnSetBaseline.TabIndex = 6;
-            this.btnSetBaseline.Text = "Set Baseline";
+            this.btnSetBaseline.Text = Lang.lgSetBaseline;
             this.btnSetBaseline.Click += new System.EventHandler(this.btnSetBaseline_Click);
             // 
             // lblFactor
@@ -204,7 +206,7 @@ namespace YieldFlo.Forms
             this.lblFactor.Name = "lblFactor";
             this.lblFactor.Size = new System.Drawing.Size(160, 23);
             this.lblFactor.TabIndex = 7;
-            this.lblFactor.Text = "Yield Factor:";
+            this.lblFactor.Text = Lang.lgYieldFactor;
             // 
             // numFactor
             // 
@@ -239,7 +241,7 @@ namespace YieldFlo.Forms
             this.lblFactorNote.Name = "lblFactorNote";
             this.lblFactorNote.Size = new System.Drawing.Size(300, 15);
             this.lblFactorNote.TabIndex = 9;
-            this.lblFactorNote.Text = "calibration multiplier — increase to raise yield readings";
+            this.lblFactorNote.Text = Lang.lgFactorNote;
             // 
             // btnSaveCal
             // 
@@ -249,7 +251,7 @@ namespace YieldFlo.Forms
             this.btnSaveCal.Name = "btnSaveCal";
             this.btnSaveCal.Size = new System.Drawing.Size(160, 36);
             this.btnSaveCal.TabIndex = 10;
-            this.btnSaveCal.Text = "Save && Apply";
+            this.btnSaveCal.Text = Lang.lgSaveApply;
             this.btnSaveCal.Click += new System.EventHandler(this.btnSaveCal_Click);
             // 
             // btnCalClose
@@ -260,7 +262,7 @@ namespace YieldFlo.Forms
             this.btnCalClose.Name = "btnCalClose";
             this.btnCalClose.Size = new System.Drawing.Size(100, 36);
             this.btnCalClose.TabIndex = 11;
-            this.btnCalClose.Text = "Close";
+            this.btnCalClose.Text = Lang.lgClose;
             this.btnCalClose.Click += new System.EventHandler(this.btnCalClose_Click);
             // 
             // lblHint
@@ -272,7 +274,7 @@ namespace YieldFlo.Forms
             this.lblHint.Name = "lblHint";
             this.lblHint.Size = new System.Drawing.Size(344, 15);
             this.lblHint.TabIndex = 12;
-            this.lblHint.Text = "Tip: run empty elevator for 10s to find baseline sensor reading.";
+            this.lblHint.Text = Lang.lgCalibrationTip;
             // 
             // lblCalSep
             // 
@@ -283,7 +285,7 @@ namespace YieldFlo.Forms
             this.lblCalSep.Name = "lblCalSep";
             this.lblCalSep.Size = new System.Drawing.Size(368, 15);
             this.lblCalSep.TabIndex = 13;
-            this.lblCalSep.Text = "─── Calibration Run ───────────────────────────";
+            this.lblCalSep.Text = Lang.lgCalibrationRun;
             // 
             // btnStartCal
             // 
@@ -293,7 +295,7 @@ namespace YieldFlo.Forms
             this.btnStartCal.Name = "btnStartCal";
             this.btnStartCal.Size = new System.Drawing.Size(100, 32);
             this.btnStartCal.TabIndex = 14;
-            this.btnStartCal.Text = "Start Run";
+            this.btnStartCal.Text = Lang.lgStartRun;
             this.btnStartCal.Click += new System.EventHandler(this.btnStartCal_Click);
             // 
             // btnStopCal
@@ -305,7 +307,7 @@ namespace YieldFlo.Forms
             this.btnStopCal.Name = "btnStopCal";
             this.btnStopCal.Size = new System.Drawing.Size(100, 32);
             this.btnStopCal.TabIndex = 15;
-            this.btnStopCal.Text = "Stop Run";
+            this.btnStopCal.Text = Lang.lgStopRun;
             this.btnStopCal.Click += new System.EventHandler(this.btnStopCal_Click);
             // 
             // lblCalMeasured
@@ -316,7 +318,7 @@ namespace YieldFlo.Forms
             this.lblCalMeasured.Name = "lblCalMeasured";
             this.lblCalMeasured.Size = new System.Drawing.Size(76, 15);
             this.lblCalMeasured.TabIndex = 16;
-            this.lblCalMeasured.Text = "Measured: —";
+            this.lblCalMeasured.Text = Lang.lgMeasuredBlank;
             // 
             // lblActualWeight
             // 
@@ -325,7 +327,7 @@ namespace YieldFlo.Forms
             this.lblActualWeight.Name = "lblActualWeight";
             this.lblActualWeight.Size = new System.Drawing.Size(160, 23);
             this.lblActualWeight.TabIndex = 17;
-            this.lblActualWeight.Text = "Actual weight:";
+            this.lblActualWeight.Text = Lang.lgActualWeight;
             // 
             // numActualWeight
             // 
@@ -360,7 +362,7 @@ namespace YieldFlo.Forms
             this.btnApplyFactor.Name = "btnApplyFactor";
             this.btnApplyFactor.Size = new System.Drawing.Size(96, 28);
             this.btnApplyFactor.TabIndex = 20;
-            this.btnApplyFactor.Text = "Apply Cal";
+            this.btnApplyFactor.Text = Lang.lgApplyCal;
             this.btnApplyFactor.Click += new System.EventHandler(this.btnApplyFactor_Click);
             // 
             // lblCalResult

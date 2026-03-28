@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Common -->
+  <data name="lgClose"     xml:space="preserve"><value>Zamknij</value></data>
+  <data name="lgNew"       xml:space="preserve"><value>Nowy</value></data>
+  <data name="lgSave"      xml:space="preserve"><value>Zapisz</value></data>
+  <data name="lgDelete"    xml:space="preserve"><value>Usuń</value></data>
+  <data name="lgLoad"      xml:space="preserve"><value>Wczytaj</value></data>
+  <data name="lgSaveApply" xml:space="preserve"><value>Zapisz &amp;&amp; Zastosuj</value></data>
+  <data name="lgYes"       xml:space="preserve"><value>Tak</value></data>
+  <data name="lgNo"        xml:space="preserve"><value>Nie</value></data>
+  <data name="lgOn"        xml:space="preserve"><value>Włącz</value></data>
+  <data name="lgOff"       xml:space="preserve"><value>Wyłącz</value></data>
+  <data name="lgRefresh"   xml:space="preserve"><value>Odśwież</value></data>
+  <data name="lgNone"      xml:space="preserve"><value>(brak)</value></data>
+  <data name="lgName"      xml:space="preserve"><value>Nazwa:</value></data>
+  <data name="lgCrop"      xml:space="preserve"><value>Uprawa:</value></data>
+  <data name="lgHeader"    xml:space="preserve"><value>Heder:</value></data>
+  <data name="lgProfile"   xml:space="preserve"><value>Profil:</value></data>
+  <data name="lgField"     xml:space="preserve"><value>Pole:</value></data>
+  <data name="lgOffset"    xml:space="preserve"><value>Offset:</value></data>
+  <data name="lgScale"     xml:space="preserve"><value>Skala:</value></data>
+  <data name="lgAppReads"  xml:space="preserve"><value>Aplikacja odczytuje:</value></data>
+  <data name="lgMeter"     xml:space="preserve"><value>Pomiar:</value></data>
+  <data name="lgApplyCal"  xml:space="preserve"><value>Zastosuj kal.</value></data>
+  <data name="lgLanguage"  xml:space="preserve"><value>Język</value></data>
+  <data name="lgRestart"   xml:space="preserve"><value>Zapisz &amp;&amp; Uruchom ponownie</value></data>
+  <data name="lgLangNote"  xml:space="preserve"><value>Zmiana wejdzie w życie po ponownym uruchomieniu.</value></data>
+
+  <!-- Form titles -->
+  <data name="lgTitleMenu"        xml:space="preserve"><value>Menu</value></data>
+  <data name="lgTitleSettings"    xml:space="preserve"><value>Ustawienia</value></data>
+  <data name="lgTitleJobs"        xml:space="preserve"><value>Zadania</value></data>
+  <data name="lgTitleCrops"       xml:space="preserve"><value>Uprawy</value></data>
+  <data name="lgTitleHeaders"     xml:space="preserve"><value>Hedery</value></data>
+  <data name="lgTitleProfiles"    xml:space="preserve"><value>Profile</value></data>
+  <data name="lgTitleFields"      xml:space="preserve"><value>Pola</value></data>
+  <data name="lgTitleYieldCal"    xml:space="preserve"><value>Kalibracja plonu</value></data>
+  <data name="lgTitleMoistureCal" xml:space="preserve"><value>Kalibracja wilgotności</value></data>
+  <data name="lgTitleJobReport"   xml:space="preserve"><value>Raport zadania</value></data>
+  <data name="lgTitleYieldMap"    xml:space="preserve"><value>Mapa plonu</value></data>
+  <data name="lgTitleLanguage"    xml:space="preserve"><value>Język</value></data>
+
+  <!-- Main form -->
+  <data name="lgYield"         xml:space="preserve"><value>PLON</value></data>
+  <data name="lgMoisture"      xml:space="preserve"><value>WILGOTNOŚĆ</value></data>
+  <data name="lgSpeed"         xml:space="preserve"><value>PRĘDKOŚĆ</value></data>
+  <data name="lgSensors"       xml:space="preserve"><value>Czujniki:</value></data>
+  <data name="lgElevFlow"      xml:space="preserve"><value>Przepływ elewatora</value></data>
+  <data name="lgMoistureLabel" xml:space="preserve"><value>Wilgotność</value></data>
+  <data name="lgGPS"           xml:space="preserve"><value>GPS</value></data>
+  <data name="lgModule"        xml:space="preserve"><value>Moduł</value></data>
+  <data name="lgNoActiveJob"   xml:space="preserve"><value>Brak aktywnego zadania</value></data>
+  <data name="lgJobStatusOn"   xml:space="preserve"><value> - Wł.</value></data>
+  <data name="lgJobStatusOff"  xml:space="preserve"><value> - Wył.</value></data>
+  <data name="lgStopJobPrompt" xml:space="preserve"><value>Zatrzymać i zamknąć to zadanie?</value></data>
+  <data name="lgStopJob"       xml:space="preserve"><value>Zatrzymaj zadanie</value></data>
+  <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>
+  <data name="lgStart"         xml:space="preserve"><value>Start</value></data>
+  <data name="lgPause"         xml:space="preserve"><value>Pauza</value></data>
+  <data name="lgStop"          xml:space="preserve"><value>Stop</value></data>
+  <data name="lgExit"          xml:space="preserve"><value>Wyjście</value></data>
+
+  <!-- Menu form -->
+  <data name="lgReports" xml:space="preserve"><value>Raporty</value></data>
+
+  <!-- Settings -->
+  <data name="lgUnits"         xml:space="preserve"><value>Jednostki</value></data>
+  <data name="lgImperial"      xml:space="preserve"><value>Imperialne</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>Metryczne</value></data>
+  <data name="lgTheme"         xml:space="preserve"><value>Motyw</value></data>
+  <data name="lgDark"          xml:space="preserve"><value>Ciemny</value></data>
+  <data name="lgLight"         xml:space="preserve"><value>Jasny</value></data>
+  <data name="lgModuleComm"    xml:space="preserve"><value>Komunikacja modułu</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Podłącz komputer do punktu dostępu WiFi modułu lub innej sieci WiFi.</value></data>
+  <data name="lgCanDriver"     xml:space="preserve"><value>Sterownik CAN</value></data>
+  <data name="lgComPort"       xml:space="preserve"><value>Port COM</value></data>
+  <data name="lgResumeOnStart" xml:space="preserve"><value>Wznów zadanie przy starcie</value></data>
+  <data name="lgSettingsSaved" xml:space="preserve"><value>Ustawienia zapisane.</value></data>
+
+  <!-- Yield Cal form -->
+  <data name="lgProcessingDelay"    xml:space="preserve"><value>Opóźnienie przetwarzania:</value></data>
+  <data name="lgSeconds"            xml:space="preserve"><value>sekundy</value></data>
+  <data name="lgSensorBaseline"     xml:space="preserve"><value>Poziom bazowy czujnika:</value></data>
+  <data name="lgBaselineNote"       xml:space="preserve"><value>współczynnik zasłonięcia bez ziarna (0–1)</value></data>
+  <data name="lgSetBaseline"        xml:space="preserve"><value>Ustaw poziom bazowy</value></data>
+  <data name="lgYieldFactor"        xml:space="preserve"><value>Współczynnik plonu:</value></data>
+  <data name="lgFactorNote"         xml:space="preserve"><value>mnożnik kalibracji — zwiększ, aby podnieść odczyty plonu</value></data>
+  <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Przebieg kalibracji ────────────────────────</value></data>
+  <data name="lgStartRun"           xml:space="preserve"><value>Rozpocznij przebieg</value></data>
+  <data name="lgStopRun"            xml:space="preserve"><value>Zatrzymaj przebieg</value></data>
+  <data name="lgMeasuredBlank"      xml:space="preserve"><value>Zmierzono: —</value></data>
+  <data name="lgActualWeight"       xml:space="preserve"><value>Rzeczywista masa:</value></data>
+  <data name="lgCalibrationTip"     xml:space="preserve"><value>Wskazówka: uruchom pusty elewator na 10 s, aby wyznaczyć poziom bazowy.</value></data>
+  <data name="lgCalSaved"           xml:space="preserve"><value>Kalibracja zapisana i zastosowana.</value></data>
+  <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Wprowadź rzeczywistą zważoną masę.</value></data>
+  <data name="lgNoMeasuredData"     xml:space="preserve"><value>Brak danych — najpierw wykonaj przebieg kalibracji.</value></data>
+  <data name="lgNewFactorResult"    xml:space="preserve"><value>Nowy współczynnik: {0:F3}</value></data>
+  <data name="lgFactorUpdated"      xml:space="preserve"><value>Współczynnik zaktualizowany do {0:F3} i zapisany.</value></data>
+  <data name="lgSetBaselineConfirm" xml:space="preserve"><value>Ustawić poziom bazowy na {0:F3}?
+
+Upewnij się, że elewator pracuje bez ziarna.</value></data>
+  <data name="lgMeasuredMetric"     xml:space="preserve"><value>Zmierzono: {0:F2} t</value></data>
+  <data name="lgMeasuredImperial"   xml:space="preserve"><value>Zmierzono: {0:F2} bu ({1:F0} lbs)</value></data>
+
+  <!-- Moisture Cal form -->
+  <data name="lgMoistureSection"    xml:space="preserve"><value>Wilgotność</value></data>
+  <data name="lgPercentSavedToCrop" xml:space="preserve"><value>% (zapisane do uprawy)</value></data>
+  <data name="lgPercentPerCount"    xml:space="preserve"><value>%/impuls (zapisane do profilu)</value></data>
+  <data name="lgTemperatureSection" xml:space="preserve"><value>Temperatura</value></data>
+  <data name="lgDegCSavedToProfile" xml:space="preserve"><value>°C (zapisane do profilu)</value></data>
+  <data name="lgDegCPerCount"       xml:space="preserve"><value>°C/impuls (zapisane do profilu)</value></data>
+  <data name="lgNoLiveMoistReading" xml:space="preserve"><value>Brak odczytu wilgotności na żywo.</value></data>
+  <data name="lgNoLiveTempReading"  xml:space="preserve"><value>Brak odczytu temperatury na żywo.</value></data>
+  <data name="lgSaved"              xml:space="preserve"><value>Zapisano.</value></data>
+
+  <!-- Jobs form -->
+  <data name="lgJobName"           xml:space="preserve"><value>Nazwa zadania:</value></data>
+  <data name="lgColJobName"        xml:space="preserve"><value>Nazwa zadania</value></data>
+  <data name="lgColStatus"         xml:space="preserve"><value>Status</value></data>
+  <data name="lgColDate"           xml:space="preserve"><value>Data</value></data>
+  <data name="lgColAcres"          xml:space="preserve"><value>Hektary</value></data>
+  <data name="lgColField"          xml:space="preserve"><value>Pole</value></data>
+  <data name="lgSelectCropFirst"   xml:space="preserve"><value>Najpierw wybierz uprawę.</value></data>
+  <data name="lgSelectHeaderFirst" xml:space="preserve"><value>Najpierw wybierz heder.</value></data>
+  <data name="lgSelectJobFirst"    xml:space="preserve"><value>Najpierw wybierz zadanie z listy.</value></data>
+  <data name="lgEnterJobName"      xml:space="preserve"><value>Wprowadź nazwę zadania.</value></data>
+  <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Wymagane jest co najmniej jedno zadanie.</value></data>
+  <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Usunąć zadanie „{0}"?</value></data>
+  <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Zadanie „{0}" jest aktywne. Przełączyć na „{1}"?</value></data>
+
+  <!-- Crops form -->
+  <data name="lgCategoryLabel"    xml:space="preserve"><value>Kategoria:</value></data>
+  <data name="lgTestWeight"       xml:space="preserve"><value>Masa testowa:</value></data>
+  <data name="lgMktMoisture"      xml:space="preserve"><value>Wilgotność rynkowa:</value></data>
+  <data name="lgEnterCropName"    xml:space="preserve"><value>Wprowadź nazwę uprawy.</value></data>
+  <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Wymagana jest co najmniej jedna uprawa.</value></data>
+  <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Usunąć tę uprawę?</value></data>
+
+  <!-- Headers form -->
+  <data name="lgType"               xml:space="preserve"><value>Typ:</value></data>
+  <data name="lgWidth"              xml:space="preserve"><value>Szerokość:</value></data>
+  <data name="lgEnterHeaderName"    xml:space="preserve"><value>Wprowadź nazwę hedera.</value></data>
+  <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Wymagany jest co najmniej jeden heder.</value></data>
+  <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Usunąć ten heder?</value></data>
+
+  <!-- Profiles form -->
+  <data name="lgCombineId"           xml:space="preserve"><value>ID kombajnu:</value></data>
+  <data name="lgEnterProfileName"    xml:space="preserve"><value>Wprowadź nazwę profilu.</value></data>
+  <data name="lgMustHaveOneProfile"  xml:space="preserve"><value>Wymagany jest co najmniej jeden profil.</value></data>
+  <data name="lgDeleteProfilePrompt" xml:space="preserve"><value>Usunąć ten profil?</value></data>
+
+  <!-- Fields form -->
+  <data name="lgEnterFieldName"    xml:space="preserve"><value>Wprowadź nazwę pola.</value></data>
+  <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Usunąć to pole?</value></data>
+
+  <!-- Job Report form -->
+  <data name="lgFieldColon"   xml:space="preserve"><value>Pole:</value></data>
+  <data name="lgAreaColon"    xml:space="preserve"><value>Obszar:</value></data>
+  <data name="lgTotalColon"   xml:space="preserve"><value>Łącznie:</value></data>
+  <data name="lgAvgYield"     xml:space="preserve"><value>Śr. plon:</value></data>
+  <data name="lgAvgMoisture"  xml:space="preserve"><value>Śr. wilgotność:</value></data>
+  <data name="lgDataPoints"   xml:space="preserve"><value>Punkty danych:</value></data>
+  <data name="lgExportCsv"    xml:space="preserve"><value>Eksportuj CSV</value></data>
+  <data name="lgExportFailed" xml:space="preserve"><value>Eksport nie powiódł się — brak danych lub błąd.</value></data>
+  <data name="lgExported"     xml:space="preserve"><value>Wyeksportowano: {0}</value></data>
+
+  <!-- Yield Map -->
+  <data name="lgLow"    xml:space="preserve"><value>Niski</value></data>
+  <data name="lgHigh"   xml:space="preserve"><value>Wysoki</value></data>
+  <data name="lgNoJobs" xml:space="preserve"><value>Brak zadań</value></data>
+
+</root>

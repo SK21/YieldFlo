@@ -1,3 +1,5 @@
+using YieldFlo.Language;
+
 namespace YieldFlo.Forms
 {
     partial class frmMini
@@ -24,7 +26,7 @@ namespace YieldFlo.Forms
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
 
             // Top bar: YIELD | unit | restore button
-            this.lblYieldTitle.Text      = "YIELD";
+            this.lblYieldTitle.Text      = Lang.lgYield;
             this.lblYieldTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.lblYieldTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblYieldTitle.Location  = new System.Drawing.Point(5, 5);

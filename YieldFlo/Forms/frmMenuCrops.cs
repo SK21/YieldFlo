@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -114,7 +115,7 @@ namespace YieldFlo.Forms
         private void btnSave_Click(object sender, EventArgs e)
         {
             string name = txtCropName.Text.Trim();
-            if (string.IsNullOrEmpty(name)) { Props.ShowMessage("Enter a crop name.", "", 2000, true); return; }
+            if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterCropName, "", 2000, true); return; }
             string cat = cboCropCategory.SelectedItem?.ToString() ?? "Cereal";
             double tw  = (double)numTestWeight.Value;
             double mm  = (double)numMarketMoisture.Value;
@@ -138,8 +139,8 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
-            if (_crops.Count <= 1) { Props.ShowMessage("Must have at least one crop.", "", 2000, true); return; }
-            using var dlg = new frmMsgBox("Delete this crop?");
+            if (_crops.Count <= 1) { Props.ShowMessage(Lang.lgMustHaveOneCrop, "", 2000, true); return; }
+            using var dlg = new frmMsgBox(Lang.lgDeleteCropPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Crops.Delete(_editingId);

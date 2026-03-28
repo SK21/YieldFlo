@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
+using YieldFlo.Language;
 
 namespace YieldFlo.Forms
 {
@@ -102,7 +103,7 @@ namespace YieldFlo.Forms
         private void btnSave_Click(object sender, EventArgs e)
         {
             string name = txtProfileName.Text.Trim();
-            if (string.IsNullOrEmpty(name)) { Props.ShowMessage("Enter a profile name.", "", 2000, true); return; }
+            if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterProfileName, "", 2000, true); return; }
             string cid = txtCombineId.Text.Trim();
 
             if (_editingId < 0)
@@ -118,8 +119,8 @@ namespace YieldFlo.Forms
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_editingId < 0) return;
-            if (_profiles.Count <= 1) { Props.ShowMessage("Must have at least one profile.", "", 2000, true); return; }
-            using var dlg = new frmMsgBox("Delete this profile?");
+            if (_profiles.Count <= 1) { Props.ShowMessage(Lang.lgMustHaveOneProfile, "", 2000, true); return; }
+            using var dlg = new frmMsgBox(Lang.lgDeleteProfilePrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Profiles.Delete(_editingId);
