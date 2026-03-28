@@ -87,19 +87,19 @@ namespace YieldFlo.Forms
             var bf = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
 
             this.btnNew.Text      = "New";    this.btnNew.Font    = bf; this.btnNew.FlatStyle    = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNew.Location  = new System.Drawing.Point(8, 222); this.btnNew.Size = new System.Drawing.Size(80, 36);
+            this.btnNew.Location  = new System.Drawing.Point(8, 222); this.btnNew.Size = new System.Drawing.Size(106, 36);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
             this.btnSave.Text      = "Save";   this.btnSave.Font   = bf; this.btnSave.FlatStyle   = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location  = new System.Drawing.Point(96, 222); this.btnSave.Size = new System.Drawing.Size(80, 36);
+            this.btnSave.Location  = new System.Drawing.Point(118, 222); this.btnSave.Size = new System.Drawing.Size(106, 36);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
             this.btnDelete.Text      = "Delete"; this.btnDelete.Font = bf; this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Location  = new System.Drawing.Point(184, 222); this.btnDelete.Size = new System.Drawing.Size(80, 36);
+            this.btnDelete.Location  = new System.Drawing.Point(228, 222); this.btnDelete.Size = new System.Drawing.Size(106, 36);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
             this.btnProfilesClose.Text      = "Close"; this.btnProfilesClose.Font = bf; this.btnProfilesClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnProfilesClose.Location  = new System.Drawing.Point(368, 222); this.btnProfilesClose.Size = new System.Drawing.Size(80, 36);
+            this.btnProfilesClose.Location  = new System.Drawing.Point(338, 222); this.btnProfilesClose.Size = new System.Drawing.Size(106, 36);
             this.btnProfilesClose.Click    += new System.EventHandler(this.btnProfilesClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {

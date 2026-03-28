@@ -50,6 +50,10 @@ namespace YieldFlo.Classes
         public static event EventHandler UpdateDisplay;
         public static event EventHandler GpsUpdated;
         public static event EventHandler JobStateChanged;
+        public static event EventHandler FieldListChanged;
+        public static event EventHandler CropListChanged;
+        public static event EventHandler HeaderListChanged;
+        public static event EventHandler ProfileListChanged;
         public static event EventHandler ColorChanged;
         public static event EventHandler AppExit;
 
@@ -161,7 +165,11 @@ namespace YieldFlo.Classes
         }
 
         public static void RaiseColorChanged() => SafeEvent.Raise(ColorChanged);
-        public static void RaiseJobStateChanged() => SafeEvent.Raise(JobStateChanged);
+        public static void RaiseJobStateChanged()   => SafeEvent.Raise(JobStateChanged);
+        public static void RaiseFieldListChanged()   => SafeEvent.Raise(FieldListChanged);
+        public static void RaiseCropListChanged()    => SafeEvent.Raise(CropListChanged);
+        public static void RaiseHeaderListChanged()  => SafeEvent.Raise(HeaderListChanged);
+        public static void RaiseProfileListChanged() => SafeEvent.Raise(ProfileListChanged);
         public static void RaiseGpsUpdated() => SafeEvent.Raise(GpsUpdated);
 
         public static void LoadJobConfig(int profileId, int cropId, int headerId)
@@ -260,6 +268,7 @@ namespace YieldFlo.Classes
                         int headerId  = j.headerId  > 0 ? j.headerId  : ActiveHeaderId;
                         LoadJobConfig(profileId, cropId, headerId);
                         Collector.LoadJob(j.id, j.name, j.acres, j.volume);
+                        RaiseJobStateChanged();
                         resumed = true;
                     }
                     else

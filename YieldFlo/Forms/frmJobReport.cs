@@ -11,9 +11,8 @@ namespace YieldFlo.Forms
         private bool _dragging;
         private Point _dragStart;
 
-        // Parallel list to lbJobs — stores (id, name, acres, volume)
-        private readonly List<(int id, string name, double acres, double volume)> _jobs
-            = new List<(int, string, double, double)>();
+        private readonly List<(int id, string name, double acres, double volume, string fieldName)> _jobs
+            = new List<(int, string, double, double, string)>();
 
         private int _selectedJobId   = -1;
         private string _selectedName = "";
@@ -81,13 +80,19 @@ namespace YieldFlo.Forms
 
             if (Core.Database == null) return;
 
-            int count = 0;
+            var fieldMap = new System.Collections.Generic.Dictionary<int, string>();
+            foreach (var f in Core.Database.Fields.GetAll())
+                fieldMap[f.id] = f.name;
+
             foreach (var j in Core.Database.Jobs.GetAll())
             {
-                if (++count > 20) break;
-                string date = j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt;
-                lbJobs.Items.Add($"{j.name}  |  {date}  |  {j.status}");
-                _jobs.Add((j.id, j.name, j.acres, j.volume));
+                string date  = j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt;
+                string fname = j.fieldId > 0 && fieldMap.TryGetValue(j.fieldId, out string fn) ? fn : "";
+                string entry = string.IsNullOrEmpty(fname)
+                    ? $"{j.name}  |  {date}  |  {j.status}"
+                    : $"{j.name}  |  {date}  |  {j.status}  |  {fname}";
+                lbJobs.Items.Add(entry);
+                _jobs.Add((j.id, j.name, j.acres, j.volume, fname));
             }
 
             int activeId  = Core.Collector?.ActiveJobId ?? -1;
@@ -108,7 +113,8 @@ namespace YieldFlo.Forms
             _selectedJobId = job.id;
             _selectedName  = job.name;
 
-            lblReportJobName.Text = job.name;
+            lblReportJobName.Text  = job.name;
+            lblReportField.Text    = string.IsNullOrEmpty(job.fieldName) ? "Field: --" : $"Field: {job.fieldName}";
 
             double displayArea = Props.DisplayArea(job.acres);
             lblReportArea.Text = $"Area: {displayArea:F2} {Props.AreaUnit}";
@@ -145,6 +151,7 @@ namespace YieldFlo.Forms
             _selectedJobId = -1;
             _selectedName  = "";
             lblReportJobName.Text  = "--";
+            lblReportField.Text    = "Field: --";
             lblReportArea.Text     = "Area: --";
             lblReportTotal.Text    = "Total: --";
             lblReportAvgYield.Text = "Avg Yield: --";

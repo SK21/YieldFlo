@@ -12,161 +12,197 @@ namespace YieldFlo.Forms
 
         private void InitializeComponent()
         {
-            this.pnlTitle      = new System.Windows.Forms.Panel();
-            this.lblTitle      = new System.Windows.Forms.Label();
-            this.btnTitleClose = new System.Windows.Forms.Button();
-            this.pnlContent    = new System.Windows.Forms.Panel();
-            this.mapPanel      = new YieldFlo.Forms.YieldMapPanel();
+            this.gmap          = new GMap.NET.WindowsForms.GMapControl();
+            this.pnlMiniBar    = new System.Windows.Forms.Panel();
+            this.lblMiniJob    = new System.Windows.Forms.Label();
+            this.btnZoomOut    = new System.Windows.Forms.Button();
+            this.btnZoomIn     = new System.Windows.Forms.Button();
+            this.btnExpand     = new System.Windows.Forms.Button();
+            this.btnMiniClose  = new System.Windows.Forms.Button();
+            this.pnlToolbar    = new System.Windows.Forms.Panel();
+            this.cboJob        = new System.Windows.Forms.ComboBox();
+            this.btnMinimize   = new System.Windows.Forms.Button();
+            this.btnRefresh    = new System.Windows.Forms.Button();
+            this.btnClose      = new System.Windows.Forms.Button();
             this.pnlLegend     = new System.Windows.Forms.Panel();
             this.lblLegendLow  = new System.Windows.Forms.Label();
             this.lblLegendHigh = new System.Windows.Forms.Label();
-            this.lblMapJob     = new System.Windows.Forms.Label();
-            this.btnRefresh    = new System.Windows.Forms.Button();
-            this.btnMapClose   = new System.Windows.Forms.Button();
 
             this.SuspendLayout();
 
-            // ── Title bar ────────────────────────────────────────────────────
-            this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
-            this.pnlTitle.Height = 40;
+            // ── GMap ──────────────────────────────────────────────────────────
+            this.gmap.Bounds         = new System.Drawing.Rectangle(0, 30, 300, 270);
+            this.gmap.CanDragMap     = false;
+            this.gmap.MouseDown     += new System.Windows.Forms.MouseEventHandler(this.Gmap_MouseDown);
+            this.gmap.MouseUp       += new System.Windows.Forms.MouseEventHandler(this.Gmap_MouseUp);
 
-            this.lblTitle.Text      = "Yield Map";
-            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
-            this.lblTitle.AutoSize  = false;
-            this.lblTitle.Dock      = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // ── Mini bar (title bar + drag + zoom, mini mode only) ────────────
+            this.pnlMiniBar.BackColor  = System.Drawing.Color.FromArgb(20, 30, 40);
+            this.pnlMiniBar.Bounds     = new System.Drawing.Rectangle(0, 0, 300, 30);
 
-            this.btnTitleClose.Text      = "×";
-            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.Size     = new System.Drawing.Size(36, 30);
-            this.btnTitleClose.Location = new System.Drawing.Point(462, 5);
-            this.btnTitleClose.Click   += new System.EventHandler(this.btnTitleClose_Click);
+            this.lblMiniJob.AutoSize   = false;
+            this.lblMiniJob.Bounds     = new System.Drawing.Rectangle(4, 3, 176, 24);
+            this.lblMiniJob.ForeColor  = System.Drawing.Color.Silver;
+            this.lblMiniJob.Font       = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.lblMiniJob.TextAlign  = System.Drawing.ContentAlignment.MiddleLeft;
 
-            this.pnlTitle.Controls.Add(this.lblTitle);
-            this.pnlTitle.Controls.Add(this.btnTitleClose);
+            var miniBtn = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
 
-            // ── Content ───────────────────────────────────────────────────────
-            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnZoomOut.Text      = "\u2212";
+            this.btnZoomOut.Font      = miniBtn;
+            this.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomOut.FlatAppearance.BorderSize = 0;
+            this.btnZoomOut.BackColor = System.Drawing.Color.FromArgb(40, 55, 70);
+            this.btnZoomOut.ForeColor = System.Drawing.Color.White;
+            this.btnZoomOut.Size      = new System.Drawing.Size(24, 24);
+            this.btnZoomOut.Location  = new System.Drawing.Point(184, 3);
+            this.btnZoomOut.Click    += new System.EventHandler(this.btnZoomOut_Click);
 
-            var lf = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            var vf = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.btnZoomIn.Text      = "+";
+            this.btnZoomIn.Font      = miniBtn;
+            this.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomIn.FlatAppearance.BorderSize = 0;
+            this.btnZoomIn.BackColor = System.Drawing.Color.FromArgb(40, 55, 70);
+            this.btnZoomIn.ForeColor = System.Drawing.Color.White;
+            this.btnZoomIn.Size      = new System.Drawing.Size(24, 24);
+            this.btnZoomIn.Location  = new System.Drawing.Point(212, 3);
+            this.btnZoomIn.Click    += new System.EventHandler(this.btnZoomIn_Click);
 
-            // Map panel (custom painted)
-            this.mapPanel.Location = new System.Drawing.Point(4, 4);
-            this.mapPanel.Size     = new System.Drawing.Size(492, 320);
+            this.btnExpand.Text      = "\u2197";
+            this.btnExpand.Font      = miniBtn;
+            this.btnExpand.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExpand.FlatAppearance.BorderSize = 0;
+            this.btnExpand.BackColor = System.Drawing.Color.FromArgb(40, 55, 70);
+            this.btnExpand.ForeColor = System.Drawing.Color.White;
+            this.btnExpand.Size      = new System.Drawing.Size(24, 24);
+            this.btnExpand.Location  = new System.Drawing.Point(240, 3);
+            this.btnExpand.Click    += new System.EventHandler(this.btnExpand_Click);
 
-            // Legend panel (color gradient drawn by OnPaint)
-            this.pnlLegend.Location = new System.Drawing.Point(4, 328);
-            this.pnlLegend.Size     = new System.Drawing.Size(492, 40);
-            this.pnlLegend.Paint   += new System.Windows.Forms.PaintEventHandler(this.pnlLegend_Paint);
+            this.btnMiniClose.Text      = "\u00d7";
+            this.btnMiniClose.Font      = miniBtn;
+            this.btnMiniClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMiniClose.FlatAppearance.BorderSize = 0;
+            this.btnMiniClose.BackColor = System.Drawing.Color.FromArgb(100, 30, 30);
+            this.btnMiniClose.ForeColor = System.Drawing.Color.White;
+            this.btnMiniClose.Size      = new System.Drawing.Size(24, 24);
+            this.btnMiniClose.Location  = new System.Drawing.Point(268, 3);
+            this.btnMiniClose.Click    += new System.EventHandler(this.btnMiniClose_Click);
 
-            // Legend labels
+            // Wire drag on bar and label (buttons absorb their own clicks)
+            this.pnlMiniBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMiniBar_MouseDown);
+            this.pnlMiniBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMiniBar_MouseMove);
+            this.pnlMiniBar.MouseUp   += new System.Windows.Forms.MouseEventHandler(this.pnlMiniBar_MouseUp);
+            this.lblMiniJob.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMiniBar_MouseDown);
+            this.lblMiniJob.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMiniBar_MouseMove);
+            this.lblMiniJob.MouseUp   += new System.Windows.Forms.MouseEventHandler(this.pnlMiniBar_MouseUp);
+
+            this.pnlMiniBar.Controls.Add(this.lblMiniJob);
+            this.pnlMiniBar.Controls.Add(this.btnZoomOut);
+            this.pnlMiniBar.Controls.Add(this.btnZoomIn);
+            this.pnlMiniBar.Controls.Add(this.btnExpand);
+            this.pnlMiniBar.Controls.Add(this.btnMiniClose);
+
+            // ── Toolbar (full mode only) ───────────────────────────────────────
+            var btnFont = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+
+            this.pnlToolbar.BackColor = System.Drawing.Color.FromArgb(25, 35, 50);
+            this.pnlToolbar.Bounds    = new System.Drawing.Rectangle(0, 0, 800, 36);
+            this.pnlToolbar.Visible   = false;
+
+            this.cboJob.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboJob.Font          = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.cboJob.BackColor     = System.Drawing.Color.FromArgb(50, 60, 75);
+            this.cboJob.ForeColor     = System.Drawing.Color.White;
+            this.cboJob.Bounds        = new System.Drawing.Rectangle(8, 5, 300, 26);
+            this.cboJob.SelectedIndexChanged += new System.EventHandler(this.cboJob_SelectedIndexChanged);
+
+            this.btnMinimize.Text      = "—";
+            this.btnMinimize.Font      = btnFont;
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.FlatAppearance.BorderSize = 0;
+            this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
+            this.btnMinimize.ForeColor = System.Drawing.Color.White;
+            this.btnMinimize.Size      = new System.Drawing.Size(64, 26);
+            this.btnMinimize.Location  = new System.Drawing.Point(574, 5);  // repositioned by SetMiniMode
+            this.btnMinimize.Click    += new System.EventHandler(this.btnMinimize_Click);
+
+            this.btnRefresh.Text      = "Refresh";
+            this.btnRefresh.Font      = btnFont;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.FlatAppearance.BorderSize = 0;
+            this.btnRefresh.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
+            this.btnRefresh.ForeColor = System.Drawing.Color.White;
+            this.btnRefresh.Size      = new System.Drawing.Size(80, 26);
+            this.btnRefresh.Location  = new System.Drawing.Point(644, 5);
+            this.btnRefresh.Click    += new System.EventHandler(this.btnRefresh_Click);
+
+            this.btnClose.Text      = "Close";
+            this.btnClose.Font      = btnFont;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.BackColor = System.Drawing.Color.FromArgb(80, 30, 30);
+            this.btnClose.ForeColor = System.Drawing.Color.White;
+            this.btnClose.Size      = new System.Drawing.Size(70, 26);
+            this.btnClose.Location  = new System.Drawing.Point(724, 5);
+            this.btnClose.Click    += new System.EventHandler(this.btnClose_Click);
+
+            this.pnlToolbar.Controls.AddRange(new System.Windows.Forms.Control[] {
+                cboJob, btnMinimize, btnRefresh, btnClose });
+
+            // ── Legend (full mode only) ────────────────────────────────────────
+            this.pnlLegend.BackColor = System.Drawing.Color.FromArgb(15, 20, 30);
+            this.pnlLegend.Bounds    = new System.Drawing.Rectangle(0, 560, 800, 36);
+            this.pnlLegend.Visible   = false;
+            this.pnlLegend.Paint    += new System.Windows.Forms.PaintEventHandler(this.pnlLegend_Paint);
+
             this.lblLegendLow.Text      = "Low";
-            this.lblLegendLow.Font      = vf;
             this.lblLegendLow.ForeColor = System.Drawing.Color.White;
+            this.lblLegendLow.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.lblLegendLow.AutoSize  = false;
-            this.lblLegendLow.Location  = new System.Drawing.Point(4, 328);
-            this.lblLegendLow.Size      = new System.Drawing.Size(40, 16);
+            this.lblLegendLow.Bounds    = new System.Drawing.Rectangle(4, 18, 100, 16);
             this.lblLegendLow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
             this.lblLegendHigh.Text      = "High";
-            this.lblLegendHigh.Font      = vf;
             this.lblLegendHigh.ForeColor = System.Drawing.Color.White;
+            this.lblLegendHigh.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.lblLegendHigh.AutoSize  = false;
-            this.lblLegendHigh.Location  = new System.Drawing.Point(452, 328);
-            this.lblLegendHigh.Size      = new System.Drawing.Size(44, 16);
+            this.lblLegendHigh.Bounds    = new System.Drawing.Rectangle(696, 18, 100, 16);
             this.lblLegendHigh.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 
-            // Job name label
-            this.lblMapJob.Text      = "";
-            this.lblMapJob.Font      = vf;
-            this.lblMapJob.AutoSize  = false;
-            this.lblMapJob.Location  = new System.Drawing.Point(4, 372);
-            this.lblMapJob.Size      = new System.Drawing.Size(306, 20);
-            this.lblMapJob.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.pnlLegend.Controls.Add(this.lblLegendLow);
+            this.pnlLegend.Controls.Add(this.lblLegendHigh);
 
-            // Refresh button
-            this.btnRefresh.Text      = "Refresh";
-            this.btnRefresh.Font      = lf;
-            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.FlatAppearance.BorderSize = 0;
-            this.btnRefresh.Size      = new System.Drawing.Size(80, 28);
-            this.btnRefresh.Location  = new System.Drawing.Point(318, 368);
-            this.btnRefresh.Click    += new System.EventHandler(this.btnRefresh_Click);
-
-            // Close button
-            this.btnMapClose.Text      = "Close";
-            this.btnMapClose.Font      = lf;
-            this.btnMapClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMapClose.FlatAppearance.BorderSize = 0;
-            this.btnMapClose.Size      = new System.Drawing.Size(80, 28);
-            this.btnMapClose.Location  = new System.Drawing.Point(412, 368);
-            this.btnMapClose.Click    += new System.EventHandler(this.btnMapClose_Click);
-
-            this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
-                mapPanel, pnlLegend, lblLegendLow, lblLegendHigh,
-                lblMapJob, btnRefresh, btnMapClose });
-
-            // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(500, 462);
-            this.MinimumSize     = new System.Drawing.Size(500, 462);
-            this.MaximumSize     = new System.Drawing.Size(500, 462);
+            // ── Form (starts in mini size, SetMiniMode will resize) ───────────
+            this.ClientSize      = new System.Drawing.Size(300, 300);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Padding         = new System.Windows.Forms.Padding(2);
-            this.BackColor       = System.Drawing.Color.White;
+            this.Padding         = new System.Windows.Forms.Padding(0);
+            this.BackColor       = System.Drawing.Color.Black;
             this.TopMost         = true;
             this.ShowInTaskbar   = false;
             this.StartPosition   = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Name            = "frmYieldMap";
             this.Text            = "Yield Map";
-            this.Controls.Add(this.pnlContent);
-            this.Controls.Add(this.pnlTitle);
+            this.Controls.AddRange(new System.Windows.Forms.Control[] {
+                gmap, pnlMiniBar, pnlToolbar, pnlLegend });
             this.Load += new System.EventHandler(this.frmYieldMap_Load);
 
             this.ResumeLayout(false);
         }
 
-        private void pnlLegend_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
-        {
-            // Draw gradient: green → yellow → red
-            var g   = e.Graphics;
-            var rect = (sender as System.Windows.Forms.Panel).ClientRectangle;
-            int w = rect.Width;
-
-            for (int x = 0; x < w; x++)
-            {
-                double t = (double)x / (w - 1);
-                System.Drawing.Color col;
-                if (t <= 0.5)
-                {
-                    double u = t * 2.0;
-                    col = System.Drawing.Color.FromArgb(
-                        (int)(u * 255), (int)(180 + u * 40), 0);
-                }
-                else
-                {
-                    double u = (t - 0.5) * 2.0;
-                    col = System.Drawing.Color.FromArgb(
-                        (int)(255 - u * 35), (int)(220 - u * 220), 0);
-                }
-                using (var pen = new System.Drawing.Pen(col))
-                    g.DrawLine(pen, x, 0, x, rect.Height);
-            }
-        }
-
-        private System.Windows.Forms.Panel   pnlTitle;
-        private System.Windows.Forms.Label   lblTitle;
-        private System.Windows.Forms.Button  btnTitleClose;
-        private System.Windows.Forms.Panel   pnlContent;
-        private YieldFlo.Forms.YieldMapPanel mapPanel;
+        private GMap.NET.WindowsForms.GMapControl gmap;
+        private System.Windows.Forms.Panel   pnlMiniBar;
+        private System.Windows.Forms.Label   lblMiniJob;
+        private System.Windows.Forms.Button  btnZoomOut;
+        private System.Windows.Forms.Button  btnZoomIn;
+        private System.Windows.Forms.Button  btnExpand;
+        private System.Windows.Forms.Button  btnMiniClose;
+        private System.Windows.Forms.Panel   pnlToolbar;
+        private System.Windows.Forms.ComboBox cboJob;
+        private System.Windows.Forms.Button  btnMinimize;
+        private System.Windows.Forms.Button  btnRefresh;
+        private System.Windows.Forms.Button  btnClose;
         private System.Windows.Forms.Panel   pnlLegend;
         private System.Windows.Forms.Label   lblLegendLow;
         private System.Windows.Forms.Label   lblLegendHigh;
-        private System.Windows.Forms.Label   lblMapJob;
-        private System.Windows.Forms.Button  btnRefresh;
-        private System.Windows.Forms.Button  btnMapClose;
     }
 }

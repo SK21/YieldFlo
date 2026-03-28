@@ -13,9 +13,15 @@ namespace YieldFlo.Forms
         private readonly List<int> _cropIds    = new List<int>();
         private readonly List<int> _headerIds  = new List<int>();
         private readonly List<int> _profileIds = new List<int>();
+        private readonly List<int> _fieldIds   = new List<int>();
 
-        private readonly List<(int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume)> _jobData
-            = new List<(int, string, int, int, int, double, double)>();
+        private readonly List<(int jobId, string jobName, string status, string startedAt, int profileId, int cropId, int headerId, int fieldId, double acres, double volume, string fieldName)> _jobData
+            = new List<(int, string, string, string, int, int, int, int, double, double, string)>();
+
+        private int  _sortCol = 2;   // Date by default
+        private bool _sortAsc = false; // newest first
+
+        private static readonly string[] _colNames = { "Job Name", "Status", "Date", "Acres", "Field" };
 
 
         public frmMenuJobs()
@@ -39,6 +45,82 @@ namespace YieldFlo.Forms
             LoadRecentJobs();
             SelectInitialJob();
             this.Shown += frmMenuJobs_Shown;
+            Core.FieldListChanged   += Core_FieldListChanged;
+            Core.CropListChanged    += Core_CropListChanged;
+            Core.HeaderListChanged  += Core_HeaderListChanged;
+            Core.ProfileListChanged += Core_ProfileListChanged;
+            this.FormClosed += (s, ev) =>
+            {
+                Core.FieldListChanged   -= Core_FieldListChanged;
+                Core.CropListChanged    -= Core_CropListChanged;
+                Core.HeaderListChanged  -= Core_HeaderListChanged;
+                Core.ProfileListChanged -= Core_ProfileListChanged;
+            };
+        }
+
+        private void Core_FieldListChanged(object sender, EventArgs e)
+        {
+            if (this.IsDisposed || !this.IsHandleCreated) return;
+            this.BeginInvoke((Action)RefreshFieldCombo);
+        }
+
+        private void Core_CropListChanged(object sender, EventArgs e)
+        {
+            if (this.IsDisposed || !this.IsHandleCreated) return;
+            this.BeginInvoke((Action)RefreshCropCombo);
+        }
+
+        private void Core_HeaderListChanged(object sender, EventArgs e)
+        {
+            if (this.IsDisposed || !this.IsHandleCreated) return;
+            this.BeginInvoke((Action)RefreshHeaderCombo);
+        }
+
+        private void Core_ProfileListChanged(object sender, EventArgs e)
+        {
+            if (this.IsDisposed || !this.IsHandleCreated) return;
+            this.BeginInvoke((Action)RefreshProfileCombo);
+        }
+
+        private void RefreshFieldCombo()
+        {
+            int cur = cboField.SelectedIndex >= 0 ? _fieldIds[cboField.SelectedIndex] : -1;
+            cboField.Items.Clear(); _fieldIds.Clear();
+            cboField.Items.Add("(none)"); _fieldIds.Add(-1);
+            foreach (var f in Core.Database.Fields.GetAll())
+            { cboField.Items.Add(f.name); _fieldIds.Add(f.id); }
+            int idx = _fieldIds.IndexOf(cur);
+            cboField.SelectedIndex = idx >= 0 ? idx : 0;
+        }
+
+        private void RefreshCropCombo()
+        {
+            int cur = cboCrop.SelectedIndex >= 0 ? _cropIds[cboCrop.SelectedIndex] : -1;
+            cboCrop.Items.Clear(); _cropIds.Clear();
+            foreach (var c in Core.Database.Crops.GetAll())
+            { cboCrop.Items.Add($"{c.name}  ({c.testWeight:F0} lb/bu)"); _cropIds.Add(c.id); }
+            int idx = _cropIds.IndexOf(cur);
+            cboCrop.SelectedIndex = idx >= 0 ? idx : (cboCrop.Items.Count > 0 ? 0 : -1);
+        }
+
+        private void RefreshHeaderCombo()
+        {
+            int cur = cboHeader.SelectedIndex >= 0 ? _headerIds[cboHeader.SelectedIndex] : -1;
+            cboHeader.Items.Clear(); _headerIds.Clear();
+            foreach (var h in Core.Database.Headers.GetAll())
+            { double w = Props.IsMetric ? h.widthM : h.widthM * 3.28084; string wu = Props.IsMetric ? "m" : "ft"; string wf = Props.IsMetric ? "F2" : "F1"; cboHeader.Items.Add($"{h.name}  ({w.ToString(wf)} {wu})"); _headerIds.Add(h.id); }
+            int idx = _headerIds.IndexOf(cur);
+            cboHeader.SelectedIndex = idx >= 0 ? idx : (cboHeader.Items.Count > 0 ? 0 : -1);
+        }
+
+        private void RefreshProfileCombo()
+        {
+            int cur = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : -1;
+            cboProfile.Items.Clear(); _profileIds.Clear();
+            foreach (var p in Core.Database.Profiles.GetAll())
+            { cboProfile.Items.Add(p.name); _profileIds.Add(p.id); }
+            int idx = _profileIds.IndexOf(cur);
+            cboProfile.SelectedIndex = idx >= 0 ? idx : (cboProfile.Items.Count > 0 ? 0 : -1);
         }
 
         private void frmMenuJobs_Shown(object sender, EventArgs e)
@@ -64,7 +146,7 @@ namespace YieldFlo.Forms
                 c.ForeColor = fore;
                 if (c is Button btn)   { btn.BackColor  = ctrl; btn.ForeColor  = Color.White; }
                 if (c is TextBox tb)   { tb.BackColor   = ctrl; tb.ForeColor   = Color.White; }
-                if (c is ComboBox cb)  { cb.BackColor   = ctrl; cb.ForeColor   = Color.White; }
+                if (c is ComboBox cb)  { cb.BackColor = ctrl; cb.ForeColor = Color.White; }
                 if (c is ListView lv)  { lv.BackColor   = ctrl; lv.ForeColor   = Color.White; }
             }
             btnSave.BackColor   = Color.FromArgb(0, 90, 0);
@@ -76,15 +158,20 @@ namespace YieldFlo.Forms
             cboCrop.Items.Clear();    _cropIds.Clear();
             cboHeader.Items.Clear();  _headerIds.Clear();
             cboProfile.Items.Clear(); _profileIds.Clear();
+            cboField.Items.Clear();   _fieldIds.Clear();
 
             foreach (var c in Core.Database.Crops.GetAll())
             { cboCrop.Items.Add($"{c.name}  ({c.testWeight:F0} lb/bu)"); _cropIds.Add(c.id); }
 
             foreach (var h in Core.Database.Headers.GetAll())
-            { cboHeader.Items.Add($"{h.name}  ({h.widthM:F2} m)"); _headerIds.Add(h.id); }
+            { double w = Props.IsMetric ? h.widthM : h.widthM * 3.28084; string wu = Props.IsMetric ? "m" : "ft"; string wf = Props.IsMetric ? "F2" : "F1"; cboHeader.Items.Add($"{h.name}  ({w.ToString(wf)} {wu})"); _headerIds.Add(h.id); }
 
             foreach (var p in Core.Database.Profiles.GetAll())
             { cboProfile.Items.Add(p.name); _profileIds.Add(p.id); }
+
+            cboField.Items.Add("(none)"); _fieldIds.Add(-1);
+            foreach (var f in Core.Database.Fields.GetAll())
+            { cboField.Items.Add(f.name); _fieldIds.Add(f.id); }
 
             SetDefaultSelections();
         }
@@ -97,23 +184,58 @@ namespace YieldFlo.Forms
             cboHeader.SelectedIndex = hi >= 0 ? hi : (cboHeader.Items.Count > 0 ? 0 : -1);
             int pi = _profileIds.IndexOf(Core.ActiveProfileId);
             cboProfile.SelectedIndex = pi >= 0 ? pi : (cboProfile.Items.Count > 0 ? 0 : -1);
+            cboField.SelectedIndex = 0;  // default "(none)"
             txtJobName.Text = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
         }
 
         private void LoadRecentJobs()
         {
-            lvJobs.Items.Clear();
             _jobData.Clear();
-            int count = 0;
             foreach (var j in Core.Database.Jobs.GetAll())
             {
-                if (++count > 8) break;
-                var item = lvJobs.Items.Add(j.name);
-                item.SubItems.Add(j.status);
-                item.SubItems.Add(j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt);
-                item.SubItems.Add(j.acres.ToString("F2") + " ac");
-                _jobData.Add((j.id, j.name, j.profileId, j.cropId, j.headerId, j.acres, j.volume));
+                int fi = _fieldIds.IndexOf(j.fieldId);
+                string fname = fi > 0 ? (string)cboField.Items[fi] : "";
+                string date  = j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt;
+                _jobData.Add((j.id, j.name, j.status, date, j.profileId, j.cropId, j.headerId, j.fieldId, j.acres, j.volume, fname));
             }
+            SortJobs();
+        }
+
+        private void RefreshListFromData()
+        {
+            int selJobId = lvJobs.SelectedIndices.Count > 0 ? _jobData[lvJobs.SelectedIndices[0]].jobId : -1;
+            lvJobs.Items.Clear();
+            for (int i = 0; i < _jobData.Count; i++)
+            {
+                var j = _jobData[i];
+                var item = lvJobs.Items.Add(j.jobName);
+                item.SubItems.Add(j.status);
+                item.SubItems.Add(j.startedAt);
+                item.SubItems.Add(j.acres.ToString("F2") + " ac");
+                item.SubItems.Add(j.fieldName);
+            }
+            int newSel = _jobData.FindIndex(j => j.jobId == selJobId);
+            if (newSel >= 0) { lvJobs.Items[newSel].Selected = true; lvJobs.Items[newSel].EnsureVisible(); }
+        }
+
+        private void SortJobs()
+        {
+            _jobData.Sort((a, b) =>
+            {
+                int cmp = _sortCol switch
+                {
+                    0 => string.Compare(a.jobName,   b.jobName,   StringComparison.OrdinalIgnoreCase),
+                    1 => string.Compare(a.status,    b.status,    StringComparison.OrdinalIgnoreCase),
+                    2 => string.Compare(a.startedAt, b.startedAt, StringComparison.Ordinal),
+                    3 => a.acres.CompareTo(b.acres),
+                    4 => string.Compare(a.fieldName, b.fieldName, StringComparison.OrdinalIgnoreCase),
+                    _ => 0
+                };
+                return _sortAsc ? cmp : -cmp;
+            });
+            for (int i = 0; i < lvJobs.Columns.Count; i++)
+                lvJobs.Columns[i].Text = i == _sortCol ? _colNames[i] + (_sortAsc ? " ▲" : " ▼") : _colNames[i];
+            RefreshListFromData();
         }
 
         private void SelectInitialJob()
@@ -157,6 +279,9 @@ namespace YieldFlo.Forms
             int pi = _profileIds.IndexOf(job.profileId);
             if (pi >= 0) cboProfile.SelectedIndex = pi;
 
+            int fi = _fieldIds.IndexOf(job.fieldId);
+            cboField.SelectedIndex = fi >= 0 ? fi : 0;
+
             btnSave.Enabled = true;
         }
 
@@ -172,8 +297,9 @@ namespace YieldFlo.Forms
             int cropId    = _cropIds[cboCrop.SelectedIndex];
             int headerId  = _headerIds[cboHeader.SelectedIndex];
             int profileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : 1;
+            int fieldId   = cboField.SelectedIndex   >= 0 ? _fieldIds[cboField.SelectedIndex]     : -1;
 
-            int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId);
+            int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId, fieldId);
 
             LoadRecentJobs();
 
@@ -213,9 +339,10 @@ namespace YieldFlo.Forms
             int cropId    = cboCrop.SelectedIndex    >= 0 ? _cropIds[cboCrop.SelectedIndex]       : job2.cropId;
             int headerId  = cboHeader.SelectedIndex  >= 0 ? _headerIds[cboHeader.SelectedIndex]   : job2.headerId;
             int profileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : job2.profileId;
+            int fieldId   = cboField.SelectedIndex   >= 0 ? _fieldIds[cboField.SelectedIndex]     : job2.fieldId;
 
             int savedJobId = _jobData[idx].jobId;
-            Core.Database.Jobs.Update(savedJobId, name, cropId, headerId, profileId);
+            Core.Database.Jobs.Update(savedJobId, name, cropId, headerId, profileId, fieldId);
 
             if (savedJobId == Core.Collector.ActiveJobId)
                 Core.Collector.RenameActiveJob(name);
@@ -252,7 +379,7 @@ namespace YieldFlo.Forms
             btnSave.Enabled = btnLoad.Enabled = btnDelete.Enabled = false;
         }
 
-        private void StartSelectedJob((int jobId, string jobName, int profileId, int cropId, int headerId, double acres, double volume) job)
+        private void StartSelectedJob((int jobId, string jobName, string status, string startedAt, int profileId, int cropId, int headerId, int fieldId, double acres, double volume, string fieldName) job)
         {
             int activeId = Core.Collector.ActiveJobId;
             if (activeId > 0 && activeId != job.jobId)
@@ -273,6 +400,13 @@ namespace YieldFlo.Forms
             Core.RaiseJobStateChanged();
             LoadRecentJobs();
             SelectInitialJob();
+        }
+
+        private void lvJobs_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
+        {
+            if (_sortCol == e.Column) _sortAsc = !_sortAsc;
+            else { _sortCol = e.Column; _sortAsc = true; }
+            SortJobs();
         }
 
         private void lvJobs_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e) => e.DrawDefault = true;

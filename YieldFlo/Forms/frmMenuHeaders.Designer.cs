@@ -104,22 +104,22 @@ namespace YieldFlo.Forms
             // Buttons
             this.btnNew.Text      = "New";    this.btnNew.Font    = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNew.Location  = new System.Drawing.Point(8, 272); this.btnNew.Size = new System.Drawing.Size(80, 36);
+            this.btnNew.Location  = new System.Drawing.Point(8, 272); this.btnNew.Size = new System.Drawing.Size(106, 36);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
             this.btnSave.Text      = "Save";   this.btnSave.Font   = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location  = new System.Drawing.Point(96, 272); this.btnSave.Size = new System.Drawing.Size(80, 36);
+            this.btnSave.Location  = new System.Drawing.Point(118, 272); this.btnSave.Size = new System.Drawing.Size(106, 36);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
             this.btnDelete.Text      = "Delete"; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Location  = new System.Drawing.Point(184, 272); this.btnDelete.Size = new System.Drawing.Size(80, 36);
+            this.btnDelete.Location  = new System.Drawing.Point(228, 272); this.btnDelete.Size = new System.Drawing.Size(106, 36);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
             this.btnHeadersClose.Text      = "Close"; this.btnHeadersClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnHeadersClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHeadersClose.Location  = new System.Drawing.Point(368, 272); this.btnHeadersClose.Size = new System.Drawing.Size(80, 36);
+            this.btnHeadersClose.Location  = new System.Drawing.Point(338, 272); this.btnHeadersClose.Size = new System.Drawing.Size(106, 36);
             this.btnHeadersClose.Click    += new System.EventHandler(this.btnHeadersClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {

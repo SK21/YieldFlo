@@ -110,6 +110,7 @@ namespace YieldFlo.Forms
             else
                 Core.Database.Profiles.Update(_editingId, name, cid);
 
+            Core.RaiseProfileListChanged();
             LoadList();
             ClearEdit();
         }
@@ -122,6 +123,7 @@ namespace YieldFlo.Forms
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Profiles.Delete(_editingId);
+            Core.RaiseProfileListChanged();
             LoadList();
             ClearEdit();
         }

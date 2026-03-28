@@ -98,10 +98,10 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.pnlEdit);
 
             // Buttons row
-            this.btnNew.Text = "New"; this.btnNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnNew.Location = new System.Drawing.Point(8, 328); this.btnNew.Size = new System.Drawing.Size(80, 36);
-            this.btnSave.Text = "Save"; this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSave.Location = new System.Drawing.Point(96, 328); this.btnSave.Size = new System.Drawing.Size(80, 36);
-            this.btnDelete.Text = "Delete"; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDelete.Location = new System.Drawing.Point(184, 328); this.btnDelete.Size = new System.Drawing.Size(80, 36);
-            this.btnCropsClose.Text = "Close"; this.btnCropsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnCropsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCropsClose.Location = new System.Drawing.Point(368, 328); this.btnCropsClose.Size = new System.Drawing.Size(80, 36);
+            this.btnNew.Text = "New"; this.btnNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnNew.Location = new System.Drawing.Point(8, 328); this.btnNew.Size = new System.Drawing.Size(106, 36);
+            this.btnSave.Text = "Save"; this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSave.Location = new System.Drawing.Point(118, 328); this.btnSave.Size = new System.Drawing.Size(106, 36);
+            this.btnDelete.Text = "Delete"; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDelete.Location = new System.Drawing.Point(228, 328); this.btnDelete.Size = new System.Drawing.Size(106, 36);
+            this.btnCropsClose.Text = "Close"; this.btnCropsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnCropsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCropsClose.Location = new System.Drawing.Point(338, 328); this.btnCropsClose.Size = new System.Drawing.Size(106, 36);
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] { btnNew, btnSave, btnDelete, btnCropsClose });
 
             btnNew.Click        += new System.EventHandler(this.btnNew_Click);

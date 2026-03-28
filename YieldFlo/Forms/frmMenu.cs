@@ -57,6 +57,7 @@ namespace YieldFlo.Forms
         private void btnProfiles_Click(object sender, EventArgs e)  => FormManager.ShowForm(new frmMenuProfiles());
         private void btnCalibrate_Click(object sender, EventArgs e) => FormManager.ShowForm(new frmMenuCalibrate());
         private void btnSettings_Click(object sender, EventArgs e) => FormManager.ShowForm(new frmMenuSettings());
+        private void btnFields_Click(object sender, EventArgs e)   => FormManager.ShowForm(new frmMenuFields());
         private void btnReports_Click(object sender, EventArgs e)   => FormManager.ShowForm(new frmJobReport());
         private void btnYieldMap_Click(object sender, EventArgs e)   => FormManager.ShowForm(new frmYieldMap());
         private void btnSensorCal_Click(object sender, EventArgs e) => FormManager.ShowForm(new frmMenuSensorCal());

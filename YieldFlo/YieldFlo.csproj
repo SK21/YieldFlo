@@ -27,6 +27,7 @@
   <!-- NuGet packages -->
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119.0" />
+    <PackageReference Include="GMap.NET.WindowsForms" Version="1.7.5" />
   </ItemGroup>
 
   <!-- Settings designer -->

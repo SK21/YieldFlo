@@ -157,6 +157,7 @@ namespace YieldFlo.Forms
             else
                 Core.Database.Headers.Update(_editingId, name, type, width);
 
+            Core.RaiseHeaderListChanged();
             LoadList();
             ClearEdit();
         }
@@ -169,6 +170,7 @@ namespace YieldFlo.Forms
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Headers.Delete(_editingId);
+            Core.RaiseHeaderListChanged();
             LoadList();
             ClearEdit();
         }

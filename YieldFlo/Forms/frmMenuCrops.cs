@@ -128,6 +128,7 @@ namespace YieldFlo.Forms
                 savedId = _editingId;
             }
 
+            Core.RaiseCropListChanged();
             LoadList();
             ClearEdit();
             int sel = _crops?.FindIndex(c => c.id == savedId) ?? -1;
@@ -142,6 +143,7 @@ namespace YieldFlo.Forms
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
             Core.Database.Crops.Delete(_editingId);
+            Core.RaiseCropListChanged();
             LoadList();
             ClearEdit();
         }
