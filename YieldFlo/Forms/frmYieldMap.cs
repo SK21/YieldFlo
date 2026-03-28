@@ -28,6 +28,9 @@ namespace YieldFlo.Forms
         // Job list
         private readonly List<int> _jobIds = new List<int>();
 
+        // Live-update timer
+        private System.Windows.Forms.Timer _liveTimer;
+
         public frmYieldMap()
         {
             InitializeComponent();
@@ -44,6 +47,11 @@ namespace YieldFlo.Forms
             LoadYieldData();
             Core.JobStateChanged += Core_JobStateChanged;
             this.FormClosed += (s, ev) => Core.JobStateChanged -= Core_JobStateChanged;
+
+            _liveTimer = new System.Windows.Forms.Timer { Interval = 5000 };
+            _liveTimer.Tick += LiveTimer_Tick;
+            _liveTimer.Start();
+            this.FormClosed += (s, ev) => _liveTimer.Stop();
         }
 
         private void Core_JobStateChanged(object sender, EventArgs e)
@@ -55,6 +63,15 @@ namespace YieldFlo.Forms
                 SelectCurrentJob();
                 LoadYieldData();
             }));
+        }
+
+        private void LiveTimer_Tick(object sender, EventArgs e)
+        {
+            if (Core.Collector == null || !Core.Collector.IsRecording) return;
+            int idx = cboJob.SelectedIndex;
+            if (idx < 0 || idx >= _jobIds.Count) return;
+            if (_jobIds[idx] != Core.Collector.ActiveJobId) return;
+            LoadYieldData(center: false);
         }
 
         // ── GMap init ─────────────────────────────────────────────────────────
@@ -205,7 +222,7 @@ namespace YieldFlo.Forms
 
         // ── Yield overlay ─────────────────────────────────────────────────────
 
-        private void LoadYieldData()
+        private void LoadYieldData(bool center = true)
         {
             gmap.Overlays.Clear();
 
@@ -231,7 +248,7 @@ namespace YieldFlo.Forms
             if (points.Count == 0) return;
 
             BuildSwathOverlay(points);
-            CenterOnData(points);
+            if (center) CenterOnData(points);
         }
 
         private void BuildSwathOverlay(List<YieldDataPoint> points)
