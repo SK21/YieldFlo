@@ -12,7 +12,7 @@ namespace YieldFlo.Classes
     {
         private static bool _open = false;
 
-        public static void Wire(Form owner, TextBox txt, string title = "")
+        public static void Wire(Form owner, TextBox txt, string title = "", bool append = false)
         {
             void ShowKeyboard(object s, EventArgs e)
             {
@@ -20,7 +20,7 @@ namespace YieldFlo.Classes
                 _open = true;
                 try
                 {
-                    using (var kb = new frmKeyboard(txt.Text, title))
+                    using (var kb = new frmKeyboard(txt.Text, title, overwrite: !append))
                     {
                         if (kb.ShowDialog(owner) == DialogResult.OK)
                             txt.Text = kb.ReturnValue;

@@ -30,12 +30,14 @@ namespace YieldFlo.Forms
 
         public string ReturnValue { get; private set; } = "";
 
-        public frmKeyboard(string current, string title = "")
+        public frmKeyboard(string current, string title = "", bool overwrite = true)
         {
             InitializeComponent();
 
+            this.KeyPreview  = true;
             lblTitle.Text    = title;
             tboxDisplay.Text = current;
+            _overwrite       = overwrite;
 
             _letterBtns = new Button[] {
                 btnQ, btnW, btnE, btnR, btnT, btnY, btnU, btnI, btnO, btnP,

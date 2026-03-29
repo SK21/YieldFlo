@@ -1,5 +1,6 @@
 
     static const char* indexHtml =
+    "<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>"
     "<body style='font-family: Verdana,sans-serif; font-size: 14px;'>"
     "<div style='width:400px;padding:20px;border-radius:10px;border:solid 2px #e0e0e0;margin:auto;margin-top:20px;'>"
     "<div style='width:100%;text-align:center;font-size:18px;font-weight:bold;margin-bottom:12px;'>ESP 2S OTA</div>"
@@ -30,4 +31,5 @@
          "});"
          "req.send(data);"
      "});"
-    "</script>";
+    "</script>"
+    "</html>";

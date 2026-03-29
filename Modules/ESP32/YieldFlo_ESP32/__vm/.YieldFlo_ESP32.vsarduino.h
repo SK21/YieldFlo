@@ -22,5 +22,8 @@
 #include "..\Begin.ino"
 #include "..\Comm.ino"
 #include "..\Flow.ino"
+#include "..\GUI.ino"
+#include "..\PgMain.ino"
+#include "..\PgUpdate.ino"
 #endif
 #endif

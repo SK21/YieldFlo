@@ -20,6 +20,9 @@
     <ClCompile Include="Analog.ino" />
     <ClCompile Include="Flow.ino" />
     <ClCompile Include="Comm.ino" />
+    <ClCompile Include="GUI.ino" />
+    <ClCompile Include="PgMain.ino" />
+    <ClCompile Include="PgUpdate.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.YieldFlo_ESP32.vsarduino.h">

@@ -77,7 +77,7 @@ namespace YieldFlo.Forms
             this.lvJobs.BorderStyle     = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lvJobs.Font        = inputFont;
             this.lvJobs.Columns.Add(Lang.lgColJobName, 130);
-            this.lvJobs.Columns.Add(Lang.lgColStatus,   56);
+            this.lvJobs.Columns.Add(Lang.lgColStatus,   80);
             this.lvJobs.Columns.Add(Lang.lgColDate,     82);
             this.lvJobs.Columns.Add(Lang.lgColAcres,    56);
             this.lvJobs.Columns.Add(Lang.lgColField,   100);

@@ -176,24 +176,23 @@ void DoSetup()
 	Serial.println();
 	Serial.println("Starting Web Server");
 
-	//server.on("/", HandleRoot);
-	//server.on("/page1", HandlePage1);
-	//server.on("/page2", HandlePage2);
-	//server.on("/ButtonPressed", ButtonPressed);
-	//server.onNotFound(HandleRoot);
+	server.on("/", HandleRoot);
+	server.onNotFound(HandleRoot);
 
 	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});
 	server.on("/fwlink", []() { server.send(200, "text/plain", "OK"); });
 	server.on("/hotspot-detect.html", HTTP_GET, []() { server.send(200, "text/html", "<html><body>Portal</body></html>"); });
 	server.on("/ncsi.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft NCSI"); });
 
-	// OTA
-	server.on("/myurl", HTTP_GET, []() {
+	// Register custom update page BEFORE ESP2SOTA so it takes priority (first registration wins)
+	server.on("/update", HTTP_GET, []() {
 		server.sendHeader("Connection", "close");
-		server.send(200, "text/plain", "Hello there!");
+		server.send(200, "text/html", GetPageUpdate());
 	});
 
 	server.begin();
+
+	MDNS.begin("yieldflo");
 
 	/* INITIALIZE ESP2SOTA LIBRARY */
 	ESP2SOTA.begin(&server);

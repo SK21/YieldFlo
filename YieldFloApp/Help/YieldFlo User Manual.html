@@ -108,6 +108,18 @@ li { margin: 2px 0; }
 
 <p>The main screen displays live harvest data and job status.</p>
 
+<h3>Toolbar buttons</h3>
+
+<table>
+<tr><th>Button</th><th>Action</th></tr>
+<tr><td><strong>Menu</strong></td><td>Open the main menu</td></tr>
+<tr><td><strong>Start</strong></td><td>Start a new job (opens Jobs menu) or resume the paused active job</td></tr>
+<tr><td><strong>Pause</strong></td><td>Manually pause recording</td></tr>
+<tr><td><strong>Stop</strong></td><td>Stop and close the current job (requires confirmation)</td></tr>
+<tr><td><strong>Exit</strong></td><td>Close YieldFlo</td></tr>
+<tr><td><strong>─</strong></td><td>Switch to compact (mini) view — see below</td></tr>
+</table>
+
 <h3>Data panels</h3>
 
 <table>
@@ -120,41 +132,30 @@ li { margin: 2px 0; }
 
 <h3>Sensor bars</h3>
 
-<p>Two horizontal bar gauges on the right side of the screen:</p>
+<p>Two horizontal bar gauges below the data panels:</p>
 
 <ul>
-<li><strong>Left bar — Elevator flow:</strong> Shows the grain obstruction percentage in the clean-grain elevator. Higher = more grain flowing.</li>
-<li><strong>Right bar — Moisture:</strong> Shows the relative moisture sensor reading.</li>
+<li><strong>Elev Flow:</strong> Grain obstruction percentage in the clean-grain elevator. Higher = more grain flowing.</li>
+<li><strong>Moisture:</strong> Relative moisture sensor reading scaled to a 0–30% range.</li>
 </ul>
-
-<p>The numeric values below each bar show the raw sensor counts from the module.</p>
 
 <h3>Status bar</h3>
 
 <table>
-<tr><th>Indicator</th><th>Green</th><th>Orange</th><th>Off / Red</th></tr>
+<tr><th>Indicator</th><th>Green</th><th>Orange</th><th>Red / Silver</th></tr>
 <tr><td><strong>GPS</strong></td><td>AOG connected and sending position</td><td>—</td><td>No AOG data</td></tr>
 <tr><td><strong>Module</strong></td><td>Module data received within 5 s</td><td>—</td><td>No module data</td></tr>
-<tr><td><strong>Job name</strong></td><td>Job recording (active)</td><td>Job paused</td><td>No active job</td></tr>
+<tr><td><strong>Comm</strong></td><td>—</td><td>—</td><td>Shows active comm type (UDP or CAN)</td></tr>
+<tr><td><strong>Job name</strong></td><td>Job recording (active)</td><td>Job paused</td><td>No active job (silver)</td></tr>
 </table>
 
-<h3>Buttons</h3>
+<p>When YieldFlo displays a notification (e.g. export complete, error), a full-width message overlays the status bar for 10 seconds then clears automatically. Yellow text = informational; red text = error.</p>
 
-<table>
-<tr><th>Button</th><th>Action</th></tr>
-<tr><td><strong>Menu</strong></td><td>Open the main menu</td></tr>
-<tr><td><strong>Start</strong></td><td>Start or resume the active job</td></tr>
-<tr><td><strong>Pause</strong></td><td>Manually pause recording</td></tr>
-<tr><td><strong>Stop</strong></td><td>Stop and close the current job</td></tr>
-<tr><td><strong>Exit</strong></td><td>Close YieldFlo</td></tr>
-<tr><td><strong>–</strong></td><td>Switch to compact (mini) view — see below</td></tr>
-</table>
+<h3>Compact (mini) view</h3>
 
-<h3>Compact view</h3>
+<p>Press <strong>─</strong> in the top-right corner of the main screen to switch to a small floating overlay that shows only the live yield reading. This is useful when running YieldFlo alongside AgOpenGPS on a single monitor.</p>
 
-<p>Press <strong>–</strong> in the top-right corner of the main screen to switch to a small floating overlay that shows only the live yield reading. This is useful when running YieldFlo alongside AgOpenGPS on a single monitor and screen space is limited.</p>
-
-<p>The compact overlay can be dragged anywhere on screen. Press <strong>▣</strong> on the overlay to return to the full main screen. Its position is remembered between sessions.</p>
+<p>The compact overlay can be dragged anywhere on screen. Press the restore button on the overlay to return to the full main screen. Its position is remembered between sessions.</p>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
@@ -168,11 +169,10 @@ li { margin: 2px 0; }
 <h3>Starting a job</h3>
 
 <ol>
-<li>Press <strong>Menu</strong> on the main screen</li>
-<li>Press <strong>Jobs</strong></li>
+<li>Press <strong>Menu</strong> on the main screen, then <strong>Jobs</strong></li>
 <li>Press <strong>New</strong> and enter a job name</li>
-<li>Select a <strong>Crop</strong>, <strong>Header</strong>, and <strong>Profile</strong> from the drop-downs</li>
-<li>Optionally select a <strong>Field</strong></li>
+<li>Select a <strong>Crop</strong>, <strong>Header</strong>, <strong>Profile</strong>, and optionally a <strong>Field</strong></li>
+<li>Enter any <strong>Notes</strong> for the job (optional)</li>
 <li>Press <strong>Start Job</strong></li>
 </ol>
 
@@ -180,7 +180,7 @@ li { margin: 2px 0; }
 
 <h3>Managing jobs</h3>
 
-<p>The jobs list shows all saved jobs with their status, date, area, and linked field.</p>
+<p>The jobs list shows all saved jobs with their status, date, area, and linked field. Click a column header to sort by that column.</p>
 
 <table>
 <tr><th>Action</th><th>Description</th></tr>
@@ -248,7 +248,7 @@ li { margin: 2px 0; }
 
 <p><strong>Menu: Menu &rarr; Headers</strong></p>
 
-<p>Headers define the cutting width of the front attachment. Width is used to calculate the area harvested.</p>
+<p>Headers define the cutting width of the front attachment. Width is used to calculate the area harvested per data point and to draw swath polygons on the yield map.</p>
 
 <h3>Header settings</h3>
 
@@ -284,10 +284,10 @@ li { margin: 2px 0; }
 <tr><th>Field</th><th>Description</th></tr>
 <tr><td><strong>Name</strong></td><td>Profile name (e.g. JD 9600, Case 2388)</td></tr>
 <tr><td><strong>Combine ID</strong></td><td>Identifier for the module — must match the module configuration</td></tr>
-<tr><td><strong>Moisture offset</strong></td><td>Fixed offset applied to all moisture readings</td></tr>
-<tr><td><strong>Moisture scale</strong></td><td>Counts-per-percent for the moisture sensor calibration</td></tr>
+<tr><td><strong>Moisture offset</strong></td><td>Fixed offset applied to all moisture readings for this profile</td></tr>
+<tr><td><strong>Moisture scale</strong></td><td>%/count scale factor for the moisture sensor</td></tr>
 <tr><td><strong>Temperature offset</strong></td><td>Temperature offset (°C)</td></tr>
-<tr><td><strong>Temperature scale</strong></td><td>Counts-per-degree for the temperature sensor</td></tr>
+<tr><td><strong>Temperature scale</strong></td><td>°C/count scale factor for the temperature sensor</td></tr>
 </table>
 
 <blockquote><strong>Note:</strong> Moisture and temperature calibration values are set in <strong>Menu &rarr; Moisture Cal</strong> and saved automatically to the active profile.</blockquote>
@@ -378,40 +378,40 @@ li { margin: 2px 0; }
 
 <p><strong>Menu: Menu &rarr; Moisture Cal</strong></p>
 
-<p>Moisture calibration maps the raw sensor counts from the capacitance moisture sensor to actual moisture percentage and grain temperature. Calibration values are stored per-profile.</p>
+<p>Moisture calibration maps the raw sensor counts from the capacitance moisture sensor to actual moisture percentage. Calibration values are stored per-profile.</p>
 
 <p>The moisture reading is calculated as:</p>
 
-<pre>Moisture (%) = offset + (scale &times; sensor count)</pre>
+<pre>Moisture (%) = raw_count &times; scale  +  offset</pre>
 
 <h3>Moisture calibration procedure</h3>
 
 <ol>
 <li>Take a grain sample and measure moisture with a certified grain moisture meter</li>
 <li>Open <strong>Menu &rarr; Moisture Cal</strong></li>
-<li>With the module connected and grain flowing, note the live sensor reading</li>
-<li>Enter the meter reading in the <strong>%</strong> field</li>
-<li>Adjust the <strong>%/count</strong> scale until the displayed reading matches</li>
+<li>With the module connected and grain flowing, observe the live sensor reading</li>
+<li>Enter the meter reading in the <strong>%</strong> field — this is saved to the active crop as an offset</li>
+<li>Adjust the <strong>%/count</strong> scale until the displayed reading matches the meter</li>
 <li>Press <strong>Save</strong></li>
 </ol>
 
 <h3>Moisture calibration fields</h3>
 
 <table>
-<tr><th>Field</th><th>Description</th></tr>
-<tr><td><strong>% (saved to crop)</strong></td><td>The reference moisture reading from an approved meter</td></tr>
-<tr><td><strong>%/count</strong></td><td>The counts-per-percent scale factor (saved to the active profile)</td></tr>
+<tr><th>Field</th><th>Saved to</th><th>Description</th></tr>
+<tr><td><strong>%</strong></td><td>Active crop</td><td>Reference moisture reading from an approved meter — applied as a per-crop offset</td></tr>
+<tr><td><strong>%/count</strong></td><td>Active profile</td><td>Scale factor converting raw ADS1115 counts to moisture percent</td></tr>
 </table>
 
 <h3>Temperature calibration</h3>
 
 <table>
-<tr><th>Field</th><th>Description</th></tr>
-<tr><td><strong>°C</strong></td><td>Reference temperature from a thermometer (saved to profile)</td></tr>
-<tr><td><strong>°C/count</strong></td><td>Counts-per-degree scale factor</td></tr>
+<tr><th>Field</th><th>Saved to</th><th>Description</th></tr>
+<tr><td><strong>°C</strong></td><td>Active profile</td><td>Reference temperature from a thermometer</td></tr>
+<tr><td><strong>°C/count</strong></td><td>Active profile</td><td>Scale factor converting raw ADS1115 counts to degrees Celsius</td></tr>
 </table>
 
-<blockquote><strong>Note:</strong> Temperature calibration is optional. Temperature is used internally to compensate moisture readings and does not appear directly on the main screen.</blockquote>
+<blockquote><strong>Note:</strong> Temperature calibration is optional. Temperature does not appear directly on the main screen.</blockquote>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
@@ -420,17 +420,66 @@ li { margin: 2px 0; }
 
 <p><strong>Menu: Menu &rarr; Yield Map</strong></p>
 
-<p>The yield map displays a colour-coded spatial plot of yield rate across the harvested area.</p>
+<p>The yield map displays a colour-coded spatial plot of yield rate across the harvested area. Each data point is drawn as a filled swath polygon sized to the header width and oriented to the GPS heading at that point.</p>
 
-<p>Data points are drawn as coloured circles at each GPS position. Colour ranges from blue (low yield) to red (high yield), with the <strong>Low</strong> and <strong>High</strong> legend values shown below the map.</p>
+<h3>Colour scale</h3>
 
-<h3>Selecting a job</h3>
+<p>Yield is mapped to a five-colour gradient:</p>
 
-<p>Use the job selector at the top of the map to choose which job to display. The map updates when a different job is selected.</p>
+<table>
+<tr><th>Colour</th><th>Yield</th></tr>
+<tr><td>Blue</td><td>Lowest</td></tr>
+<tr><td>Cyan</td><td>Low</td></tr>
+<tr><td>Green</td><td>Mid</td></tr>
+<tr><td>Yellow</td><td>High</td></tr>
+<tr><td>Red</td><td>Highest</td></tr>
+</table>
 
-<h3>Refreshing</h3>
+<p>The legend at the bottom of the full-screen map shows the low and high yield values for the current data set.</p>
 
-<p>Press <strong>Refresh</strong> to reload the map data. Useful if the map is open during an active job and you want to see the latest points.</p>
+<h3>Mini mode</h3>
+
+<p>When opened from the menu, the yield map starts as a small floating 300&times;300 overlay (mini mode). The title bar shows the active job name and zoom controls.</p>
+
+<table>
+<tr><th>Control</th><th>Action</th></tr>
+<tr><td><strong>─</strong> / <strong>+</strong></td><td>Zoom out / in</td></tr>
+<tr><td><strong>&times;</strong></td><td>Close the map overlay</td></tr>
+<tr><td>Click the map</td><td>Expand to full-screen mode</td></tr>
+<tr><td>Drag the title bar</td><td>Move the overlay</td></tr>
+</table>
+
+<p>The mini map position is remembered between sessions.</p>
+
+<h3>Full-screen mode</h3>
+
+<p>Click the map or press <strong>&times;</strong> to expand to full screen. The toolbar at the top provides:</p>
+
+<table>
+<tr><th>Control</th><th>Action</th></tr>
+<tr><td>Job selector (drop-down)</td><td>Choose which job to display</td></tr>
+<tr><td><strong>─</strong> / <strong>+</strong></td><td>Zoom out / in</td></tr>
+<tr><td><strong>Print</strong></td><td>Export the map as a PNG image — see below</td></tr>
+<tr><td><strong>Close</strong></td><td>Return to mini mode</td></tr>
+</table>
+
+<p>The map can be dragged in both mini and full-screen modes.</p>
+
+<h3>Live update during harvest</h3>
+
+<p>When the yield map is open and a job is actively recording, the map updates automatically every 5 seconds. New swath polygons are added without re-centering the view.</p>
+
+<h3>Exporting the map as a PNG</h3>
+
+<p>Press <strong>Print</strong> in the full-screen toolbar to export the current map view (including the legend) as a PNG image.</p>
+
+<ol>
+<li>A save dialog opens with a default filename of <code>JobName_Date.png</code></li>
+<li>Choose a folder and confirm</li>
+<li>The image is saved and a confirmation appears in the status bar</li>
+</ol>
+
+<p>The export folder is remembered for subsequent exports.</p>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
@@ -439,13 +488,14 @@ li { margin: 2px 0; }
 
 <p><strong>Menu: Menu &rarr; Reports</strong></p>
 
-<p>The job report shows a summary of a completed or active job.</p>
+<p>The job report shows a summary of a completed or active job. Select a job from the list on the left to view its details.</p>
 
 <h3>Report contents</h3>
 
 <table>
 <tr><th>Field</th><th>Description</th></tr>
-<tr><td><strong>Field</strong></td><td>Field name assigned to the job</td></tr>
+<tr><td><strong>Job name</strong></td><td>Name entered when the job was created</td></tr>
+<tr><td><strong>Field</strong></td><td>Field name assigned to the job (if set)</td></tr>
 <tr><td><strong>Area</strong></td><td>Total area harvested (ac or ha)</td></tr>
 <tr><td><strong>Total</strong></td><td>Total mass harvested (bu or tonnes)</td></tr>
 <tr><td><strong>Avg Yield</strong></td><td>Average yield rate across all data points</td></tr>
@@ -453,20 +503,35 @@ li { margin: 2px 0; }
 <tr><td><strong>Data Points</strong></td><td>Number of recorded GPS data points</td></tr>
 </table>
 
+<h3>Printing a report</h3>
+
+<p>Press <strong>Print</strong> to send the job summary to the system print dialog. The report is formatted as plain text suitable for any printer.</p>
+
 <h3>CSV export</h3>
 
-<p>Press <strong>Export CSV</strong> to save all raw data points for the job to a CSV file. The file is saved to the <code>Jobs</code> folder inside the YieldFlo application folder.</p>
+<p>Press <strong>Export CSV</strong> to save all raw data points for the selected job.</p>
+
+<ol>
+<li>A save dialog opens with a default filename of <code>JobName_Date.csv</code></li>
+<li>Choose a folder and confirm</li>
+<li>The file is saved and a confirmation appears in the status bar</li>
+</ol>
+
+<p>The export folder is remembered for subsequent exports. The CSV format is compatible with the AgOpenGPS Rate Controller yield overlay.</p>
 
 <table>
 <tr><th>Column</th><th>Description</th></tr>
 <tr><td>Timestamp</td><td>Date and time of the reading</td></tr>
 <tr><td>Latitude</td><td>GPS latitude (decimal degrees)</td></tr>
 <tr><td>Longitude</td><td>GPS longitude (decimal degrees)</td></tr>
-<tr><td>Yield</td><td>Instantaneous yield rate</td></tr>
-<tr><td>Moisture</td><td>Grain moisture (%)</td></tr>
-<tr><td>Speed</td><td>Ground speed</td></tr>
+<tr><td>WidthMeters</td><td>Header cutting width (metres)</td></tr>
+<tr><td>Yield_kgha</td><td>Yield rate in kg/ha</td></tr>
+<tr><td>ElevationMeters</td><td>GPS elevation (metres)</td></tr>
+<tr><td>Speed_kmh</td><td>Ground speed (km/h)</td></tr>
 <tr><td>Heading</td><td>GPS heading (degrees)</td></tr>
-<tr><td>Area</td><td>Incremental area for this point</td></tr>
+<tr><td>Moisture_pct</td><td>Grain moisture (%)</td></tr>
+<tr><td>HaAccumulated</td><td>Cumulative area at this point (ha)</td></tr>
+<tr><td>Sensor1Raw</td><td>Raw elevator sensor ratio</td></tr>
 </table>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
@@ -489,16 +554,17 @@ li { margin: 2px 0; }
 
 <table>
 <tr><th>Setting</th><th>Options</th></tr>
-<tr><td><strong>Theme</strong></td><td>Dark or Light</td></tr>
+<tr><td><strong>Theme</strong></td><td>Dark or Light — changes the main screen background and gauge colours</td></tr>
 </table>
 
 <h3>Module communication</h3>
 
 <table>
 <tr><th>Setting</th><th>Description</th></tr>
-<tr><td><strong>WiFi</strong></td><td>Module communicates over UDP WiFi. Connect the PC to the module's WiFi access point or a shared network.</td></tr>
-<tr><td><strong>CAN Driver</strong></td><td>Module communicates over CAN bus (Phase 2 hardware required).</td></tr>
-<tr><td><strong>COM Port</strong></td><td>Serial port for CAN interface (CAN mode only).</td></tr>
+<tr><td><strong>WiFi (UDP)</strong></td><td>Module communicates over UDP WiFi on port 30100. Connect the PC to the module's WiFi access point or a shared network.</td></tr>
+<tr><td><strong>CAN</strong></td><td>Module communicates over CAN bus via a USB CAN interface.</td></tr>
+<tr><td><strong>CAN Driver</strong></td><td>Select the CAN interface driver (SLCAN, InnoMaker, or PCAN).</td></tr>
+<tr><td><strong>COM Port</strong></td><td>Serial/USB port for the CAN interface (CAN mode only).</td></tr>
 </table>
 
 <h3>Resume Job on Start</h3>
@@ -540,7 +606,7 @@ li { margin: 2px 0; }
 
 <p>YieldFlo will restart automatically with the new language applied.</p>
 
-<blockquote><strong>Note:</strong> If AgOpenGPS is already installed with a language set, YieldFlo will automatically use the same language on first launch.</blockquote>
+<blockquote><strong>Note:</strong> If AgOpenGPS is already installed, YieldFlo will automatically use the same language on first launch.</blockquote>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
@@ -551,7 +617,7 @@ li { margin: 2px 0; }
 <ul>
 <li>Confirm AgOpenGPS is running on the same PC or local network</li>
 <li>Check that both apps are on the same subnet</li>
-<li>In YieldFlo Settings, verify the network configuration</li>
+<li>Verify the network configuration in YieldFlo Settings</li>
 </ul>
 
 <h3>Module indicator stays off</h3>
@@ -572,7 +638,7 @@ li { margin: 2px 0; }
 <h3>Moisture reads incorrectly</h3>
 <ul>
 <li>Verify the moisture sensor is installed and wired correctly</li>
-<li>Check that the moisture calibration (offset and scale) is set in the active profile</li>
+<li>Check that the moisture calibration (offset and scale) is set in the active profile via <strong>Menu &rarr; Moisture Cal</strong></li>
 <li>Compare against a certified grain moisture meter and adjust the calibration</li>
 </ul>
 
@@ -585,6 +651,12 @@ li { margin: 2px 0; }
 <ul>
 <li>Ensure <strong>Resume Job on Start</strong> is enabled in Settings</li>
 <li>The job must have been active (not stopped) when YieldFlo was closed</li>
+</ul>
+
+<h3>AOG UDP failed to start</h3>
+<ul>
+<li>If AgOpenGPS Rate Controller (RC) is running, both RC and YieldFlo must be built from current source for UDP port sharing to work</li>
+<li>YieldFlo will still function for module data — only GPS reception will be affected</li>
 </ul>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>

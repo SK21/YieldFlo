@@ -128,7 +128,7 @@ namespace YieldFlo.Forms
         private void frmMenuJobs_Shown(object sender, EventArgs e)
         {
             KeyboardHelper.Wire(this, txtJobName, "Job Name");
-            KeyboardHelper.Wire(this, txtNotes, "Notes");
+            KeyboardHelper.Wire(this, txtNotes, "Notes", append: true);
             btnJobsClose.Focus();
         }
 
