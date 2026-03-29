@@ -122,6 +122,7 @@
 
   <!-- Jobs form -->
   <data name="lgJobName"           xml:space="preserve"><value>Darbo pavadinimas:</value></data>
+  <data name="lgNotes"            xml:space="preserve"><value>Pastabos:</value></data>
   <data name="lgColJobName"        xml:space="preserve"><value>Darbo pavadinimas</value></data>
   <data name="lgColStatus"         xml:space="preserve"><value>Būsena</value></data>
   <data name="lgColDate"           xml:space="preserve"><value>Data</value></data>
@@ -161,6 +162,8 @@
   <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Ištrinti šį lauką?</value></data>
 
   <!-- Job Report form -->
+  <data name="lgJobReport"    xml:space="preserve"><value>Užduoties ataskaita</value></data>
+  <data name="lgPrint"       xml:space="preserve"><value>Spausdinti</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Laukas:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Plotas:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Iš viso:</value></data>

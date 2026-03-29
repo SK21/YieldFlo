@@ -176,6 +176,7 @@ Make sure the elevator is running with no grain.</value></data>
 
   <!-- ── Jobs form ──────────────────────────────────────────────────────── -->
   <data name="lgJobName" xml:space="preserve"><value>Job Name:</value></data>
+  <data name="lgNotes" xml:space="preserve"><value>Notes:</value></data>
   <data name="lgColJobName" xml:space="preserve"><value>Job Name</value></data>
   <data name="lgColStatus" xml:space="preserve"><value>Status</value></data>
   <data name="lgColDate" xml:space="preserve"><value>Date</value></data>
@@ -215,6 +216,8 @@ Make sure the elevator is running with no grain.</value></data>
   <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Delete this field?</value></data>
 
   <!-- ── Job Report form ────────────────────────────────────────────────── -->
+  <data name="lgJobReport" xml:space="preserve"><value>Job Report</value></data>
+  <data name="lgPrint" xml:space="preserve"><value>Print</value></data>
   <data name="lgFieldColon" xml:space="preserve"><value>Field:</value></data>
   <data name="lgAreaColon" xml:space="preserve"><value>Area:</value></data>
   <data name="lgTotalColon" xml:space="preserve"><value>Total:</value></data>

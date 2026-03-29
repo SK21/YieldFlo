@@ -138,6 +138,7 @@ namespace YieldFlo.Language
 
         // ── Jobs form ────────────────────────────────────────────────────────
         internal static string lgJobName           => Get("lgJobName");
+        internal static string lgNotes             => Get("lgNotes");
         internal static string lgColJobName        => Get("lgColJobName");
         internal static string lgColStatus         => Get("lgColStatus");
         internal static string lgColDate           => Get("lgColDate");
@@ -177,6 +178,8 @@ namespace YieldFlo.Language
         internal static string lgDeleteFieldPrompt => Get("lgDeleteFieldPrompt");
 
         // ── Job Report form ──────────────────────────────────────────────────
+        internal static string lgJobReport    => Get("lgJobReport");
+        internal static string lgPrint        => Get("lgPrint");
         internal static string lgFieldColon   => Get("lgFieldColon");
         internal static string lgAreaColon    => Get("lgAreaColon");
         internal static string lgTotalColon   => Get("lgTotalColon");

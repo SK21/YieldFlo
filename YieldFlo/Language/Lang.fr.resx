@@ -122,6 +122,7 @@ S'assurer que l'élévateur tourne sans grain.</value></data>
 
   <!-- Jobs form -->
   <data name="lgJobName"           xml:space="preserve"><value>Nom du travail :</value></data>
+  <data name="lgNotes"            xml:space="preserve"><value>Notes :</value></data>
   <data name="lgColJobName"        xml:space="preserve"><value>Nom du travail</value></data>
   <data name="lgColStatus"         xml:space="preserve"><value>Statut</value></data>
   <data name="lgColDate"           xml:space="preserve"><value>Date</value></data>
@@ -161,6 +162,8 @@ S'assurer que l'élévateur tourne sans grain.</value></data>
   <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Supprimer cette parcelle ?</value></data>
 
   <!-- Job Report form -->
+  <data name="lgJobReport"    xml:space="preserve"><value>Rapport de travail</value></data>
+  <data name="lgPrint"       xml:space="preserve"><value>Imprimer</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Parcelle :</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Surface :</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Total :</value></data>

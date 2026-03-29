@@ -29,6 +29,8 @@ namespace YieldFlo.Forms
             this.cboProfile      = new System.Windows.Forms.ComboBox();
             this.lblFieldLabel   = new System.Windows.Forms.Label();
             this.cboField        = new System.Windows.Forms.ComboBox();
+            this.lblNotesLabel   = new System.Windows.Forms.Label();
+            this.txtNotes        = new System.Windows.Forms.TextBox();
             this.btnNew          = new System.Windows.Forms.Button();
             this.btnLoad         = new System.Windows.Forms.Button();
             this.btnSave         = new System.Windows.Forms.Button();
@@ -111,33 +113,40 @@ namespace YieldFlo.Forms
             this.cboField.Font          = inputFont;
             this.cboField.Location      = new System.Drawing.Point(116, 288); this.cboField.Size = new System.Drawing.Size(326, 24); this.cboField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
+            this.lblNotesLabel.Text     = Lang.lgNotes; this.lblNotesLabel.Font = labelFont;
+            this.lblNotesLabel.Location = new System.Drawing.Point(8, 323); this.lblNotesLabel.Size = new System.Drawing.Size(100, 20); this.lblNotesLabel.AutoSize = false;
+            this.txtNotes.Font          = inputFont;
+            this.txtNotes.Location      = new System.Drawing.Point(116, 320); this.txtNotes.Size = new System.Drawing.Size(326, 52);
+            this.txtNotes.Multiline     = true;
+            this.txtNotes.ScrollBars    = System.Windows.Forms.ScrollBars.Vertical;
+
             // ── Bottom row: New / Load / Save / Delete / Close ────────────────
             this.btnNew.Text      = Lang.lgNew;      this.btnNew.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNew.Size      = new System.Drawing.Size(86, 36); this.btnNew.Location = new System.Drawing.Point(4, 328);
+            this.btnNew.Size      = new System.Drawing.Size(86, 36); this.btnNew.Location = new System.Drawing.Point(4, 382);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
             this.btnLoad.Text      = Lang.lgLoad;    this.btnLoad.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLoad.Size      = new System.Drawing.Size(86, 36); this.btnLoad.Location = new System.Drawing.Point(94, 328);
+            this.btnLoad.Size      = new System.Drawing.Size(86, 36); this.btnLoad.Location = new System.Drawing.Point(94, 382);
             this.btnLoad.Enabled   = false;
             this.btnLoad.Click    += new System.EventHandler(this.btnLoad_Click);
 
             this.btnSave.Text      = Lang.lgSave;    this.btnSave.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Size      = new System.Drawing.Size(86, 36); this.btnSave.Location = new System.Drawing.Point(184, 328);
+            this.btnSave.Size      = new System.Drawing.Size(86, 36); this.btnSave.Location = new System.Drawing.Point(184, 382);
             this.btnSave.Enabled   = false;
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
             this.btnDelete.Text      = Lang.lgDelete; this.btnDelete.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Size      = new System.Drawing.Size(86, 36); this.btnDelete.Location = new System.Drawing.Point(274, 328);
+            this.btnDelete.Size      = new System.Drawing.Size(86, 36); this.btnDelete.Location = new System.Drawing.Point(274, 382);
             this.btnDelete.Enabled   = false;
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
             this.btnJobsClose.Text      = Lang.lgClose; this.btnJobsClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnJobsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnJobsClose.Size      = new System.Drawing.Size(84, 36); this.btnJobsClose.Location = new System.Drawing.Point(364, 328);
+            this.btnJobsClose.Size      = new System.Drawing.Size(84, 36); this.btnJobsClose.Location = new System.Drawing.Point(364, 382);
             this.btnJobsClose.Click    += new System.EventHandler(this.btnJobsClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
@@ -145,12 +154,13 @@ namespace YieldFlo.Forms
                 lblJobName, txtJobName, lblCropLabel, cboCrop,
                 lblHeaderLabel, cboHeader, lblProfileLabel, cboProfile,
                 lblFieldLabel, cboField,
+                lblNotesLabel, txtNotes,
                 btnNew, btnLoad, btnSave, btnDelete, btnJobsClose });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 412);
-            this.MinimumSize     = new System.Drawing.Size(456, 412);
-            this.MaximumSize     = new System.Drawing.Size(456, 412);
+            this.ClientSize      = new System.Drawing.Size(456, 466);
+            this.MinimumSize     = new System.Drawing.Size(456, 466);
+            this.MaximumSize     = new System.Drawing.Size(456, 466);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
@@ -182,6 +192,8 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.ComboBox cboProfile;
         private System.Windows.Forms.Label    lblFieldLabel;
         private System.Windows.Forms.ComboBox cboField;
+        private System.Windows.Forms.Label    lblNotesLabel;
+        private System.Windows.Forms.TextBox  txtNotes;
         private System.Windows.Forms.Button   btnNew;
         private System.Windows.Forms.Button   btnLoad;
         private System.Windows.Forms.Button   btnSave;

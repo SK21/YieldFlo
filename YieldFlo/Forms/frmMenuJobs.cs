@@ -16,8 +16,8 @@ namespace YieldFlo.Forms
         private readonly List<int> _profileIds = new List<int>();
         private readonly List<int> _fieldIds   = new List<int>();
 
-        private readonly List<(int jobId, string jobName, string status, string startedAt, int profileId, int cropId, int headerId, int fieldId, double acres, double volume, string fieldName)> _jobData
-            = new List<(int, string, string, string, int, int, int, int, double, double, string)>();
+        private readonly List<(int jobId, string jobName, string status, string startedAt, int profileId, int cropId, int headerId, int fieldId, double acres, double volume, string fieldName, string notes)> _jobData
+            = new List<(int, string, string, string, int, int, int, int, double, double, string, string)>();
 
         private int  _sortCol = 2;   // Date by default
         private bool _sortAsc = false; // newest first
@@ -128,6 +128,7 @@ namespace YieldFlo.Forms
         private void frmMenuJobs_Shown(object sender, EventArgs e)
         {
             KeyboardHelper.Wire(this, txtJobName, "Job Name");
+            KeyboardHelper.Wire(this, txtNotes, "Notes");
             btnJobsClose.Focus();
         }
 
@@ -150,6 +151,7 @@ namespace YieldFlo.Forms
                 if (c is TextBox tb)   { tb.BackColor   = ctrl; tb.ForeColor   = Color.White; }
                 if (c is ComboBox cb)  { cb.BackColor = ctrl; cb.ForeColor = Color.White; }
                 if (c is ListView lv)  { lv.BackColor   = ctrl; lv.ForeColor   = Color.White; }
+                if (c is TextBox tb2 && tb2 != txtJobName) { tb2.BackColor = ctrl; tb2.ForeColor = Color.White; }
             }
             btnSave.BackColor   = Color.FromArgb(0, 90, 0);
             btnDelete.BackColor = Color.FromArgb(100, 0, 0);
@@ -198,7 +200,7 @@ namespace YieldFlo.Forms
                 int fi = _fieldIds.IndexOf(j.fieldId);
                 string fname = fi > 0 ? (string)cboField.Items[fi] : "";
                 string date  = j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt;
-                _jobData.Add((j.id, j.name, j.status, date, j.profileId, j.cropId, j.headerId, j.fieldId, j.acres, j.volume, fname));
+                _jobData.Add((j.id, j.name, j.status, date, j.profileId, j.cropId, j.headerId, j.fieldId, j.acres, j.volume, fname, j.notes));
             }
             SortJobs();
         }
@@ -262,6 +264,7 @@ namespace YieldFlo.Forms
             if (!selected)
             {
                 btnSave.Enabled = false;
+                txtNotes.Text   = "";
                 return;
             }
 
@@ -271,6 +274,7 @@ namespace YieldFlo.Forms
             var job = _jobData[idx];
 
             txtJobName.Text = job.jobName;
+            txtNotes.Text   = job.notes;
 
             int ci = _cropIds.IndexOf(job.cropId);
             if (ci >= 0) cboCrop.SelectedIndex = ci;
@@ -344,7 +348,7 @@ namespace YieldFlo.Forms
             int fieldId   = cboField.SelectedIndex   >= 0 ? _fieldIds[cboField.SelectedIndex]     : job2.fieldId;
 
             int savedJobId = _jobData[idx].jobId;
-            Core.Database.Jobs.Update(savedJobId, name, cropId, headerId, profileId, fieldId);
+            Core.Database.Jobs.Update(savedJobId, name, cropId, headerId, profileId, fieldId, txtNotes.Text.Trim());
 
             if (savedJobId == Core.Collector.ActiveJobId)
                 Core.Collector.RenameActiveJob(name);
@@ -381,7 +385,7 @@ namespace YieldFlo.Forms
             btnSave.Enabled = btnLoad.Enabled = btnDelete.Enabled = false;
         }
 
-        private void StartSelectedJob((int jobId, string jobName, string status, string startedAt, int profileId, int cropId, int headerId, int fieldId, double acres, double volume, string fieldName) job)
+        private void StartSelectedJob((int jobId, string jobName, string status, string startedAt, int profileId, int cropId, int headerId, int fieldId, double acres, double volume, string fieldName, string notes) job)
         {
             int activeId = Core.Collector.ActiveJobId;
             if (activeId > 0 && activeId != job.jobId)

@@ -122,6 +122,7 @@
 
   <!-- Jobs form -->
   <data name="lgJobName"           xml:space="preserve"><value>Название задания:</value></data>
+  <data name="lgNotes"            xml:space="preserve"><value>Примечания:</value></data>
   <data name="lgColJobName"        xml:space="preserve"><value>Название задания</value></data>
   <data name="lgColStatus"         xml:space="preserve"><value>Статус</value></data>
   <data name="lgColDate"           xml:space="preserve"><value>Дата</value></data>
@@ -161,6 +162,8 @@
   <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Удалить это поле?</value></data>
 
   <!-- Job Report form -->
+  <data name="lgJobReport"    xml:space="preserve"><value>Отчёт о работе</value></data>
+  <data name="lgPrint"       xml:space="preserve"><value>Печать</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Поле:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Площадь:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Итого:</value></data>

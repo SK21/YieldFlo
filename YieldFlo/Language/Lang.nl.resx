@@ -122,6 +122,7 @@ Zorg dat de elevator leeg loopt.</value></data>
 
   <!-- Jobs form -->
   <data name="lgJobName"           xml:space="preserve"><value>Taaknaam:</value></data>
+  <data name="lgNotes"            xml:space="preserve"><value>Notities:</value></data>
   <data name="lgColJobName"        xml:space="preserve"><value>Taaknaam</value></data>
   <data name="lgColStatus"         xml:space="preserve"><value>Status</value></data>
   <data name="lgColDate"           xml:space="preserve"><value>Datum</value></data>
@@ -161,6 +162,8 @@ Zorg dat de elevator leeg loopt.</value></data>
   <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Dit perceel verwijderen?</value></data>
 
   <!-- Job Report form -->
+  <data name="lgJobReport"    xml:space="preserve"><value>Taakrapport</value></data>
+  <data name="lgPrint"       xml:space="preserve"><value>Afdrukken</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Perceel:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Oppervlakte:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Totaal:</value></data>

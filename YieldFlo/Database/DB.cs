@@ -171,6 +171,13 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
                 cmd.ExecuteNonQuery();
             }
             catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE jobs ADD COLUMN notes TEXT NOT NULL DEFAULT '';", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
         }
     }
 }

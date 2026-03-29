@@ -48,13 +48,13 @@ namespace YieldFlo.Database
             cmd.ExecuteNonQuery();
         }
 
-        public List<(int id, string name, string status, string startedAt, double acres, double volume, int profileId, int cropId, int headerId, int fieldId)> GetAll()
+        public List<(int id, string name, string status, string startedAt, double acres, double volume, int profileId, int cropId, int headerId, int fieldId, string notes)> GetAll()
         {
-            var result = new List<(int, string, string, string, double, double, int, int, int, int)>();
+            var result = new List<(int, string, string, string, double, double, int, int, int, int, string)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "SELECT id, name, status, started_at, total_acres, total_volume, profile_id, crop_id, header_id, field_id FROM jobs ORDER BY id DESC", conn);
+                "SELECT id, name, status, started_at, total_acres, total_volume, profile_id, crop_id, header_id, field_id, notes FROM jobs ORDER BY id DESC", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
                 result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
@@ -62,21 +62,23 @@ namespace YieldFlo.Database
                             reader.IsDBNull(6) ? -1 : reader.GetInt32(6),
                             reader.IsDBNull(7) ? -1 : reader.GetInt32(7),
                             reader.IsDBNull(8) ? -1 : reader.GetInt32(8),
-                            reader.IsDBNull(9) ? -1 : reader.GetInt32(9)));
+                            reader.IsDBNull(9) ? -1 : reader.GetInt32(9),
+                            reader.IsDBNull(10) ? "" : reader.GetString(10)));
             return result;
         }
 
-        public void Update(int jobId, string name, int cropId, int headerId, int profileId, int fieldId = -1)
+        public void Update(int jobId, string name, int cropId, int headerId, int profileId, int fieldId = -1, string notes = "")
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "UPDATE jobs SET name=@n, crop_id=@c, header_id=@h, profile_id=@p, field_id=@f WHERE id=@id", conn);
-            cmd.Parameters.AddWithValue("@n", name);
-            cmd.Parameters.AddWithValue("@c", cropId);
-            cmd.Parameters.AddWithValue("@h", headerId);
-            cmd.Parameters.AddWithValue("@p", profileId);
-            cmd.Parameters.AddWithValue("@f", fieldId > 0 ? (object)fieldId : DBNull.Value);
+                "UPDATE jobs SET name=@n, crop_id=@c, header_id=@h, profile_id=@p, field_id=@f, notes=@nt WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@n",  name);
+            cmd.Parameters.AddWithValue("@c",  cropId);
+            cmd.Parameters.AddWithValue("@h",  headerId);
+            cmd.Parameters.AddWithValue("@p",  profileId);
+            cmd.Parameters.AddWithValue("@f",  fieldId > 0 ? (object)fieldId : DBNull.Value);
+            cmd.Parameters.AddWithValue("@nt", notes ?? "");
             cmd.Parameters.AddWithValue("@id", jobId);
             cmd.ExecuteNonQuery();
         }

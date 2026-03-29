@@ -123,6 +123,7 @@ Elevator muss ohne Erntegut laufen.</value></data>
 
   <!-- Jobs form -->
   <data name="lgJobName"           xml:space="preserve"><value>Auftragsname:</value></data>
+  <data name="lgNotes"            xml:space="preserve"><value>Notizen:</value></data>
   <data name="lgColJobName"        xml:space="preserve"><value>Auftragsname</value></data>
   <data name="lgColStatus"         xml:space="preserve"><value>Status</value></data>
   <data name="lgColDate"           xml:space="preserve"><value>Datum</value></data>
@@ -162,6 +163,8 @@ Elevator muss ohne Erntegut laufen.</value></data>
   <data name="lgDeleteFieldPrompt" xml:space="preserve"><value>Dieses Feld löschen?</value></data>
 
   <!-- Job Report form -->
+  <data name="lgJobReport"    xml:space="preserve"><value>Jobbericht</value></data>
+  <data name="lgPrint"       xml:space="preserve"><value>Drucken</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Feld:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Fläche:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Gesamt:</value></data>
