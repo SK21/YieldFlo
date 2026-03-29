@@ -19,16 +19,13 @@ namespace YieldFlo.Forms
             this.lblMiniJob    = new System.Windows.Forms.Label();
             this.btnZoomOut    = new System.Windows.Forms.Button();
             this.btnZoomIn     = new System.Windows.Forms.Button();
-            this.btnExpand     = new System.Windows.Forms.Button();
             this.btnMiniClose  = new System.Windows.Forms.Button();
-            this.pnlToolbar    = new System.Windows.Forms.Panel();
-            this.cboJob        = new System.Windows.Forms.ComboBox();
-            this.btnMinimize   = new System.Windows.Forms.Button();
-            this.btnRefresh    = new System.Windows.Forms.Button();
+            this.pnlToolbar       = new System.Windows.Forms.Panel();
+            this.cboJob           = new System.Windows.Forms.ComboBox();
+            this.btnZoomOutFull   = new System.Windows.Forms.Button();
+            this.btnZoomInFull    = new System.Windows.Forms.Button();
             this.btnClose      = new System.Windows.Forms.Button();
             this.pnlLegend     = new System.Windows.Forms.Panel();
-            this.lblLegendLow  = new System.Windows.Forms.Label();
-            this.lblLegendHigh = new System.Windows.Forms.Label();
 
             this.SuspendLayout();
 
@@ -70,16 +67,6 @@ namespace YieldFlo.Forms
             this.btnZoomIn.Location  = new System.Drawing.Point(212, 3);
             this.btnZoomIn.Click    += new System.EventHandler(this.btnZoomIn_Click);
 
-            this.btnExpand.Text      = "\u2197";
-            this.btnExpand.Font      = miniBtn;
-            this.btnExpand.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExpand.FlatAppearance.BorderSize = 0;
-            this.btnExpand.BackColor = System.Drawing.Color.FromArgb(40, 55, 70);
-            this.btnExpand.ForeColor = System.Drawing.Color.White;
-            this.btnExpand.Size      = new System.Drawing.Size(24, 24);
-            this.btnExpand.Location  = new System.Drawing.Point(240, 3);
-            this.btnExpand.Click    += new System.EventHandler(this.btnExpand_Click);
-
             this.btnMiniClose.Text      = "\u00d7";
             this.btnMiniClose.Font      = miniBtn;
             this.btnMiniClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -87,7 +74,7 @@ namespace YieldFlo.Forms
             this.btnMiniClose.BackColor = System.Drawing.Color.FromArgb(100, 30, 30);
             this.btnMiniClose.ForeColor = System.Drawing.Color.White;
             this.btnMiniClose.Size      = new System.Drawing.Size(24, 24);
-            this.btnMiniClose.Location  = new System.Drawing.Point(268, 3);
+            this.btnMiniClose.Location  = new System.Drawing.Point(240, 3);
             this.btnMiniClose.Click    += new System.EventHandler(this.btnMiniClose_Click);
 
             // Wire drag on bar and label (buttons absorb their own clicks)
@@ -101,7 +88,6 @@ namespace YieldFlo.Forms
             this.pnlMiniBar.Controls.Add(this.lblMiniJob);
             this.pnlMiniBar.Controls.Add(this.btnZoomOut);
             this.pnlMiniBar.Controls.Add(this.btnZoomIn);
-            this.pnlMiniBar.Controls.Add(this.btnExpand);
             this.pnlMiniBar.Controls.Add(this.btnMiniClose);
 
             // ── Toolbar (full mode only) ───────────────────────────────────────
@@ -118,25 +104,25 @@ namespace YieldFlo.Forms
             this.cboJob.Bounds        = new System.Drawing.Rectangle(8, 5, 300, 26);
             this.cboJob.SelectedIndexChanged += new System.EventHandler(this.cboJob_SelectedIndexChanged);
 
-            this.btnMinimize.Text      = "—";
-            this.btnMinimize.Font      = btnFont;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
-            this.btnMinimize.ForeColor = System.Drawing.Color.White;
-            this.btnMinimize.Size      = new System.Drawing.Size(64, 26);
-            this.btnMinimize.Location  = new System.Drawing.Point(574, 5);  // repositioned by SetMiniMode
-            this.btnMinimize.Click    += new System.EventHandler(this.btnMinimize_Click);
+            this.btnZoomOutFull.Text      = "\u2212";
+            this.btnZoomOutFull.Font      = btnFont;
+            this.btnZoomOutFull.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomOutFull.FlatAppearance.BorderSize = 0;
+            this.btnZoomOutFull.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
+            this.btnZoomOutFull.ForeColor = System.Drawing.Color.White;
+            this.btnZoomOutFull.Size      = new System.Drawing.Size(36, 26);
+            this.btnZoomOutFull.Location  = new System.Drawing.Point(700, 5);  // repositioned by SetMiniMode
+            this.btnZoomOutFull.Click    += new System.EventHandler(this.btnZoomOut_Click);
 
-            this.btnRefresh.Text      = Lang.lgRefresh;
-            this.btnRefresh.Font      = btnFont;
-            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.FlatAppearance.BorderSize = 0;
-            this.btnRefresh.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
-            this.btnRefresh.ForeColor = System.Drawing.Color.White;
-            this.btnRefresh.Size      = new System.Drawing.Size(80, 26);
-            this.btnRefresh.Location  = new System.Drawing.Point(644, 5);
-            this.btnRefresh.Click    += new System.EventHandler(this.btnRefresh_Click);
+            this.btnZoomInFull.Text      = "+";
+            this.btnZoomInFull.Font      = btnFont;
+            this.btnZoomInFull.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomInFull.FlatAppearance.BorderSize = 0;
+            this.btnZoomInFull.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
+            this.btnZoomInFull.ForeColor = System.Drawing.Color.White;
+            this.btnZoomInFull.Size      = new System.Drawing.Size(36, 26);
+            this.btnZoomInFull.Location  = new System.Drawing.Point(740, 5);  // repositioned by SetMiniMode
+            this.btnZoomInFull.Click    += new System.EventHandler(this.btnZoomIn_Click);
 
             this.btnClose.Text      = Lang.lgClose;
             this.btnClose.Font      = btnFont;
@@ -149,30 +135,14 @@ namespace YieldFlo.Forms
             this.btnClose.Click    += new System.EventHandler(this.btnClose_Click);
 
             this.pnlToolbar.Controls.AddRange(new System.Windows.Forms.Control[] {
-                cboJob, btnMinimize, btnRefresh, btnClose });
+                cboJob, btnZoomOutFull, btnZoomInFull, btnClose });
 
             // ── Legend (full mode only) ────────────────────────────────────────
             this.pnlLegend.BackColor = System.Drawing.Color.FromArgb(15, 20, 30);
-            this.pnlLegend.Bounds    = new System.Drawing.Rectangle(0, 560, 800, 36);
+            this.pnlLegend.Bounds    = new System.Drawing.Rectangle(0, 560, 800, 38);
             this.pnlLegend.Visible   = false;
             this.pnlLegend.Paint    += new System.Windows.Forms.PaintEventHandler(this.pnlLegend_Paint);
 
-            this.lblLegendLow.Text      = Lang.lgLow;
-            this.lblLegendLow.ForeColor = System.Drawing.Color.White;
-            this.lblLegendLow.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.lblLegendLow.AutoSize  = false;
-            this.lblLegendLow.Bounds    = new System.Drawing.Rectangle(4, 18, 100, 16);
-            this.lblLegendLow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
-            this.lblLegendHigh.Text      = Lang.lgHigh;
-            this.lblLegendHigh.ForeColor = System.Drawing.Color.White;
-            this.lblLegendHigh.Font      = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.lblLegendHigh.AutoSize  = false;
-            this.lblLegendHigh.Bounds    = new System.Drawing.Rectangle(696, 18, 100, 16);
-            this.lblLegendHigh.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
-            this.pnlLegend.Controls.Add(this.lblLegendLow);
-            this.pnlLegend.Controls.Add(this.lblLegendHigh);
 
             // ── Form (starts in mini size, SetMiniMode will resize) ───────────
             this.ClientSize      = new System.Drawing.Size(300, 300);
@@ -196,15 +166,12 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label   lblMiniJob;
         private System.Windows.Forms.Button  btnZoomOut;
         private System.Windows.Forms.Button  btnZoomIn;
-        private System.Windows.Forms.Button  btnExpand;
         private System.Windows.Forms.Button  btnMiniClose;
-        private System.Windows.Forms.Panel   pnlToolbar;
+        private System.Windows.Forms.Panel    pnlToolbar;
         private System.Windows.Forms.ComboBox cboJob;
-        private System.Windows.Forms.Button  btnMinimize;
-        private System.Windows.Forms.Button  btnRefresh;
-        private System.Windows.Forms.Button  btnClose;
+        private System.Windows.Forms.Button   btnZoomOutFull;
+        private System.Windows.Forms.Button   btnZoomInFull;
+        private System.Windows.Forms.Button   btnClose;
         private System.Windows.Forms.Panel   pnlLegend;
-        private System.Windows.Forms.Label   lblLegendLow;
-        private System.Windows.Forms.Label   lblLegendHigh;
     }
 }

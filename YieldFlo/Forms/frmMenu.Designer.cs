@@ -36,9 +36,9 @@ namespace YieldFlo.Forms
             // 
             // pnlTitle
             // 
-            this.pnlTitle.Controls.Add(this.lblTitle);
             this.pnlTitle.Controls.Add(this.btnHelp);
             this.pnlTitle.Controls.Add(this.btnTitleClose);
+            this.pnlTitle.Controls.Add(this.lblTitle);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(2, 2);
             this.pnlTitle.Name = "pnlTitle";

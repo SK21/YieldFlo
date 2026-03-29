@@ -32,7 +32,7 @@ namespace YieldFlo.Forms
 
         private void frmMenuJobs_Load(object sender, EventArgs e)
         {
-            _colNames = new string[] { Lang.lgColJobName, Lang.lgColStatus, Lang.lgColDate, Lang.lgColAcres, Lang.lgColField };
+            _colNames = new string[] { Lang.lgColJobName, Lang.lgColStatus, Lang.lgColDate, Props.AreaUnit, Lang.lgColField };
             ApplyTheme();
             FormPositions.Restore(this);
             this.FormClosed += (s2, ev2) => FormPositions.Save(this);
@@ -213,7 +213,7 @@ namespace YieldFlo.Forms
                 var item = lvJobs.Items.Add(j.jobName);
                 item.SubItems.Add(j.status);
                 item.SubItems.Add(j.startedAt);
-                item.SubItems.Add(j.acres.ToString("F2") + " ac");
+                item.SubItems.Add(Props.DisplayArea(j.acres).ToString("F2") + " " + Props.AreaUnit);
                 item.SubItems.Add(j.fieldName);
             }
             int newSel = _jobData.FindIndex(j => j.jobId == selJobId);

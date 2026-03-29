@@ -21,7 +21,6 @@ namespace YieldFlo.Forms
             this.btnPause = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
-            this.btnMinimize = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlGauges = new System.Windows.Forms.Panel();
             this.pnlYield = new System.Windows.Forms.Panel();
@@ -76,7 +75,6 @@ namespace YieldFlo.Forms
             this.pnlToolbar.Controls.Add(this.btnPause);
             this.pnlToolbar.Controls.Add(this.btnStop);
             this.pnlToolbar.Controls.Add(this.btnExit);
-            this.pnlToolbar.Controls.Add(this.btnMinimize);
             this.pnlToolbar.Controls.Add(this.lblTitle);
             this.pnlToolbar.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlToolbar.Location = new System.Drawing.Point(2, 2);
@@ -158,22 +156,7 @@ namespace YieldFlo.Forms
             this.btnExit.Text = global::YieldFlo.Language.Lang.lgExit;
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
-            this.btnMinimize.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-            this.btnMinimize.ForeColor = System.Drawing.Color.White;
-            this.btnMinimize.Location = new System.Drawing.Point(464, 5);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(30, 34);
-            this.btnMinimize.TabIndex = 5;
-            this.btnMinimize.Text = "–";
-            this.btnMinimize.UseVisualStyleBackColor = false;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
+            //
             // lblTitle
             // 
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold);
@@ -591,7 +574,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Label  lblTitle;
 
         private System.Windows.Forms.Panel pnlGauges;

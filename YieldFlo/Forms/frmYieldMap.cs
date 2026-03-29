@@ -26,6 +26,9 @@ namespace YieldFlo.Forms
         // Click-vs-drag detection on gmap in mini mode
         private Point _gmapClickStart;
 
+        // Precomputed legend tick text (set by BuildSwathOverlay, drawn in pnlLegend_Paint)
+        private string[] _tickText;
+
         // Job list
         private readonly List<int> _jobIds = new List<int>();
 
@@ -134,12 +137,10 @@ namespace YieldFlo.Forms
                 gmap.Zoom = _savedFullZoom;
 
                 // Anchor buttons to right edge of toolbar
-                btnClose.Location    = new Point(wa.Width - 76, 5);
-                btnRefresh.Location  = new Point(wa.Width - 156, 5);
-                btnMinimize.Location = new Point(wa.Width - 226, 5);
+                btnClose.Location       = new Point(wa.Width - 76, 5);
+                btnZoomInFull.Location  = new Point(wa.Width - 118, 5);
+                btnZoomOutFull.Location = new Point(wa.Width - 158, 5);
 
-                // Legend high label to right edge
-                lblLegendHigh.Location = new Point(wa.Width - 84, 20);
             }
         }
 
@@ -267,8 +268,16 @@ namespace YieldFlo.Forms
             if (minY > maxY) { gmap.Overlays.Add(overlay); return; }
             double yRange = Math.Max(0.1, maxY - minY);
 
-            lblLegendLow.Text  = $"{minY:F0} {Props.RateUnit}";
-            lblLegendHigh.Text = $"{maxY:F0} {Props.RateUnit}";
+            var texts = new string[5];
+            double[] tStops = { 0.0, 0.25, 0.5, 0.75, 1.0 };
+            for (int i = 0; i < 5; i++)
+            {
+                double disp = Props.DisplayRate(minY + tStops[i] * (maxY - minY));
+                string num  = Props.IsMetric ? $"{disp:F1}" : $"{disp:F0}";
+                texts[i]    = (i == 0 || i == 4) ? $"{num} {Props.RateUnit}" : num;
+            }
+            _tickText = texts;
+            pnlLegend.Invalidate();
 
             // Thin points to keep polygon count manageable
             int step = Math.Max(1, points.Count / 3000);
@@ -323,18 +332,32 @@ namespace YieldFlo.Forms
             };
         }
 
+        // 5-stop Blue → Cyan → Green → Yellow → Red (matches OEM yield monitor convention)
+        private static readonly (double T, int R, int G, int B)[] YieldStops =
+        {
+            (0.00,   0,   0, 220),  // Blue
+            (0.25,   0, 210, 210),  // Cyan
+            (0.50,   0, 200,   0),  // Green
+            (0.75, 230, 230,   0),  // Yellow
+            (1.00, 220,   0,   0),  // Red
+        };
+
         private static Color YieldToColor(double t)
         {
-            if (t <= 0.5)
+            t = Math.Max(0, Math.Min(1, t));
+            for (int i = 1; i < YieldStops.Length; i++)
             {
-                double u = t * 2.0;
-                return Color.FromArgb(Clamp((int)(u * 255)), Clamp((int)(180 + u * 40)), 0);
+                if (t <= YieldStops[i].T)
+                {
+                    double span = YieldStops[i].T - YieldStops[i - 1].T;
+                    double u    = (t - YieldStops[i - 1].T) / span;
+                    int r = Clamp((int)(YieldStops[i - 1].R + u * (YieldStops[i].R - YieldStops[i - 1].R)));
+                    int g = Clamp((int)(YieldStops[i - 1].G + u * (YieldStops[i].G - YieldStops[i - 1].G)));
+                    int b = Clamp((int)(YieldStops[i - 1].B + u * (YieldStops[i].B - YieldStops[i - 1].B)));
+                    return Color.FromArgb(r, g, b);
+                }
             }
-            else
-            {
-                double u = (t - 0.5) * 2.0;
-                return Color.FromArgb(Clamp((int)(255 - u * 35)), Clamp((int)(220 - u * 220)), 0);
-            }
+            return Color.FromArgb(220, 0, 0);
         }
 
         private static int Clamp(int v) => v < 0 ? 0 : v > 255 ? 255 : v;
@@ -369,28 +392,6 @@ namespace YieldFlo.Forms
         private void btnZoomIn_Click(object sender, EventArgs e)  => gmap.Zoom = Math.Min(gmap.MaxZoom, gmap.Zoom + 1);
         private void btnZoomOut_Click(object sender, EventArgs e) => gmap.Zoom = Math.Max(gmap.MinZoom, gmap.Zoom - 1);
 
-        private void btnExpand_Click(object sender, EventArgs e)
-        {
-            FormPositions.Save(this);
-            _savedFullZoom = gmap.Zoom;
-            SetMiniMode(false);
-            LoadYieldData();
-        }
-
-        private void btnMinimize_Click(object sender, EventArgs e)
-        {
-            _savedFullZoom = gmap.Zoom;
-            SetMiniMode(true);
-            LoadYieldData();
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            LoadJobCombo();
-            SelectCurrentJob();
-            LoadYieldData();
-        }
-
         private void btnMiniClose_Click(object sender, EventArgs e) => this.Close();
         private void btnClose_Click(object sender, EventArgs e)    => this.Close();
 
@@ -399,13 +400,36 @@ namespace YieldFlo.Forms
         private void pnlLegend_Paint(object sender, PaintEventArgs e)
         {
             var g    = e.Graphics;
-            var rect = (sender as Panel).ClientRectangle;
-            int w    = rect.Width;
+            int w    = (sender as Panel).Width;
+            int h    = (sender as Panel).Height;
+
+            // Gradient bar (top 16 px)
             for (int x = 0; x < w; x++)
             {
                 double t = (double)x / Math.Max(1, w - 1);
                 using var pen = new Pen(YieldToColor(t));
                 g.DrawLine(pen, x, 0, x, 16);
+            }
+
+            var texts = _tickText;
+            if (texts == null) return;
+
+            double[] tStops = { 0.0, 0.25, 0.5, 0.75, 1.0 };
+            using var tickPen = new Pen(Color.White);
+            using var font    = new Font("Microsoft Sans Serif", 9f);
+            using var brush   = new SolidBrush(Color.White);
+
+            for (int i = 0; i < 5; i++)
+            {
+                int   tickX = (int)(tStops[i] * (w - 1));
+                g.DrawLine(tickPen, tickX, 15, tickX, 19);
+
+                SizeF sz     = g.MeasureString(texts[i], font);
+                float labelX = i == 0 ? tickX
+                             : i == 4 ? tickX - sz.Width
+                             :           tickX - sz.Width / 2f;
+                float labelY = h - sz.Height - 1;
+                g.DrawString(texts[i], font, brush, labelX, labelY);
             }
         }
 

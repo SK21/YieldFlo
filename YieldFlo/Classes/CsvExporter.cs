@@ -48,7 +48,7 @@ namespace YieldFlo.Classes
                 var sb = new StringBuilder();
                 // Columns 0-5 match RC's YieldOverlayCreator expected format (parsed by position).
                 // Extra columns follow for YieldFlo-specific data.
-                sb.AppendLine("Timestamp,Latitude,Longitude,WidthMeters,YieldKg,ElevationMeters,Speed_kmh,Heading,Moisture_pct,HaAccumulated,Sensor1Raw");
+                sb.AppendLine("Timestamp,Latitude,Longitude,WidthMeters,Yield_kgha,ElevationMeters,Speed_kmh,Heading,Moisture_pct,HaAccumulated,Sensor1Raw");
 
                 foreach (var p in points)
                 {

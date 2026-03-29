@@ -18,6 +18,7 @@ namespace YieldFlo.Forms
 
         private void frmMenu_Load(object sender, EventArgs e)
         {
+            lblTitle.Text = Lang.lgTitleMenu;
             ApplyTheme();
             FormPositions.Restore(this);
             this.FormClosed += (s2, ev2) => FormPositions.Save(this);
