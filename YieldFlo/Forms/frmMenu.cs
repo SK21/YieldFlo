@@ -36,6 +36,8 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor   = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor   = Color.FromArgb(180, 200, 220);
+            btnHelp.BackColor       = Color.FromArgb(30, 60, 90);
+            btnHelp.ForeColor       = Color.White;
             btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
             btnTitleClose.ForeColor = Color.White;
             foreach (Control c in pnlContent.Controls)
@@ -50,7 +52,20 @@ namespace YieldFlo.Forms
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();
-        private void btnClose_Click(object sender, EventArgs e)      => this.Close();
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string dir  = AppDomain.CurrentDomain.BaseDirectory;
+            string pdf  = System.IO.Path.Combine(dir, "Help", "YieldFlo User Manual.pdf");
+            string html = System.IO.Path.Combine(dir, "Help", "YieldFlo User Manual.html");
+            string md   = System.IO.Path.Combine(dir, "Help", "YieldFlo User Manual.md");
+            string open = System.IO.File.Exists(pdf)  ? pdf
+                        : System.IO.File.Exists(html) ? html
+                        : System.IO.File.Exists(md)   ? md
+                        : null;
+            if (open != null)
+                System.Diagnostics.Process.Start(open);
+        }
 
         private void btnJobs_Click(object sender, EventArgs e)      => FormManager.ShowForm(new frmMenuJobs());
         private void btnCrops_Click(object sender, EventArgs e)     => FormManager.ShowForm(new frmMenuCrops());

@@ -90,7 +90,21 @@
       "WebFetch(domain:en.wikipedia.org)",
       "WebFetch(domain:www.aspexit.com)",
       "Bash(find /f/Documents/GitHub/YieldFlo -name *.mdb -o -name *.accdb -o -name *.db)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "WebFetch(domain:kg2.com.au)",
+      "WebFetch(domain:www.deere.com.au)",
+      "WebFetch(domain:www.trulandequip.com)",
+      "WebFetch(domain:www.soyl.com)",
+      "WebFetch(domain:support.farmtrx.com)",
+      "WebFetch(domain:www.yieldgap.org)",
+      "WebFetch(domain:www.destatis.de)",
+      "WebFetch(domain:manuals.deere.com)",
+      "WebFetch(domain:www.climatefieldview.co.za)",
+      "WebFetch(domain:www.harvestcalc.com)",
+      "WebFetch(domain:manualzz.com)",
+      "WebFetch(domain:projectblue.blob.core.windows.net)",
+      "WebFetch(domain:grdc.com.au)",
+      "WebFetch(domain:vantagenortheast.com)"
     ]
   }
 }

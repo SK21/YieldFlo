@@ -11,7 +11,7 @@ namespace YieldFlo.Classes
     {
         public static readonly string AppName = "YieldFlo";
         public static readonly string AppVersion = "1.0.0";
-        public static readonly string AppDate = "2026";
+        public static readonly string AppDate = "28-Mar-2026";
 
         private static string cApplicationFolder;
         private static string cDataFolder;
@@ -26,6 +26,8 @@ namespace YieldFlo.Classes
             get { return cCanEnabled; }
             set { cCanEnabled = value; }
         }
+
+        public static string Version { get { return AppVersion; } }
 
         public static CanDriver CurrentCanDriver
         {
@@ -45,15 +47,15 @@ namespace YieldFlo.Classes
         public static double TestWeightKgPerBu { get; set; } = 25.4;  // default: corn (56 lb/bu)
 
         public static bool IsMetric => Properties.Settings.Default.Units == "Metric";
-        public static string AreaUnit  => IsMetric ? "ha"    : "ac";
-        public static string MassUnit  => IsMetric ? "t"     : "bu";
-        public static string RateUnit  => IsMetric ? "t/ha"  : "bu/ac";
-        public static string SpeedUnit => IsMetric ? "km/h"  : "mph";
+        public static string AreaUnit => IsMetric ? "ha" : "ac";
+        public static string MassUnit => IsMetric ? "t" : "bu";
+        public static string RateUnit => IsMetric ? "t/ha" : "bu/ac";
+        public static string SpeedUnit => IsMetric ? "km/h" : "mph";
 
-        public static double DisplayArea(double acres)    => IsMetric ? acres   * 0.404686 : acres;
-        public static double DisplayMass(double bushels)  => IsMetric ? bushels * TestWeightKgPerBu / 1000.0 : bushels;
-        public static double DisplayRate(double buPerAc)  => IsMetric ? buPerAc * TestWeightKgPerBu / 1000.0 / 0.404686 : buPerAc;
-        public static double DisplaySpeed(double kmh)     => IsMetric ? kmh : kmh * 0.621371;
+        public static double DisplayArea(double acres) => IsMetric ? acres * 0.404686 : acres;
+        public static double DisplayMass(double bushels) => IsMetric ? bushels * TestWeightKgPerBu / 1000.0 : bushels;
+        public static double DisplayRate(double buPerAc) => IsMetric ? buPerAc * TestWeightKgPerBu / 1000.0 / 0.404686 : buPerAc;
+        public static double DisplaySpeed(double kmh) => IsMetric ? kmh : kmh * 0.621371;
 
         public static string ApplicationFolder { get { return cApplicationFolder; } }
         public static string DataFolder { get { return cDataFolder; } }

@@ -95,7 +95,7 @@ namespace YieldFlo.Forms
             this.btnMenu.Name = "btnMenu";
             this.btnMenu.Size = new System.Drawing.Size(60, 34);
             this.btnMenu.TabIndex = 0;
-            this.btnMenu.Text = Lang.lgMenu;
+            this.btnMenu.Text = global::YieldFlo.Language.Lang.lgMenu;
             this.btnMenu.UseVisualStyleBackColor = false;
             this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
             // 
@@ -110,7 +110,7 @@ namespace YieldFlo.Forms
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(68, 34);
             this.btnStart.TabIndex = 1;
-            this.btnStart.Text = Lang.lgStart;
+            this.btnStart.Text = global::YieldFlo.Language.Lang.lgStart;
             this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
@@ -125,7 +125,7 @@ namespace YieldFlo.Forms
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(68, 34);
             this.btnPause.TabIndex = 2;
-            this.btnPause.Text = Lang.lgPause;
+            this.btnPause.Text = global::YieldFlo.Language.Lang.lgPause;
             this.btnPause.UseVisualStyleBackColor = false;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
@@ -140,7 +140,7 @@ namespace YieldFlo.Forms
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(68, 34);
             this.btnStop.TabIndex = 3;
-            this.btnStop.Text = Lang.lgStop;
+            this.btnStop.Text = global::YieldFlo.Language.Lang.lgStop;
             this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
@@ -155,7 +155,7 @@ namespace YieldFlo.Forms
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(52, 34);
             this.btnExit.TabIndex = 4;
-            this.btnExit.Text = Lang.lgExit;
+            this.btnExit.Text = global::YieldFlo.Language.Lang.lgExit;
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
@@ -238,7 +238,7 @@ namespace YieldFlo.Forms
             this.lblYieldTitle.Name = "lblYieldTitle";
             this.lblYieldTitle.Size = new System.Drawing.Size(186, 18);
             this.lblYieldTitle.TabIndex = 2;
-            this.lblYieldTitle.Text = Lang.lgYield;
+            this.lblYieldTitle.Text = "YIELD";
             this.lblYieldTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlMoisture
@@ -283,7 +283,7 @@ namespace YieldFlo.Forms
             this.lblMoistureTitle.Name = "lblMoistureTitle";
             this.lblMoistureTitle.Size = new System.Drawing.Size(152, 18);
             this.lblMoistureTitle.TabIndex = 2;
-            this.lblMoistureTitle.Text = Lang.lgMoisture;
+            this.lblMoistureTitle.Text = "MOISTURE";
             this.lblMoistureTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlSpeedPanel
@@ -328,7 +328,7 @@ namespace YieldFlo.Forms
             this.lblSpeedTitle.Name = "lblSpeedTitle";
             this.lblSpeedTitle.Size = new System.Drawing.Size(146, 18);
             this.lblSpeedTitle.TabIndex = 2;
-            this.lblSpeedTitle.Text = Lang.lgSpeed;
+            this.lblSpeedTitle.Text = "SPEED";
             this.lblSpeedTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlTotals
@@ -399,7 +399,7 @@ namespace YieldFlo.Forms
             this.lblSensorHeader.Name = "lblSensorHeader";
             this.lblSensorHeader.Size = new System.Drawing.Size(63, 15);
             this.lblSensorHeader.TabIndex = 0;
-            this.lblSensorHeader.Text = Lang.lgSensors;
+            this.lblSensorHeader.Text = "Sensors:";
             // 
             // lblSensor1Title
             // 
@@ -409,7 +409,7 @@ namespace YieldFlo.Forms
             this.lblSensor1Title.Name = "lblSensor1Title";
             this.lblSensor1Title.Size = new System.Drawing.Size(70, 18);
             this.lblSensor1Title.TabIndex = 1;
-            this.lblSensor1Title.Text = Lang.lgElevFlow;
+            this.lblSensor1Title.Text = "Elev Flow";
             // 
             // pnlSensor1
             // 
@@ -447,7 +447,7 @@ namespace YieldFlo.Forms
             this.lblSensor2Title.Name = "lblSensor2Title";
             this.lblSensor2Title.Size = new System.Drawing.Size(70, 18);
             this.lblSensor2Title.TabIndex = 4;
-            this.lblSensor2Title.Text = Lang.lgMoistureLabel;
+            this.lblSensor2Title.Text = "Moisture";
             // 
             // pnlSensor2
             // 
@@ -500,7 +500,7 @@ namespace YieldFlo.Forms
             this.lblStatusGPS.Name = "lblStatusGPS";
             this.lblStatusGPS.Size = new System.Drawing.Size(36, 23);
             this.lblStatusGPS.TabIndex = 0;
-            this.lblStatusGPS.Text = Lang.lgGPS;
+            this.lblStatusGPS.Text = "GPS";
             // 
             // lblStatusModule
             // 
@@ -510,7 +510,7 @@ namespace YieldFlo.Forms
             this.lblStatusModule.Name = "lblStatusModule";
             this.lblStatusModule.Size = new System.Drawing.Size(60, 23);
             this.lblStatusModule.TabIndex = 1;
-            this.lblStatusModule.Text = Lang.lgModule;
+            this.lblStatusModule.Text = "Module";
             // 
             // lblStatusComm
             // 
@@ -530,27 +530,27 @@ namespace YieldFlo.Forms
             this.lblStatusJob.Name = "lblStatusJob";
             this.lblStatusJob.Size = new System.Drawing.Size(138, 23);
             this.lblStatusJob.TabIndex = 3;
-            this.lblStatusJob.Text = Lang.lgNoActiveJob;
+            this.lblStatusJob.Text = "No Active Job";
             // 
             // lblStatusMsg
             // 
             this.lblStatusMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusMsg.ForeColor = System.Drawing.Color.Silver;
-            this.lblStatusMsg.Location = new System.Drawing.Point(296, 4);
+            this.lblStatusMsg.Location = new System.Drawing.Point(249, 4);
             this.lblStatusMsg.Name = "lblStatusMsg";
-            this.lblStatusMsg.Size = new System.Drawing.Size(170, 23);
+            this.lblStatusMsg.Size = new System.Drawing.Size(179, 23);
             this.lblStatusMsg.TabIndex = 4;
             // 
             // lblVersion
             // 
-            this.lblVersion.AutoSize = true;
             this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.lblVersion.Location = new System.Drawing.Point(468, 6);
+            this.lblVersion.Location = new System.Drawing.Point(434, 4);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(29, 15);
+            this.lblVersion.Size = new System.Drawing.Size(59, 15);
             this.lblVersion.TabIndex = 5;
-            this.lblVersion.Text = "v1.0";
+            this.lblVersion.Text = "v8.10.10";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // frmMain
             // 
@@ -580,7 +580,6 @@ namespace YieldFlo.Forms
             this.pnlSensor1.ResumeLayout(false);
             this.pnlSensor2.ResumeLayout(false);
             this.pnlStatus.ResumeLayout(false);
-            this.pnlStatus.PerformLayout();
             this.ResumeLayout(false);
 
         }

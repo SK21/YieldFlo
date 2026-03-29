@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YieldFlo User Manual</title>
+<style>body { font-family: Segoe UI, Arial, sans-serif; font-size: 11pt; max-width: 900px; margin: 40px auto; color: #222; }
+h1 { font-size: 22pt; border-bottom: 2px solid #333; padding-bottom: 6px; }
+h2 { font-size: 15pt; border-bottom: 1px solid #aaa; margin-top: 1.4em; }
+h3 { font-size: 12pt; margin-top: 1.2em; }
+h4 { font-size: 11pt; }
+table { border-collapse: collapse; width: 100%; margin: 0.8em 0; font-size: 10pt; }
+th { background: #dde4ee; text-align: left; padding: 5px 8px; border: 1px solid #aaa; }
+td { padding: 4px 8px; border: 1px solid #ccc; vertical-align: top; }
+tr:nth-child(even) td { background: #f6f8fc; }
+code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 10pt; }
+pre { background: #f0f0f0; padding: 10px; border-radius: 4px; overflow-x: auto; }
+blockquote { border-left: 4px solid #aaa; margin: 0.5em 0 0.5em 1em; padding: 4px 12px; color: #555; background: #f9f9f9; }
+hr { border: none; border-top: 1px solid #ccc; margin: 1.5em 0; }
+a { color: #1a56cc; text-decoration: underline; cursor: pointer; }
+ul, ol { margin: 0.4em 0 0.4em 1.5em; }
+li { margin: 2px 0; }
+.back-link { text-align: right; margin: 1.8em 0 0; font-size: 10pt; }
+@media print {
+  a { color: #1a56cc; }
+  div[style*="page-break-before"] { page-break-before: always; break-before: page; }
+  table { page-break-inside: avoid; }
+}</style>
+</head>
+<body>
+<h1 id="yieldflo-user-manual">YieldFlo User Manual</h1>
+
+<p>YieldFlo is a yield monitoring application that works alongside AgOpenGPS (AOG). It records yield rate, moisture, and GPS position continuously while harvesting, and produces spatial yield maps and job reports.</p>
+
+<p>YieldFlo receives GPS and section control data from AOG over a local network (UDP). A YieldFlo hardware module connects to the combine's clean-grain elevator and moisture sensor and sends live readings to the PC application.</p>
+
+<hr>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+<li><a href="#1-getting-started">Getting Started</a></li>
+<li><a href="#2-main-screen">Main Screen</a></li>
+<li><a href="#3-jobs">Jobs</a></li>
+<li><a href="#4-crops">Crops</a></li>
+<li><a href="#5-headers">Headers</a></li>
+<li><a href="#6-profiles">Profiles</a></li>
+<li><a href="#7-fields">Fields</a></li>
+<li><a href="#8-yield-calibration">Yield Calibration</a></li>
+<li><a href="#9-moisture-calibration">Moisture Calibration</a></li>
+<li><a href="#10-yield-map">Yield Map</a></li>
+<li><a href="#11-job-report">Job Report</a></li>
+<li><a href="#12-settings">Settings</a></li>
+<li><a href="#13-language">Language</a></li>
+<li><a href="#14-troubleshooting">Troubleshooting</a></li>
+</ol>
+
+<hr>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="1-getting-started">1. Getting Started</h2>
+
+<h3>Requirements</h3>
+
+<table>
+<tr><th>Item</th><th>Requirement</th></tr>
+<tr><td>Operating system</td><td>Windows 10 or Windows 11</td></tr>
+<tr><td>.NET Framework</td><td>4.8 (pre-installed on Windows 10 May 2019 Update and later)</td></tr>
+<tr><td>AgOpenGPS</td><td>Running on the same PC or local network</td></tr>
+</table>
+
+<p><strong>No installer is required.</strong> Extract the YieldFlo folder to any location and run <code>YieldFlo.exe</code>.</p>
+
+<h3>Hardware module</h3>
+
+<ul>
+<li>YieldFlo module (based on ESP32) mounted on the combine</li>
+<li>Connected to the clean-grain elevator optical sensor</li>
+<li>Connected to the capacitance moisture sensor (optional)</li>
+<li>Communicates with the PC via WiFi or CAN bus</li>
+</ul>
+
+<h3>Network</h3>
+
+<ul>
+<li><strong>WiFi mode:</strong> connect the PC to the same WiFi network as the YieldFlo module, or directly to the module's access point</li>
+<li>AOG must be running and broadcasting GPS/section data on the local network</li>
+</ul>
+
+<h3>Recommended first-run setup</h3>
+
+<p>On first launch YieldFlo creates a default crop, header, and profile. Before starting your first job:</p>
+
+<ol>
+<li>Open <strong>Menu &rarr; Settings</strong> and select your preferred units (Imperial or Metric)</li>
+<li>Open <strong>Menu &rarr; Profiles</strong> and enter your combine ID</li>
+<li>Open <strong>Menu &rarr; Crops</strong> and add or edit crops for your operation</li>
+<li>Open <strong>Menu &rarr; Headers</strong> and enter the correct cutting width</li>
+<li>Open <strong>Menu &rarr; Fields</strong> and add field names if desired</li>
+</ol>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="2-main-screen">2. Main Screen</h2>
+
+<p>The main screen displays live harvest data and job status.</p>
+
+<h3>Data panels</h3>
+
+<table>
+<tr><th>Panel</th><th>Description</th></tr>
+<tr><td><strong>YIELD</strong></td><td>Instantaneous yield rate (bu/ac or t/ha), smoothed over recent readings</td></tr>
+<tr><td><strong>MOISTURE</strong></td><td>Live grain moisture percentage from the capacitance sensor</td></tr>
+<tr><td><strong>SPEED</strong></td><td>Ground speed received from AOG GPS</td></tr>
+<tr><td>Totals area</td><td>Total area harvested, total mass, and average yield for the current job</td></tr>
+</table>
+
+<h3>Sensor bars</h3>
+
+<p>Two vertical bar gauges on the right side of the screen:</p>
+
+<ul>
+<li><strong>Left bar — Elevator flow:</strong> Shows the grain obstruction percentage in the clean-grain elevator. Higher = more grain flowing.</li>
+<li><strong>Right bar — Moisture:</strong> Shows the relative moisture sensor reading.</li>
+</ul>
+
+<p>The numeric values below each bar show the raw sensor counts from the module.</p>
+
+<h3>Status bar</h3>
+
+<table>
+<tr><th>Indicator</th><th>Green</th><th>Orange</th><th>Off / Red</th></tr>
+<tr><td><strong>GPS</strong></td><td>AOG connected and sending position</td><td>—</td><td>No AOG data</td></tr>
+<tr><td><strong>Module</strong></td><td>Module data received within 5 s</td><td>—</td><td>No module data</td></tr>
+<tr><td><strong>Job name</strong></td><td>Job recording (active)</td><td>Job paused</td><td>No active job</td></tr>
+</table>
+
+<h3>Buttons</h3>
+
+<table>
+<tr><th>Button</th><th>Action</th></tr>
+<tr><td><strong>Menu</strong></td><td>Open the main menu</td></tr>
+<tr><td><strong>Start</strong></td><td>Start or resume the active job</td></tr>
+<tr><td><strong>Pause</strong></td><td>Manually pause recording</td></tr>
+<tr><td><strong>Stop</strong></td><td>Stop and close the current job</td></tr>
+<tr><td><strong>Exit</strong></td><td>Close YieldFlo</td></tr>
+</table>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="3-jobs">3. Jobs</h2>
+
+<p><strong>Menu: Menu &rarr; Jobs</strong></p>
+
+<p>A job records yield, moisture, GPS position, and area for a single harvest session. Each job is linked to a crop, header, and profile.</p>
+
+<h3>Starting a job</h3>
+
+<ol>
+<li>Press <strong>Menu</strong> on the main screen</li>
+<li>Press <strong>Jobs</strong></li>
+<li>Press <strong>New</strong> and enter a job name</li>
+<li>Select a <strong>Crop</strong>, <strong>Header</strong>, and <strong>Profile</strong> from the drop-downs</li>
+<li>Optionally select a <strong>Field</strong></li>
+<li>Press <strong>Start Job</strong></li>
+</ol>
+
+<p>Recording begins automatically when harvesting conditions are met (speed &gt; 0.5 km/h and AOG sections are on).</p>
+
+<h3>Managing jobs</h3>
+
+<p>The jobs list shows all saved jobs with their status, date, area, and linked field.</p>
+
+<table>
+<tr><th>Action</th><th>Description</th></tr>
+<tr><td><strong>Load</strong></td><td>Make a saved job the active job (prompts if another job is already active)</td></tr>
+<tr><td><strong>Delete</strong></td><td>Permanently remove a job and all its recorded data — cannot be undone</td></tr>
+</table>
+
+<p>Only one job can be active at a time.</p>
+
+<h3>Auto-pause</h3>
+
+<p>The job automatically pauses when harvesting stops:</p>
+<ul>
+<li>Machine speed falls below 0.5 km/h, <strong>or</strong></li>
+<li>AOG turns all header sections off (e.g. turning on headland, travelling over harvested ground)</li>
+</ul>
+
+<p>When auto-paused the job name turns orange in the status bar. Recording resumes automatically when harvesting conditions return.</p>
+
+<h3>Manual pause and resume</h3>
+
+<p>Press <strong>Pause</strong> on the main screen to manually pause recording. Press <strong>Start</strong> to resume.</p>
+
+<h3>Stopping a job</h3>
+
+<p>Press <strong>Stop</strong> &rarr; confirm. The job is saved and closed. All totals are written to the database. The job remains in the list and can be viewed in the Job Report.</p>
+
+<h3>Resume on start</h3>
+
+<p>If <strong>Resume Job on Start</strong> is enabled in Settings, the active job is automatically reloaded when YieldFlo restarts. Useful if the PC is rebooted during a harvest day.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="4-crops">4. Crops</h2>
+
+<p><strong>Menu: Menu &rarr; Crops</strong></p>
+
+<p>Crops store the grain-specific parameters used in yield calculations and reporting.</p>
+
+<h3>Crop settings</h3>
+
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><strong>Name</strong></td><td>Crop name (e.g. Wheat, Corn, Canola)</td></tr>
+<tr><td><strong>Category</strong></td><td>Grain type category</td></tr>
+<tr><td><strong>Test Weight</strong></td><td>Standard bushel weight (lbs/bu) — used to convert mass to bushels</td></tr>
+<tr><td><strong>Market Moisture</strong></td><td>Standard moisture for yield reporting (e.g. 14.5% for wheat)</td></tr>
+</table>
+
+<h3>Adding a crop</h3>
+
+<ol>
+<li>Press <strong>New</strong> and enter a crop name</li>
+<li>Set the test weight and market moisture</li>
+<li>Press <strong>Save</strong></li>
+</ol>
+
+<p>Select a crop from the list to edit it. At least one crop must exist at all times.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="5-headers">5. Headers</h2>
+
+<p><strong>Menu: Menu &rarr; Headers</strong></p>
+
+<p>Headers define the cutting width of the front attachment. Width is used to calculate the area harvested.</p>
+
+<h3>Header settings</h3>
+
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><strong>Name</strong></td><td>Header name (e.g. 30ft Draper, 8-row Corn Head)</td></tr>
+<tr><td><strong>Type</strong></td><td>Header type category</td></tr>
+<tr><td><strong>Width</strong></td><td>Cutting width in feet (Imperial) or metres (Metric)</td></tr>
+</table>
+
+<h3>Adding a header</h3>
+
+<ol>
+<li>Press <strong>New</strong> and enter a header name</li>
+<li>Enter the cutting width</li>
+<li>Press <strong>Save</strong></li>
+</ol>
+
+<p>At least one header must exist at all times.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="6-profiles">6. Profiles</h2>
+
+<p><strong>Menu: Menu &rarr; Profiles</strong></p>
+
+<p>Profiles store combine-specific and calibration settings. Use a separate profile for each combine if running YieldFlo on multiple machines.</p>
+
+<h3>Profile settings</h3>
+
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><strong>Name</strong></td><td>Profile name (e.g. JD 9600, Case 2388)</td></tr>
+<tr><td><strong>Combine ID</strong></td><td>Identifier for the module — must match the module configuration</td></tr>
+<tr><td><strong>Moisture offset</strong></td><td>Fixed offset applied to all moisture readings</td></tr>
+<tr><td><strong>Moisture scale</strong></td><td>Counts-per-percent for the moisture sensor calibration</td></tr>
+<tr><td><strong>Temperature offset</strong></td><td>Temperature offset (°C)</td></tr>
+<tr><td><strong>Temperature scale</strong></td><td>Counts-per-degree for the temperature sensor</td></tr>
+</table>
+
+<blockquote><strong>Note:</strong> Moisture and temperature calibration values are set in <strong>Menu &rarr; Moisture Cal</strong> and saved automatically to the active profile.</blockquote>
+
+<h3>Adding a profile</h3>
+
+<ol>
+<li>Press <strong>New</strong> and enter a profile name</li>
+<li>Enter the Combine ID to match your module</li>
+<li>Press <strong>Save</strong></li>
+</ol>
+
+<p>At least one profile must exist at all times.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="7-fields">7. Fields</h2>
+
+<p><strong>Menu: Menu &rarr; Fields</strong></p>
+
+<p>Fields are optional location labels that can be assigned to jobs for organisation and reporting.</p>
+
+<h3>Adding a field</h3>
+
+<ol>
+<li>Press <strong>New</strong> and enter a field name</li>
+<li>Press <strong>Save</strong></li>
+</ol>
+
+<p>Fields are not required. A job can be created without a field selected.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="8-yield-calibration">8. Yield Calibration</h2>
+
+<p><strong>Menu: Menu &rarr; Yield Cal</strong></p>
+
+<p>Yield calibration corrects the elevator sensor reading to match the actual mass of grain harvested. Two parameters are set here:</p>
+
+<ul>
+<li><strong>Sensor Baseline</strong> — the obstruction reading with paddles running but no grain (set once at installation)</li>
+<li><strong>Yield Factor</strong> — a multiplier that scales the sensor reading to match a weighed reference</li>
+</ul>
+
+<h3>Setting the baseline</h3>
+
+<ol>
+<li>Start the clean-grain elevator with no grain</li>
+<li>Open <strong>Menu &rarr; Yield Cal</strong></li>
+<li>When the reading is stable, press <strong>Set Baseline</strong></li>
+<li>Confirm the prompt</li>
+</ol>
+
+<blockquote><strong>Tip:</strong> Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.</blockquote>
+
+<h3>Processing delay</h3>
+
+<p>The processing delay accounts for the travel time of grain from the header to the elevator sensor. Set this value (in seconds) to match your combine. Typical range is 4–12 seconds.</p>
+
+<h3>Running a calibration pass</h3>
+
+<p>A calibration pass measures the actual mass of grain harvested during a known run, then adjusts the Yield Factor to match.</p>
+
+<p><strong>Preparation:</strong> Position a weigh wagon or grain cart to catch grain from the unloading auger and record start and end weights.</p>
+
+<ol>
+<li>Open <strong>Menu &rarr; Yield Cal</strong></li>
+<li>Press <strong>Start Run</strong> — the app begins accumulating sensor data</li>
+<li>Harvest a suitable area (at least one full tank is recommended)</li>
+<li>Press <strong>Stop Run</strong></li>
+<li>Weigh the harvested grain</li>
+<li>Enter the actual weight in the <strong>Actual weight</strong> field</li>
+<li>Press <strong>Apply Cal</strong></li>
+</ol>
+
+<p>YieldFlo calculates a new Yield Factor and displays the result. Press <strong>Save &amp; Apply</strong> to save the new factor to the active profile.</p>
+
+<h3>Manual factor adjustment</h3>
+
+<p>The Yield Factor can also be adjusted manually in the <strong>Yield Factor</strong> field. Increase to raise yield readings; decrease to lower them.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="9-moisture-calibration">9. Moisture Calibration</h2>
+
+<p><strong>Menu: Menu &rarr; Moisture Cal</strong></p>
+
+<p>Moisture calibration maps the raw sensor counts from the capacitance moisture sensor to actual moisture percentage and grain temperature. Calibration values are stored per-profile.</p>
+
+<p>The moisture reading is calculated as:</p>
+
+<pre>Moisture (%) = offset + (scale &times; sensor count)</pre>
+
+<h3>Moisture calibration procedure</h3>
+
+<ol>
+<li>Take a grain sample and measure moisture with a certified grain moisture meter</li>
+<li>Open <strong>Menu &rarr; Moisture Cal</strong></li>
+<li>With the module connected and grain flowing, note the live sensor reading</li>
+<li>Enter the meter reading in the <strong>%</strong> field</li>
+<li>Adjust the <strong>%/count</strong> scale until the displayed reading matches</li>
+<li>Press <strong>Save</strong></li>
+</ol>
+
+<h3>Moisture calibration fields</h3>
+
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><strong>% (saved to crop)</strong></td><td>The reference moisture reading from an approved meter</td></tr>
+<tr><td><strong>%/count</strong></td><td>The counts-per-percent scale factor (saved to the active profile)</td></tr>
+</table>
+
+<h3>Temperature calibration</h3>
+
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><strong>°C</strong></td><td>Reference temperature from a thermometer (saved to profile)</td></tr>
+<tr><td><strong>°C/count</strong></td><td>Counts-per-degree scale factor</td></tr>
+</table>
+
+<blockquote><strong>Note:</strong> Temperature calibration is optional. Temperature is used internally to compensate moisture readings and does not appear directly on the main screen.</blockquote>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="10-yield-map">10. Yield Map</h2>
+
+<p><strong>Menu: Menu &rarr; Yield Map</strong></p>
+
+<p>The yield map displays a colour-coded spatial plot of yield rate across the harvested area.</p>
+
+<p>Data points are drawn as coloured circles at each GPS position. Colour ranges from blue (low yield) to red (high yield), with the <strong>Low</strong> and <strong>High</strong> legend values shown below the map.</p>
+
+<h3>Selecting a job</h3>
+
+<p>Use the job selector at the top of the map to choose which job to display. The map updates when a different job is selected.</p>
+
+<h3>Refreshing</h3>
+
+<p>Press <strong>Refresh</strong> to reload the map data. Useful if the map is open during an active job and you want to see the latest points.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="11-job-report">11. Job Report</h2>
+
+<p><strong>Menu: Menu &rarr; Reports</strong></p>
+
+<p>The job report shows a summary of a completed or active job.</p>
+
+<h3>Report contents</h3>
+
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><strong>Field</strong></td><td>Field name assigned to the job</td></tr>
+<tr><td><strong>Area</strong></td><td>Total area harvested (ac or ha)</td></tr>
+<tr><td><strong>Total</strong></td><td>Total mass harvested (bu or tonnes)</td></tr>
+<tr><td><strong>Avg Yield</strong></td><td>Average yield rate across all data points</td></tr>
+<tr><td><strong>Avg Moisture</strong></td><td>Average grain moisture across all data points</td></tr>
+<tr><td><strong>Data Points</strong></td><td>Number of recorded GPS data points</td></tr>
+</table>
+
+<h3>CSV export</h3>
+
+<p>Press <strong>Export CSV</strong> to save all raw data points for the job to a CSV file. The file is saved to the <code>Jobs</code> folder inside the YieldFlo application folder.</p>
+
+<table>
+<tr><th>Column</th><th>Description</th></tr>
+<tr><td>Timestamp</td><td>Date and time of the reading</td></tr>
+<tr><td>Latitude</td><td>GPS latitude (decimal degrees)</td></tr>
+<tr><td>Longitude</td><td>GPS longitude (decimal degrees)</td></tr>
+<tr><td>Yield</td><td>Instantaneous yield rate</td></tr>
+<tr><td>Moisture</td><td>Grain moisture (%)</td></tr>
+<tr><td>Speed</td><td>Ground speed</td></tr>
+<tr><td>Heading</td><td>GPS heading (degrees)</td></tr>
+<tr><td>Area</td><td>Incremental area for this point</td></tr>
+</table>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="12-settings">12. Settings</h2>
+
+<p><strong>Menu: Menu &rarr; Settings</strong></p>
+
+<h3>Units</h3>
+
+<table>
+<tr><th>Setting</th><th>Options</th></tr>
+<tr><td><strong>Units</strong></td><td>Imperial (bu/ac, mph, acres, lbs) or Metric (t/ha, km/h, ha, tonnes)</td></tr>
+</table>
+
+<p>Changing units takes effect immediately. Historical data is stored in metric units internally and converted for display.</p>
+
+<h3>Theme</h3>
+
+<table>
+<tr><th>Setting</th><th>Options</th></tr>
+<tr><td><strong>Theme</strong></td><td>Dark or Light</td></tr>
+</table>
+
+<h3>Module communication</h3>
+
+<table>
+<tr><th>Setting</th><th>Description</th></tr>
+<tr><td><strong>WiFi</strong></td><td>Module communicates over UDP WiFi. Connect the PC to the module's WiFi access point or a shared network.</td></tr>
+<tr><td><strong>CAN Driver</strong></td><td>Module communicates over CAN bus (Phase 2 hardware required).</td></tr>
+<tr><td><strong>COM Port</strong></td><td>Serial port for CAN interface (CAN mode only).</td></tr>
+</table>
+
+<h3>Resume Job on Start</h3>
+
+<p>When enabled, YieldFlo automatically reloads the active job when the app starts. Useful if the PC is rebooted during a harvest day.</p>
+
+<h3>Saving settings</h3>
+
+<p>Press <strong>Save &amp; Apply</strong> to save and apply all settings immediately.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="13-language">13. Language</h2>
+
+<p><strong>Menu: Menu &rarr; Language</strong></p>
+
+<p>YieldFlo supports the following languages:</p>
+
+<table>
+<tr><th>Code</th><th>Language</th></tr>
+<tr><td>en</td><td>English</td></tr>
+<tr><td>de</td><td>German</td></tr>
+<tr><td>fr</td><td>French</td></tr>
+<tr><td>hu</td><td>Hungarian</td></tr>
+<tr><td>nl</td><td>Dutch</td></tr>
+<tr><td>pl</td><td>Polish</td></tr>
+<tr><td>ru</td><td>Russian</td></tr>
+<tr><td>lt</td><td>Lithuanian</td></tr>
+</table>
+
+<h3>Changing language</h3>
+
+<ol>
+<li>Press <strong>Menu &rarr; Language</strong></li>
+<li>Select the desired language from the list</li>
+<li>Press <strong>Save &amp; Restart</strong></li>
+</ol>
+
+<p>YieldFlo will restart automatically with the new language applied.</p>
+
+<blockquote><strong>Note:</strong> If AgOpenGPS is already installed with a language set, YieldFlo will automatically use the same language on first launch.</blockquote>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="14-troubleshooting">14. Troubleshooting</h2>
+
+<h3>GPS indicator stays red</h3>
+<ul>
+<li>Confirm AgOpenGPS is running on the same PC or local network</li>
+<li>Check that both apps are on the same subnet</li>
+<li>In YieldFlo Settings, verify the network configuration</li>
+</ul>
+
+<h3>Module indicator stays off</h3>
+<ul>
+<li>Check the module is powered and the WiFi or CAN connection is active</li>
+<li>In WiFi mode, confirm the PC is connected to the correct network</li>
+<li>Check the module LED for status indication</li>
+<li>Restart the module and wait 10–15 seconds for it to connect</li>
+</ul>
+
+<h3>Yield reads zero or very low</h3>
+<ul>
+<li>Check the elevator optical sensor alignment and wiring</li>
+<li>Verify the Sensor Baseline is set correctly (set with elevator running empty)</li>
+<li>Confirm the processing delay is appropriate for your combine</li>
+</ul>
+
+<h3>Moisture reads incorrectly</h3>
+<ul>
+<li>Verify the moisture sensor is installed and wired correctly</li>
+<li>Check that the moisture calibration (offset and scale) is set in the active profile</li>
+<li>Compare against a certified grain moisture meter and adjust the calibration</li>
+</ul>
+
+<h3>App crashes on start</h3>
+<ul>
+<li>Check <code>YieldFlo_Crash.log</code> in the application folder for details</li>
+</ul>
+
+<h3>Job does not resume after restart</h3>
+<ul>
+<li>Ensure <strong>Resume Job on Start</strong> is enabled in Settings</li>
+<li>The job must have been active (not stopped) when YieldFlo was closed</li>
+</ul>
+
+<hr>
+
+<p><em>YieldFlo is designed for use with AgOpenGPS. It is not a certified weighing system and should not be used as the sole basis for grain settlement.</em></p>
+
+</body>
+</html>

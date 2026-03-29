@@ -20,6 +20,7 @@ namespace YieldFlo.Forms
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlContent = new System.Windows.Forms.Panel();
+            this.lblWifiInfo = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
             this.btnImperial = new System.Windows.Forms.Button();
             this.btnMetric = new System.Windows.Forms.Button();
@@ -29,7 +30,6 @@ namespace YieldFlo.Forms
             this.lblNetwork = new System.Windows.Forms.Label();
             this.btnEthernet = new System.Windows.Forms.Button();
             this.btnCAN = new System.Windows.Forms.Button();
-            this.lblWifiInfo = new System.Windows.Forms.Label();
             this.lblCanDriver = new System.Windows.Forms.Label();
             this.cbCanDriver = new System.Windows.Forms.ComboBox();
             this.lblCanPort = new System.Windows.Forms.Label();
@@ -64,7 +64,7 @@ namespace YieldFlo.Forms
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(452, 40);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = Lang.lgTitleSettings;
+            this.lblTitle.Text = "Settings";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnTitleClose
@@ -108,8 +108,19 @@ namespace YieldFlo.Forms
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(2, 42);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(452, 436);
+            this.pnlContent.Size = new System.Drawing.Size(452, 407);
             this.pnlContent.TabIndex = 1;
+            // 
+            // lblWifiInfo
+            // 
+            this.lblWifiInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblWifiInfo.ForeColor = System.Drawing.Color.Silver;
+            this.lblWifiInfo.Location = new System.Drawing.Point(8, 224);
+            this.lblWifiInfo.Name = "lblWifiInfo";
+            this.lblWifiInfo.Size = new System.Drawing.Size(434, 42);
+            this.lblWifiInfo.TabIndex = 9;
+            this.lblWifiInfo.Text = "Connect PC to module WiFi access point or other WiFi network.";
+            this.lblWifiInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUnits
             // 
@@ -119,7 +130,7 @@ namespace YieldFlo.Forms
             this.lblUnits.Name = "lblUnits";
             this.lblUnits.Size = new System.Drawing.Size(200, 16);
             this.lblUnits.TabIndex = 0;
-            this.lblUnits.Text = Lang.lgUnits;
+            this.lblUnits.Text = "Units";
             // 
             // btnImperial
             // 
@@ -132,7 +143,7 @@ namespace YieldFlo.Forms
             this.btnImperial.Name = "btnImperial";
             this.btnImperial.Size = new System.Drawing.Size(210, 44);
             this.btnImperial.TabIndex = 1;
-            this.btnImperial.Text = Lang.lgImperial;
+            this.btnImperial.Text = global::YieldFlo.Language.Lang.lgImperial;
             this.btnImperial.UseVisualStyleBackColor = false;
             this.btnImperial.Click += new System.EventHandler(this.btnImperial_Click);
             // 
@@ -147,7 +158,7 @@ namespace YieldFlo.Forms
             this.btnMetric.Name = "btnMetric";
             this.btnMetric.Size = new System.Drawing.Size(210, 44);
             this.btnMetric.TabIndex = 2;
-            this.btnMetric.Text = Lang.lgMetric;
+            this.btnMetric.Text = global::YieldFlo.Language.Lang.lgMetric;
             this.btnMetric.UseVisualStyleBackColor = false;
             this.btnMetric.Click += new System.EventHandler(this.btnMetric_Click);
             // 
@@ -159,7 +170,7 @@ namespace YieldFlo.Forms
             this.lblTheme.Name = "lblTheme";
             this.lblTheme.Size = new System.Drawing.Size(200, 16);
             this.lblTheme.TabIndex = 3;
-            this.lblTheme.Text = Lang.lgTheme;
+            this.lblTheme.Text = "Theme";
             // 
             // btnDark
             // 
@@ -172,7 +183,7 @@ namespace YieldFlo.Forms
             this.btnDark.Name = "btnDark";
             this.btnDark.Size = new System.Drawing.Size(210, 44);
             this.btnDark.TabIndex = 4;
-            this.btnDark.Text = Lang.lgDark;
+            this.btnDark.Text = global::YieldFlo.Language.Lang.lgDark;
             this.btnDark.UseVisualStyleBackColor = false;
             this.btnDark.Click += new System.EventHandler(this.btnDark_Click);
             // 
@@ -187,7 +198,7 @@ namespace YieldFlo.Forms
             this.btnLight.Name = "btnLight";
             this.btnLight.Size = new System.Drawing.Size(210, 44);
             this.btnLight.TabIndex = 5;
-            this.btnLight.Text = Lang.lgLight;
+            this.btnLight.Text = global::YieldFlo.Language.Lang.lgLight;
             this.btnLight.UseVisualStyleBackColor = false;
             this.btnLight.Click += new System.EventHandler(this.btnLight_Click);
             // 
@@ -199,7 +210,7 @@ namespace YieldFlo.Forms
             this.lblNetwork.Name = "lblNetwork";
             this.lblNetwork.Size = new System.Drawing.Size(300, 16);
             this.lblNetwork.TabIndex = 6;
-            this.lblNetwork.Text = Lang.lgModuleComm;
+            this.lblNetwork.Text = "Module Communication";
             // 
             // btnEthernet
             // 
@@ -212,7 +223,7 @@ namespace YieldFlo.Forms
             this.btnEthernet.Name = "btnEthernet";
             this.btnEthernet.Size = new System.Drawing.Size(210, 44);
             this.btnEthernet.TabIndex = 7;
-            this.btnEthernet.Text = Lang.lgWiFi;
+            this.btnEthernet.Text = global::YieldFlo.Language.Lang.lgWiFi;
             this.btnEthernet.UseVisualStyleBackColor = false;
             this.btnEthernet.Click += new System.EventHandler(this.btnEthernet_Click);
             // 
@@ -231,17 +242,6 @@ namespace YieldFlo.Forms
             this.btnCAN.UseVisualStyleBackColor = false;
             this.btnCAN.Click += new System.EventHandler(this.btnCAN_Click);
             // 
-            // lblWifiInfo
-            // 
-            this.lblWifiInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.lblWifiInfo.ForeColor = System.Drawing.Color.Silver;
-            this.lblWifiInfo.Location = new System.Drawing.Point(8, 224);
-            this.lblWifiInfo.Name = "lblWifiInfo";
-            this.lblWifiInfo.Size = new System.Drawing.Size(434, 42);
-            this.lblWifiInfo.TabIndex = 9;
-            this.lblWifiInfo.Text = Lang.lgWifiInfo;
-            this.lblWifiInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // lblCanDriver
             // 
             this.lblCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
@@ -250,7 +250,7 @@ namespace YieldFlo.Forms
             this.lblCanDriver.Name = "lblCanDriver";
             this.lblCanDriver.Size = new System.Drawing.Size(200, 16);
             this.lblCanDriver.TabIndex = 10;
-            this.lblCanDriver.Text = Lang.lgCanDriver;
+            this.lblCanDriver.Text = "CAN Driver";
             // 
             // cbCanDriver
             // 
@@ -273,7 +273,7 @@ namespace YieldFlo.Forms
             this.lblCanPort.Name = "lblCanPort";
             this.lblCanPort.Size = new System.Drawing.Size(180, 16);
             this.lblCanPort.TabIndex = 12;
-            this.lblCanPort.Text = Lang.lgComPort;
+            this.lblCanPort.Text = "COM Port";
             // 
             // cbCanPort
             // 
@@ -308,7 +308,7 @@ namespace YieldFlo.Forms
             this.lblResumeJob.Name = "lblResumeJob";
             this.lblResumeJob.Size = new System.Drawing.Size(300, 16);
             this.lblResumeJob.TabIndex = 15;
-            this.lblResumeJob.Text = Lang.lgResumeOnStart;
+            this.lblResumeJob.Text = "Resume Job on Start";
             // 
             // btnResumeOn
             // 
@@ -321,7 +321,7 @@ namespace YieldFlo.Forms
             this.btnResumeOn.Name = "btnResumeOn";
             this.btnResumeOn.Size = new System.Drawing.Size(210, 44);
             this.btnResumeOn.TabIndex = 16;
-            this.btnResumeOn.Text = Lang.lgOn;
+            this.btnResumeOn.Text = global::YieldFlo.Language.Lang.lgOn;
             this.btnResumeOn.UseVisualStyleBackColor = false;
             this.btnResumeOn.Click += new System.EventHandler(this.btnResumeOn_Click);
             // 
@@ -336,7 +336,7 @@ namespace YieldFlo.Forms
             this.btnResumeOff.Name = "btnResumeOff";
             this.btnResumeOff.Size = new System.Drawing.Size(210, 44);
             this.btnResumeOff.TabIndex = 17;
-            this.btnResumeOff.Text = Lang.lgOff;
+            this.btnResumeOff.Text = global::YieldFlo.Language.Lang.lgOff;
             this.btnResumeOff.UseVisualStyleBackColor = false;
             this.btnResumeOff.Click += new System.EventHandler(this.btnResumeOff_Click);
             // 
@@ -351,7 +351,7 @@ namespace YieldFlo.Forms
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(160, 36);
             this.btnSaveSettings.TabIndex = 18;
-            this.btnSaveSettings.Text = Lang.lgSaveApply;
+            this.btnSaveSettings.Text = global::YieldFlo.Language.Lang.lgSaveApply;
             this.btnSaveSettings.UseVisualStyleBackColor = false;
             this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
             // 
@@ -366,7 +366,7 @@ namespace YieldFlo.Forms
             this.btnSettingsClose.Name = "btnSettingsClose";
             this.btnSettingsClose.Size = new System.Drawing.Size(112, 36);
             this.btnSettingsClose.TabIndex = 19;
-            this.btnSettingsClose.Text = Lang.lgClose;
+            this.btnSettingsClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnSettingsClose.UseVisualStyleBackColor = false;
             this.btnSettingsClose.Click += new System.EventHandler(this.btnSettingsClose_Click);
             // 
@@ -375,13 +375,11 @@ namespace YieldFlo.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.ClientSize = new System.Drawing.Size(456, 480);
+            this.ClientSize = new System.Drawing.Size(456, 451);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlTitle);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximumSize = new System.Drawing.Size(456, 480);
-            this.MinimumSize = new System.Drawing.Size(456, 480);
             this.Name = "frmMenuSettings";
             this.Padding = new System.Windows.Forms.Padding(2);
             this.ShowInTaskbar = false;

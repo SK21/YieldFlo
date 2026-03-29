@@ -24,6 +24,14 @@
     <Content Include="YieldFlo2.ico" />
   </ItemGroup>
 
+  <!-- Help files — copied to Help\ subfolder in output -->
+  <ItemGroup>
+    <Content Include="Help\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Help\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+
   <!-- NuGet packages -->
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119.0" />

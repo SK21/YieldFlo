@@ -55,6 +55,8 @@ namespace YieldFlo.Forms
             // Tablet mode: slightly larger controls
             if (IsTabletPC())
                 lblYield.Font = new Font(lblYield.Font.FontFamily, 36f, FontStyle.Bold);
+
+            lblVersion.Text = "v" + Props.AppVersion;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
