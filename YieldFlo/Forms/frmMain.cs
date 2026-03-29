@@ -313,6 +313,12 @@ namespace YieldFlo.Forms
             Core.RequestUserExit();
         }
 
+        private void btnMini_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            new frmMini().Show();
+        }
+
         private void SetJobButtons(bool jobActive)
         {
             btnStart.Enabled = !jobActive;

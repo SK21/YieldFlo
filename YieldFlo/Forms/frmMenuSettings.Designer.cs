@@ -343,7 +343,6 @@ namespace YieldFlo.Forms
             // btnSaveSettings
             // 
             this.btnSaveSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(110)))), ((int)(((byte)(0)))));
-            this.btnSaveSettings.FlatAppearance.BorderSize = 0;
             this.btnSaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSaveSettings.ForeColor = System.Drawing.Color.White;
@@ -358,7 +357,6 @@ namespace YieldFlo.Forms
             // btnSettingsClose
             // 
             this.btnSettingsClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.btnSettingsClose.FlatAppearance.BorderSize = 0;
             this.btnSettingsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettingsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSettingsClose.ForeColor = System.Drawing.Color.White;
@@ -374,7 +372,7 @@ namespace YieldFlo.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(456, 451);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlTitle);

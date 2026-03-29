@@ -21,6 +21,7 @@ namespace YieldFlo.Forms
             this.btnPause = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
+            this.btnMini = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlGauges = new System.Windows.Forms.Panel();
             this.pnlYield = new System.Windows.Forms.Panel();
@@ -76,6 +77,7 @@ namespace YieldFlo.Forms
             this.pnlToolbar.Controls.Add(this.btnStop);
             this.pnlToolbar.Controls.Add(this.btnExit);
             this.pnlToolbar.Controls.Add(this.lblTitle);
+            this.pnlToolbar.Controls.Add(this.btnMini);
             this.pnlToolbar.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlToolbar.Location = new System.Drawing.Point(2, 2);
             this.pnlToolbar.Name = "pnlToolbar";
@@ -158,15 +160,30 @@ namespace YieldFlo.Forms
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             //
             // lblTitle
-            // 
+            //
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(200)))), ((int)(((byte)(220)))));
-            this.lblTitle.Location = new System.Drawing.Point(334, 0);
+            this.lblTitle.Location = new System.Drawing.Point(335, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(128, 44);
-            this.lblTitle.TabIndex = 6;
+            this.lblTitle.Size = new System.Drawing.Size(127, 44);
+            this.lblTitle.TabIndex = 5;
             this.lblTitle.Text = "YieldFlo";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
+            // btnMini
+            //
+            this.btnMini.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.btnMini.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.btnMini.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMini.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.btnMini.ForeColor = System.Drawing.Color.White;
+            this.btnMini.Location = new System.Drawing.Point(464, 5);
+            this.btnMini.Name = "btnMini";
+            this.btnMini.Size = new System.Drawing.Size(30, 34);
+            this.btnMini.TabIndex = 6;
+            this.btnMini.Text = "─";
+            this.btnMini.UseVisualStyleBackColor = false;
+            this.btnMini.Click += new System.EventHandler(this.btnMini_Click);
             // 
             // pnlGauges
             // 
@@ -574,6 +591,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Button btnMini;
         private System.Windows.Forms.Label  lblTitle;
 
         private System.Windows.Forms.Panel pnlGauges;

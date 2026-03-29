@@ -51,8 +51,8 @@ namespace YieldFlo.Forms
             this.btnTitleClose.Location = new System.Drawing.Point(418, 5);
             this.btnTitleClose.Click   += new System.EventHandler(this.btnTitleClose_Click);
 
-            this.pnlTitle.Controls.Add(this.lblTitle);
             this.pnlTitle.Controls.Add(this.btnTitleClose);
+            this.pnlTitle.Controls.Add(this.lblTitle);
 
             // ── Content ───────────────────────────────────────────────────────
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -89,20 +89,20 @@ namespace YieldFlo.Forms
             this.btnLt.Click += new System.EventHandler(this.btnLang_Click);
 
             // Save & Restart / Close
+            var btnFont = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+
             this.btnSaveRestart.Text      = Lang.lgRestart;
-            this.btnSaveRestart.Font      = bf;
+            this.btnSaveRestart.Font      = btnFont;
             this.btnSaveRestart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveRestart.FlatAppearance.BorderSize = 0;
-            this.btnSaveRestart.Size      = new System.Drawing.Size(210, 44);
-            this.btnSaveRestart.Location  = new System.Drawing.Point(8, 248);
+            this.btnSaveRestart.Size      = new System.Drawing.Size(210, 36);
+            this.btnSaveRestart.Location  = new System.Drawing.Point(8, 256);
             this.btnSaveRestart.Click    += new System.EventHandler(this.btnSaveRestart_Click);
 
             this.btnClose.Text      = Lang.lgClose;
-            this.btnClose.Font      = bf;
+            this.btnClose.Font      = btnFont;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.Size      = new System.Drawing.Size(210, 44);
-            this.btnClose.Location  = new System.Drawing.Point(238, 248);
+            this.btnClose.Size      = new System.Drawing.Size(210, 36);
+            this.btnClose.Location  = new System.Drawing.Point(238, 256);
             this.btnClose.Click    += new System.EventHandler(this.btnClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
@@ -111,9 +111,9 @@ namespace YieldFlo.Forms
                 btnSaveRestart, btnClose });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 340);
-            this.MinimumSize     = new System.Drawing.Size(456, 340);
-            this.MaximumSize     = new System.Drawing.Size(456, 340);
+            this.ClientSize      = new System.Drawing.Size(456, 350);
+            this.MinimumSize     = new System.Drawing.Size(456, 350);
+            this.MaximumSize     = new System.Drawing.Size(456, 350);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;

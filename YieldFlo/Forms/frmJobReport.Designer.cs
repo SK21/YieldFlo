@@ -183,7 +183,6 @@ namespace YieldFlo.Forms
             // 
             // btnExportCsv
             // 
-            this.btnExportCsv.FlatAppearance.BorderSize = 0;
             this.btnExportCsv.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExportCsv.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnExportCsv.Location = new System.Drawing.Point(8, 354);
@@ -198,7 +197,6 @@ namespace YieldFlo.Forms
             //
             // btnPrint
             //
-            this.btnPrint.FlatAppearance.BorderSize = 0;
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnPrint.Location = new System.Drawing.Point(150, 354);
@@ -210,7 +208,6 @@ namespace YieldFlo.Forms
             //
             // btnReportClose
             //
-            this.btnReportClose.FlatAppearance.BorderSize = 0;
             this.btnReportClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReportClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnReportClose.Location = new System.Drawing.Point(344, 354);
