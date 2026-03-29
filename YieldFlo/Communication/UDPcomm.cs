@@ -78,6 +78,7 @@ namespace YieldFlo.Communication
                 recvSocket.Bind(new IPEndPoint(IPAddress.Any, cReceivePort));
 
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                sendSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 sendSocket.Bind(new IPEndPoint(IPAddress.Any, cSendFromPort));
 
                 EndPoint client = new IPEndPoint(IPAddress.Any, 0);

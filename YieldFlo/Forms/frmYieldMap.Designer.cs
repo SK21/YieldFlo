@@ -24,6 +24,7 @@ namespace YieldFlo.Forms
             this.cboJob           = new System.Windows.Forms.ComboBox();
             this.btnZoomOutFull   = new System.Windows.Forms.Button();
             this.btnZoomInFull    = new System.Windows.Forms.Button();
+            this.btnPrint      = new System.Windows.Forms.Button();
             this.btnClose      = new System.Windows.Forms.Button();
             this.pnlLegend     = new System.Windows.Forms.Panel();
 
@@ -124,6 +125,16 @@ namespace YieldFlo.Forms
             this.btnZoomInFull.Location  = new System.Drawing.Point(740, 5);  // repositioned by SetMiniMode
             this.btnZoomInFull.Click    += new System.EventHandler(this.btnZoomIn_Click);
 
+            this.btnPrint.Text      = Lang.lgPrint;
+            this.btnPrint.Font      = btnFont;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.BackColor = System.Drawing.Color.FromArgb(0, 70, 130);
+            this.btnPrint.ForeColor = System.Drawing.Color.White;
+            this.btnPrint.Size      = new System.Drawing.Size(70, 26);
+            this.btnPrint.Location  = new System.Drawing.Point(640, 5);
+            this.btnPrint.Click    += new System.EventHandler(this.btnPrint_Click);
+
             this.btnClose.Text      = Lang.lgClose;
             this.btnClose.Font      = btnFont;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -135,7 +146,7 @@ namespace YieldFlo.Forms
             this.btnClose.Click    += new System.EventHandler(this.btnClose_Click);
 
             this.pnlToolbar.Controls.AddRange(new System.Windows.Forms.Control[] {
-                cboJob, btnZoomOutFull, btnZoomInFull, btnClose });
+                cboJob, btnZoomOutFull, btnZoomInFull, btnPrint, btnClose });
 
             // ── Legend (full mode only) ────────────────────────────────────────
             this.pnlLegend.BackColor = System.Drawing.Color.FromArgb(15, 20, 30);
@@ -171,6 +182,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.ComboBox cboJob;
         private System.Windows.Forms.Button   btnZoomOutFull;
         private System.Windows.Forms.Button   btnZoomInFull;
+        private System.Windows.Forms.Button   btnPrint;
         private System.Windows.Forms.Button   btnClose;
         private System.Windows.Forms.Panel   pnlLegend;
     }

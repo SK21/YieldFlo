@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 using GMap.NET;
@@ -140,6 +141,7 @@ namespace YieldFlo.Forms
                 btnClose.Location       = new Point(wa.Width - 76, 5);
                 btnZoomInFull.Location  = new Point(wa.Width - 118, 5);
                 btnZoomOutFull.Location = new Point(wa.Width - 158, 5);
+                btnPrint.Location       = new Point(wa.Width - 234, 5);
 
             }
         }
@@ -394,6 +396,58 @@ namespace YieldFlo.Forms
 
         private void btnMiniClose_Click(object sender, EventArgs e) => this.Close();
         private void btnClose_Click(object sender, EventArgs e)    => this.Close();
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            int idx = cboJob.SelectedIndex;
+            if (idx < 0 || idx >= _jobIds.Count) return;
+
+            int jobId = _jobIds[idx];
+            string jobName = (string)cboJob.Items[idx];
+            string date = "";
+            foreach (var j in Core.Database.Jobs.GetAll())
+            {
+                if (j.id == jobId) { date = j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt; break; }
+            }
+
+            string safeName = string.Concat((jobName + "_" + date).Split(Path.GetInvalidFileNameChars()));
+
+            string lastFolder = Properties.Settings.Default.LastExportFolder;
+            if (string.IsNullOrEmpty(lastFolder) || !Directory.Exists(lastFolder))
+                lastFolder = Props.ExportFolder;
+
+            using (var sfd = new SaveFileDialog())
+            {
+                sfd.Title            = Lang.lgPrint;
+                sfd.Filter           = "PNG image (*.png)|*.png";
+                sfd.InitialDirectory = lastFolder;
+                sfd.FileName         = safeName + ".png";
+
+                if (sfd.ShowDialog(this) != DialogResult.OK) return;
+
+                Properties.Settings.Default.LastExportFolder = Path.GetDirectoryName(sfd.FileName);
+                Properties.Settings.Default.Save();
+
+                // Capture gmap + legend into a single bitmap
+                int totalH = gmap.Height + (pnlLegend.Visible ? pnlLegend.Height : 0);
+                using (var bmp = new Bitmap(gmap.Width, totalH))
+                {
+                    gmap.DrawToBitmap(bmp, new Rectangle(0, 0, gmap.Width, gmap.Height));
+                    if (pnlLegend.Visible)
+                    {
+                        using (var legendBmp = new Bitmap(pnlLegend.Width, pnlLegend.Height))
+                        {
+                            pnlLegend.DrawToBitmap(legendBmp, new Rectangle(0, 0, legendBmp.Width, legendBmp.Height));
+                            using (var g = Graphics.FromImage(bmp))
+                                g.DrawImage(legendBmp, 0, gmap.Height);
+                        }
+                    }
+                    bmp.Save(sfd.FileName, ImageFormat.Png);
+                }
+
+                Props.ShowMessage(string.Format(Lang.lgExported, sfd.FileName));
+            }
+        }
 
         // ── Legend paint ──────────────────────────────────────────────────────
 
