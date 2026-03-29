@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using YieldFlo.Classes;
 using YieldFlo.Language;
@@ -16,8 +17,9 @@ namespace YieldFlo.Forms
         private readonly List<(int id, string name, string startedAt, double acres, double volume, string fieldName, int cropId, int headerId, string notes)> _jobs
             = new List<(int, string, string, double, double, string, int, int, string)>();
 
-        private int _selectedJobId   = -1;
-        private string _selectedName = "";
+        private int _selectedJobId     = -1;
+        private string _selectedName   = "";
+        private string _selectedDate   = "";
 
         public frmJobReport()
         {
@@ -118,6 +120,7 @@ namespace YieldFlo.Forms
             var job = _jobs[idx];
             _selectedJobId = job.id;
             _selectedName  = job.name;
+            _selectedDate  = job.startedAt;
 
             lblReportJobName.Text  = job.name;
             lblReportField.Text    = string.IsNullOrEmpty(job.fieldName) ? $"{Lang.lgFieldColon} --" : $"{Lang.lgFieldColon} {job.fieldName}";
@@ -159,6 +162,7 @@ namespace YieldFlo.Forms
         {
             _selectedJobId = -1;
             _selectedName  = "";
+            _selectedDate  = "";
             lblReportJobName.Text  = "--";
             lblReportField.Text    = $"{Lang.lgFieldColon} --";
             lblReportNotes.Text         = "";
@@ -179,11 +183,29 @@ namespace YieldFlo.Forms
                 return;
             }
 
-            string path = CsvExporter.ExportJob(_selectedJobId, _selectedName);
-            if (path != null)
-                Props.ShowMessage(string.Format(Lang.lgExported, path));
-            else
-                Props.ShowMessage(Lang.lgExportFailed, "", 3000, true);
+            string lastFolder = Properties.Settings.Default.LastExportFolder;
+            if (string.IsNullOrEmpty(lastFolder) || !Directory.Exists(lastFolder))
+                lastFolder = Props.ExportFolder;
+
+            using (var sfd = new SaveFileDialog())
+            {
+                sfd.Title            = Lang.lgExportCsv;
+                sfd.Filter           = "CSV files (*.csv)|*.csv";
+                sfd.InitialDirectory = lastFolder;
+                string safeName      = string.Concat((_selectedName + "_" + _selectedDate).Split(Path.GetInvalidFileNameChars()));
+                sfd.FileName         = safeName + ".csv";
+
+                if (sfd.ShowDialog(this) != DialogResult.OK) return;
+
+                Properties.Settings.Default.LastExportFolder = Path.GetDirectoryName(sfd.FileName);
+                Properties.Settings.Default.Save();
+
+                string path = CsvExporter.ExportJob(_selectedJobId, _selectedName, sfd.FileName);
+                if (path != null)
+                    Props.ShowMessage(string.Format(Lang.lgExported, path));
+                else
+                    Props.ShowMessage(Lang.lgExportFailed, "", 3000, true);
+            }
         }
 
         private void btnPrint_Click(object sender, EventArgs e)

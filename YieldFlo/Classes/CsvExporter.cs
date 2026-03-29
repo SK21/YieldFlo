@@ -11,7 +11,7 @@ namespace YieldFlo.Classes
         /// Exports all YieldDataPoints for a job to a CSV file.
         /// Returns the output file path, or null on error.
         /// </summary>
-        public static string ExportJob(int jobId, string jobName)
+        public static string ExportJob(int jobId, string jobName, string path)
         {
             try
             {
@@ -40,10 +40,6 @@ namespace YieldFlo.Classes
                     }
                     break;
                 }
-
-                string safeName = string.Concat(jobName.Split(Path.GetInvalidFileNameChars()));
-                string folder = Props.ExportFolder;
-                string path = Path.Combine(folder, $"{safeName}_{jobId}.csv");
 
                 var sb = new StringBuilder();
                 // Columns 0-5 match RC's YieldOverlayCreator expected format (parsed by position).

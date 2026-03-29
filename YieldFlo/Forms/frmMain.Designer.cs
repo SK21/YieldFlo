@@ -484,8 +484,8 @@ namespace YieldFlo.Forms
             this.pnlStatus.Controls.Add(this.lblStatusModule);
             this.pnlStatus.Controls.Add(this.lblStatusComm);
             this.pnlStatus.Controls.Add(this.lblStatusJob);
-            this.pnlStatus.Controls.Add(this.lblStatusMsg);
             this.pnlStatus.Controls.Add(this.lblVersion);
+            this.pnlStatus.Controls.Add(this.lblStatusMsg);
             this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlStatus.Location = new System.Drawing.Point(2, 281);
             this.pnlStatus.Name = "pnlStatus";
@@ -536,10 +536,12 @@ namespace YieldFlo.Forms
             // 
             this.lblStatusMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusMsg.ForeColor = System.Drawing.Color.Silver;
-            this.lblStatusMsg.Location = new System.Drawing.Point(249, 4);
+            this.lblStatusMsg.Location = new System.Drawing.Point(0, 0);
             this.lblStatusMsg.Name = "lblStatusMsg";
-            this.lblStatusMsg.Size = new System.Drawing.Size(179, 23);
+            this.lblStatusMsg.Size = new System.Drawing.Size(496, 26);
             this.lblStatusMsg.TabIndex = 4;
+            this.lblStatusMsg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblStatusMsg.Visible = false;
             // 
             // lblVersion
             // 

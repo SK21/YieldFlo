@@ -330,9 +330,12 @@ namespace YieldFlo.Forms
 
         public void ShowStatusMessage(string message, bool isError)
         {
+            lblStatusMsg.BackColor = pnlStatus.BackColor;
             lblStatusMsg.Text = message;
             lblStatusMsg.ForeColor = isError ? Color.Red : Color.Yellow;
-            _msgCountdown = 5;
+            lblStatusMsg.Visible = true;
+            lblStatusMsg.BringToFront();
+            _msgCountdown = 10;
             _msgTimer.Start();
         }
 
@@ -341,6 +344,7 @@ namespace YieldFlo.Forms
             _msgCountdown--;
             if (_msgCountdown <= 0)
             {
+                lblStatusMsg.Visible = false;
                 lblStatusMsg.Text = "";
                 _msgTimer.Stop();
             }
