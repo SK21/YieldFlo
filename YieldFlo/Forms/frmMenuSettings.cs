@@ -11,6 +11,9 @@ namespace YieldFlo.Forms
     {
         private bool _dragging;
         private Point _dragStart;
+        private string _originalCommType;
+        private string _originalCanDriver;
+        private string _originalCanPort;
 
         private static readonly Color ActiveColour   = Color.FromArgb(0, 80, 160);
         private static readonly Color InactiveColour = Color.FromArgb(60, 60, 60);
@@ -32,6 +35,9 @@ namespace YieldFlo.Forms
                 c.MouseUp   += (s, ev) => _dragging = false;
             }
             LoadCurrentSettings();
+            _originalCommType  = Properties.Settings.Default.ModuleCommType;
+            _originalCanDriver = Properties.Settings.Default.CanDriver;
+            _originalCanPort   = Properties.Settings.Default.CanPort;
         }
 
         private void ApplyTheme()
@@ -197,6 +203,24 @@ namespace YieldFlo.Forms
             Properties.Settings.Default.Save();
             Core.RaiseColorChanged();
             Props.ShowMessage(Lang.lgSettingsSaved);
+
+            bool commChanged = Properties.Settings.Default.ModuleCommType != _originalCommType
+                            || Properties.Settings.Default.CanDriver       != _originalCanDriver
+                            || Properties.Settings.Default.CanPort         != _originalCanPort;
+
+            if (commChanged)
+            {
+                var result = MessageBox.Show(
+                    "Comm settings changed. Restart now to apply?",
+                    "Restart Required",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                    Core.RequestRestart();
+                else
+                    _originalCommType = _originalCanDriver = _originalCanPort = null;
+            }
         }
 
         private void btnTitleClose_Click(object sender, EventArgs e)    => this.Close();

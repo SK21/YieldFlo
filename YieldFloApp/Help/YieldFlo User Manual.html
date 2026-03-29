@@ -378,20 +378,23 @@ li { margin: 2px 0; }
 
 <p><strong>Menu: Menu &rarr; Moisture Cal</strong></p>
 
-<p>Moisture calibration maps the raw sensor counts from the capacitance moisture sensor to actual moisture percentage. Calibration values are stored per-profile.</p>
+<p>Moisture and temperature readings are both calculated the same way:</p>
 
-<p>The moisture reading is calculated as:</p>
+<pre>Value = raw_count &times; scale  +  offset</pre>
 
-<pre>Moisture (%) = raw_count &times; scale  +  offset</pre>
+<p>Both support single-point calibration. With offset set to 0, adjust scale until the displayed reading matches a reference instrument:</p>
+
+<pre>scale = known_value / raw_count</pre>
+
+<p>For example: if the raw count is 420 and a certified meter reads 18.5%, set scale to 18.5 &divide; 420 &asymp; 0.044. The offset field can then be used for fine trimming against a second reference point if needed.</p>
 
 <h3>Moisture calibration procedure</h3>
 
 <ol>
 <li>Take a grain sample and measure moisture with a certified grain moisture meter</li>
 <li>Open <strong>Menu &rarr; Moisture Cal</strong></li>
-<li>With the module connected and grain flowing, observe the live sensor reading</li>
-<li>Enter the meter reading in the <strong>%</strong> field — this is saved to the active crop as an offset</li>
-<li>Adjust the <strong>%/count</strong> scale until the displayed reading matches the meter</li>
+<li>With the module connected and grain flowing, observe the live raw count</li>
+<li>Set offset to 0 and adjust <strong>%/count</strong> scale until the displayed reading matches the meter</li>
 <li>Press <strong>Save</strong></li>
 </ol>
 
@@ -399,15 +402,17 @@ li { margin: 2px 0; }
 
 <table>
 <tr><th>Field</th><th>Saved to</th><th>Description</th></tr>
-<tr><td><strong>%</strong></td><td>Active crop</td><td>Reference moisture reading from an approved meter — applied as a per-crop offset</td></tr>
+<tr><td><strong>%</strong></td><td>Active crop</td><td>Moisture offset — set to 0 for single-point scale calibration</td></tr>
 <tr><td><strong>%/count</strong></td><td>Active profile</td><td>Scale factor converting raw ADS1115 counts to moisture percent</td></tr>
 </table>
 
 <h3>Temperature calibration</h3>
 
+<p>Same principle as moisture. The default scale of 0.0125 assumes an LM35 sensor (10 mV/°C at PGA = 4.096 V). With offset at 0, adjust <strong>°C/count</strong> until the reading matches a thermometer.</p>
+
 <table>
 <tr><th>Field</th><th>Saved to</th><th>Description</th></tr>
-<tr><td><strong>°C</strong></td><td>Active profile</td><td>Reference temperature from a thermometer</td></tr>
+<tr><td><strong>°C</strong></td><td>Active profile</td><td>Temperature offset — set to 0 for single-point scale calibration</td></tr>
 <tr><td><strong>°C/count</strong></td><td>Active profile</td><td>Scale factor converting raw ADS1115 counts to degrees Celsius</td></tr>
 </table>
 
