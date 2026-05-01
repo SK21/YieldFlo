@@ -23,6 +23,7 @@ namespace YieldFlo.Communication
         private Socket recvSocket;
         private volatile bool Running = false;
         private Socket sendSocket;
+        private string cModuleIP;
 
         public UDPComm(frmMain CallingForm, int ReceivePort, int SendToPort, int SendFromPort,
                        string ConnectionName, string DestinationEndPoint = "")
@@ -179,18 +180,18 @@ namespace YieldFlo.Communication
             if (data.Length < 11) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
-            byte   flags      = data[2];
-            ushort ratio      = BitConverter.ToUInt16(data, 3);
+            byte flags = data[2];
+            ushort ratio = BitConverter.ToUInt16(data, 3);
             ushort moistureRaw = BitConverter.ToUInt16(data, 5);
-            byte   noiseCount = data[9];
+            byte noiseCount = data[9];
 
-            bool s1Ok       = (flags & 0x01) != 0;
+            bool s1Ok = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
 
-            Core.LastSensor1  = s1Ok       ? ratio       / 1000.0              : 0;
+            Core.LastSensor1 = s1Ok ? ratio / 1000.0 : 0;
             Core.LastMoisture = moistureOk ? moistureRaw * Core.ActiveMoistScale : 0;
-            Core.LastNoiseCount    = noiseCount;
-            Core.ModuleConnected   = true;
+            Core.LastNoiseCount = noiseCount;
+            Core.ModuleConnected = true;
             Core.LastModuleReceive = DateTime.UtcNow;
 
             Core.Yield?.PushSensorReading(Core.LastSensor1);
@@ -206,7 +207,7 @@ namespace YieldFlo.Communication
             if (data.Length < 6) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
-            bool tempOk   = (data[2] & 0x01) != 0;
+            bool tempOk = (data[2] & 0x01) != 0;
             short tempRaw = BitConverter.ToInt16(data, 3);
 
             Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
@@ -219,6 +220,21 @@ namespace YieldFlo.Communication
             catch (Exception ex) { Props.WriteErrorLog("UDPComm/HandleSend " + ex.Message); }
         }
 
+        public string ModuleIP
+        {
+            get
+            {
+                if (Core.ModuleConnected)
+                {
+                    return cModuleIP;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
         private void Receive(IAsyncResult asyncResult)
         {
             if (!Running) return;
@@ -228,12 +244,12 @@ namespace YieldFlo.Communication
                 int msgLen = recvSocket.EndReceiveFrom(asyncResult, ref epSender);
                 byte[] localMsg = null;
                 int port = 0;
-
                 if (msgLen > 0)
                 {
                     localMsg = new byte[msgLen];
                     Array.Copy(buffer, localMsg, msgLen);
                     port = ((IPEndPoint)epSender).Port;
+                    cModuleIP = ((IPEndPoint)epSender).Address.ToString();
                 }
 
                 // Re-arm listener

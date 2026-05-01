@@ -15,7 +15,7 @@ namespace YieldFlo.Forms
         private string _originalCanDriver;
         private string _originalCanPort;
 
-        private static readonly Color ActiveColour   = Color.FromArgb(0, 80, 160);
+        private static readonly Color ActiveColour = Color.FromArgb(0, 80, 160);
         private static readonly Color InactiveColour = Color.FromArgb(60, 60, 60);
 
         public frmMenuSettings()
@@ -32,12 +32,21 @@ namespace YieldFlo.Forms
             {
                 c.MouseDown += (s, ev) => { if (ev.Button == MouseButtons.Left) { _dragging = true; _dragStart = ev.Location; } };
                 c.MouseMove += (s, ev) => { if (_dragging) { Left += ev.X - _dragStart.X; Top += ev.Y - _dragStart.Y; } };
-                c.MouseUp   += (s, ev) => _dragging = false;
+                c.MouseUp += (s, ev) => _dragging = false;
             }
             LoadCurrentSettings();
-            _originalCommType  = Properties.Settings.Default.ModuleCommType;
+            _originalCommType = Properties.Settings.Default.ModuleCommType;
             _originalCanDriver = Properties.Settings.Default.CanDriver;
-            _originalCanPort   = Properties.Settings.Default.CanPort;
+            _originalCanPort = Properties.Settings.Default.CanPort;
+
+            if (Core.UDPmodule.ModuleIP != "")
+            {
+                btnEthernet.Text = "Wifi  (" + Core.UDPmodule.ModuleIP + ")";
+            }
+            else
+            {
+                btnEthernet.Text = "Wifi";
+            }
         }
 
         private void ApplyTheme()
@@ -46,9 +55,9 @@ namespace YieldFlo.Forms
             var fore = Properties.Settings.Default.MainForeColour;
             var ctrl = Color.FromArgb(60, 60, 60);
 
-            pnlTitle.BackColor      = back;
-            pnlContent.BackColor    = back;
-            lblTitle.ForeColor      = Color.FromArgb(180, 200, 220);
+            pnlTitle.BackColor = back;
+            pnlContent.BackColor = back;
+            lblTitle.ForeColor = Color.FromArgb(180, 200, 220);
             btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
             btnTitleClose.ForeColor = Color.White;
 
@@ -67,8 +76,8 @@ namespace YieldFlo.Forms
                 }
             }
 
-            btnSaveSettings.BackColor  = Color.FromArgb(0, 110, 0);
-            btnSaveSettings.ForeColor  = Color.White;
+            btnSaveSettings.BackColor = Color.FromArgb(0, 110, 0);
+            btnSaveSettings.ForeColor = Color.White;
             btnSettingsClose.BackColor = InactiveColour;
             btnSettingsClose.ForeColor = Color.White;
         }
@@ -114,12 +123,12 @@ namespace YieldFlo.Forms
 
         private void UpdateNetworkControls(bool isWifi)
         {
-            lblWifiInfo.Visible     = isWifi;
-            lblCanDriver.Visible    = !isWifi;
-            cbCanDriver.Visible     = !isWifi;
-            lblCanPort.Visible      = !isWifi;
-            cbCanPort.Visible       = !isWifi;
-            btnRescanPorts.Visible  = !isWifi;
+            lblWifiInfo.Visible = isWifi;
+            lblCanDriver.Visible = !isWifi;
+            cbCanDriver.Visible = !isWifi;
+            lblCanPort.Visible = !isWifi;
+            cbCanPort.Visible = !isWifi;
+            btnRescanPorts.Visible = !isWifi;
         }
 
         private void btnRescanPorts_Click(object sender, EventArgs e)
@@ -131,15 +140,15 @@ namespace YieldFlo.Forms
 
         private void SetToggle(Button active, Button inactive, bool firstActive)
         {
-            active.BackColor   = firstActive ? ActiveColour : InactiveColour;
+            active.BackColor = firstActive ? ActiveColour : InactiveColour;
             inactive.BackColor = firstActive ? InactiveColour : ActiveColour;
         }
 
-        private void btnImperial_Click(object sender, EventArgs e)  => SetToggle(btnImperial, btnMetric, true);
-        private void btnMetric_Click(object sender, EventArgs e)    => SetToggle(btnImperial, btnMetric, false);
-        private void btnDark_Click(object sender, EventArgs e)      => SetToggle(btnDark, btnLight, true);
-        private void btnLight_Click(object sender, EventArgs e)     => SetToggle(btnDark, btnLight, false);
-        private void btnResumeOn_Click(object sender, EventArgs e)  => SetToggle(btnResumeOn, btnResumeOff, true);
+        private void btnImperial_Click(object sender, EventArgs e) => SetToggle(btnImperial, btnMetric, true);
+        private void btnMetric_Click(object sender, EventArgs e) => SetToggle(btnImperial, btnMetric, false);
+        private void btnDark_Click(object sender, EventArgs e) => SetToggle(btnDark, btnLight, true);
+        private void btnLight_Click(object sender, EventArgs e) => SetToggle(btnDark, btnLight, false);
+        private void btnResumeOn_Click(object sender, EventArgs e) => SetToggle(btnResumeOn, btnResumeOff, true);
         private void btnResumeOff_Click(object sender, EventArgs e) => SetToggle(btnResumeOn, btnResumeOff, false);
 
         private void btnEthernet_Click(object sender, EventArgs e)
@@ -164,16 +173,16 @@ namespace YieldFlo.Forms
             bool isDark = btnDark.BackColor == ActiveColour;
             if (isDark)
             {
-                Properties.Settings.Default.MainBackColour    = Color.FromArgb(45, 45, 45);
+                Properties.Settings.Default.MainBackColour = Color.FromArgb(45, 45, 45);
                 Properties.Settings.Default.DisplayBackColour = Color.FromArgb(60, 60, 60);
-                Properties.Settings.Default.MainForeColour    = Color.White;
+                Properties.Settings.Default.MainForeColour = Color.White;
                 Properties.Settings.Default.DisplayForeColour = Color.FromArgb(180, 200, 220);
             }
             else
             {
-                Properties.Settings.Default.MainBackColour    = Color.FromArgb(200, 200, 210);
+                Properties.Settings.Default.MainBackColour = Color.FromArgb(200, 200, 210);
                 Properties.Settings.Default.DisplayBackColour = Color.FromArgb(220, 220, 230);
-                Properties.Settings.Default.MainForeColour    = Color.FromArgb(20, 20, 20);
+                Properties.Settings.Default.MainForeColour = Color.FromArgb(20, 20, 20);
                 Properties.Settings.Default.DisplayForeColour = Color.FromArgb(20, 50, 100);
             }
 
@@ -188,9 +197,9 @@ namespace YieldFlo.Forms
             else
             {
                 string driver = cbCanDriver.SelectedItem?.ToString() ?? "SLCAN";
-                string port   = cbCanPort.SelectedItem?.ToString() ?? "";
+                string port = cbCanPort.SelectedItem?.ToString() ?? "";
                 Properties.Settings.Default.CanDriver = driver;
-                Properties.Settings.Default.CanPort   = port;
+                Properties.Settings.Default.CanPort = port;
                 Props.CurrentCanDriver = Enum.TryParse(driver, out CanDriver cd) ? cd : CanDriver.SLCAN;
                 Props.CanPort = port;
             }
@@ -205,8 +214,8 @@ namespace YieldFlo.Forms
             Props.ShowMessage(Lang.lgSettingsSaved);
 
             bool commChanged = Properties.Settings.Default.ModuleCommType != _originalCommType
-                            || Properties.Settings.Default.CanDriver       != _originalCanDriver
-                            || Properties.Settings.Default.CanPort         != _originalCanPort;
+                            || Properties.Settings.Default.CanDriver != _originalCanDriver
+                            || Properties.Settings.Default.CanPort != _originalCanPort;
 
             if (commChanged)
             {
@@ -223,7 +232,7 @@ namespace YieldFlo.Forms
             }
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e)    => this.Close();
+        private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();
         private void btnSettingsClose_Click(object sender, EventArgs e) => this.Close();
     }
 }

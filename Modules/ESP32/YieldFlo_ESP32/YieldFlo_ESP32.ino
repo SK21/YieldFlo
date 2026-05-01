@@ -21,7 +21,7 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 29036         // firmware version — update with every build (DDMMY format)
+#define InoID 30046         // firmware version — update with every build (DDMMY format)
 #define StructVersion 1     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 const uint8_t NC = 0xFF;		// Pin not connected

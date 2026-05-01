@@ -228,15 +228,6 @@ void DoSetup()
 
 	delay(1500);
 
-	if (ADSfound)
-	{
-		Serial.println(F("ADS1115: Enabled "));
-	}
-	else
-	{
-		Serial.println(F("ADS1115: Disabled "));
-	}
-
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
