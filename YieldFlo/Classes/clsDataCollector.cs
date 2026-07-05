@@ -1,14 +1,30 @@
 using System;
+using System.Collections.Generic;
 using YieldFlo.Database;
 
 namespace YieldFlo.Classes
 {
     /// <summary>
     /// Accumulates yield data points during an active job.
+    /// Positions are buffered for ProcessingDelaySec (the grain transport time
+    /// from header to elevator sensor) and paired with the sensor flow measured
+    /// when they drain, so grain is mapped where it was actually cut and the
+    /// tail still in the machine after sections go off is not lost.
     /// Writes one record per second to the database.
     /// </summary>
     public class clsDataCollector
     {
+        // One entry per GPS tick while sections are on, drained after ProcessingDelaySec
+        private struct PendingPoint
+        {
+            public DateTime Time;
+            public double Lat, Lon;
+            public float Altitude, Speed, Heading;
+            public double AcresInc;
+        }
+
+        private readonly Queue<PendingPoint> _pipeline = new Queue<PendingPoint>();
+
         public bool IsRecording { get; private set; }
         public bool IsAutoPaused { get; private set; }  // true only when paused by AOG condition (not manually)
         public int ActiveJobId { get; private set; } = -1;
@@ -43,6 +59,7 @@ namespace YieldFlo.Classes
             _lastLat = 0;
             _lastLon = 0;
             _lastWriteTime = DateTime.MinValue;
+            _pipeline.Clear();
             IsRecording  = false;
             IsAutoPaused = true;   // starts recording when sections come on
         }
@@ -52,6 +69,7 @@ namespace YieldFlo.Classes
         public void StopJob()
         {
             IsRecording = false;
+            _pipeline.Clear();   // grain still in transit is abandoned on an explicit stop
             if (ActiveJobId > 0 && Core.Database != null)
             {
                 Core.Database.Jobs.UpdateTotals(ActiveJobId, TotalAcres, TotalBushels);
@@ -61,7 +79,9 @@ namespace YieldFlo.Classes
             ActiveJobName = "";
         }
 
-        public void PauseJob() { IsRecording = false; IsAutoPaused = false; }  // manual pause
+        // Manual pause discards in-transit positions; their flow can't be
+        // matched after an arbitrary pause.
+        public void PauseJob() { IsRecording = false; IsAutoPaused = false; _pipeline.Clear(); }
 
         private void AutoPause() { IsRecording = false; IsAutoPaused = true; }
 
@@ -74,6 +94,7 @@ namespace YieldFlo.Classes
         public void SuspendJob()
         {
             IsRecording = false;
+            _pipeline.Clear();
             if (ActiveJobId > 0 && Core.Database != null)
                 Core.Database.Jobs.UpdateTotals(ActiveJobId, TotalAcres, TotalBushels);
             ActiveJobId   = -1;
@@ -105,6 +126,7 @@ namespace YieldFlo.Classes
             _lastLat = 0;
             _lastLon = 0;
             _lastWriteTime = DateTime.MinValue;
+            _pipeline.Clear();
             IsRecording  = false;
             IsAutoPaused = true;   // auto-resumes once AOG connects and harvesting starts
         }
@@ -114,7 +136,6 @@ namespace YieldFlo.Classes
         /// </summary>
         public void OnGpsUpdate(double rawMoisture)
         {
-            double moisture = rawMoisture > 0 ? rawMoisture + Core.ActiveMoistureOffset : 0;
             if (ActiveJobId < 0) return;
 
             // Allow auto-resume check even when paused — but skip entirely if manually paused.
@@ -125,74 +146,107 @@ namespace YieldFlo.Classes
 
             var yield = Core.Yield;
 
-            // Calculate yield for this GPS position
-            yield.Calculate(gps.Speed);
-
-            // Auto-pause/resume based on AOG state: speed > 0 AND at least one section on.
             // Sections turn off over already-harvested ground even when moving.
             bool harvestActive = gps.SectionsActive;
 
-            if (!harvestActive)
+            if (harvestActive)
             {
+                // Crop is entering the machine — buffer this position. Its grain
+                // reaches the sensor ProcessingDelaySec from now.
+                double acresInc = 0;
+                if (_lastLat != 0 && _lastLon != 0)
+                {
+                    double distM = HaversineMetres(_lastLat, _lastLon, gps.Latitude, gps.Longitude);
+                    acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM);
+                }
+                _lastLat = gps.Latitude;
+                _lastLon = gps.Longitude;
+
+                _pipeline.Enqueue(new PendingPoint
+                {
+                    Time = DateTime.UtcNow,
+                    Lat = gps.Latitude,
+                    Lon = gps.Longitude,
+                    Altitude = gps.Altitude,
+                    Speed = gps.Speed,
+                    Heading = gps.Heading,
+                    AcresInc = acresInc
+                });
+            }
+            else
+            {
+                // Header up / sections off — no new crop, but keep draining the
+                // pipeline: delay-time's worth of grain is still in the machine.
                 _lastLat = 0;
                 _lastLon = 0;
-                if (!IsAutoPaused)
-                {
-                    AutoPause();
-                    Core.RaiseJobStateChanged();
-                }
-                return;
             }
 
-            if (IsAutoPaused)
+            // Drain positions older than the transport delay — their grain is at
+            // the sensor now, so pair them with the current flow reading.
+            double moisture = rawMoisture > 0 ? rawMoisture + Core.ActiveMoistureOffset : 0;
+            DateTime cutoff = DateTime.UtcNow.AddSeconds(-yield.ProcessingDelaySec);
+
+            while (_pipeline.Count > 0 && _pipeline.Peek().Time <= cutoff)
+            {
+                PendingPoint pt = _pipeline.Dequeue();
+
+                yield.Calculate(pt.Speed);
+
+                TotalAcres += pt.AcresInc;
+                double bushelsInc = yield.InstantYield * pt.AcresInc;
+                TotalBushels += bushelsInc;
+                yield.AccumulateCalRun(bushelsInc);
+
+                // Moisture is measured at the sensor, so the current reading
+                // belongs to this drained position's grain.
+                if (moisture > 0)
+                {
+                    _moistureSum += moisture;
+                    _moistureCount++;
+                    AverageMoisture = _moistureSum / _moistureCount;
+                }
+
+                // Write to DB once per second
+                if ((DateTime.UtcNow - _lastWriteTime).TotalSeconds >= 1.0)
+                {
+                    _lastWriteTime = DateTime.UtcNow;
+
+                    var point = new YieldDataPoint
+                    {
+                        JobId = ActiveJobId,
+                        Timestamp = pt.Time,
+                        Latitude = pt.Lat,
+                        Longitude = pt.Lon,
+                        Elevation = pt.Altitude,
+                        Speed = pt.Speed,
+                        Heading = pt.Heading,
+                        YieldRate = yield.InstantYield,
+                        Moisture = moisture,
+                        AcresAccumulated = TotalAcres,
+                        Sensor1Raw = Core.LastSensor1,
+                        Sensor2Raw = Core.LastNoiseCount
+                    };
+
+                    Core.Database?.YieldData.Insert(point);
+                }
+            }
+
+            // Keep the live display honest while idle
+            if (!harvestActive && _pipeline.Count == 0)
+                yield.Calculate(gps.Speed);
+
+            // Recording while crop is entering the machine or grain is still in transit
+            bool shouldRecord = harvestActive || _pipeline.Count > 0;
+
+            if (shouldRecord && IsAutoPaused)
             {
                 AutoResume();
                 Core.RaiseJobStateChanged();
             }
-
-            // Accumulate acres
-            if (_lastLat != 0 && _lastLon != 0)
+            else if (!shouldRecord && !IsAutoPaused)
             {
-                double distM = HaversineMetres(_lastLat, _lastLon, gps.Latitude, gps.Longitude);
-                double acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM);
-                TotalAcres += acresInc;
-                double bushelsInc = yield.InstantYield * acresInc;
-                TotalBushels += bushelsInc;
-                yield.AccumulateCalRun(bushelsInc);
-            }
-            _lastLat = gps.Latitude;
-            _lastLon = gps.Longitude;
-
-            // Moisture average
-            if (moisture > 0)
-            {
-                _moistureSum += moisture;
-                _moistureCount++;
-                AverageMoisture = _moistureSum / _moistureCount;
-            }
-
-            // Write to DB once per second
-            if ((DateTime.UtcNow - _lastWriteTime).TotalSeconds >= 1.0)
-            {
-                _lastWriteTime = DateTime.UtcNow;
-
-                var point = new YieldDataPoint
-                {
-                    JobId = ActiveJobId,
-                    Timestamp = DateTime.UtcNow,
-                    Latitude = gps.Latitude,
-                    Longitude = gps.Longitude,
-                    Elevation = gps.Altitude,
-                    Speed = gps.Speed,
-                    Heading = gps.Heading,
-                    YieldRate = yield.InstantYield,
-                    Moisture = moisture,
-                    AcresAccumulated = TotalAcres,
-                    Sensor1Raw = Core.LastSensor1,
-                    Sensor2Raw = Core.LastNoiseCount
-                };
-
-                Core.Database?.YieldData.Insert(point);
+                AutoPause();
+                Core.RaiseJobStateChanged();
             }
         }
 

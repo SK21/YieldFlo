@@ -1,19 +1,16 @@
 using System;
-using System.Collections.Generic;
 
 namespace YieldFlo.Classes
 {
     /// <summary>
     /// Converts raw optical sensor readings into instantaneous yield (bu/ac).
-    /// Maintains a ring buffer to apply the processing delay between the header
-    /// and the clean-grain elevator sensors.
+    /// The transport delay between the header and the clean-grain elevator
+    /// sensor is handled by the position pipeline in clsDataCollector, which
+    /// pairs the current sensor flow with the position harvested
+    /// ProcessingDelaySec earlier.
     /// </summary>
     public class clsYieldCalculator
     {
-        // Ring buffer: pairs (timestamp, averaged obstruction ratio)
-        private readonly Queue<(DateTime time, double ratio)> _delayBuffer
-            = new Queue<(DateTime, double)>();
-
         // Calibration values — set from the active Calibration record
         public double SensorBaseline { get; set; } = 0.0;      // paddle-only obstruction ratio
         public double YieldFactor { get; set; } = 1.0;         // crop calibration multiplier
@@ -27,6 +24,7 @@ namespace YieldFlo.Classes
         public double InstantYield { get; private set; }        // bu/ac
         public double SmoothedYield { get; private set; }       // simple rolling average
         public bool IsFlowing { get; private set; }
+        public double CurrentRatio { get; private set; }        // latest baseline-corrected reading
 
         private const double M2_PER_ACRE = 4046.856;
         private const double KG_PER_BUSHEL_WHEAT = 27.215;     // approx — overridden by TestWeight
@@ -73,26 +71,17 @@ namespace YieldFlo.Classes
 
         /// <summary>
         /// Called each time a sensor packet arrives (~10 Hz).
-        /// Pushes the raw reading into the delay buffer.
+        /// Stores the latest baseline-corrected reading.
         /// </summary>
         public void PushSensorReading(double sensor1Raw)
         {
-            double avg = sensor1Raw;
-            double ratio = Math.Max(0.0, Math.Min(1.0, avg - SensorBaseline));
-            _delayBuffer.Enqueue((DateTime.UtcNow, ratio));
-
-            // Trim old entries beyond 2× the delay window
-            while (_delayBuffer.Count > 0 &&
-                   (DateTime.UtcNow - _delayBuffer.Peek().time).TotalSeconds > ProcessingDelaySec * 2)
-            {
-                _delayBuffer.Dequeue();
-            }
+            CurrentRatio = Math.Max(0.0, Math.Min(1.0, sensor1Raw - SensorBaseline));
         }
 
         /// <summary>
-        /// Called each time a GPS position arrives.
-        /// Returns the yield value for this position point.
-        /// Speed in km/h.
+        /// Pairs the current sensor flow with a buffered position point.
+        /// speedKmh is the ground speed recorded at that position.
+        /// Returns the yield value for that position.
         /// </summary>
         public double Calculate(double speedKmh)
         {
@@ -103,10 +92,9 @@ namespace YieldFlo.Classes
                 return 0;
             }
 
-            // Pull the delayed sensor reading
-            double delayedRatio = GetDelayedRatio();
+            double ratio = CurrentRatio;
 
-            IsFlowing = delayedRatio > 0.01;
+            IsFlowing = ratio > 0.01;
 
             if (!IsFlowing)
             {
@@ -119,7 +107,7 @@ namespace YieldFlo.Classes
             double areaRateM2s = speedMs * HeaderWidthM;
 
             // Grain flow index (arbitrary volume/s) — calibrated via YieldFactor
-            double grainFlowIndex = delayedRatio * YieldFactor;
+            double grainFlowIndex = ratio * YieldFactor;
 
             // Yield in lbs/m²·s / (area m²/s) → lbs/m²
             // Then convert lbs/m² → bu/ac
@@ -156,25 +144,6 @@ namespace YieldFlo.Classes
             _smoothAccum = 0;
             _smoothCount = 0;
             SmoothedYield = 0;
-        }
-
-        private double GetDelayedRatio()
-        {
-            if (_delayBuffer.Count == 0) return 0;
-
-            DateTime target = DateTime.UtcNow.AddSeconds(-ProcessingDelaySec);
-            double best = 0;
-            DateTime bestTime = DateTime.MinValue;
-
-            foreach (var entry in _delayBuffer)
-            {
-                if (entry.time <= target && entry.time > bestTime)
-                {
-                    best = entry.ratio;
-                    bestTime = entry.time;
-                }
-            }
-            return best;
         }
     }
 }
