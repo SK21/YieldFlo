@@ -549,6 +549,46 @@ Use Deutsch DTM strain relief backshell (DTHD-24-00 or equivalent) — it has an
 
 ---
 
+## FarmTrx signal tap — shared optical sensor (9070 combine, planned 2026-07-04)
+
+The 9070 has a FarmTrx yield monitor installed: module **AG-YMK-2500** (Yield Monitor Plus+, legacy ECU, **DB15 connector** at head unit in cab). Its optical pair is **T18-2NAEL-Q8-809577** emitter + **T18-2VPRL-Q8-809578** receiver — the same PNP complementary Banner sensor selected for YieldFlo. Plan: run both monitors from the one sensor via a Y-tap at the DB15 in the cab, using the FarmTrx install as a calibrated reference while proving out YieldFlo.
+
+### Why parallel sharing is safe
+
+- YF1 input per channel = PC817 LED + 560Ω ≈ **19 mA**, plus 10k pull-down ≈ 1.2 mA — small fraction of the T18-2 output rating (~150 mA, verify datasheet 201875)
+- PC817 opto isolation: only load is LED between signal and sensor GND — no back-path from ESP32 logic into FarmTrx wiring
+- 10k pull-down improves PNP off-state definition for both monitors
+- Both modules in cab share the Y → common ground automatic
+
+### DB15 pinout — NOT public
+
+Installation PDFs (media.farmtrx.com) are image-based, no pinout; confirmed unhelpful. Option: email support@farmtrx.com with part no. Otherwise identify pins by measurement:
+
+**Continuity trace (chosen method, unpowered both ends):**
+1. Unplug M12 at receiver and DB15 at head unit
+2. Jumper M12 harness-side pin 4 (black) → pin 3 (blue/GND); at DB15 find ~0 Ω pin to known GND = **Main**
+3. Repeat with M12 pin 2 (white) = **Comp**
+4. Jumper pin 1 (brown) to find sensor 12V feed — if ECU-switched output (not battery feed), YieldFlo must tap the battery side
+
+**Cross-check (powered, after Y wired):** cardboard beam-block test — Main ≈12V beam clear / ≈0V blocked, Comp always opposite. Firmware reads HIGH on Main = beam clear (`BeamBlocked = (digitalRead(MainPin) == LOW)`).
+
+**Toggle test variant:** with everything connected and key on, block beam — exactly two DB15 pins swap ~12V↔~0V; HIGH-when-clear = Main → J7 pin 3, other = Comp → J7 pin 11. Probe with head unit connected (its load pins the PNP off-state low); unloaded pins float on a 10MΩ DMM.
+
+### Key risk — complementary wire may not reach the cab
+
+If FarmTrx only wired black through the harness, white/Comp never reaches the DB15. Firmware **requires both** signals (Begin.ino attaches interrupts only when MainPin AND CompPin valid; ISR noise rejection needs the pair). Fallback: tap white at sensor M12 with a splitter, or pull one extra wire cab-to-elevator.
+
+### Hardware for the tap
+
+- DB15 male-female **breakout board with screw terminals** — probe point during identification, then permanent Y-tap (check FarmTrx shell: 2-row DA-15 vs 3-row HD15 before ordering)
+- M12 5-pin female flying-lead cable (A-coded, mates with 4-pin sensor) for the receiver-end breakout during the trace
+
+### Reference measurement
+
+Empty-elevator duty cycle on the OEM install = baseline obstruction ratio (~20%, SensorRatio ≈ 200). Measure with only FarmTrx connected, again after Y-tap added (should not change), then compare FarmTrx yield trace vs YieldFlo SensorRatio/NoiseCount during a harvest pass. NoiseCount near zero = clean shared tap.
+
+---
+
 ## References
 
 ### Sensor hardware
