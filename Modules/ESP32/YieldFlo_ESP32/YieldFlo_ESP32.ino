@@ -21,8 +21,8 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 30046         // firmware version — update with every build (DDMMY format)
-#define StructVersion 1     // EEPROM layout version — increment ONLY when ModuleData fields change
+#define InoID 4076          // firmware version — update with every build (DDMMY format)
+#define StructVersion 2     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
@@ -65,6 +65,7 @@ struct ModuleConfig
 	uint8_t RPMpin = 35;
 	uint8_t CompPin = 32;	// complementary PNP signal from light sensor
 	uint8_t MainPin = 33;	// main PNP signal from light sensor
+	bool UseCompSignal = true;	// true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
 	uint8_t AlertPin = 16;
 	uint8_t AnalogPin = NC;
 	bool    UseCanComm = false;		// false = WiFi UDP, true = CAN bus

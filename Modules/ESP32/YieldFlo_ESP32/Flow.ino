@@ -3,9 +3,13 @@ void IRAM_ATTR onSensorEdge()
 {
 	// Complementary outputs must always be opposite logic levels.
 	// If both read the same, it is a noise glitch on one wire — discard.
+	// Main-only mode has no pair to compare, so the check is skipped.
 	bool mainHigh = digitalRead(MDL.MainPin);
-	bool compHigh = digitalRead(MDL.CompPin);
-	if (mainHigh == compHigh) { NoiseCount++; return; }
+	if (MDL.UseCompSignal)
+	{
+		bool compHigh = digitalRead(MDL.CompPin);
+		if (mainHigh == compHigh) { NoiseCount++; return; }
+	}
 
 	// HIGH on main = beam clear, LOW = beam blocked.
 	// If state hasn't changed, this is a duplicate interrupt — discard.

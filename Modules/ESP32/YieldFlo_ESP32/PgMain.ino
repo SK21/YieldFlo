@@ -75,6 +75,20 @@ String GetPageMain()
     // Divider
     st += "<tr><td colspan='2'><hr></td></tr>";
 
+    // Optical sensor signal mode
+    st += "<tr><td colspan='2' style='text-align:center; padding:0;'><h1 class='subhead'>Optical Sensor</h1></td></tr>";
+    st += "<tr>";
+    st += "  <td class='label-col'>Signals</td>";
+    st += "  <td class='input-col'><div class='control-width'><div class='radio-row'>";
+    st += "    <label><input class='styled' type='radio' name='sensormode' value='both'" + String(MDL.UseCompSignal ? " checked" : "") + "> Main + Comp</label>";
+    st += "    <label><input class='styled' type='radio' name='sensormode' value='main'" + String(MDL.UseCompSignal ? "" : " checked") + "> Main only</label>";
+    st += "  </div></div></td>";
+    st += "</tr>";
+    st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Main only: complementary wire not connected, noise rejection disabled.</div></div></td></tr>";
+
+    // Divider
+    st += "<tr><td colspan='2'><hr></td></tr>";
+
     // WiFi station settings
     st += "<tr><td colspan='2' style='text-align:center; padding:0;'><h1 class='subhead'>WiFi Network</h1></td></tr>";
     st += "<tr>";

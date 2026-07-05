@@ -17,11 +17,17 @@ void handleSettings()
     bool   oldStation  = MDL.WifiModeUseStation;
     bool   oldCanComm  = MDL.UseCanComm;
     String oldAPpw     = String(MDL.APpassword);
+    bool   oldUseComp  = MDL.UseCompSignal;
 
     // Comm mode
     String commmode = server.arg("commmode");
     commmode.trim();
     MDL.UseCanComm = (commmode == "can");
+
+    // Optical sensor signal mode
+    String sensormode = server.arg("sensormode");
+    sensormode.trim();
+    MDL.UseCompSignal = (sensormode != "main");
 
     // WiFi station credentials
     String newSSID = server.arg("prop1");
@@ -48,6 +54,7 @@ void handleSettings()
 
     bool changed =
         (MDL.UseCanComm        != oldCanComm)  ||
+        (MDL.UseCompSignal     != oldUseComp)  ||
         (MDL.WifiModeUseStation != oldStation)  ||
         (String(MDL.SSID)       != oldSSID)     ||
         (String(MDL.Password)   != oldPassword) ||

@@ -52,7 +52,8 @@ li { margin: 2px 0; }
 <li><a href="#11-job-report">Job Report</a></li>
 <li><a href="#12-settings">Settings</a></li>
 <li><a href="#13-language">Language</a></li>
-<li><a href="#14-troubleshooting">Troubleshooting</a></li>
+<li><a href="#14-module-web-portal">Module Web Portal</a></li>
+<li><a href="#15-troubleshooting">Troubleshooting</a></li>
 </ol>
 
 <hr>
@@ -616,7 +617,40 @@ li { margin: 2px 0; }
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
 
-<h2 id="14-troubleshooting">14. Troubleshooting</h2>
+<h2 id="14-module-web-portal">14. Module Web Portal</h2>
+
+<p>The YieldFlo module has a built-in settings page served from its own WiFi hotspot. Use it to configure the communication mode, the optical sensor signals, and WiFi credentials, and to update the module firmware.</p>
+
+<h3>Opening the portal</h3>
+
+<ol>
+<li>Power the module. It broadcasts a WiFi hotspot named <code>YieldFlo_ESP32_XXXXXXXX</code> (the suffix is unique to each module).</li>
+<li>Connect the PC, tablet, or phone to that hotspot.</li>
+<li>Browse to <code>http://192.168.200.1</code> (with the default module ID 0 — the address is 192.168.(200&nbsp;+&nbsp;module&nbsp;ID).1).</li>
+</ol>
+
+<h3>Settings</h3>
+
+<table>
+<tr><th>Setting</th><th>Description</th></tr>
+<tr><td><strong>Communication &mdash; Mode</strong></td><td>WiFi (UDP) or CAN bus. Must match the Module communication setting in the PC app.</td></tr>
+<tr><td><strong>Optical Sensor &mdash; Signals</strong></td><td><strong>Main + Comp</strong> (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. <strong>Main only</strong>: only the main signal wire is connected &mdash; for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode.</td></tr>
+<tr><td><strong>WiFi Network</strong></td><td>Name and password of an external WiFi network. Tick <strong>Use this Network</strong> to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only.</td></tr>
+<tr><td><strong>Hotspot &mdash; Password</strong></td><td>Password for the module's own hotspot. Use 8&ndash;10 characters, or leave empty for an open hotspot.</td></tr>
+</table>
+
+<p>Press <strong>Save / Restart</strong> to store the settings in the module and restart it.</p>
+
+<h3>Firmware update</h3>
+
+<p>The <strong>Update Firmware</strong> link at the bottom of the portal opens the over-the-air update page. Select the compiled firmware file (<code>.bin</code>) and upload it &mdash; the module flashes itself and restarts. The installed firmware version is shown at the top of the portal page.</p>
+
+<blockquote><strong>Note:</strong> A firmware update that changes the stored settings layout resets the module to factory defaults. Reopen the portal afterwards and re-enter your settings.</blockquote>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="15-troubleshooting">15. Troubleshooting</h2>
 
 <h3>GPS indicator stays red</h3>
 <ul>
@@ -638,6 +672,7 @@ li { margin: 2px 0; }
 <li>Check the elevator optical sensor alignment and wiring</li>
 <li>Verify the Sensor Baseline is set correctly (set with elevator running empty)</li>
 <li>Confirm the processing delay is appropriate for your combine</li>
+<li>If the sensor's complementary wire is not connected, set <strong>Signals</strong> to <strong>Main only</strong> in the module web portal &mdash; in Main + Comp mode a missing complementary signal causes erratic, low readings</li>
 </ul>
 
 <h3>Moisture reads incorrectly</h3>

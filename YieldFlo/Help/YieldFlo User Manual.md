@@ -21,7 +21,8 @@
 13. [Job Report](#job-report)
 14. [Settings](#settings)
 15. [Language](#language)
-16. [Troubleshooting](#troubleshooting)
+16. [Module Web Portal](#module-web-portal)
+17. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -476,6 +477,35 @@ YieldFlo will restart automatically with the new language applied.
 
 ---
 
+## Module Web Portal
+
+The YieldFlo module has a built-in settings page served from its own WiFi hotspot. Use it to configure the communication mode, the optical sensor signals, and WiFi credentials, and to update the module firmware.
+
+### Opening the portal
+
+1. Power the module. It broadcasts a WiFi hotspot named `YieldFlo_ESP32_XXXXXXXX` (the suffix is unique to each module).
+2. Connect the PC, tablet, or phone to that hotspot.
+3. Browse to `http://192.168.200.1` (with the default module ID 0 — the address is 192.168.(200 + module ID).1).
+
+### Settings
+
+| Setting | Description |
+|---------|-------------|
+| **Communication — Mode** | WiFi (UDP) or CAN bus. Must match the Module communication setting in the PC app. |
+| **Optical Sensor — Signals** | **Main + Comp** (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. **Main only**: only the main signal wire is connected — for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode. |
+| **WiFi Network** | Name and password of an external WiFi network. Tick **Use this Network** to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only. |
+| **Hotspot — Password** | Password for the module's own hotspot. Use 8–10 characters, or leave empty for an open hotspot. |
+
+Press **Save / Restart** to store the settings in the module and restart it.
+
+### Firmware update
+
+The **Update Firmware** link at the bottom of the portal opens the over-the-air update page. Select the compiled firmware file (`.bin`) and upload it — the module flashes itself and restarts. The installed firmware version is shown at the top of the portal page.
+
+> **Note:** A firmware update that changes the stored settings layout resets the module to factory defaults. Reopen the portal afterwards and re-enter your settings.
+
+---
+
 ## Troubleshooting
 
 ### GPS indicator stays red
@@ -496,6 +526,7 @@ YieldFlo will restart automatically with the new language applied.
 - Check the elevator optical sensor alignment and wiring
 - Verify the Sensor Baseline is set correctly (set with elevator running empty)
 - Confirm the processing delay is appropriate for your combine
+- If the sensor's complementary wire is not connected, set **Signals** to **Main only** in the module web portal — in Main + Comp mode a missing complementary signal causes erratic, low readings
 
 ### Moisture reads incorrectly
 

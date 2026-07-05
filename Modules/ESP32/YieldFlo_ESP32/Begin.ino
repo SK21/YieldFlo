@@ -105,15 +105,18 @@ void DoSetup()
 
 	// Optical sensor
 	Serial.print("Starting optical sensor ... ");
-	if (MDL.MainPin < NC && MDL.CompPin < NC)
+	if (MDL.MainPin < NC && (!MDL.UseCompSignal || MDL.CompPin < NC))
 	{
 		pinMode(MDL.MainPin, INPUT);
-		pinMode(MDL.CompPin, INPUT);
 		attachInterrupt(digitalPinToInterrupt(MDL.MainPin), onSensorEdge, CHANGE);
-		attachInterrupt(digitalPinToInterrupt(MDL.CompPin), onSensorEdge, CHANGE);
+		if (MDL.UseCompSignal)
+		{
+			pinMode(MDL.CompPin, INPUT);
+			attachInterrupt(digitalPinToInterrupt(MDL.CompPin), onSensorEdge, CHANGE);
+		}
 		BeamBlocked = (digitalRead(MDL.MainPin) == LOW);	// HIGH = clear, LOW = blocked
 		LastEdgeUs = micros();
-		Serial.println("OK.");
+		Serial.println(MDL.UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
 	}
 	else
 	{
@@ -354,6 +357,7 @@ void LoadDefaults()
 	MDL.RPMpin = 35;
 	MDL.CompPin = 32;
 	MDL.MainPin = 33;
+	MDL.UseCompSignal = true;
 	MDL.AlertPin = 16;
 	MDL.AnalogPin = NC;
 	MDL.UseCanComm = false;
