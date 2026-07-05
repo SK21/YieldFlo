@@ -1,11 +1,6 @@
 
-#include <Adafruit_SPIDevice.h>
-#include <Adafruit_I2CRegister.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_GenericDevice.h>
-#include <Adafruit_BusIO_Register.h>
-#include <index_html.h>
-#include "ESP2SOTA_RC/ESP2SOTA_RC.h"	// modified from https://github.com/pangodream/ESP2SOTA
+#include "src/ESP2SOTA_RC/index_html.h"
+#include "src/ESP2SOTA_RC/ESP2SOTA_RC.h"	// modified from https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
@@ -21,7 +16,7 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 4076          // firmware version — update with every build (DDMMY format)
+#define InoID 5076          // firmware version — update with every build (DDMMY format)
 #define StructVersion 2     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 const uint8_t NC = 0xFF;		// Pin not connected
@@ -39,6 +34,11 @@ void IRAM_ATTR onADSReady()
 {
 	ADSconversionReady = true;
 }
+
+// ISR forward declarations — the Arduino sketch preprocessor does not
+// auto-generate prototypes for functions with IRAM_ATTR.
+void IRAM_ATTR onSensorEdge();
+void IRAM_ATTR onRPMedge();
 
 // optical sensor ISR state
 volatile uint32_t BlockedAccum = 0;		// µs beam blocked this window
