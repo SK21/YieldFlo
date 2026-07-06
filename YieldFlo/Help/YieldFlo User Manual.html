@@ -570,8 +570,19 @@ li { margin: 2px 0; }
 <tr><td><strong>WiFi (UDP)</strong></td><td>Module communicates over UDP WiFi on port 30100. Connect the PC to the module's WiFi access point or a shared network.</td></tr>
 <tr><td><strong>CAN</strong></td><td>Module communicates over CAN bus via a USB CAN interface.</td></tr>
 <tr><td><strong>CAN Driver</strong></td><td>Select the CAN interface driver (SLCAN, InnoMaker, or PCAN).</td></tr>
-<tr><td><strong>COM Port</strong></td><td>Serial/USB port for the CAN interface (CAN mode only).</td></tr>
+<tr><td><strong>COM Port</strong></td><td>Serial/USB port for the CAN interface (SLCAN driver only).</td></tr>
 </table>
+
+<h4>Supported CAN adapters</h4>
+
+<table>
+<tr><th>Driver</th><th>Adapters</th><th>Notes</th></tr>
+<tr><td><strong>SLCAN</strong></td><td>CANable (slcan firmware), SH-C30A, other SLCAN adapters</td><td>Appears as a COM port &mdash; select it under <strong>COM Port</strong>.</td></tr>
+<tr><td><strong>InnoMaker</strong></td><td>InnoMaker USB2CAN</td><td>Requires the vendor's driver and SDK files: copy <code>InnoMakerUsb2CanLib.dll</code> and <code>LibUsbDotNet.dll</code> from the InnoMaker USB2CAN C# SDK into the YieldFlo application folder. The COM Port setting is ignored &mdash; the first adapter found is used.</td></tr>
+<tr><td><strong>PCAN</strong></td><td>Peak PCAN-USB</td><td>Not yet supported.</td></tr>
+</table>
+
+<p>If CAN fails to start, the reason is written to the error log in <code>Documents\YieldFlo\Logs</code>.</p>
 
 <h3>Resume Job on Start</h3>
 

@@ -1,37 +1,42 @@
 using System;
-using System.Runtime.InteropServices;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using YieldFlo.Classes;
 
 namespace YieldFlo.Communication.Can
 {
     /// <summary>
-    /// CAN interface using InnoMaker USB2CAN adapter via InnoMakerUsb2CanLib.dll.
-    /// The 32-bit or 64-bit DLL is selected automatically based on process architecture.
-    /// Both DLLs must be present in the application directory.
+    /// CAN interface using the InnoMaker USB2CAN adapter via the vendor's managed
+    /// SDK (InnoMakerUsb2CanLib.dll + LibUsbDotNet.dll, both copied to the app
+    /// directory). The SDK is bound by reflection at runtime so the application
+    /// builds and runs without the DLLs — Open() fails with a logged message if
+    /// they are missing.
+    ///
+    /// The adapter speaks the gs_usb (candleLight) protocol: 20-byte host frames
+    ///   [0-3]  echo_id   uint32 LE  (0xFFFFFFFF = received frame, else TX echo)
+    ///   [4-7]  can_id    uint32 LE  (bit31 = extended, bit30 = RTR, id in low 29)
+    ///   [8]    can_dlc
+    ///   [9]    channel
+    ///   [10]   flags
+    ///   [11]   reserved
+    ///   [12-19] data
+    /// Bit timing: 48 MHz core clock, 16 tq/bit (sync=1, prop=6, seg1=7, seg2=2),
+    /// so brp = 48000000 / (bitrate × 16) — 250 kbps → brp 12.
     /// </summary>
     public class InnoMakerInterface : ICanInterface
     {
-        // InnoMaker frame structure (matches DLL API)
-        [StructLayout(LayoutKind.Sequential)]
-        private struct InnoMakerFrame
-        {
-            public uint can_id;     // 29-bit CAN ID (extended bit set in upper bits)
-            public byte can_dlc;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-            public byte[] data;
-        }
+        private const int HostFrameSize = 20;
+        private const uint EchoIdRxFrame = 0xFFFFFFFFu;
+        private const uint CanIdExtendedFlag = 0x80000000u;
+        private const uint CanIdRtrFlag = 0x40000000u;
+        private const int RecvTimeoutMs = 100;
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct InnoMakerCanConfig
-        {
-            public uint bitrate;
-            public uint mode;   // 0 = normal
-        }
-
-        private const uint DEV_INDEX = 0;
-        private const uint CAN_INDEX = 0;
-        private const uint CAN_ID_EFF = 0x80000000u;  // Extended frame flag
+        private object _lib;             // InnoMakerUsb2CanLib instance
+        private object _device;          // InnoMakerDevice instance
+        private Type _libType;
+        private MethodInfo _sendMethod;  // sendInnoMakerDeviceBuf(device, byte[], int)
+        private MethodInfo _recvMethod;  // recvInnoMakerDeviceBuf(device, byte[], int, timeout)
 
         private Thread _receiveThread;
         private volatile bool _running = false;
@@ -45,11 +50,42 @@ namespace YieldFlo.Communication.Can
         {
             try
             {
-                var config = new InnoMakerCanConfig { bitrate = (uint)bitrate, mode = 0 };
-                int result = InnoMaker_OpenDevice(DEV_INDEX, CAN_INDEX, ref config);
-                if (result != 0)
+                if (!LoadSdk()) return false;
+
+                InvokeOptional("setup");
+                InvokeOptional("scanInnoMakerDevice");
+
+                object count = InvokeOptional("getInnoMakerDeviceCount");
+                if (count is int n && n < 1)
                 {
-                    Props.WriteErrorLog("InnoMakerInterface/Open: OpenDevice returned " + result);
+                    Props.WriteErrorLog("InnoMakerInterface/Open: no USB2CAN adapter found. " +
+                        "Check the USB connection and that the InnoMaker driver is installed.");
+                    return false;
+                }
+
+                _device = Invoke("getInnoMakerDevice", 0);
+                if (_device == null)
+                {
+                    Props.WriteErrorLog("InnoMakerInterface/Open: getInnoMakerDevice(0) returned null.");
+                    return false;
+                }
+
+                object opened = Invoke("openInnoMakerDevice", _device);
+                if (opened is bool ob && !ob)
+                {
+                    Props.WriteErrorLog("InnoMakerInterface/Open: openInnoMakerDevice failed. " +
+                        "The adapter may be in use by another program.");
+                    return false;
+                }
+
+                if (!SetupBitTiming(bitrate)) return false;
+
+                _sendMethod = FindMethod("sendInnoMakerDeviceBuf");
+                _recvMethod = FindMethod("recvInnoMakerDeviceBuf");
+                if (_recvMethod == null)
+                {
+                    Props.WriteErrorLog("InnoMakerInterface/Open: SDK method recvInnoMakerDeviceBuf not found.");
+                    CloseDevice();
                     return false;
                 }
 
@@ -59,109 +95,297 @@ namespace YieldFlo.Communication.Can
                 _receiveThread.Start();
                 return true;
             }
-            catch (DllNotFoundException ex)
-            {
-                Props.WriteErrorLog("InnoMakerInterface/Open: DLL not found - " + ex.Message);
-                return false;
-            }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("InnoMakerInterface/Open: " + ex.Message);
+                Props.WriteErrorLog("InnoMakerInterface/Open: " + Describe(ex));
+                CloseDevice();
                 return false;
             }
         }
 
+        /// <summary>Load InnoMakerUsb2CanLib.dll from the application directory.</summary>
+        private bool LoadSdk()
+        {
+            string dllPath = Path.Combine(Props.ApplicationFolder, "InnoMakerUsb2CanLib.dll");
+            if (!File.Exists(dllPath))
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: InnoMakerUsb2CanLib.dll not found in " +
+                    Props.ApplicationFolder + ". Copy InnoMakerUsb2CanLib.dll and LibUsbDotNet.dll " +
+                    "from the InnoMaker USB2CAN C# SDK into the application folder.");
+                return false;
+            }
+
+            try
+            {
+                Assembly asm = Assembly.LoadFrom(dllPath);
+                foreach (Type t in asm.GetTypes())
+                {
+                    if (t.IsClass && t.Name.IndexOf("InnoMakerUsb2CanLib", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        _libType = t;
+                        break;
+                    }
+                }
+
+                if (_libType == null)
+                {
+                    Props.WriteErrorLog("InnoMakerInterface/Open: class InnoMakerUsb2CanLib not found in DLL — " +
+                        "wrong or incompatible SDK version.");
+                    return false;
+                }
+
+                _lib = Activator.CreateInstance(_libType);
+                return true;
+            }
+            catch (BadImageFormatException)
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: InnoMakerUsb2CanLib.dll bitness does not match " +
+                    "this application (" + (Environment.Is64BitProcess ? "64" : "32") + "-bit). " +
+                    "Use the matching DLL from the SDK.");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Call urbSetupDevice(device, UsbCanModeNormal, bittiming). The mode and
+        /// bit-timing types are taken from the method's own parameter list so the
+        /// exact SDK type names don't matter.
+        /// </summary>
+        private bool SetupBitTiming(int bitrate)
+        {
+            MethodInfo setup = FindMethod("urbSetupDevice");
+            if (setup == null)
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: SDK method urbSetupDevice not found.");
+                return false;
+            }
+
+            ParameterInfo[] pars = setup.GetParameters();
+            if (pars.Length != 3)
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: unexpected urbSetupDevice signature (" +
+                    pars.Length + " parameters).");
+                return false;
+            }
+
+            // 48 MHz clock, 16 tq per bit → brp must divide exactly (250k → 12)
+            int brp = 48000000 / (bitrate * 16);
+            if (brp * bitrate * 16 != 48000000 || brp < 1)
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: unsupported bitrate " + bitrate + ".");
+                return false;
+            }
+
+            // Mode parameter: enum member containing "Normal", or plain 0
+            object mode;
+            Type modeType = pars[1].ParameterType;
+            if (modeType.IsEnum)
+            {
+                mode = Enum.ToObject(modeType, 0);
+                foreach (string name in Enum.GetNames(modeType))
+                {
+                    if (name.IndexOf("Normal", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        mode = Enum.Parse(modeType, name);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                mode = Convert.ChangeType(0, modeType);
+            }
+
+            // Bit-timing parameter: instantiate and fill by field name
+            Type btType = pars[2].ParameterType;
+            object bt = Activator.CreateInstance(btType);
+            if (!SetNumericField(bt, "prop_seg", 6) |
+                !SetNumericField(bt, "phase_seg1", 7) |
+                !SetNumericField(bt, "phase_seg2", 2) |
+                !SetNumericField(bt, "sjw", 1) |
+                !SetNumericField(bt, "brp", brp))
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: bit-timing fields not found on " + btType.Name + ".");
+                return false;
+            }
+
+            object result = setup.Invoke(_lib, new object[] { _device, mode, bt });
+            if (result is bool ok && !ok)
+            {
+                Props.WriteErrorLog("InnoMakerInterface/Open: urbSetupDevice failed (bitrate " + bitrate + ").");
+                return false;
+            }
+            return true;
+        }
+
         public void Close()
         {
-            bool wasOpen = _open;
             _running = false;
             _open = false;
             try
             {
-                // Wait for any pending CAN TX frames to be physically transmitted
-                // before closing the device (same issue as SLCAN — driver TX queue
-                // may not be flushed before CloseDevice tears down the channel).
-                Thread.Sleep(50);
                 _receiveThread?.Join(1000);
-                if (wasOpen)
-                    InnoMaker_CloseDevice(DEV_INDEX, CAN_INDEX);
+                _receiveThread = null;
+                CloseDevice();
+            }
+            catch { }
+        }
+
+        private void CloseDevice()
+        {
+            if (_lib == null) return;
+            try
+            {
+                if (_device != null)
+                {
+                    InvokeOptional("urbResetDevice", _device);   // stop CAN channel if the SDK has it
+                    InvokeOptional("closeInnoMakerDevice", _device);
+                    _device = null;
+                }
+                InvokeOptional("setdown");
             }
             catch { }
         }
 
         public bool Send(CanFrame frame)
         {
-            if (!_open) return false;
+            if (!_open || _sendMethod == null) return false;
             try
             {
-                var f = new InnoMakerFrame
-                {
-                    can_id = frame.IsExtended ? (frame.Id | CAN_ID_EFF) : frame.Id,
-                    can_dlc = frame.Dlc,
-                    data = new byte[8]
-                };
+                byte[] buf = new byte[HostFrameSize];
+                // echo_id 0 — buf[0-3] already zero
+                uint canId = frame.Id & 0x1FFFFFFFu;
+                if (frame.IsExtended) canId |= CanIdExtendedFlag;
+                buf[4] = (byte)(canId & 0xFF);
+                buf[5] = (byte)((canId >> 8) & 0xFF);
+                buf[6] = (byte)((canId >> 16) & 0xFF);
+                buf[7] = (byte)((canId >> 24) & 0xFF);
+                buf[8] = frame.Dlc;
                 if (frame.Data != null)
-                    Array.Copy(frame.Data, f.data, Math.Min(frame.Dlc, frame.Data.Length));
+                    Array.Copy(frame.Data, 0, buf, 12, Math.Min(frame.Dlc, frame.Data.Length));
 
-                return InnoMaker_TransmitFrame(DEV_INDEX, CAN_INDEX, ref f) == 0;
+                object result = InvokeMethod(_sendMethod, _device, buf, HostFrameSize);
+                return !(result is bool ok) || ok;
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("InnoMakerInterface/Send: " + ex.Message);
+                Props.WriteErrorLog("InnoMakerInterface/Send: " + Describe(ex));
                 return false;
             }
         }
 
         private void ReceiveLoop()
         {
+            byte[] buf = new byte[HostFrameSize];
             while (_running)
             {
                 try
                 {
-                    var f = new InnoMakerFrame { data = new byte[8] };
-                    int result = InnoMaker_ReceiveFrame(DEV_INDEX, CAN_INDEX, ref f, 50);
-                    if (result == 0 && _running)
-                    {
-                        bool extended = (f.can_id & CAN_ID_EFF) != 0;
-                        uint id = f.can_id & 0x1FFFFFFFu;
-                        byte dlc = f.can_dlc > 8 ? (byte)8 : f.can_dlc;
-                        byte[] data = new byte[dlc];
-                        if (f.data != null) Array.Copy(f.data, data, dlc);
+                    Array.Clear(buf, 0, buf.Length);
+                    object result = InvokeMethod(_recvMethod, _device, buf, HostFrameSize, RecvTimeoutMs);
+                    if (result is bool ok && !ok) continue;   // timeout — no frame
+                    if (!_running) break;
 
-                        var frame = new CanFrame { Id = id, Dlc = dlc, Data = data, IsExtended = extended };
-                        FrameReceived?.Invoke(this, new CanFrameEventArgs(frame));
-                    }
+                    uint echoId = BitConverter.ToUInt32(buf, 0);
+                    if (echoId != EchoIdRxFrame) continue;    // echo of our own TX frame
+
+                    uint rawId = BitConverter.ToUInt32(buf, 4);
+                    if ((rawId & CanIdRtrFlag) != 0) continue;
+
+                    byte dlc = buf[8] > 8 ? (byte)8 : buf[8];
+                    byte[] data = new byte[dlc];
+                    Array.Copy(buf, 12, data, 0, dlc);
+
+                    var frame = new CanFrame
+                    {
+                        Id = rawId & 0x1FFFFFFFu,
+                        Dlc = dlc,
+                        Data = data,
+                        IsExtended = (rawId & CanIdExtendedFlag) != 0
+                    };
+                    FrameReceived?.Invoke(this, new CanFrameEventArgs(frame));
                 }
                 catch (Exception ex)
                 {
                     if (_running)
-                        Props.WriteErrorLog("InnoMakerInterface/ReceiveLoop: " + ex.Message);
+                    {
+                        Props.WriteErrorLog("InnoMakerInterface/ReceiveLoop: " + Describe(ex));
+                        Thread.Sleep(500);   // avoid log flooding if the adapter was unplugged
+                    }
                 }
             }
         }
 
-        // P/Invoke — selects 32-bit or 64-bit DLL at runtime via DllImport
-        // The DLL filename is selected by loading the correct one based on process bitness.
-        // Both InnoMakerUsb2CanLib.dll and InnoMakerUsb2CanLib64.dll must be in app dir.
+        // ── Reflection helpers ───────────────────────────────────────────────
 
-        [DllImport("InnoMakerUsb2CanLib.dll", EntryPoint = "InnoMaker_OpenDevice",
-            CallingConvention = CallingConvention.Cdecl)]
-        private static extern int InnoMaker_OpenDevice(uint devIndex, uint canIndex,
-            ref InnoMakerCanConfig config);
+        private MethodInfo FindMethod(string name)
+        {
+            if (_libType == null) return null;
+            foreach (MethodInfo m in _libType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                if (string.Equals(m.Name, name, StringComparison.OrdinalIgnoreCase))
+                    return m;
+            return null;
+        }
 
-        [DllImport("InnoMakerUsb2CanLib.dll", EntryPoint = "InnoMaker_CloseDevice",
-            CallingConvention = CallingConvention.Cdecl)]
-        private static extern int InnoMaker_CloseDevice(uint devIndex, uint canIndex);
+        /// <summary>Call a required SDK method; throws if it does not exist.</summary>
+        private object Invoke(string name, params object[] args)
+        {
+            MethodInfo m = FindMethod(name);
+            if (m == null)
+                throw new MissingMethodException("SDK method " + name + " not found in InnoMakerUsb2CanLib.dll.");
+            return InvokeMethod(m, args);
+        }
 
-        [DllImport("InnoMakerUsb2CanLib.dll", EntryPoint = "InnoMaker_TransmitFrame",
-            CallingConvention = CallingConvention.Cdecl)]
-        private static extern int InnoMaker_TransmitFrame(uint devIndex, uint canIndex,
-            ref InnoMakerFrame frame);
+        /// <summary>Call an SDK method if it exists; returns null otherwise.</summary>
+        private object InvokeOptional(string name, params object[] args)
+        {
+            MethodInfo m = FindMethod(name);
+            return m == null ? null : InvokeMethod(m, args);
+        }
 
-        [DllImport("InnoMakerUsb2CanLib.dll", EntryPoint = "InnoMaker_ReceiveFrame",
-            CallingConvention = CallingConvention.Cdecl)]
-        private static extern int InnoMaker_ReceiveFrame(uint devIndex, uint canIndex,
-            ref InnoMakerFrame frame, int timeoutMs);
+        /// <summary>Invoke with basic numeric conversion so int args match uint/short parameters.</summary>
+        private object InvokeMethod(MethodInfo m, params object[] args)
+        {
+            ParameterInfo[] pars = m.GetParameters();
+            object[] converted = new object[args.Length];
+            for (int i = 0; i < args.Length && i < pars.Length; i++)
+            {
+                Type pt = pars[i].ParameterType;
+                if (args[i] != null && pt.IsPrimitive && args[i].GetType() != pt)
+                    converted[i] = Convert.ChangeType(args[i], pt);
+                else
+                    converted[i] = args[i];
+            }
+            return m.Invoke(_lib, converted);
+        }
+
+        private static bool SetNumericField(object target, string name, int value)
+        {
+            Type t = target.GetType();
+            FieldInfo f = t.GetField(name, BindingFlags.Public | BindingFlags.Instance |
+                                           BindingFlags.IgnoreCase);
+            if (f != null)
+            {
+                f.SetValue(target, Convert.ChangeType(value, f.FieldType));
+                return true;
+            }
+            PropertyInfo p = t.GetProperty(name, BindingFlags.Public | BindingFlags.Instance |
+                                                 BindingFlags.IgnoreCase);
+            if (p != null && p.CanWrite)
+            {
+                p.SetValue(target, Convert.ChangeType(value, p.PropertyType), null);
+                return true;
+            }
+            return false;
+        }
+
+        private static string Describe(Exception ex)
+        {
+            // Reflection wraps the real error in TargetInvocationException
+            if (ex is TargetInvocationException tie && tie.InnerException != null)
+                ex = tie.InnerException;
+            return ex.GetType().Name + " - " + ex.Message;
+        }
 
         public void Dispose()
         {
