@@ -26,10 +26,24 @@ To use it:
 
 PCAN (alternative adapter)
 --------------------------
-   YieldFlo also supports Peak PCAN-USB adapters now. Install the PEAK
-   device driver package from peak-system.com (it includes PCAN-Basic),
-   select CAN Driver: PCAN in YieldFlo, Save & Apply, restart. Nothing
-   needs to be copied into the app folder.
+   YieldFlo builds BEFORE 2026-07-06 did not support PCAN at all (the
+   driver was an empty stub) — update YieldFlo.exe first. Then: install
+   the PEAK device driver package from peak-system.com (it includes
+   PCAN-Basic), select CAN Driver: PCAN in YieldFlo, Save & Apply,
+   restart. Nothing needs to be copied into the app folder.
+
+Checking whether the module is sending (any adapter)
+----------------------------------------------------
+   The module sends unsolicited; the PC only listens. But CAN frames
+   need at least one ACTIVE receiver on the bus — if no program has the
+   adapter open, the module's frames are not acknowledged and (on the
+   STM32 module, which sends single-shot) simply vanish. "No messages
+   on the bus" therefore usually means the PC side never opened, not
+   that the module is silent.
+
+   To test the module independent of YieldFlo: open PCAN-View (PEAK's
+   free tool) at 250 kbit/s in normal mode (NOT listen-only). A working
+   module shows ID 18FF00F8h at 5 Hz and 18FF01F8h at 1 Hz.
 
 3. In YieldFlo:  Menu > Settings > Module communication
    - select CAN
