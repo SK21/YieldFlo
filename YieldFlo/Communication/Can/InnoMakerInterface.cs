@@ -141,7 +141,8 @@ namespace YieldFlo.Communication.Can
             {
                 Props.WriteErrorLog("InnoMakerInterface/Open: InnoMakerUsb2CanLib.dll bitness does not match " +
                     "this application (" + (Environment.Is64BitProcess ? "64" : "32") + "-bit). " +
-                    "Use the matching DLL from the SDK.");
+                    "The InnoMaker C# SDK is 32-bit only — update to a YieldFlo build that runs 32-bit " +
+                    "(2026-07-06 or later).");
                 return false;
             }
         }

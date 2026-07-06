@@ -14,8 +14,11 @@ To use it:
        InnoMakerUsb2CanLib.dll
        LibUsbDotNet.dll
 
-   Use the DLLs that match the app (32-bit vs 64-bit). If the wrong
-   ones are used, the error log will say so.
+   These are the only DLLs in the C# SDK's Lib folder — InnoMaker
+   ships them 32-bit only. YieldFlo builds from 2026-07-06 onward run
+   as a 32-bit app so they load fine; if you saw a "bitness does not
+   match" error in the log, update YieldFlo.exe (the DLLs are fine,
+   keep them where they are).
 
 3. In YieldFlo:  Menu > Settings > Module communication
    - select CAN

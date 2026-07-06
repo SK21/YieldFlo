@@ -14,6 +14,9 @@
     <RootNamespace>YieldFlo</RootNamespace>
     <ApplicationIcon>YieldFlo2.ico</ApplicationIcon>
 
+    <!-- 32-bit process: the InnoMaker USB2CAN C# SDK ships x86-only DLLs -->
+    <Prefer32Bit>true</Prefer32Bit>
+
     <!-- Prevent SDK from adding Debug/net48/ folders -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>

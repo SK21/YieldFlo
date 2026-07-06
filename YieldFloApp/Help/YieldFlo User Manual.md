@@ -438,7 +438,17 @@ Changing units takes effect immediately. Historical data is stored in metric uni
 |---------|-------------|
 | **WiFi** | Module communicates over UDP WiFi. Connect the PC to the module's WiFi access point or a shared network. |
 | **CAN Driver** | Module communicates over CAN bus (Phase 2 hardware required). |
-| **COM Port** | Serial port for CAN interface (CAN mode only). |
+| **COM Port** | Serial port for CAN interface (SLCAN driver only). |
+
+#### Supported CAN adapters
+
+| Driver | Adapters | Notes |
+|--------|----------|-------|
+| **SLCAN** | CANable (slcan firmware), SH-C30A, other SLCAN adapters | Appears as a COM port — select it under **COM Port**. |
+| **InnoMaker** | InnoMaker USB2CAN | Requires the vendor's driver and SDK files: copy `InnoMakerUsb2CanLib.dll` and `LibUsbDotNet.dll` from the InnoMaker USB2CAN C# SDK into the YieldFlo application folder. The COM Port setting is ignored — the first adapter found is used. |
+| **PCAN** | Peak PCAN-USB | Not yet supported. |
+
+If CAN fails to start, the reason is written to the error log in `Documents\YieldFlo\Logs`.
 
 ### Resume Job on Start
 
