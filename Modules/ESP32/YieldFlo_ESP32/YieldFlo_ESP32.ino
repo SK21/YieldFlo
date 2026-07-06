@@ -139,8 +139,10 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	}
 }
 
-const uint16_t LoopTime = 50;   // ms = 20 Hz
+const uint16_t LoopTime = 50;   // ms = 20 Hz (analog reads)
 uint32_t       LoopLast = LoopTime;
+const uint16_t FlowTime = 200;  // ms — flow window matches the send period, so every
+uint32_t       FlowLast = FlowTime;   // blocked/clear µs since the last packet is counted
 const uint16_t SendTimePK1 = 200;  // ms = 5 Hz  (main data packet)
 uint32_t       SendLastPK1 = SendTimePK1;
 const uint16_t SendTimePK2 = 1000; // ms = 1 Hz  (temperature packet)
@@ -160,6 +162,10 @@ void loop()
 	{
 		LoopLast = millis();
 		ReadAnalog();
+	}
+	if (millis() - FlowLast >= FlowTime)
+	{
+		FlowLast = millis();
 		ReadFlow();
 	}
 	if (MDL.CommMode == CommModeCan)
