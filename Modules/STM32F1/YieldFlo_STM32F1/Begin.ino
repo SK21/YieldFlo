@@ -105,7 +105,7 @@ void DoSetup()
 		pinMode(CompPin, INPUT);
 		attachInterrupt(digitalPinToInterrupt(CompPin), onSensorEdge, CHANGE);
 	}
-	BeamBlocked = (digitalRead(MainPin) == LOW);	// HIGH = clear, LOW = blocked
+	BeamBlocked = ((digitalRead(MainPin) == HIGH) == InvertSensor);	// PNP: HIGH = clear; NPN inverted
 	LastEdgeUs = micros();
 	SegStartUs = LastEdgeUs;
 	Serial.println(UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");

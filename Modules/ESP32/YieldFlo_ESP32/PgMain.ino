@@ -105,6 +105,14 @@ String GetPageMain()
     st += "  </div></div></td>";
     st += "</tr>";
     st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Main only: complementary wire not connected, noise rejection disabled.</div></div></td></tr>";
+    st += "<tr>";
+    st += "  <td class='label-col'>Polarity</td>";
+    st += "  <td class='input-col'><div class='control-width'><div class='radio-row'>";
+    st += "    <label><input class='styled' type='radio' name='polarity' value='pnp'" + String(MDL.InvertSensor ? "" : " checked") + "> PNP</label>";
+    st += "    <label><input class='styled' type='radio' name='polarity' value='npn'" + String(MDL.InvertSensor ? " checked" : "") + "> NPN</label>";
+    st += "  </div></div></td>";
+    st += "</tr>";
+    st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>PNP (FarmTrx): output HIGH with beam clear. NPN: inverted — select NPN if flow reads high with no grain.</div></div></td></tr>";
 
     // Divider
     st += "<tr><td colspan='2'><hr></td></tr>";

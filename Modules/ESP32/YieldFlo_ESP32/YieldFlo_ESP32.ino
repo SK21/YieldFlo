@@ -76,6 +76,7 @@ struct ModuleConfig
 	uint8_t CompPin = 32;	// complementary PNP signal from light sensor
 	uint8_t MainPin = 33;	// main PNP signal from light sensor
 	bool UseCompSignal = true;	// true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
+	bool InvertSensor = false;	// false = PNP (HIGH = beam clear, FarmTrx), true = NPN (inverted logic)
 	uint8_t AlertPin = 16;
 	uint8_t AnalogPin = NC;
 	uint8_t CommMode = CommModeWifi;	// 0 = WiFi UDP, 1 = CAN bus, 2 = Ethernet UDP

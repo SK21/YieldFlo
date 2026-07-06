@@ -19,6 +19,7 @@
 // ── User settings (compile-time) ─────────────────────────────────────────
 const uint8_t ModuleID       = 0;     // module ID (informational)
 const bool    UseCompSignal  = true;  // true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
+const bool    InvertSensor   = false; // false = PNP (HIGH = beam clear, FarmTrx), true = NPN (inverted logic)
 const bool    RPMEnabled     = true;  // RPM sensor wired to RPMPin
 const bool    ADS1115Enabled = true;  // Moisture1 daughter board present
 

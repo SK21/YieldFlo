@@ -114,7 +114,7 @@ void DoSetup()
 			pinMode(MDL.CompPin, INPUT);
 			attachInterrupt(digitalPinToInterrupt(MDL.CompPin), onSensorEdge, CHANGE);
 		}
-		BeamBlocked = (digitalRead(MDL.MainPin) == LOW);	// HIGH = clear, LOW = blocked
+		BeamBlocked = ((digitalRead(MDL.MainPin) == HIGH) == MDL.InvertSensor);	// PNP: HIGH = clear; NPN inverted
 		LastEdgeUs = micros();
 		SegStartUs = LastEdgeUs;
 		Serial.println(MDL.UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
@@ -392,6 +392,7 @@ void LoadDefaults()
 	MDL.CompPin = 32;
 	MDL.MainPin = 33;
 	MDL.UseCompSignal = true;
+	MDL.InvertSensor = false;
 	MDL.AlertPin = 16;
 	MDL.AnalogPin = NC;
 	MDL.CommMode = CommModeWifi;

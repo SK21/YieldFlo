@@ -77,8 +77,8 @@
   <data name="lgDark"          xml:space="preserve"><value>Тёмная</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Светлая</value></data>
   <data name="lgModuleComm"    xml:space="preserve"><value>Связь с модулем</value></data>
-  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
-  <data name="lgWifiInfo"      xml:space="preserve"><value>Подключите ПК к точке доступа WiFi модуля или другой WiFi сети.</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi / Ethernet</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Подключите ПК к точке доступа WiFi модуля, к сети WiFi или по проводному Ethernet (W5500).</value></data>
   <data name="lgCanDriver"     xml:space="preserve"><value>CAN-драйвер</value></data>
   <data name="lgComPort"       xml:space="preserve"><value>COM-порт</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Возобновить задание при запуске</value></data>

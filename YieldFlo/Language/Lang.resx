@@ -131,8 +131,8 @@
   <data name="lgDark" xml:space="preserve"><value>Dark</value></data>
   <data name="lgLight" xml:space="preserve"><value>Light</value></data>
   <data name="lgModuleComm" xml:space="preserve"><value>Module Communication</value></data>
-  <data name="lgWiFi" xml:space="preserve"><value>WiFi</value></data>
-  <data name="lgWifiInfo" xml:space="preserve"><value>Connect PC to module WiFi access point or other WiFi network.</value></data>
+  <data name="lgWiFi" xml:space="preserve"><value>WiFi / Ethernet</value></data>
+  <data name="lgWifiInfo" xml:space="preserve"><value>Connect the PC to the module's WiFi access point, a WiFi network, or by wired Ethernet (W5500).</value></data>
   <data name="lgCanDriver" xml:space="preserve"><value>CAN Driver</value></data>
   <data name="lgComPort" xml:space="preserve"><value>COM Port</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Resume Job on Start</value></data>

@@ -41,11 +41,11 @@ namespace YieldFlo.Forms
 
             if (Core.UDPmodule.ModuleIP != "")
             {
-                btnEthernet.Text = "Wifi  (" + Core.UDPmodule.ModuleIP + ")";
+                btnEthernet.Text = Lang.lgWiFi + "  (" + Core.UDPmodule.ModuleIP + ")";
             }
             else
             {
-                btnEthernet.Text = "Wifi";
+                btnEthernet.Text = Lang.lgWiFi;
             }
         }
 
@@ -86,10 +86,6 @@ namespace YieldFlo.Forms
         {
             // Units
             SetToggle(btnImperial, btnMetric, Properties.Settings.Default.Units == "Imperial");
-
-            // Theme
-            bool isDark = Properties.Settings.Default.MainBackColour.GetBrightness() < 0.5f;
-            SetToggle(btnDark, btnLight, isDark);
 
             // Network mode
             bool isEthernet = Properties.Settings.Default.ModuleCommType != "CAN";
@@ -146,8 +142,6 @@ namespace YieldFlo.Forms
 
         private void btnImperial_Click(object sender, EventArgs e) => SetToggle(btnImperial, btnMetric, true);
         private void btnMetric_Click(object sender, EventArgs e) => SetToggle(btnImperial, btnMetric, false);
-        private void btnDark_Click(object sender, EventArgs e) => SetToggle(btnDark, btnLight, true);
-        private void btnLight_Click(object sender, EventArgs e) => SetToggle(btnDark, btnLight, false);
         private void btnResumeOn_Click(object sender, EventArgs e) => SetToggle(btnResumeOn, btnResumeOff, true);
         private void btnResumeOff_Click(object sender, EventArgs e) => SetToggle(btnResumeOn, btnResumeOff, false);
 
@@ -168,23 +162,6 @@ namespace YieldFlo.Forms
             // Units
             bool isImperial = btnImperial.BackColor == ActiveColour;
             Properties.Settings.Default.Units = isImperial ? "Imperial" : "Metric";
-
-            // Theme
-            bool isDark = btnDark.BackColor == ActiveColour;
-            if (isDark)
-            {
-                Properties.Settings.Default.MainBackColour = Color.FromArgb(45, 45, 45);
-                Properties.Settings.Default.DisplayBackColour = Color.FromArgb(60, 60, 60);
-                Properties.Settings.Default.MainForeColour = Color.White;
-                Properties.Settings.Default.DisplayForeColour = Color.FromArgb(180, 200, 220);
-            }
-            else
-            {
-                Properties.Settings.Default.MainBackColour = Color.FromArgb(200, 200, 210);
-                Properties.Settings.Default.DisplayBackColour = Color.FromArgb(220, 220, 230);
-                Properties.Settings.Default.MainForeColour = Color.FromArgb(20, 20, 20);
-                Properties.Settings.Default.DisplayForeColour = Color.FromArgb(20, 50, 100);
-            }
 
             // Network / comm type
             bool isEthernet = btnEthernet.BackColor == ActiveColour;

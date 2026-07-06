@@ -77,8 +77,8 @@
   <data name="lgDark"          xml:space="preserve"><value>Sötét</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Világos</value></data>
   <data name="lgModuleComm"    xml:space="preserve"><value>Modul kommunikáció</value></data>
-  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
-  <data name="lgWifiInfo"      xml:space="preserve"><value>Csatlakoztassa a PC-t a modul WiFi hozzáférési pontjához vagy más WiFi hálózathoz.</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi / Ethernet</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Csatlakoztassa a PC-t a modul WiFi hozzáférési pontjához, más WiFi hálózathoz, vagy vezetékes Ethernettel (W5500).</value></data>
   <data name="lgCanDriver"     xml:space="preserve"><value>CAN meghajtó</value></data>
   <data name="lgComPort"       xml:space="preserve"><value>COM port</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Munka folytatása indításkor</value></data>

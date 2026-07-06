@@ -51,6 +51,21 @@ namespace YieldFlo
             }
             catch { }
 
+            // Dark theme only — the Light option was dropped (it never rendered well).
+            // Normalizes colour settings saved by older builds that offered Light.
+            try
+            {
+                if (Properties.Settings.Default.MainBackColour.GetBrightness() >= 0.5f)
+                {
+                    Properties.Settings.Default.MainBackColour    = System.Drawing.Color.FromArgb(45, 45, 45);
+                    Properties.Settings.Default.DisplayBackColour = System.Drawing.Color.FromArgb(60, 60, 60);
+                    Properties.Settings.Default.MainForeColour    = System.Drawing.Color.White;
+                    Properties.Settings.Default.DisplayForeColour = System.Drawing.Color.FromArgb(180, 200, 220);
+                    Properties.Settings.Default.Save();
+                }
+            }
+            catch { }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

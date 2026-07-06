@@ -13,6 +13,7 @@ compile-time constants at the top of `YieldFlo_STM32F1.ino` — edit and reflash
 |---|---|---|
 | `ModuleID` | 0 | Module ID (informational, printed at boot) |
 | `UseCompSignal` | true | Main + Comp noise rejection. Set false when Comp is not wired (e.g. FarmTrx tap — Main only) |
+| `InvertSensor` | false | false = PNP (HIGH = beam clear, FarmTrx), true = NPN sensors (inverted logic) |
 | `RPMEnabled` | true | RPM sensor wired to `RPMPin`. When false the module reports the fixed reference 200 |
 | `ADS1115Enabled` | true | Moisture1 daughter board present |
 | `UseAnalogFallback` | false | Read moisture from the native ADC (`AnalogPin`) when there is no ADS1115 |

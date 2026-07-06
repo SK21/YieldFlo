@@ -426,17 +426,11 @@ Press **Menu → Settings** to open the settings form.
 
 Changing units takes effect immediately. Historical data is stored in metric units internally and converted for display.
 
-### Theme
-
-| Setting | Options |
-|---------|---------|
-| **Theme** | Dark or Light |
-
 ### Module communication
 
 | Setting | Description |
 |---------|-------------|
-| **WiFi** | Module communicates over UDP WiFi. Connect the PC to the module's WiFi access point or a shared network. |
+| **WiFi / Ethernet** | Module communicates over UDP — via the module's WiFi access point / a shared WiFi network, or via wired Ethernet (W5500 board on the module). |
 | **CAN Driver** | Module communicates over CAN bus (Phase 2 hardware required). |
 | **COM Port** | Serial port for CAN interface (SLCAN driver only). |
 
@@ -506,6 +500,7 @@ The YieldFlo module has a built-in settings page served from its own WiFi hotspo
 | **Communication — Mode** | WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the Module communication setting in the PC app — the app treats WiFi and Ethernet identically. |
 | **Communication — Ethernet subnet** | First three octets of the wired network (default `192.168.1`). The module takes IP `subnet.(50 + module ID)`; give the PC's wired adapter a static IP on the same subnet (e.g. `192.168.1.10`). In Ethernet mode the portal shows whether the W5500 board and cable link are detected. |
 | **Optical Sensor — Signals** | **Main + Comp** (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. **Main only**: only the main signal wire is connected — for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode. |
+| **Optical Sensor — Polarity** | **PNP** (default — FarmTrx-style, output HIGH with beam clear) or **NPN** (inverted logic). Select NPN if flow reads high with no grain and low with grain. |
 | **WiFi Network** | Name and password of an external WiFi network. Tick **Use this Network** to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only. |
 | **Hotspot — Password** | Password for the module's own hotspot. Use 8–10 characters, or leave empty for an open hotspot. |
 

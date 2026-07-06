@@ -77,8 +77,8 @@
   <data name="lgDark"          xml:space="preserve"><value>Ciemny</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Jasny</value></data>
   <data name="lgModuleComm"    xml:space="preserve"><value>Komunikacja modułu</value></data>
-  <data name="lgWiFi"          xml:space="preserve"><value>WiFi</value></data>
-  <data name="lgWifiInfo"      xml:space="preserve"><value>Podłącz komputer do punktu dostępu WiFi modułu lub innej sieci WiFi.</value></data>
+  <data name="lgWiFi"          xml:space="preserve"><value>WiFi / Ethernet</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Podłącz komputer do punktu dostępu WiFi modułu, sieci WiFi lub przez przewodowy Ethernet (W5500).</value></data>
   <data name="lgCanDriver"     xml:space="preserve"><value>Sterownik CAN</value></data>
   <data name="lgComPort"       xml:space="preserve"><value>Port COM</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Wznów zadanie przy starcie</value></data>

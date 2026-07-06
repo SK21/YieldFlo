@@ -17,9 +17,9 @@ void onSensorEdge()
 		if (mainHigh == compHigh) { NoiseCount++; return; }
 	}
 
-	// HIGH on main = beam clear, LOW = beam blocked.
+	// PNP: HIGH on main = beam clear, LOW = blocked. NPN sensors are inverted.
 	// If state hasn't changed, this is a duplicate interrupt — discard.
-	bool nowBlocked = !mainHigh;
+	bool nowBlocked = (mainHigh == InvertSensor);
 	if (nowBlocked == BeamBlocked) return;
 
 	// Accumulate time spent in the previous state

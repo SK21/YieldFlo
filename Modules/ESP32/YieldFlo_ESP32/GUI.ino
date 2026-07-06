@@ -47,6 +47,12 @@ void handleSettings()
     sensormode.trim();
     MDL.UseCompSignal = (sensormode != "main");
 
+    // Optical sensor polarity (PNP = FarmTrx, NPN = inverted)
+    bool oldInvert = MDL.InvertSensor;
+    String polarity = server.arg("polarity");
+    polarity.trim();
+    MDL.InvertSensor = (polarity == "npn");
+
     // WiFi station credentials
     String newSSID = server.arg("prop1");
     newSSID.trim();
@@ -73,6 +79,7 @@ void handleSettings()
     bool changed =
         (MDL.CommMode          != oldCommMode) ||
         (MDL.UseCompSignal     != oldUseComp)  ||
+        (MDL.InvertSensor      != oldInvert)   ||
         (MDL.WifiModeUseStation != oldStation)  ||
         (String(MDL.SSID)       != oldSSID)     ||
         (String(MDL.Password)   != oldPassword) ||

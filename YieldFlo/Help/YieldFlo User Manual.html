@@ -556,18 +556,11 @@ li { margin: 2px 0; }
 
 <p>Changing units takes effect immediately. Historical data is stored in metric units internally and converted for display.</p>
 
-<h3>Theme</h3>
-
-<table>
-<tr><th>Setting</th><th>Options</th></tr>
-<tr><td><strong>Theme</strong></td><td>Dark or Light — changes the main screen background and gauge colours</td></tr>
-</table>
-
 <h3>Module communication</h3>
 
 <table>
 <tr><th>Setting</th><th>Description</th></tr>
-<tr><td><strong>WiFi (UDP)</strong></td><td>Module communicates over UDP WiFi on port 30100. Connect the PC to the module's WiFi access point or a shared network.</td></tr>
+<tr><td><strong>WiFi / Ethernet</strong></td><td>Module communicates over UDP on port 30100 &mdash; via the module's WiFi access point / a shared WiFi network, or via wired Ethernet (W5500 board on the module).</td></tr>
 <tr><td><strong>CAN</strong></td><td>Module communicates over CAN bus via a USB CAN interface.</td></tr>
 <tr><td><strong>CAN Driver</strong></td><td>Select the CAN interface driver (SLCAN, InnoMaker, or PCAN).</td></tr>
 <tr><td><strong>COM Port</strong></td><td>Serial/USB port for the CAN interface (SLCAN driver only).</td></tr>
@@ -649,6 +642,7 @@ li { margin: 2px 0; }
 <tr><td><strong>Communication &mdash; Mode</strong></td><td>WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the Module communication setting in the PC app &mdash; the app treats WiFi and Ethernet identically.</td></tr>
 <tr><td><strong>Communication &mdash; Ethernet subnet</strong></td><td>First three octets of the wired network (default <code>192.168.1</code>). The module takes IP <code>subnet.(50 + module ID)</code>; give the PC's wired adapter a static IP on the same subnet (e.g. <code>192.168.1.10</code>). In Ethernet mode the portal shows whether the W5500 board and cable link are detected.</td></tr>
 <tr><td><strong>Optical Sensor &mdash; Signals</strong></td><td><strong>Main + Comp</strong> (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. <strong>Main only</strong>: only the main signal wire is connected &mdash; for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode.</td></tr>
+<tr><td><strong>Optical Sensor &mdash; Polarity</strong></td><td><strong>PNP</strong> (default &mdash; FarmTrx-style, output HIGH with beam clear) or <strong>NPN</strong> (inverted logic). Select NPN if flow reads high with no grain and low with grain.</td></tr>
 <tr><td><strong>WiFi Network</strong></td><td>Name and password of an external WiFi network. Tick <strong>Use this Network</strong> to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only.</td></tr>
 <tr><td><strong>Hotspot &mdash; Password</strong></td><td>Password for the module's own hotspot. Use 8&ndash;10 characters, or leave empty for an open hotspot.</td></tr>
 </table>
