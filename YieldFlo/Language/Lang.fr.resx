@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Valeur de référence :</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>ratio d'obstruction sans grain (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Définir la référence</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module non connecté.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Facteur de rendement :</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>multiplicateur de calibration — augmenter pour hausser les lectures</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Passe de calibration ──────────────────────</value></data>

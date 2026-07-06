@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Poziom bazowy czujnika:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>współczynnik zasłonięcia bez ziarna (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Ustaw poziom bazowy</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>Moduł nie jest połączony.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Współczynnik plonu:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>mnożnik kalibracji — zwiększ, aby podnieść odczyty plonu</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Przebieg kalibracji ────────────────────────</value></data>

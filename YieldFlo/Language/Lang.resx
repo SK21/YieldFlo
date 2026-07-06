@@ -144,6 +144,7 @@
   <data name="lgSensorBaseline" xml:space="preserve"><value>Sensor Baseline:</value></data>
   <data name="lgBaselineNote" xml:space="preserve"><value>obstruction ratio with no grain (0–1)</value></data>
   <data name="lgSetBaseline" xml:space="preserve"><value>Set Baseline</value></data>
+  <data name="lgBaselineNoModule" xml:space="preserve"><value>Module not connected.</value></data>
   <data name="lgYieldFactor" xml:space="preserve"><value>Yield Factor:</value></data>
   <data name="lgFactorNote" xml:space="preserve"><value>calibration multiplier — increase to raise yield readings</value></data>
   <data name="lgCalibrationRun" xml:space="preserve"><value>─── Calibration Run ───────────────────────────</value></data>

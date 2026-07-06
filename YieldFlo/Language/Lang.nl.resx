@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Sensor basiswaarde:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>afsluitingsverhouding zonder graan (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Basiswaarde instellen</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module niet verbonden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Opbrengstfactor:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibratiemultiplicator — vergroot om opbrengstlezingen te verhogen</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Calibratierun ─────────────────────────────</value></data>

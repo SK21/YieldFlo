@@ -108,6 +108,7 @@ namespace YieldFlo.Language
         internal static string lgSensorBaseline     => Get("lgSensorBaseline");
         internal static string lgBaselineNote       => Get("lgBaselineNote");
         internal static string lgSetBaseline        => Get("lgSetBaseline");
+        internal static string lgBaselineNoModule   => Get("lgBaselineNoModule");
         internal static string lgYieldFactor        => Get("lgYieldFactor");
         internal static string lgFactorNote         => Get("lgFactorNote");
         internal static string lgCalibrationRun     => Get("lgCalibrationRun");

@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Базовое значение датчика:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>степень перекрытия без зерна (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Установить базовое значение</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>Модуль не подключен.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Коэффициент урожайности:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>калибровочный множитель — увеличьте для повышения показаний</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Калибровочный прогон ──────────────────────</value></data>

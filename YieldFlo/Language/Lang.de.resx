@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Sensor-Grundwert:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>Verschlussgrad ohne Erntegut (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Grundwert setzen</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modul nicht verbunden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Ertragsfaktor:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>Kalibrierungsmultiplikator — erhöhen um Ertragswerte anzuheben</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Kalibrierungslauf ─────────────────────────</value></data>

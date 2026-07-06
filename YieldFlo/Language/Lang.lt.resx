@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Jutiklio bazinė vertė:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>užtvėrimo santykis be grūdų (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Nustatyti bazinę vertę</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modulis neprijungtas.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Derliaus koeficientas:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibravimo dauginamasis — padidinkite, kad padidintumėte rodmenis</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Kalibravimo ciklas ────────────────────────</value></data>

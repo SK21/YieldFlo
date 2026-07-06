@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Érzékelő alapérték:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>elzárási arány szemterméka nélkül (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Alapérték beállítása</value></data>
+  <data name="lgBaselineNoModule"   xml:space="preserve"><value>A modul nincs csatlakoztatva.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Hozamtényező:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibrálási szorzó — növelje a hozamleolvasások emeléséhez</value></data>
   <data name="lgCalibrationRun"     xml:space="preserve"><value>─── Kalibrálási futás ──────────────────────────</value></data>

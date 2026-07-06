@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using YieldFlo.Classes;
@@ -11,6 +12,12 @@ namespace YieldFlo.Forms
         private bool _dragging;
         private Point _dragStart;
         private System.Windows.Forms.Timer _calTimer;
+
+        // Baseline sampling (Set Baseline button)
+        private System.Windows.Forms.Timer _baselineTimer;
+        private readonly List<double> _baselineSamples = new List<double>();
+        private const int BaselineSampleMs = 200;      // one module packet period
+        private const int BaselineSampleCount = 25;    // ~5 seconds
 
         public frmMenuCalibrate()
         {
@@ -209,16 +216,54 @@ namespace YieldFlo.Forms
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _calTimer?.Stop();
+            _baselineTimer?.Stop();
             base.OnFormClosing(e);
         }
 
         private void btnSetBaseline_Click(object sender, EventArgs e)
         {
-            double live = Core.LastSensor1;
-            live = Math.Round(live, 3);
+            if (_baselineTimer != null && _baselineTimer.Enabled) return;   // already sampling
+
+            if (!Core.ModuleConnected)
+            {
+                Props.ShowMessage(Lang.lgBaselineNoModule, "", 2000, true);
+                return;
+            }
+
+            // Sample the live reading for ~5 s and take the median — a single
+            // instantaneous read can catch a spiked packet (e.g. a no-pulse
+            // 100% reading) and store a baseline far off the true idle ratio.
+            _baselineSamples.Clear();
+            btnSetBaseline.Enabled = false;
+
+            if (_baselineTimer == null)
+            {
+                _baselineTimer = new System.Windows.Forms.Timer { Interval = BaselineSampleMs };
+                _baselineTimer.Tick += BaselineTimer_Tick;
+            }
+            btnSetBaseline.Text = Lang.lgSetBaseline + " 5";
+            _baselineTimer.Start();
+        }
+
+        private void BaselineTimer_Tick(object sender, EventArgs e)
+        {
+            _baselineSamples.Add(Core.LastSensor1);
+
+            int secondsLeft = (BaselineSampleCount - _baselineSamples.Count) * BaselineSampleMs / 1000;
+            btnSetBaseline.Text = Lang.lgSetBaseline + " " + (secondsLeft + 1);
+
+            if (_baselineSamples.Count < BaselineSampleCount) return;
+
+            _baselineTimer.Stop();
+            btnSetBaseline.Enabled = true;
+            btnSetBaseline.Text = Lang.lgSetBaseline;
+
+            _baselineSamples.Sort();
+            double median = _baselineSamples[_baselineSamples.Count / 2];
+            median = Math.Round(median, 3);
 
             var answer = MessageBox.Show(
-                string.Format(Lang.lgSetBaselineConfirm, live),
+                string.Format(Lang.lgSetBaselineConfirm, median),
                 Lang.lgSetBaseline,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -226,7 +271,7 @@ namespace YieldFlo.Forms
             if (answer != DialogResult.Yes) return;
 
             decimal clamped = (decimal)Math.Min((double)numBaseline.Maximum,
-                               Math.Max((double)numBaseline.Minimum, live));
+                               Math.Max((double)numBaseline.Minimum, median));
             numBaseline.Value = clamped;
         }
 
