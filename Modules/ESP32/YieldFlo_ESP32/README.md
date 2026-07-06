@@ -2,8 +2,9 @@
 
 YieldFlo module firmware for the ESP32 (DOIT ESP32 DEVKIT V1). Reads the
 optical grain-flow sensor, the Moisture1 daughter board (ADS1115) and an
-optional RPM sensor, and sends the data to the PC app over **WiFi UDP or
-CAN bus** — selectable at runtime in the web portal.
+optional RPM sensor, and sends the data to the PC app over **WiFi UDP,
+wired Ethernet UDP (W5500) or CAN bus** — selectable at runtime in the
+web portal.
 
 Settings are stored in EEPROM and edited through the module's web portal;
 nothing needs to be recompiled to reconfigure. (For the CAN-only STM32 port
@@ -24,7 +25,8 @@ Portal settings:
 
 | Setting | Meaning |
 |---|---|
-| Comm mode | WiFi UDP or CAN bus |
+| Comm mode | WiFi UDP, CAN bus, or Ethernet UDP (W5500) |
+| Ethernet subnet | First three octets of the wired network (default `192.168.1`). Module IP is `subnet.(50 + ID)`, /24, broadcast to `subnet.255`. In Ethernet mode the portal shows W5500/link status |
 | Signals | *Main + Comp* noise rejection, or *Main only* (e.g. FarmTrx tap — Comp not wired) |
 | Network / Password + Connect | Optional station mode: also join an existing WiFi network (default `Tractor`). After repeated failures the module reverts to AP-only and restarts |
 | AP password | Password for the module's own access point |
@@ -44,6 +46,8 @@ bumping it in the source wipes stored settings back to defaults.
 | ADS1115 ALERT/RDY | 16 | Open-drain active-low, conversion-ready interrupt |
 | CAN TX | 14 | → MCP2562 TXD |
 | CAN RX | 27 | ← MCP2562 RXD |
+| W5500 SS | 5 | Ethernet board chip select (same wiring as AOG_RC) |
+| W5500 SCK / MISO / MOSI | 18 / 19 / 23 | VSPI defaults; W5500 also needs 3.3 V + GND |
 | Debug UART | USB serial | 38400 baud, boot messages + CAN warnings |
 
 Pin assignments live in `ModuleConfig` (EEPROM) but are not exposed on the
@@ -52,11 +56,12 @@ portal — change the defaults in the source if a board revision moves them.
 ## Building
 
 Arduino IDE (or arduino-cli) with the **esp32 core** (tested with 3.3.7),
-board **DOIT ESP32 DEVKIT V1**. No external libraries — the modified
-ESP2SOTA OTA library is bundled in `src/ESP2SOTA_RC/` (it must stay under
-`src/` so Arduino builds compile it). The `.vcxproj` / `__vm` files are a
-Visual Micro project for building from Visual Studio; plain Arduino IDE
-users can ignore them.
+board **DOIT ESP32 DEVKIT V1**. One external library: **Ethernet_Generic**
+(install via Library Manager — the same library AOG_RC uses for the W5500).
+The modified ESP2SOTA OTA library is bundled in `src/ESP2SOTA_RC/` (it must
+stay under `src/` so Arduino builds compile it). The `.vcxproj` / `__vm`
+files are a Visual Micro project for building from Visual Studio; plain
+Arduino IDE users can ignore them.
 
 ## Protocol
 
@@ -70,7 +75,9 @@ Both transports carry the same 8-byte data body:
 | 5-6 | module_rpm uint16 LE (fixed 200 when no RPM sensor) |
 | 7 | noise_count (ISR-rejected edges per 200 ms window, capped 255) |
 
-**WiFi UDP** — module listens on port 28001, sends broadcast to port 30100:
+**WiFi / Ethernet UDP** — module listens on port 28001, sends broadcast to
+port 30100 (Ethernet mode broadcasts to `subnet.255` on the wired network;
+packet format is identical):
 
 - Data packet, 5 Hz: 11 bytes — PGN 40001 LE, 8-byte body, CRC8 (byte sum)
 - Temperature packet, 1 Hz: 6 bytes — PGN 40002 LE, flags (bit0=TempOK),

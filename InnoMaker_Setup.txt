@@ -15,10 +15,21 @@ To use it:
        LibUsbDotNet.dll
 
    These are the only DLLs in the C# SDK's Lib folder — InnoMaker
-   ships them 32-bit only. YieldFlo builds from 2026-07-06 onward run
-   as a 32-bit app so they load fine; if you saw a "bitness does not
-   match" error in the log, update YieldFlo.exe (the DLLs are fine,
-   keep them where they are).
+   ships them 32-bit only. Download them as raw files (from the GitHub
+   page use the Download button on each file, or download the whole
+   repo as a zip — saving the web page itself gives a corrupt DLL).
+
+   If the error log said "bitness does not match" or "class
+   InnoMakerUsb2CanLib not found", update YieldFlo.exe to the newest
+   build (2026-07-06 or later) — the DLLs are fine, keep them where
+   they are.
+
+PCAN (alternative adapter)
+--------------------------
+   YieldFlo also supports Peak PCAN-USB adapters now. Install the PEAK
+   device driver package from peak-system.com (it includes PCAN-Basic),
+   select CAN Driver: PCAN in YieldFlo, Save & Apply, restart. Nothing
+   needs to be copied into the app folder.
 
 3. In YieldFlo:  Menu > Settings > Module communication
    - select CAN

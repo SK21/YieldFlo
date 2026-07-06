@@ -23,9 +23,18 @@
     <ClCompile Include="GUI.ino" />
     <ClCompile Include="PgMain.ino" />
     <ClCompile Include="PgUpdate.ino" />
+    <ClCompile Include="src\ESP2SOTA_RC\ESP2SOTA_RC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.YieldFlo_ESP32.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ESP2SOTA_RC\ESP2SOTA_RC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ESP2SOTA_RC\index_html.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

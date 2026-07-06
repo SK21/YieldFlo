@@ -15,14 +15,32 @@ void handleSettings()
     String oldSSID     = String(MDL.SSID);
     String oldPassword = String(MDL.Password);
     bool   oldStation  = MDL.WifiModeUseStation;
-    bool   oldCanComm  = MDL.UseCanComm;
+    uint8_t oldCommMode = MDL.CommMode;
     String oldAPpw     = String(MDL.APpassword);
     bool   oldUseComp  = MDL.UseCompSignal;
+    uint8_t oldE0 = MDL.EthIP0, oldE1 = MDL.EthIP1, oldE2 = MDL.EthIP2;
 
     // Comm mode
     String commmode = server.arg("commmode");
     commmode.trim();
-    MDL.UseCanComm = (commmode == "can");
+    MDL.CommMode = CommModeWifi;
+    if (commmode == "can") MDL.CommMode = CommModeCan;
+    else if (commmode == "eth") MDL.CommMode = CommModeEth;
+
+    // Ethernet subnet ("192.168.1" — module gets .50+ID on it)
+    if (server.hasArg("ethsubnet"))
+    {
+        String sn = server.arg("ethsubnet");
+        sn.trim();
+        int a, b, c;
+        if (sscanf(sn.c_str(), "%d.%d.%d", &a, &b, &c) == 3 &&
+            a >= 0 && a <= 255 && b >= 0 && b <= 255 && c >= 0 && c <= 255)
+        {
+            MDL.EthIP0 = (uint8_t)a;
+            MDL.EthIP1 = (uint8_t)b;
+            MDL.EthIP2 = (uint8_t)c;
+        }
+    }
 
     // Optical sensor signal mode
     String sensormode = server.arg("sensormode");
@@ -53,12 +71,13 @@ void handleSettings()
     server.send(200, "text/html", GetPageMain());
 
     bool changed =
-        (MDL.UseCanComm        != oldCanComm)  ||
+        (MDL.CommMode          != oldCommMode) ||
         (MDL.UseCompSignal     != oldUseComp)  ||
         (MDL.WifiModeUseStation != oldStation)  ||
         (String(MDL.SSID)       != oldSSID)     ||
         (String(MDL.Password)   != oldPassword) ||
-        (String(MDL.APpassword) != oldAPpw);
+        (String(MDL.APpassword) != oldAPpw)     ||
+        (MDL.EthIP0 != oldE0) || (MDL.EthIP1 != oldE1) || (MDL.EthIP2 != oldE2);
 
     if (changed)
     {

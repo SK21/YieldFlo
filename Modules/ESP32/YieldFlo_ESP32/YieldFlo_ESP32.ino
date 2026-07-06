@@ -9,15 +9,24 @@
 
 #include <WiFiUdp.h>
 #include <WiFiClient.h>
-#include <EEPROM.h> 
+#include <EEPROM.h>
 #include <Wire.h>
+
+#include <SPI.h>
+#include <Ethernet_Generic.h>	// W5500 wired ethernet (same library as AOG_RC)
+#include <EthernetUdp.h>
 
 #include "driver/twai.h"
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
 #define InoID 6076          // firmware version — update with every build (DDMMY format)
-#define StructVersion 2     // EEPROM layout version — increment ONLY when ModuleData fields change
+#define StructVersion 3     // EEPROM layout version — increment ONLY when ModuleData fields change
+
+// Comm modes
+const uint8_t CommModeWifi = 0;
+const uint8_t CommModeCan = 1;
+const uint8_t CommModeEth = 2;
 
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
@@ -69,11 +78,20 @@ struct ModuleConfig
 	bool UseCompSignal = true;	// true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
 	uint8_t AlertPin = 16;
 	uint8_t AnalogPin = NC;
-	bool    UseCanComm = false;		// false = WiFi UDP, true = CAN bus
+	uint8_t CommMode = CommModeWifi;	// 0 = WiFi UDP, 1 = CAN bus, 2 = Ethernet UDP
 	uint8_t CanTxPin = 14;			// TWAI TX → MCP2562 TXD
 	uint8_t CanRxPin = 27;			// TWAI RX ← MCP2562 RXD
+	uint8_t EthIP0 = 192;			// Ethernet subnet — module IP is EthIP0.EthIP1.EthIP2.(50+ID)
+	uint8_t EthIP1 = 168;
+	uint8_t EthIP2 = 1;
 };
 ModuleConfig MDL;
+
+// ethernet (W5500 on VSPI: SCK 18, MISO 19, MOSI 23, SS 5 — same wiring as AOG_RC ESP32)
+const uint8_t W5500_SS = 5;
+EthernetUDP UDP_Ethernet;
+bool EthChipFound = false;
+IPAddress Ethernet_DestinationIP;
 
 // wifi
 WiFiUDP UDP_Wifi;
@@ -143,14 +161,14 @@ void loop()
 		ReadAnalog();
 		ReadFlow();
 	}
-	if (MDL.UseCanComm)
+	if (MDL.CommMode == CommModeCan)
 	{
 		CheckCanBus();
 		SendCAN();
 	}
 	else
 	{
-		SendWifi();
+		SendUdp();   // WiFi or Ethernet, per MDL.CommMode
 	}
 	//Blink();
 }

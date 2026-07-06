@@ -204,7 +204,7 @@ void DoSetup()
 	Serial.println("OTA started.");
 
 	// CAN bus (TWAI) — only when configured; WiFi AP stays active for web portal regardless
-	if (MDL.UseCanComm)
+	if (MDL.CommMode == CommModeCan)
 	{
 		Serial.println("Starting TWAI CAN ...");
 		twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(
@@ -215,6 +215,39 @@ void DoSetup()
 			Serial.println("TWAI CAN started at 250kbps.");
 		else
 			Serial.println("TWAI CAN failed to start.");
+	}
+
+	// Ethernet (W5500) — only when configured; WiFi AP stays active for web portal regardless
+	if (MDL.CommMode == CommModeEth)
+	{
+		Serial.println("Starting Ethernet ...");
+		uint8_t ip3 = 50 + MDL.ID;
+		IPAddress LocalIP(MDL.EthIP0, MDL.EthIP1, MDL.EthIP2, ip3);
+		static uint8_t LocalMac[] = { 0x0A, 0x0B, 0x59, 0x46, 0x0D, 0x00 };
+		LocalMac[5] = ip3;
+
+		Ethernet.init(W5500_SS);
+		IPAddress Gateway(MDL.EthIP0, MDL.EthIP1, MDL.EthIP2, 1);
+		IPAddress Mask(255, 255, 255, 0);
+		Ethernet.begin(LocalMac, LocalIP, Gateway, Gateway, Mask);
+
+		delay(1500);
+		EthChipFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
+		if (EthChipFound)
+		{
+			if (Ethernet.linkStatus() == LinkON)
+				Serial.println("Ethernet connected.");
+			else
+				Serial.println("Ethernet cable not connected.");
+			Serial.print("Ethernet IP: ");
+			Serial.println(Ethernet.localIP());
+			UDP_Ethernet.begin(ListeningPort);
+		}
+		else
+		{
+			Serial.println("Ethernet hardware (W5500) not found.");
+		}
+		Ethernet_DestinationIP = IPAddress(MDL.EthIP0, MDL.EthIP1, MDL.EthIP2, 255);
 	}
 
 	// wifi client mode
@@ -361,7 +394,10 @@ void LoadDefaults()
 	MDL.UseCompSignal = true;
 	MDL.AlertPin = 16;
 	MDL.AnalogPin = NC;
-	MDL.UseCanComm = false;
+	MDL.CommMode = CommModeWifi;
 	MDL.CanTxPin = 14;
 	MDL.CanRxPin = 27;
+	MDL.EthIP0 = 192;
+	MDL.EthIP1 = 168;
+	MDL.EthIP2 = 1;
 }

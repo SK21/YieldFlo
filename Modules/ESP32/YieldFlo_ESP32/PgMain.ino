@@ -67,10 +67,30 @@ String GetPageMain()
     st += "<tr>";
     st += "  <td class='label-col'>Mode</td>";
     st += "  <td class='input-col'><div class='control-width'><div class='radio-row'>";
-    st += "    <label><input class='styled' type='radio' name='commmode' value='wifi'" + String(MDL.UseCanComm ? "" : " checked") + "> WiFi</label>";
-    st += "    <label><input class='styled' type='radio' name='commmode' value='can'"  + String(MDL.UseCanComm ? " checked" : "") + "> CAN</label>";
+    st += "    <label><input class='styled' type='radio' name='commmode' value='wifi'" + String(MDL.CommMode == CommModeWifi ? " checked" : "") + "> WiFi</label>";
+    st += "    <label><input class='styled' type='radio' name='commmode' value='can'"  + String(MDL.CommMode == CommModeCan  ? " checked" : "") + "> CAN</label>";
+    st += "    <label><input class='styled' type='radio' name='commmode' value='eth'"  + String(MDL.CommMode == CommModeEth  ? " checked" : "") + "> Ethernet</label>";
     st += "  </div></div></td>";
     st += "</tr>";
+
+    // Ethernet settings
+    String ethSubnet = String(MDL.EthIP0) + "." + String(MDL.EthIP1) + "." + String(MDL.EthIP2);
+    st += "<tr>";
+    st += "  <td class='label-col'>Ethernet subnet</td>";
+    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='ethsubnet' value='" + ethSubnet + "'></div></td>";
+    st += "</tr>";
+    st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Module IP: " + ethSubnet + "." + String(50 + MDL.ID) + " — the PC's wired adapter must be on the same subnet.</div></div></td></tr>";
+    if (MDL.CommMode == CommModeEth)
+    {
+        st += "<tr><td colspan='2' style='text-align:center;'>";
+        if (!EthChipFound)
+            st += "<div class='status'>Ethernet hardware (W5500) not found</div>";
+        else if (Ethernet.linkStatus() == LinkON)
+            st += "<div class='status'>Ethernet connected (" + Ethernet.localIP().toString() + ")</div>";
+        else
+            st += "<div class='status'>Ethernet cable not connected</div>";
+        st += "</td></tr>";
+    }
 
     // Divider
     st += "<tr><td colspan='2'><hr></td></tr>";

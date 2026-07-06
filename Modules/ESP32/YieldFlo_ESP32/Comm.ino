@@ -59,7 +59,7 @@ void CheckCanBus()
 		if (BusOffCount > 5)
 		{
 			Serial.println("CAN Bus Off: persistent. Falling back to WiFi.");
-			MDL.UseCanComm = false;     // session only — EEPROM unchanged, reverts on restart
+			MDL.CommMode = CommModeWifi;     // session only — EEPROM unchanged, reverts on restart
 			BusOffCount = 0;
 			SendLastPK1 = 0;         // send WiFi immediately on next loop
 		}
@@ -131,14 +131,32 @@ void SendCANPK2()
 	}
 }
 
-void SendWifi()
+void SendUdp()
 {
-	SendWifiPK1();
-	SendWifiPK2();
+	SendUdpPK1();
+	SendUdpPK2();
 }
 
-// ── WiFi UDP send (5 Hz) ─────────────────────────────────────────────────
-void SendWifiPK1()
+// Send one packet on the configured UDP transport (WiFi or W5500 ethernet)
+void UdpSend(byte pkt[], int len)
+{
+	if (MDL.CommMode == CommModeEth)
+	{
+		if (!EthChipFound || Ethernet.linkStatus() != LinkON) return;
+		UDP_Ethernet.beginPacket(Ethernet_DestinationIP, ModuleSendPort);
+		UDP_Ethernet.write(pkt, len);
+		UDP_Ethernet.endPacket();
+	}
+	else
+	{
+		UDP_Wifi.beginPacket(Wifi_DestinationIP, ModuleSendPort);
+		UDP_Wifi.write(pkt, len);
+		UDP_Wifi.endPacket();
+	}
+}
+
+// ── UDP send (5 Hz) ──────────────────────────────────────────────────────
+void SendUdpPK1()
 {
 	if (millis() - SendLastPK1 < SendTimePK1) return;
 	SendLastPK1 = millis();
@@ -160,9 +178,7 @@ void SendWifiPK1()
 	pkt[9] = body[7];	// noise_count
 	pkt[10] = CRC(pkt, 10, 0);
 
-	UDP_Wifi.beginPacket(Wifi_DestinationIP, ModuleSendPort);
-	UDP_Wifi.write(pkt, 11);
-	UDP_Wifi.endPacket();
+	UdpSend(pkt, 11);
 }
 
 // ── Second packet: temperature (1 Hz) ────────────────────────────────────
@@ -173,7 +189,7 @@ void SendWifiPK1()
 //   [5]   CRC8
 // CAN  — ID 0x18FF01F8, DLC=8, [0]=flags, [1-2]=temp_raw, [3-7]=0
 
-void SendWifiPK2()
+void SendUdpPK2()
 {
 	if (millis() - SendLastPK2 > SendTimePK2)
 	{
@@ -189,9 +205,7 @@ void SendWifiPK2()
 		pkt[4] = (byte)((temp >> 8) & 0xFF);
 		pkt[5] = CRC(pkt, 5, 0);
 
-		UDP_Wifi.beginPacket(Wifi_DestinationIP, ModuleSendPort);
-		UDP_Wifi.write(pkt, 6);
-		UDP_Wifi.endPacket();
+		UdpSend(pkt, 6);
 	}
 }
 
@@ -205,5 +219,15 @@ void ReceiveComm()
 	{
 		UDP_Wifi.flush();
 		sz = UDP_Wifi.parsePacket();
+	}
+
+	if (EthChipFound)
+	{
+		sz = UDP_Ethernet.parsePacket();
+		while (sz > 0)
+		{
+			UDP_Ethernet.flush();
+			sz = UDP_Ethernet.parsePacket();
+		}
 	}
 }
