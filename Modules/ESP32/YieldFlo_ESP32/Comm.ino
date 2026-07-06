@@ -82,11 +82,14 @@ void SendCANPK1()
 {
 	if (millis() - SendLastPK1 < SendTimePK1) return;
 
-	// Skip transmit if controller is not healthy — avoids driving TEC toward Bus Off
+	// Skip transmit only if controller is stopped. Do NOT gate on tx_error_counter:
+	// with no ACKing node on the bus (app not open yet) TEC rises to error-passive,
+	// and TEC only falls on successful TX — a TEC guard here would block transmit
+	// forever. ACK errors at error-passive cannot reach Bus Off (CAN spec), so
+	// transmitting in that state is safe; CheckCanBus handles recovery if it stops.
 	twai_status_info_t st;
 	if (twai_get_status_info(&st) != ESP_OK)           return;
 	if (st.state != TWAI_STATE_RUNNING)                return;
-	if (st.tx_error_counter > 96)                      return;  // error-passive threshold
 
 	SendLastPK1 = millis();
 
@@ -111,7 +114,6 @@ void SendCANPK2()
 		twai_status_info_t st;
 		if (twai_get_status_info(&st) != ESP_OK) return;
 		if (st.state != TWAI_STATE_RUNNING)      return;
-		if (st.tx_error_counter > 96)            return;
 
 		byte flags = ADSfound ? 0x01 : 0x00;
 		int16_t temp = TemperatureReading;

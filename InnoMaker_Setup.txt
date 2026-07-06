@@ -1,0 +1,41 @@
+YieldFlo — InnoMaker USB2CAN setup
+==================================
+
+The next YieldFlo build adds support for the InnoMaker USB2CAN adapter.
+To use it:
+
+1. Install InnoMaker's Windows driver for the USB2CAN adapter
+   (from the InnoMaker website or their driver installer).
+
+2. Download the InnoMaker USB2CAN C# SDK and copy these two files
+   into the YieldFlo application folder (the folder containing
+   YieldFlo.exe):
+
+       InnoMakerUsb2CanLib.dll
+       LibUsbDotNet.dll
+
+   Use the DLLs that match the app (32-bit vs 64-bit). If the wrong
+   ones are used, the error log will say so.
+
+3. In YieldFlo:  Menu > Settings > Module communication
+   - select CAN
+   - CAN Driver: InnoMaker
+   - COM Port is ignored for InnoMaker (the first adapter found is
+     used), then Save & Apply and restart when prompted.
+
+If CAN still fails to start, send the newest file from:
+
+       Documents\YieldFlo\Logs
+
+The exact reason (DLL missing, wrong bitness, no adapter found, etc.)
+is written there.
+
+STM32F1 module checklist (module side)
+--------------------------------------
+- The sketch must be compiled with USB support set to "None"
+  (Arduino IDE > Tools > USB support). USB and CAN share memory on
+  the F103 — with USB enabled, CAN silently does not work.
+- Debug output is on USART1 (PA9/PA10) at 38400 baud; at power-up it
+  should print "CAN started at 250kbps."
+- CAN wiring: PB9 = TX, PB8 = RX to the transceiver; bus needs 120 ohm
+  termination at both ends.
