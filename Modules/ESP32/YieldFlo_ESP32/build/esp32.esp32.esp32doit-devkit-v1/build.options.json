@@ -1,9 +1,0 @@
-{
-  "additionalFiles": "..\\..\\..\\..\\..,..\\..\\..\\..\\..,..\\..,..\\..\\..\\..,..\\..\\..\\..,..\\..\\..\\..",
-  "compiler.optimization_flags": "-Os",
-  "customBuildProperties": "",
-  "fqbn": "esp32:esp32:esp32doit-devkit-v1",
-  "hardwareFolders": "C:\\Users\\CoxDa\\AppData\\Local\\arduino15\\packages\\esp32\\hardware\\esp32\\3.3.7,C:\\Users\\CoxDa\\AppData\\Local\\arduino15\\packages\\esp32\\hardware\\esp32\\3.3.7",
-  "otherLibrariesFolders": "F:\\Documents\\Arduino\\libraries",
-  "sketchLocation": "F:\\Documents\\GitHub\\YieldFlo\\Modules\\ESP32\\YieldFlo_ESP32"
-}

@@ -397,3 +397,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+Modules/ESP32/YieldFlo_ESP32/build/

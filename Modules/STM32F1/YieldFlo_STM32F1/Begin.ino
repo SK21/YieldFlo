@@ -107,6 +107,7 @@ void DoSetup()
 	}
 	BeamBlocked = (digitalRead(MainPin) == LOW);	// HIGH = clear, LOW = blocked
 	LastEdgeUs = micros();
+	SegStartUs = LastEdgeUs;
 	Serial.println(UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
 
 	// RPM sensor

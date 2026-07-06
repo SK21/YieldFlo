@@ -116,6 +116,7 @@ void DoSetup()
 		}
 		BeamBlocked = (digitalRead(MDL.MainPin) == LOW);	// HIGH = clear, LOW = blocked
 		LastEdgeUs = micros();
+		SegStartUs = LastEdgeUs;
 		Serial.println(MDL.UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
 	}
 	else

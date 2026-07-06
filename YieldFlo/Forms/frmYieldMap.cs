@@ -30,6 +30,12 @@ namespace YieldFlo.Forms
         // Precomputed legend tick text (set by BuildSwathOverlay, drawn in pnlLegend_Paint)
         private string[] _tickText;
 
+        // GDI brushes/pens owned by the current swath overlay. Polygons share these;
+        // they must be disposed on every rebuild — the live timer rebuilds the overlay
+        // every 5 s, and leaking ~6000 handles per rebuild exhausts the 10k GDI limit
+        // (coverage and legend go blank once drawing starts failing).
+        private readonly List<IDisposable> _overlayGdi = new List<IDisposable>();
+
         // Job list
         private readonly List<int> _jobIds = new List<int>();
 
@@ -226,9 +232,16 @@ namespace YieldFlo.Forms
 
         // ── Yield overlay ─────────────────────────────────────────────────────
 
-        private void LoadYieldData(bool center = true)
+        private void ClearSwathOverlay()
         {
             gmap.Overlays.Clear();
+            foreach (var d in _overlayGdi) d.Dispose();
+            _overlayGdi.Clear();
+        }
+
+        private void LoadYieldData(bool center = true)
+        {
+            ClearSwathOverlay();
 
             int idx = cboJob.SelectedIndex;
             if (idx < 0 || idx >= _jobIds.Count) return;
@@ -284,6 +297,12 @@ namespace YieldFlo.Forms
             // Thin points to keep polygon count manageable
             int step = Math.Max(1, points.Count / 3000);
 
+            // Polygons share pooled brushes (yield quantized to 100 colour steps) and
+            // one invisible stroke pen instead of owning ~2 GDI handles each.
+            var brushCache = new Dictionary<int, SolidBrush>();
+            var stroke = new Pen(Color.FromArgb(0, Color.Black));
+            _overlayGdi.Add(stroke);
+
             for (int i = 0; i < points.Count; i += step)
             {
                 var pt = points[i];
@@ -295,12 +314,18 @@ namespace YieldFlo.Forms
                     _headerWidthM, lengthM);
 
                 double t   = Math.Max(0, Math.Min(1, (pt.YieldRate - minY) / yRange));
-                Color  col = YieldToColor(t);
+                int    key = (int)Math.Round(t * 100);
+                if (!brushCache.TryGetValue(key, out SolidBrush fill))
+                {
+                    fill = new SolidBrush(Color.FromArgb(210, YieldToColor(key / 100.0)));
+                    brushCache[key] = fill;
+                    _overlayGdi.Add(fill);
+                }
 
                 var poly = new GMapPolygon(corners, "s")
                 {
-                    Fill   = new SolidBrush(Color.FromArgb(210, col)),
-                    Stroke = new Pen(Color.FromArgb(0, col))
+                    Fill   = fill,
+                    Stroke = stroke
                 };
                 overlay.Polygons.Add(poly);
             }
@@ -458,11 +483,14 @@ namespace YieldFlo.Forms
             int h    = (sender as Panel).Height;
 
             // Gradient bar (top 16 px)
-            for (int x = 0; x < w; x++)
+            using (var pen = new Pen(Color.Black))
             {
-                double t = (double)x / Math.Max(1, w - 1);
-                using var pen = new Pen(YieldToColor(t));
-                g.DrawLine(pen, x, 0, x, 16);
+                for (int x = 0; x < w; x++)
+                {
+                    double t = (double)x / Math.Max(1, w - 1);
+                    pen.Color = YieldToColor(t);
+                    g.DrawLine(pen, x, 0, x, 16);
+                }
             }
 
             var texts = _tickText;
@@ -492,7 +520,7 @@ namespace YieldFlo.Forms
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             if (_isMini) FormPositions.Save(this);
-            gmap.Overlays.Clear();
+            ClearSwathOverlay();
             base.OnFormClosed(e);
         }
     }

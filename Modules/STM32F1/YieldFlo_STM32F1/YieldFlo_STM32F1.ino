@@ -53,7 +53,8 @@ void onADSReady()
 // optical sensor ISR state
 volatile uint32_t BlockedAccum = 0;		// µs beam blocked this window
 volatile uint32_t ClearAccum = 0;		// µs beam clear this window
-volatile uint32_t LastEdgeUs = 0;		// micros() at last valid edge
+volatile uint32_t LastEdgeUs = 0;		// micros() at last valid edge — set ONLY in the ISR (sensor health)
+volatile uint32_t SegStartUs = 0;		// micros() at start of the current blocked/clear segment
 volatile bool BeamBlocked = false;		// current beam state
 volatile uint16_t NoiseCount = 0;		// rejected noise edges this window
 bool SensorOK = false;
