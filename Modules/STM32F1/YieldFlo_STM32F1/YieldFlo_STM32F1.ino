@@ -51,9 +51,13 @@ void onADSReady()
 	ADSconversionReady = true;
 }
 
-// optical sensor ISR state
-volatile uint32_t BlockedAccum = 0;		// µs beam blocked this window
-volatile uint32_t ClearAccum = 0;		// µs beam clear this window
+// optical sensor ISR state — ratio is accounted per signal CYCLE (closed at each
+// clear→blocked edge), so the reported value is exact at any pulse rate and a
+// fixed read window can never alias against the signal period.
+volatile uint32_t CycStartUs = 0;		// micros() at the clear→blocked edge that started this cycle
+volatile uint32_t CycBlockedUs = 0;		// µs blocked within the current cycle
+volatile uint32_t WinBlockedUs = 0;		// blocked µs of completed cycles since last ReadFlow
+volatile uint32_t WinTotalUs = 0;		// total µs of completed cycles since last ReadFlow
 volatile uint32_t LastEdgeUs = 0;		// micros() at last valid edge — set ONLY in the ISR (sensor health)
 volatile uint32_t SegStartUs = 0;		// micros() at start of the current blocked/clear segment
 volatile bool BeamBlocked = false;		// current beam state
