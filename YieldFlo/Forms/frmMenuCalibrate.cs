@@ -44,6 +44,22 @@ namespace YieldFlo.Forms
 
             // Reflect state if a cal run was already active when form opened
             UpdateCalRunButtons();
+
+            // The run keeps accumulating in Core.Yield while the form is closed.
+            // On reopen, restore the measured display — and resume live updates if
+            // still running — otherwise the label stays blank until the next
+            // Start/Stop even though a run is in progress or has data.
+            if (Core.Yield?.IsCalRunActive ?? false)
+            {
+                UpdateCalMeasuredLabel();
+                _calTimer.Start();
+                btnApplyFactor.Enabled = false;
+            }
+            else if ((Core.Yield?.CalRunBushels ?? 0) > 0)
+            {
+                UpdateCalMeasuredLabel();
+                btnApplyFactor.Enabled = true;
+            }
         }
 
         private void ApplyTheme()
