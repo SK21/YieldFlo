@@ -50,7 +50,7 @@ namespace YieldFlo.Forms
             _msgTimer.Tick += MsgTimer_Tick;
 
             UpdateStatusBar();
-            SetJobButtons(false);
+            SetJobButtons(Core.Collector?.IsRecording ?? false);
 
             // Tablet mode: slightly larger controls
             if (IsTabletPC())
@@ -319,11 +319,45 @@ namespace YieldFlo.Forms
             new frmMini().Show();
         }
 
+        // Full-strength colours for each job button when it is available.
+        private static readonly Color StartActive = Color.FromArgb(0, 150, 0);    // green
+        private static readonly Color PauseActive = Color.FromArgb(200, 150, 0);  // amber
+        private static readonly Color StopActive  = Color.FromArgb(170, 0, 0);    // red
+        // Shared "unavailable" look — clearly off, not just a dimmed word.
+        private static readonly Color BtnOffBack   = Color.FromArgb(40, 40, 40);
+        private static readonly Color BtnOffFore   = Color.FromArgb(95, 95, 95);
+        private static readonly Color BtnOffBorder = Color.FromArgb(70, 70, 70);
+
         private void SetJobButtons(bool jobActive)
         {
             btnStart.Enabled = !jobActive;
             btnPause.Enabled = jobActive;
             btnStop.Enabled = jobActive || Core.Collector.ActiveJobId > 0;
+
+            StyleJobButton(btnStart, StartActive);
+            StyleJobButton(btnPause, PauseActive);
+            StyleJobButton(btnStop,  StopActive);
+        }
+
+        // Make availability obvious at a glance: an enabled button shows its
+        // full colour with a bright border; a disabled one goes flat dark grey
+        // so it plainly reads as "off" rather than a slightly greyed word.
+        private static void StyleJobButton(Button btn, Color activeBack)
+        {
+            if (btn.Enabled)
+            {
+                btn.BackColor = activeBack;
+                btn.ForeColor = Color.White;
+                btn.FlatAppearance.BorderColor = Color.FromArgb(230, 230, 230);
+                btn.FlatAppearance.BorderSize  = 2;
+            }
+            else
+            {
+                btn.BackColor = BtnOffBack;
+                btn.ForeColor = BtnOffFore;
+                btn.FlatAppearance.BorderColor = BtnOffBorder;
+                btn.FlatAppearance.BorderSize  = 1;
+            }
         }
 
         // ── Status message ────────────────────────────────────────────────────

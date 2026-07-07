@@ -149,6 +149,12 @@ namespace YieldFlo.Forms
                 btnZoomOutFull.Location = new Point(wa.Width - 158, 5);
                 btnPrint.Location       = new Point(wa.Width - 234, 5);
 
+                // gmap is first in the Controls collection (= top of z-order);
+                // make sure toolbar and legend paint above it, and repaint the
+                // legend now that it is visible again.
+                pnlToolbar.BringToFront();
+                pnlLegend.BringToFront();
+                pnlLegend.Invalidate();
             }
         }
 
@@ -239,12 +245,14 @@ namespace YieldFlo.Forms
             _overlayGdi.Clear();
         }
 
+        // Job whose data is currently drawn — lets a transient failure (locked DB
+        // read, combo mid-reload) keep the existing drawing instead of wiping it.
+        private int _drawnJobId = -1;
+
         private void LoadYieldData(bool center = true)
         {
-            ClearSwathOverlay();
-
             int idx = cboJob.SelectedIndex;
-            if (idx < 0 || idx >= _jobIds.Count) return;
+            if (idx < 0 || idx >= _jobIds.Count) return;   // combo mid-reload — keep current drawing
 
             int jobId = _jobIds[idx];
 
@@ -261,14 +269,35 @@ namespace YieldFlo.Forms
                 break;
             }
 
-            var points = Core.Database.YieldData.GetByJob(jobId);
-            if (points.Count == 0) return;
+            List<YieldDataPoint> points;
+            try   { points = Core.Database.YieldData.GetByJob(jobId); }
+            catch { return; }   // transient read failure — keep current drawing
 
-            BuildSwathOverlay(points);
+            if (points.Count == 0)
+            {
+                // A different job with no data must show empty; the SAME job
+                // suddenly reading empty is transient — don't wipe the map.
+                if (jobId != _drawnJobId) { ClearSwathOverlay(); _drawnJobId = jobId; }
+                return;
+            }
+
+            // Build the replacement fully, then swap — clearing before building
+            // leaves the map erased whenever anything later fails or returns early.
+            var oldGdi = new List<IDisposable>(_overlayGdi);
+            _overlayGdi.Clear();
+            var overlay = BuildSwathOverlay(points);
+
+            gmap.Overlays.Clear();
+            gmap.Overlays.Add(overlay);
+            _drawnJobId = jobId;
+
+            // Old polygons are no longer referenced by the map — safe to release
+            foreach (var d in oldGdi) d.Dispose();
+
             if (center) CenterOnData(points);
         }
 
-        private void BuildSwathOverlay(List<YieldDataPoint> points)
+        private GMapOverlay BuildSwathOverlay(List<YieldDataPoint> points)
         {
             var overlay = new GMapOverlay("yield");
 
@@ -280,7 +309,7 @@ namespace YieldFlo.Forms
                 if (pt.YieldRate < minY) minY = pt.YieldRate;
                 if (pt.YieldRate > maxY) maxY = pt.YieldRate;
             }
-            if (minY > maxY) { gmap.Overlays.Add(overlay); return; }
+            if (minY > maxY) return overlay;   // no positive yields yet — empty overlay
             double yRange = Math.Max(0.1, maxY - minY);
 
             var texts = new string[5];
@@ -330,7 +359,7 @@ namespace YieldFlo.Forms
                 overlay.Polygons.Add(poly);
             }
 
-            gmap.Overlays.Add(overlay);
+            return overlay;
         }
 
         private static List<PointLatLng> ComputeSwathCorners(

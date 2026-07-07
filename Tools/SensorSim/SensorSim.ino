@@ -95,10 +95,33 @@ void setup()
 	printStatus();
 }
 
+// Non-blocking command reader. Accepts '\n', '\r', or a 100 ms pause as
+// end-of-command, so it works with any serial monitor regardless of its
+// line-ending setting (Visual Micro, Arduino IDE, PuTTY, raw port writes).
+// readStringUntil() is deliberately avoided: it blocks loop() for up to 1 s,
+// which freezes the output waveform while a command is being typed.
+char     cmdBuf[16];
+uint8_t  cmdLen = 0;
+uint32_t lastCharMs = 0;
+
 void handleSerial()
 {
-	if (!Serial.available()) return;
-	String line = Serial.readStringUntil('\n');
+	while (Serial.available())
+	{
+		char ch = (char)Serial.read();
+		lastCharMs = millis();
+		if (ch == '\n' || ch == '\r') { processCommand(); continue; }
+		if (cmdLen < sizeof(cmdBuf) - 1) cmdBuf[cmdLen++] = ch;
+	}
+	if (cmdLen > 0 && millis() - lastCharMs > 100) processCommand();
+}
+
+void processCommand()
+{
+	if (cmdLen == 0) return;
+	cmdBuf[cmdLen] = 0;
+	String line = String(cmdBuf);
+	cmdLen = 0;
 	line.trim();
 	if (line.length() == 0) return;
 
