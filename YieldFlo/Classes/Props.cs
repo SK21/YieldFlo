@@ -52,6 +52,15 @@ namespace YieldFlo.Classes
         public static string RateUnit => IsMetric ? "t/ha" : "bu/ac";
         public static string SpeedUnit => IsMetric ? "km/h" : "mph";
 
+        public static string TestWeightUnit => IsMetric ? "kg/hL" : "lb/bu";
+
+        // Grain test weight (specific / hectolitre weight) is stored internally
+        // as lb/bu (US Winchester bushel = 35.239 L). Metric users work in kg/hL,
+        // the standard European/Canadian grain unit: 1 lb/bu = 1.287184 kg/hL.
+        private const double KgHlPerLbBu = 1.287184;
+        public static double DisplayTestWeight(double lbBu)     => IsMetric ? lbBu * KgHlPerLbBu : lbBu;
+        public static double TestWeightToLbBu(double displayTw) => IsMetric ? displayTw / KgHlPerLbBu : displayTw;
+
         public static double DisplayArea(double acres) => IsMetric ? acres * 0.404686 : acres;
         public static double DisplayMass(double bushels) => IsMetric ? bushels * TestWeightKgPerBu / 1000.0 : bushels;
         public static double DisplayRate(double buPerAc) => IsMetric ? buPerAc * TestWeightKgPerBu / 1000.0 / 0.404686 : buPerAc;

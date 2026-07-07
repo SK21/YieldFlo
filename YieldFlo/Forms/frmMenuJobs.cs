@@ -100,7 +100,7 @@ namespace YieldFlo.Forms
             int cur = cboCrop.SelectedIndex >= 0 ? _cropIds[cboCrop.SelectedIndex] : -1;
             cboCrop.Items.Clear(); _cropIds.Clear();
             foreach (var c in Core.Database.Crops.GetAll())
-            { cboCrop.Items.Add($"{c.name}  ({c.testWeight:F0} lb/bu)"); _cropIds.Add(c.id); }
+            { cboCrop.Items.Add($"{c.name}  ({Props.DisplayTestWeight(c.testWeight):F0} {Props.TestWeightUnit})"); _cropIds.Add(c.id); }
             int idx = _cropIds.IndexOf(cur);
             cboCrop.SelectedIndex = idx >= 0 ? idx : (cboCrop.Items.Count > 0 ? 0 : -1);
         }
@@ -165,7 +165,7 @@ namespace YieldFlo.Forms
             cboField.Items.Clear();   _fieldIds.Clear();
 
             foreach (var c in Core.Database.Crops.GetAll())
-            { cboCrop.Items.Add($"{c.name}  ({c.testWeight:F0} lb/bu)"); _cropIds.Add(c.id); }
+            { cboCrop.Items.Add($"{c.name}  ({Props.DisplayTestWeight(c.testWeight):F0} {Props.TestWeightUnit})"); _cropIds.Add(c.id); }
 
             foreach (var h in Core.Database.Headers.GetAll())
             { double w = Props.IsMetric ? h.widthM : h.widthM * 3.28084; string wu = Props.IsMetric ? "m" : "ft"; string wf = Props.IsMetric ? "F2" : "F1"; cboHeader.Items.Add($"{h.name}  ({w.ToString(wf)} {wu})"); _headerIds.Add(h.id); }

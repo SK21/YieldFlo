@@ -23,6 +23,7 @@ namespace YieldFlo.Forms
         private void frmMenuCrops_Load(object sender, EventArgs e)
         {
             ApplyTheme();
+            lblTestWeightUnit.Text = Props.TestWeightUnit;   // "kg/hL" in metric, "lb/bu" imperial
             FormPositions.Restore(this);
             this.FormClosed += (s2, ev2) => FormPositions.Save(this);
             foreach (Control c in new Control[] { pnlTitle, lblTitle })
@@ -44,7 +45,7 @@ namespace YieldFlo.Forms
         private void frmMenuCrops_Shown(object sender, EventArgs e)
         {
             KeyboardHelper.Wire(this, txtCropName, "Crop Name");
-            NumpadHelper.Wire(this, numTestWeight,     0,   200, 0, "Test Weight (lb/bu)");
+            NumpadHelper.Wire(this, numTestWeight,     0,   200, 0, "Test Weight (" + Props.TestWeightUnit + ")");
             NumpadHelper.Wire(this, numMarketMoisture, 0,    40, 0, "Market Moisture (%)");
             btnSave.Focus();
         }
@@ -80,7 +81,7 @@ namespace YieldFlo.Forms
             _crops = Core.Database.Crops.GetAll();
             lbCrops.Items.Clear();
             foreach (var c in _crops)
-                lbCrops.Items.Add($"{c.name}  –  {c.category}  –  {c.testWeight:F0} lb/bu");
+                lbCrops.Items.Add($"{c.name}  –  {c.category}  –  {Props.DisplayTestWeight(c.testWeight):F0} {Props.TestWeightUnit}");
         }
 
         private void ClearEdit()
@@ -89,7 +90,7 @@ namespace YieldFlo.Forms
             _editingMoistureOffset = 0;
             txtCropName.Text = "";
             cboCropCategory.SelectedIndex = 0;
-            numTestWeight.Value     = 60;
+            numTestWeight.Value     = (decimal)Props.DisplayTestWeight(60);   // 60 lb/bu default, shown in active unit
             numMarketMoisture.Value = 14;
             lbCrops.ClearSelected();
         }
@@ -105,7 +106,7 @@ namespace YieldFlo.Forms
             cboCropCategory.SelectedIndex = cboCropCategory.Items.IndexOf(c.category);
             if (cboCropCategory.SelectedIndex < 0) cboCropCategory.SelectedIndex = 0;
             numTestWeight.Value     = (decimal)System.Math.Max((double)numTestWeight.Minimum,
-                                        System.Math.Min((double)numTestWeight.Maximum, c.testWeight));
+                                        System.Math.Min((double)numTestWeight.Maximum, Props.DisplayTestWeight(c.testWeight)));
             numMarketMoisture.Value = (decimal)System.Math.Max((double)numMarketMoisture.Minimum,
                                         System.Math.Min((double)numMarketMoisture.Maximum, c.marketMoisture));
         }
@@ -117,7 +118,7 @@ namespace YieldFlo.Forms
             string name = txtCropName.Text.Trim();
             if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterCropName, "", 2000, true); return; }
             string cat = cboCropCategory.SelectedItem?.ToString() ?? "Cereal";
-            double tw  = (double)numTestWeight.Value;
+            double tw  = Props.TestWeightToLbBu((double)numTestWeight.Value);   // store internally as lb/bu
             double mm  = (double)numMarketMoisture.Value;
 
             int savedId;
