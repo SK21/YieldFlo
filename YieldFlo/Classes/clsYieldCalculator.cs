@@ -23,6 +23,8 @@ namespace YieldFlo.Classes
         // Latest calculated values (read by DataCollector / UI)
         public double InstantYield { get; private set; }        // bu/ac
         public double SmoothedYield { get; private set; }       // simple rolling average
+        public double InstantWorkRate { get; private set; }     // bu/hr — grain throughput
+        public double SmoothedWorkRate { get; private set; }    // bu/hr, rolling average
         public bool IsFlowing { get; private set; }
         public double CurrentRatio { get; private set; }        // latest baseline-corrected reading
 
@@ -66,6 +68,7 @@ namespace YieldFlo.Classes
         }
 
         private double _smoothAccum = 0;
+        private double _workAccum = 0;
         private int _smoothCount = 0;
         private const int SmoothWindow = 5;
 
@@ -88,8 +91,9 @@ namespace YieldFlo.Classes
             if (speedKmh < 0.5 || HeaderWidthM <= 0 || TestWeightLbsBu <= 0)
             {
                 InstantYield = 0;
+                InstantWorkRate = 0;
                 IsFlowing = false;
-                Smooth(0);
+                Smooth(0, 0);
                 return 0;
             }
 
@@ -100,7 +104,8 @@ namespace YieldFlo.Classes
             if (!IsFlowing)
             {
                 InstantYield = 0;
-                Smooth(0);
+                InstantWorkRate = 0;
+                Smooth(0, 0);
                 return 0;
             }
 
@@ -119,7 +124,12 @@ namespace YieldFlo.Classes
 
             InstantYield = Math.Round(yieldBuAc, 1);
 
-            Smooth(InstantYield);
+            // Throughput (bu/hr). grainFlowIndex is the calibrated grain flow in
+            // lbs/s, so bu/hr = flow * 3600 / testweight — independent of ground
+            // speed and consistent with the accumulated bushel total.
+            InstantWorkRate = Math.Round(grainFlowIndex * 3600.0 / TestWeightLbsBu, 1);
+
+            Smooth(InstantYield, InstantWorkRate);
 
             return InstantYield;
         }
@@ -129,14 +139,17 @@ namespace YieldFlo.Classes
         /// flow stops so SmoothedYield decays to 0 instead of freezing at the
         /// last flowing value.
         /// </summary>
-        private void Smooth(double instant)
+        private void Smooth(double instantYield, double instantWork)
         {
-            _smoothAccum += instant;
+            _smoothAccum += instantYield;
+            _workAccum   += instantWork;
             _smoothCount++;
             if (_smoothCount >= SmoothWindow)
             {
-                SmoothedYield = Math.Round(_smoothAccum / _smoothCount, 1);
+                SmoothedYield    = Math.Round(_smoothAccum / _smoothCount, 1);
+                SmoothedWorkRate = Math.Round(_workAccum   / _smoothCount, 1);
                 _smoothAccum = 0;
+                _workAccum   = 0;
                 _smoothCount = 0;
             }
         }
@@ -153,8 +166,10 @@ namespace YieldFlo.Classes
         public void ResetSmoothing()
         {
             _smoothAccum = 0;
+            _workAccum = 0;
             _smoothCount = 0;
             SmoothedYield = 0;
+            SmoothedWorkRate = 0;
         }
     }
 }

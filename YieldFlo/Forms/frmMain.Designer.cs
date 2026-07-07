@@ -38,6 +38,7 @@ namespace YieldFlo.Forms
             this.lblSpeedTitle = new System.Windows.Forms.Label();
             this.pnlTotals = new System.Windows.Forms.Panel();
             this.lblTotRate = new System.Windows.Forms.Label();
+            this.lblWorkRate = new System.Windows.Forms.Label();
             this.lblTotTotal = new System.Windows.Forms.Label();
             this.lblTotArea = new System.Windows.Forms.Label();
             this.pnlSensors = new System.Windows.Forms.Panel();
@@ -334,6 +335,7 @@ namespace YieldFlo.Forms
             // pnlTotals
             // 
             this.pnlTotals.Controls.Add(this.lblTotRate);
+            this.pnlTotals.Controls.Add(this.lblWorkRate);
             this.pnlTotals.Controls.Add(this.lblTotTotal);
             this.pnlTotals.Controls.Add(this.lblTotArea);
             this.pnlTotals.Dock = System.Windows.Forms.DockStyle.Top;
@@ -348,30 +350,41 @@ namespace YieldFlo.Forms
             this.lblTotRate.ForeColor = System.Drawing.Color.Silver;
             this.lblTotRate.Location = new System.Drawing.Point(0, 0);
             this.lblTotRate.Name = "lblTotRate";
-            this.lblTotRate.Size = new System.Drawing.Size(166, 26);
+            this.lblTotRate.Size = new System.Drawing.Size(124, 26);
             this.lblTotRate.TabIndex = 0;
             this.lblTotRate.Text = "0.0 bu/ac";
             this.lblTotRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
+            // lblWorkRate
+            //
+            this.lblWorkRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblWorkRate.ForeColor = System.Drawing.Color.Silver;
+            this.lblWorkRate.Location = new System.Drawing.Point(124, 0);
+            this.lblWorkRate.Name = "lblWorkRate";
+            this.lblWorkRate.Size = new System.Drawing.Size(124, 26);
+            this.lblWorkRate.TabIndex = 1;
+            this.lblWorkRate.Text = "0.0 bu/hr";
+            this.lblWorkRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
             // lblTotTotal
-            // 
+            //
             this.lblTotTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblTotTotal.ForeColor = System.Drawing.Color.Silver;
-            this.lblTotTotal.Location = new System.Drawing.Point(166, 0);
+            this.lblTotTotal.Location = new System.Drawing.Point(248, 0);
             this.lblTotTotal.Name = "lblTotTotal";
-            this.lblTotTotal.Size = new System.Drawing.Size(166, 26);
-            this.lblTotTotal.TabIndex = 1;
+            this.lblTotTotal.Size = new System.Drawing.Size(124, 26);
+            this.lblTotTotal.TabIndex = 2;
             this.lblTotTotal.Text = "0 bu";
             this.lblTotTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
             // lblTotArea
-            // 
+            //
             this.lblTotArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblTotArea.ForeColor = System.Drawing.Color.Silver;
-            this.lblTotArea.Location = new System.Drawing.Point(332, 0);
+            this.lblTotArea.Location = new System.Drawing.Point(372, 0);
             this.lblTotArea.Name = "lblTotArea";
-            this.lblTotArea.Size = new System.Drawing.Size(164, 26);
-            this.lblTotArea.TabIndex = 2;
+            this.lblTotArea.Size = new System.Drawing.Size(124, 26);
+            this.lblTotArea.TabIndex = 3;
             this.lblTotArea.Text = "0.00 ac";
             this.lblTotArea.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -616,6 +629,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label lblTotArea;
         private System.Windows.Forms.Label lblTotTotal;
         private System.Windows.Forms.Label lblTotRate;
+        private System.Windows.Forms.Label lblWorkRate;
 
         private System.Windows.Forms.Panel pnlSensors;
         private System.Windows.Forms.Label lblSensorHeader;

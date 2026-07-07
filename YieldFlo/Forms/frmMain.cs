@@ -121,6 +121,7 @@ namespace YieldFlo.Forms
             lblTotArea.ForeColor = fore;
             lblTotTotal.ForeColor = fore;
             lblTotRate.ForeColor = fore;
+            lblWorkRate.ForeColor = fore;
             lblMoistureUnit.ForeColor = System.Drawing.Color.White;
             lblMoistureUnit.BackColor = dispBack;
 
@@ -219,9 +220,12 @@ namespace YieldFlo.Forms
             double total = Props.DisplayMass(Core.Collector.TotalBushels);
             double avg = Props.DisplayRate(Core.Collector.AverageYield);
 
+            double workRate = Props.DisplayMass(Core.Yield?.SmoothedWorkRate ?? 0);   // t/hr metric, bu/hr imperial
+
             lblTotArea.Text = $"{area:F2} {Props.AreaUnit}";
             lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
             lblTotRate.Text = $"{avg:F1} {Props.RateUnit}";
+            lblWorkRate.Text = $"{workRate:F1} {Props.MassUnit}/hr";
         }
 
         private void UpdateStatusBar()
