@@ -300,12 +300,34 @@ namespace YieldFlo.Forms
             { Props.ShowMessage(Lang.lgSelectHeaderFirst, "", 3000, true); return; }
 
             string name = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
+
+            // Guard against accidentally abandoning a job in progress — starting a
+            // new job closes the current one. Prompt whenever a job is active,
+            // including while auto-paused (e.g. a headland turn), since IsRecording
+            // briefly drops to false there and would otherwise skip the prompt.
+            if (Core.Collector.ActiveJobId > 0)
+            {
+                using var dlg = new frmMsgBox(string.Format(Lang.lgSwitchJobPrompt,
+                    Core.Collector.ActiveJobName, name));
+                dlg.ShowDialog(this);
+                if (!dlg.Result) return;
+            }
+
             int cropId    = _cropIds[cboCrop.SelectedIndex];
             int headerId  = _headerIds[cboHeader.SelectedIndex];
             int profileId = cboProfile.SelectedIndex >= 0 ? _profileIds[cboProfile.SelectedIndex] : 1;
             int fieldId   = cboField.SelectedIndex   >= 0 ? _fieldIds[cboField.SelectedIndex]     : -1;
 
             int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId, fieldId);
+
+            // A valid new job becomes the active (recording) job immediately.
+            // Same sequence as StartSelectedJob: apply its config, mark it Active,
+            // then switch the collector — which saves and closes the previously
+            // active job so only this one is active. Totals start at zero.
+            Core.LoadJobConfig(profileId, cropId, headerId);
+            Core.Database.Jobs.Reopen(jobId);
+            Core.Collector.LoadJob(jobId, name, 0, 0);
+            Core.RaiseJobStateChanged();
 
             LoadRecentJobs();
 

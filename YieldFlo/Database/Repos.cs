@@ -15,9 +15,14 @@ namespace YieldFlo.Database
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
+            // A newly created job is not yet recording — it becomes 'Active' only
+            // when Loaded (JobRepo.Reopen / Collector.LoadJob), which closes any
+            // previously active job. Creating it 'Active' here produced a second
+            // active row alongside the job actually recording, so the DB could
+            // hold two 'Active' jobs and resume the wrong one on next start.
             using var cmd = new SQLiteCommand(
                 "INSERT INTO jobs (name, profile_id, crop_id, header_id, field_id, status) " +
-                "VALUES (@n, @p, @c, @h, @f, 'Active'); SELECT last_insert_rowid();", conn);
+                "VALUES (@n, @p, @c, @h, @f, 'New'); SELECT last_insert_rowid();", conn);
             cmd.Parameters.AddWithValue("@n", name);
             cmd.Parameters.AddWithValue("@p", profileId);
             cmd.Parameters.AddWithValue("@c", cropId);
