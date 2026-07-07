@@ -89,6 +89,7 @@ namespace YieldFlo.Classes
             {
                 InstantYield = 0;
                 IsFlowing = false;
+                Smooth(0);
                 return 0;
             }
 
@@ -99,6 +100,7 @@ namespace YieldFlo.Classes
             if (!IsFlowing)
             {
                 InstantYield = 0;
+                Smooth(0);
                 return 0;
             }
 
@@ -117,8 +119,19 @@ namespace YieldFlo.Classes
 
             InstantYield = Math.Round(yieldBuAc, 1);
 
-            // Smoothing
-            _smoothAccum += InstantYield;
+            Smooth(InstantYield);
+
+            return InstantYield;
+        }
+
+        /// <summary>
+        /// Rolling-average smoothing. Zeros must be pushed through here when
+        /// flow stops so SmoothedYield decays to 0 instead of freezing at the
+        /// last flowing value.
+        /// </summary>
+        private void Smooth(double instant)
+        {
+            _smoothAccum += instant;
             _smoothCount++;
             if (_smoothCount >= SmoothWindow)
             {
@@ -126,8 +139,6 @@ namespace YieldFlo.Classes
                 _smoothAccum = 0;
                 _smoothCount = 0;
             }
-
-            return InstantYield;
         }
 
         /// <summary>
