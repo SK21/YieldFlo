@@ -191,9 +191,8 @@ namespace YieldFlo.Classes
             foreach (var c in Database.Crops.GetAll())
             {
                 if (c.id != cropId) continue;
-                Yield.TestWeightLbsBu   = c.testWeight;
-                Props.TestWeightKgPerBu = c.testWeight * 0.453592;
-                ActiveMoistureOffset    = c.moistureOffset;
+                Yield.TestWeightLbsBu = c.testWeight;   // Props.TestWeightKgPerBu derives from this
+                ActiveMoistureOffset  = c.moistureOffset;
                 break;
             }
 

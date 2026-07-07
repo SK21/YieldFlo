@@ -43,8 +43,12 @@ namespace YieldFlo.Classes
 
         // ── Units ─────────────────────────────────────────────────────────────
         // Internal values are always imperial (acres, bu, bu/ac).
-        // TestWeightKgPerBu can be overridden by the active crop profile.
-        public static double TestWeightKgPerBu { get; set; } = 25.4;  // default: corn (56 lb/bu)
+        // Test weight has a single source of truth — Core.Yield.TestWeightLbsBu,
+        // set from the active crop. This kg/bu view is derived from it so the two
+        // can never disagree (a stored second copy once drifted out of sync and
+        // skewed mass display and calibration). Falls back to the wheat default
+        // when the calculator is not yet constructed during early startup.
+        public static double TestWeightKgPerBu => (Core.Yield?.TestWeightLbsBu ?? 60.0) * 0.453592;
 
         public static bool IsMetric => Properties.Settings.Default.Units == "Metric";
         public static string AreaUnit => IsMetric ? "ha" : "ac";
