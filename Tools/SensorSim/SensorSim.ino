@@ -4,7 +4,8 @@
 // like the elevator optical sensor: blocked fraction of each period = the
 // sensor ratio the module should report.
 //
-// Board: any 3.3 V Arduino-compatible (ESP32 devkit, STM32 Blue Pill, ...).
+// Board: any 3.3 V Arduino-compatible (ESP32 devkit, ESP8266 D1 mini/pro,
+// STM32 Blue Pill, ...).
 // Do NOT drive the module's ESP32 pins from a 5 V board (Nano/Uno) without
 // a divider. Inject either at the YF1's ESP32-side test points (3.3 V) or
 // through the J7 sensor input conditioning at whatever level it expects.
@@ -25,8 +26,15 @@
 //
 // Defaults: 100 Hz, 30 % blocked, PNP, running.
 
+#if defined(ESP8266)
+#include <ESP8266WiFi.h>
+// Board pins are labeled D0-D8, NOT GPIO numbers: wire the pins marked D1/D2.
+const uint8_t MAIN_PIN = 5;   // pin labeled D1 on a WeMos/LOLIN D1 mini (pro)
+const uint8_t COMP_PIN = 4;   // pin labeled D2
+#else
 const uint8_t MAIN_PIN = 25;
 const uint8_t COMP_PIN = 26;
+#endif
 
 uint16_t dutyPct  = 30;     // % of period blocked
 uint16_t freqHz   = 100;
@@ -69,12 +77,20 @@ void printStatus()
 
 void setup()
 {
+#if defined(ESP8266)
+	// The ESP8266 core starts WiFi by default (and retries any saved SSID),
+	// stalling loop() for tens of ms — which stretches our software-timed
+	// segments and corrupts the duty cycle. This sketch never needs WiFi.
+	WiFi.mode(WIFI_OFF);
+	WiFi.forceSleepBegin();
+#endif
 	pinMode(MAIN_PIN, OUTPUT);
 	pinMode(COMP_PIN, OUTPUT);
 	Serial.begin(115200);
 	applySettings();
 	writeBeam(false);
 	phaseStartUs = micros();
+	Serial.println();
 	Serial.println("SensorSim ready. Commands: d <pct>, f <hz>, p, s, g, b, c, ?");
 	printStatus();
 }

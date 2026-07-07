@@ -119,6 +119,7 @@ namespace YieldFlo.Forms
         {
             Core.Yield.StartCalRun();
             lblCalResult.Text = "";
+            numActualWeight.Value = 0;   // stale weight from a previous run must not be reused
             btnApplyFactor.Enabled = false;
             _calTimer.Start();
             UpdateCalRunButtons();
@@ -234,6 +235,11 @@ namespace YieldFlo.Forms
             // instantaneous read can catch a spiked packet (e.g. a no-pulse
             // 100% reading) and store a baseline far off the true idle ratio.
             _baselineSamples.Clear();
+
+            // Park focus elsewhere first: disabling the focused button makes
+            // WinForms select the next control in tab order (numFactor), whose
+            // numpad focus hook would pop the number-entry screen open.
+            btnSaveCal.Focus();
             btnSetBaseline.Enabled = false;
 
             if (_baselineTimer == null)
@@ -273,6 +279,22 @@ namespace YieldFlo.Forms
             decimal clamped = (decimal)Math.Min((double)numBaseline.Maximum,
                                Math.Max((double)numBaseline.Minimum, median));
             numBaseline.Value = clamped;
+
+            // Apply immediately — the user just confirmed this value, so the
+            // yield math must use it now, not only after Save Cal is pressed.
+            Core.Yield.SensorBaseline = (double)clamped;
+            Core.Yield.ResetSmoothing();
+
+            if (Core.ActiveProfileId > 0 && Core.ActiveCropId > 0)
+            {
+                Core.Database.Calibrations.Save(
+                    Core.ActiveProfileId, Core.ActiveCropId,
+                    (double)clamped,
+                    (double)numFactor.Value,
+                    (int)numDelay.Value);
+            }
+
+            Props.ShowMessage(Lang.lgCalSaved);
         }
 
         private void frmMenuCalibrate_Shown(object sender, EventArgs e)

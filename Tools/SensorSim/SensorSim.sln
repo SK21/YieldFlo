@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11925.98
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SensorSim", "SensorSim.vcxproj", "{2ECCD1FC-E310-15A0-5AD0-DC6447551404}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Debug|ARM.Build.0 = Debug|ARM
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Debug|ARM.Deploy.0 = Debug|ARM
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Debug|ARM64.Build.0 = Debug|ARM64
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Release|ARM.ActiveCfg = Release|ARM
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Release|ARM.Build.0 = Release|ARM
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Release|ARM.Deploy.0 = Release|ARM
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Release|ARM64.ActiveCfg = Release|ARM64
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Release|ARM64.Build.0 = Release|ARM64
+		{2ECCD1FC-E310-15A0-5AD0-DC6447551404}.Release|ARM64.Deploy.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A2A937A-85CA-46CB-8F52-622C817DEBF0}
+	EndGlobalSection
+EndGlobal
