@@ -27,14 +27,32 @@ namespace YieldFlo.Forms
         // Click-vs-drag detection on gmap in mini mode
         private Point _gmapClickStart;
 
-        // Precomputed legend tick text (set by BuildSwathOverlay, drawn in pnlLegend_Paint)
+        // Precomputed legend tick text (set on a full rebuild, drawn in pnlLegend_Paint)
         private string[] _tickText;
 
         // GDI brushes/pens owned by the current swath overlay. Polygons share these;
-        // they must be disposed on every rebuild — the live timer rebuilds the overlay
-        // every 5 s, and leaking ~6000 handles per rebuild exhausts the 10k GDI limit
-        // (coverage and legend go blank once drawing starts failing).
+        // they must be disposed on every full rebuild — leaking ~6000 handles per
+        // rebuild exhausts the 10k GDI limit (coverage and legend go blank once
+        // drawing starts failing).
         private readonly List<IDisposable> _overlayGdi = new List<IDisposable>();
+
+        // Persistent swath overlay + incremental-draw state. The live timer must NOT
+        // rebuild everything every 5 s (that erases the painted coverage for a frame
+        // and rescales/redraws the legend). Instead we keep one overlay, freeze the
+        // colour scale on the first build, and append only swaths for new points.
+        private GMapOverlay _yieldOverlay;
+        private int    _drawnRawCount;               // raw points already turned into swaths
+        private double _scaleMin, _scaleMax, _scaleRange;
+        private bool   _scaleSet;
+        private Dictionary<int, SolidBrush> _brushCache;  // shared across rebuild + append
+        private Pen    _stroke;
+
+        // Ribbon-break guards (match RateController YieldOverlayCreator). A segment is
+        // drawn only where grain flows on both ends AND the two points are close in
+        // space and time — otherwise the machine travelled that ground without grain
+        // (flow stopped, headland turn, GPS jump) and it must stay blank.
+        private const double MaxBridgeMeters  = 5.0;
+        private const double MaxBridgeSeconds = 3.0;
 
         // Job list
         private readonly List<int> _jobIds = new List<int>();
@@ -59,7 +77,12 @@ namespace YieldFlo.Forms
             Core.JobStateChanged += Core_JobStateChanged;
             this.FormClosed += (s, ev) => Core.JobStateChanged -= Core_JobStateChanged;
 
-            _liveTimer = new System.Windows.Forms.Timer { Interval = 5000 };
+            // Mini map follows the vehicle (like RateController): re-centre on the
+            // current GPS fix each update. Unsubscribed on close.
+            Core.UpdateDisplay += Core_UpdateDisplay;
+            this.FormClosed += (s, ev) => Core.UpdateDisplay -= Core_UpdateDisplay;
+
+            _liveTimer = new System.Windows.Forms.Timer { Interval = 2000 };
             _liveTimer.Tick += LiveTimer_Tick;
             _liveTimer.Start();
             this.FormClosed += (s, ev) => _liveTimer.Stop();
@@ -74,6 +97,19 @@ namespace YieldFlo.Forms
                 SelectCurrentJob();
                 LoadYieldData();
             }));
+        }
+
+        // Keep the mini map centred on the vehicle. Fires on the UI thread with each
+        // display update (same event frmMain uses to refresh gauges). Full mode is
+        // left free so the operator can pan/zoom the whole field. Only Position is
+        // set — the current zoom is preserved.
+        private void Core_UpdateDisplay(object sender, EventArgs e)
+        {
+            if (!_isMini || this.IsDisposed || !this.IsHandleCreated) return;
+            var gps = Core.GPS;
+            if (gps == null || !gps.IsConnected) return;
+            if (gps.Latitude == 0 && gps.Longitude == 0) return;
+            gmap.Position = new PointLatLng(gps.Latitude, gps.Longitude);
         }
 
         private void LiveTimer_Tick(object sender, EventArgs e)
@@ -238,16 +274,21 @@ namespace YieldFlo.Forms
 
         // ── Yield overlay ─────────────────────────────────────────────────────
 
+        // Job whose data is currently drawn — lets a transient failure (locked DB
+        // read, combo mid-reload) keep the existing drawing instead of wiping it.
+        private int _drawnJobId = -1;
+
         private void ClearSwathOverlay()
         {
             gmap.Overlays.Clear();
             foreach (var d in _overlayGdi) d.Dispose();
             _overlayGdi.Clear();
+            _yieldOverlay  = null;
+            _brushCache    = null;
+            _stroke        = null;
+            _scaleSet      = false;
+            _drawnRawCount = 0;
         }
-
-        // Job whose data is currently drawn — lets a transient failure (locked DB
-        // read, combo mid-reload) keep the existing drawing instead of wiping it.
-        private int _drawnJobId = -1;
 
         private void LoadYieldData(bool center = true)
         {
@@ -255,19 +296,6 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobIds.Count) return;   // combo mid-reload — keep current drawing
 
             int jobId = _jobIds[idx];
-
-            // Resolve header width for this job
-            _headerWidthM = 9.144;
-            foreach (var j in Core.Database.Jobs.GetAll())
-            {
-                if (j.id != jobId) continue;
-                if (j.headerId > 0)
-                {
-                    foreach (var h in Core.Database.Headers.GetAll())
-                        if (h.id == j.headerId) { _headerWidthM = h.widthM; break; }
-                }
-                break;
-            }
 
             List<YieldDataPoint> points;
             try   { points = Core.Database.YieldData.GetByJob(jobId); }
@@ -281,27 +309,57 @@ namespace YieldFlo.Forms
                 return;
             }
 
-            // Build the replacement fully, then swap — clearing before building
-            // leaves the map erased whenever anything later fails or returns early.
-            var oldGdi = new List<IDisposable>(_overlayGdi);
-            _overlayGdi.Clear();
-            var overlay = BuildSwathOverlay(points);
+            // Live update of the same job: if only new points arrived and they all
+            // fall within the frozen colour scale, append their swaths to the
+            // existing overlay instead of rebuilding. This is what stops the coverage
+            // flashing away and the legend being redrawn on every 5 s tick.
+            bool sameJob = jobId == _drawnJobId && _yieldOverlay != null && _scaleSet;
+            if (sameJob && points.Count >= _drawnRawCount)
+            {
+                bool outOfScale = false;
+                for (int i = _drawnRawCount; i < points.Count; i++)
+                {
+                    double y = points[i].YieldRate;
+                    if (y > 0 && (y < _scaleMin || y > _scaleMax)) { outOfScale = true; break; }
+                }
+                if (!outOfScale)
+                {
+                    // Bridge each new point to its predecessor so coverage stays
+                    // continuous (start at 1 so points[i-1] is valid; _drawnRawCount
+                    // is the first unbridged point, whose predecessor is already drawn).
+                    for (int i = Math.Max(1, _drawnRawCount); i < points.Count; i++)
+                        AddSwath(_yieldOverlay, points[i - 1], points[i]);
+                    _drawnRawCount = points.Count;
+                    // gmap.Refresh() — a plain Invalidate leaves the tile-cached
+                    // control unpainted, so appended swaths never show (matches the
+                    // RateControl GMap usage).
+                    gmap.Refresh();
+                    if (center) CenterOnData(points);
+                    return;
+                }
+            }
 
-            gmap.Overlays.Clear();
-            gmap.Overlays.Add(overlay);
-            _drawnJobId = jobId;
-
-            // Old polygons are no longer referenced by the map — safe to release
-            foreach (var d in oldGdi) d.Dispose();
-
-            if (center) CenterOnData(points);
+            // Full (re)build: new job, or new data pushed past the frozen scale so
+            // every swath's colour must be recomputed.
+            RebuildSwaths(points, jobId, center);
         }
 
-        private GMapOverlay BuildSwathOverlay(List<YieldDataPoint> points)
+        private void RebuildSwaths(List<YieldDataPoint> points, int jobId, bool center)
         {
-            var overlay = new GMapOverlay("yield");
+            // Header width can change between jobs; resolve it on a full rebuild only.
+            _headerWidthM = 9.144;
+            foreach (var j in Core.Database.Jobs.GetAll())
+            {
+                if (j.id != jobId) continue;
+                if (j.headerId > 0)
+                {
+                    foreach (var h in Core.Database.Headers.GetAll())
+                        if (h.id == j.headerId) { _headerWidthM = h.widthM; break; }
+                }
+                break;
+            }
 
-            // Compute yield range (skip zeroes)
+            // Colour scale = min..max of positive yields, frozen until the next rebuild.
             double minY = double.MaxValue, maxY = double.MinValue;
             foreach (var pt in points)
             {
@@ -309,82 +367,124 @@ namespace YieldFlo.Forms
                 if (pt.YieldRate < minY) minY = pt.YieldRate;
                 if (pt.YieldRate > maxY) maxY = pt.YieldRate;
             }
-            if (minY > maxY) return overlay;   // no positive yields yet — empty overlay
-            double yRange = Math.Max(0.1, maxY - minY);
 
+            var newOverlay = new GMapOverlay("yield");
+            var oldGdi     = new List<IDisposable>(_overlayGdi);
+            _overlayGdi.Clear();
+
+            if (minY > maxY)
+            {
+                // No positive yields yet — show an empty overlay, no scale/legend.
+                _scaleSet = false;
+                _tickText = null;
+                pnlLegend.Invalidate();
+            }
+            else
+            {
+                _scaleMin   = minY;
+                _scaleMax   = maxY;
+                _scaleRange = Math.Max(0.1, maxY - minY);
+                _scaleSet   = true;
+
+                UpdateLegendTicks();
+
+                _brushCache = new Dictionary<int, SolidBrush>();
+                _stroke     = new Pen(Color.FromArgb(0, Color.Black));
+                _overlayGdi.Add(_stroke);
+
+                // Bridge every consecutive pair; AddSwath itself breaks the ribbon
+                // across no-yield stretches and space/time gaps (no thinning — that
+                // would inflate the gap between drawn points past the break guards).
+                for (int i = 1; i < points.Count; i++)
+                    AddSwath(newOverlay, points[i - 1], points[i]);
+            }
+
+            gmap.Overlays.Clear();
+            gmap.Overlays.Add(newOverlay);
+            _yieldOverlay  = newOverlay;
+            _drawnJobId    = jobId;
+            _drawnRawCount = points.Count;
+
+            foreach (var d in oldGdi) d.Dispose();   // old polygons no longer referenced
+
+            gmap.Refresh();
+            if (center) CenterOnData(points);
+        }
+
+        // Adds one swath as a ribbon quad spanning from point a to point b, coloured
+        // by b's yield. Drawing a segment BETWEEN consecutive points (instead of a
+        // fixed-length rectangle centred on one point) guarantees continuous coverage
+        // regardless of speed or GPS-point spacing — the old approach guessed the
+        // length from speed×time and left gaps whenever the guess fell short.
+        private void AddSwath(GMapOverlay overlay, YieldDataPoint a, YieldDataPoint b)
+        {
+            // Both ends must carry grain — a ribbon must never bridge FROM a no-yield
+            // point (the ground travelled empty stays blank).
+            if (!_scaleSet || a.YieldRate <= 0 || b.YieldRate <= 0 || b.Speed < 0.5) return;
+
+            // Break across a time gap (stop / headland turn / auto-pause resume).
+            double dt = (b.Timestamp - a.Timestamp).TotalSeconds;
+            if (dt <= 0 || dt > MaxBridgeSeconds) return;
+
+            var corners = ComputeSegmentCorners(
+                a.Latitude, a.Longitude, b.Latitude, b.Longitude, _headerWidthM, MaxBridgeMeters);
+            if (corners == null) return;   // points coincide or spatial gap too large
+
+            double t   = Math.Max(0, Math.Min(1, (b.YieldRate - _scaleMin) / _scaleRange));
+            int    key = (int)Math.Round(t * 100);
+            if (!_brushCache.TryGetValue(key, out SolidBrush fill))
+            {
+                fill = new SolidBrush(Color.FromArgb(210, YieldToColor(key / 100.0)));
+                _brushCache[key] = fill;
+                _overlayGdi.Add(fill);
+            }
+
+            overlay.Polygons.Add(new GMapPolygon(corners, "s") { Fill = fill, Stroke = _stroke });
+        }
+
+        // Recomputes the 5 legend tick labels from the frozen scale. Called only on a
+        // full rebuild, so the legend no longer flickers/rescales on every live tick.
+        private void UpdateLegendTicks()
+        {
             var texts = new string[5];
             double[] tStops = { 0.0, 0.25, 0.5, 0.75, 1.0 };
             for (int i = 0; i < 5; i++)
             {
-                double disp = Props.DisplayRate(minY + tStops[i] * (maxY - minY));
+                double disp = Props.DisplayRate(_scaleMin + tStops[i] * (_scaleMax - _scaleMin));
                 string num  = Props.IsMetric ? $"{disp:F1}" : $"{disp:F0}";
                 texts[i]    = (i == 0 || i == 4) ? $"{num} {Props.RateUnit}" : num;
             }
             _tickText = texts;
             pnlLegend.Invalidate();
-
-            // Thin points to keep polygon count manageable
-            int step = Math.Max(1, points.Count / 3000);
-
-            // Polygons share pooled brushes (yield quantized to 100 colour steps) and
-            // one invisible stroke pen instead of owning ~2 GDI handles each.
-            var brushCache = new Dictionary<int, SolidBrush>();
-            var stroke = new Pen(Color.FromArgb(0, Color.Black));
-            _overlayGdi.Add(stroke);
-
-            for (int i = 0; i < points.Count; i += step)
-            {
-                var pt = points[i];
-                if (pt.YieldRate <= 0 || pt.Speed < 0.5) continue;
-
-                double lengthM = Math.Max(0.5, (pt.Speed / 3.6) * step);
-                var corners = ComputeSwathCorners(
-                    pt.Latitude, pt.Longitude, pt.Heading,
-                    _headerWidthM, lengthM);
-
-                double t   = Math.Max(0, Math.Min(1, (pt.YieldRate - minY) / yRange));
-                int    key = (int)Math.Round(t * 100);
-                if (!brushCache.TryGetValue(key, out SolidBrush fill))
-                {
-                    fill = new SolidBrush(Color.FromArgb(210, YieldToColor(key / 100.0)));
-                    brushCache[key] = fill;
-                    _overlayGdi.Add(fill);
-                }
-
-                var poly = new GMapPolygon(corners, "s")
-                {
-                    Fill   = fill,
-                    Stroke = stroke
-                };
-                overlay.Polygons.Add(poly);
-            }
-
-            return overlay;
         }
 
-        private static List<PointLatLng> ComputeSwathCorners(
-            double lat, double lon, double headingDeg,
-            double widthM, double lengthM)
+        // Builds a header-width ribbon quad from point 1 to point 2. The two long
+        // edges are offset perpendicular to the travel direction by half the header
+        // width, so consecutive segments share an edge and tile without gaps on
+        // straight runs. Returns null if the points coincide (no direction).
+        private static List<PointLatLng> ComputeSegmentCorners(
+            double lat1, double lon1, double lat2, double lon2, double widthM, double maxLenM)
         {
-            double hdg     = headingDeg * Math.PI / 180.0;
+            double midLat  = (lat1 + lat2) / 2.0;
             double mPerLat = 111320.0;
-            double mPerLon = Math.Max(1.0, 111320.0 * Math.Cos(lat * Math.PI / 180.0));
+            double mPerLon = Math.Max(1.0, 111320.0 * Math.Cos(midLat * Math.PI / 180.0));
 
-            // Forward and perpendicular unit vectors in lat/lon space
-            double fwdLat  =  Math.Cos(hdg) / mPerLat;
-            double fwdLon  =  Math.Sin(hdg)  / mPerLon;
-            double perpLat = -Math.Sin(hdg)  / mPerLat;
-            double perpLon =  Math.Cos(hdg)  / mPerLon;
+            double dEast  = (lon2 - lon1) * mPerLon;
+            double dNorth = (lat2 - lat1) * mPerLat;
+            double len    = Math.Sqrt(dEast * dEast + dNorth * dNorth);
+            if (len < 0.05 || len > maxLenM) return null;   // no movement, or gap too large to bridge
 
-            double hL = lengthM / 2.0;
-            double hW = widthM  / 2.0;
+            // Unit perpendicular (travel direction rotated 90°), scaled to half width.
+            double hW    = widthM / 2.0;
+            double pLat  = ( dEast  / len) * hW / mPerLat;
+            double pLon  = (-dNorth / len) * hW / mPerLon;
 
             return new List<PointLatLng>
             {
-                new PointLatLng(lat + hL*fwdLat + hW*perpLat, lon + hL*fwdLon + hW*perpLon),
-                new PointLatLng(lat + hL*fwdLat - hW*perpLat, lon + hL*fwdLon - hW*perpLon),
-                new PointLatLng(lat - hL*fwdLat - hW*perpLat, lon - hL*fwdLon - hW*perpLon),
-                new PointLatLng(lat - hL*fwdLat + hW*perpLat, lon - hL*fwdLon + hW*perpLon),
+                new PointLatLng(lat1 + pLat, lon1 + pLon),
+                new PointLatLng(lat2 + pLat, lon2 + pLon),
+                new PointLatLng(lat2 - pLat, lon2 - pLon),
+                new PointLatLng(lat1 - pLat, lon1 - pLon),
             };
         }
 
