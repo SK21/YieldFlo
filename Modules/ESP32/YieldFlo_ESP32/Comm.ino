@@ -69,14 +69,31 @@ void CheckCanBus()
 		twai_start();
 	}
 
-	// Status line every 5 s — the controller's own account of what is wrong:
+	// Status line — the controller's own account of what is wrong:
 	//   msgs_to_tx growing + no errors = RX line stuck dominant (bus "always busy")
 	//   tx_error_counter pinned high   = frames going out but never ACKed
 	//   bus_error_count climbing       = bit/form errors (TXD/RXD wiring)
+	// Checked every 5 s but printed only when something changed, so a healthy
+	// steady bus is silent and a developing fault still logs every 5 s.
 	static uint32_t LastStatusMs = 0;
+	static twai_status_info_t PrevSt;
+	static bool StatusPrinted = false;
 	if (millis() - LastStatusMs > 5000)
 	{
 		LastStatusMs = millis();
+
+		if (StatusPrinted
+			&& st.state == PrevSt.state
+			&& st.msgs_to_tx == PrevSt.msgs_to_tx
+			&& st.tx_error_counter == PrevSt.tx_error_counter
+			&& st.rx_error_counter == PrevSt.rx_error_counter
+			&& st.tx_failed_count == PrevSt.tx_failed_count
+			&& st.bus_error_count == PrevSt.bus_error_count
+			&& st.arb_lost_count == PrevSt.arb_lost_count) return;
+
+		PrevSt = st;
+		StatusPrinted = true;
+
 		Serial.print("CAN state=");
 		Serial.print((int)st.state);
 		Serial.print(" txq=");

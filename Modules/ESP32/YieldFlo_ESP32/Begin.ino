@@ -206,7 +206,11 @@ void DoSetup()
 	// CAN bus (TWAI) — only when configured; WiFi AP stays active for web portal regardless
 	if (MDL.CommMode == CommModeCan)
 	{
-		Serial.println("Starting TWAI CAN ...");
+		Serial.print("Starting TWAI CAN (TX GPIO ");
+		Serial.print(MDL.CanTxPin);
+		Serial.print(", RX GPIO ");
+		Serial.print(MDL.CanRxPin);
+		Serial.println(") ...");
 		twai_general_config_t g = TWAI_GENERAL_CONFIG_DEFAULT(
 			(gpio_num_t)MDL.CanTxPin, (gpio_num_t)MDL.CanRxPin, TWAI_MODE_NORMAL);
 		twai_timing_config_t  t = TWAI_TIMING_CONFIG_250KBITS();
@@ -305,77 +309,33 @@ void LoadData()
 // valid pins for each processor
 uint8_t ValidPins0[] = { 0,2,4,5,13,14,15,16,17,18,19,21,22,23,25,26,27,32,33,34,35,36,39 };
 
+bool PinValid(uint8_t pin)
+{
+	for (int i = 0; i < sizeof(ValidPins0); i++)
+	{
+		if (pin == ValidPins0[i]) return true;
+	}
+	return false;
+}
+
 bool ValidData()
 {
-	bool Result = false;
+	// optional pins: NC allowed, otherwise must be in the valid list
+	if (MDL.RPMpin != NC && !PinValid(MDL.RPMpin)) return false;
+	if (MDL.CompPin != NC && !PinValid(MDL.CompPin)) return false;
+	if (MDL.MainPin != NC && !PinValid(MDL.MainPin)) return false;
+	if (MDL.AlertPin != NC && !PinValid(MDL.AlertPin)) return false;
+	if (MDL.AnalogPin != NC && !PinValid(MDL.AnalogPin)) return false;
 
-	// RPM pin
-	Result = (MDL.RPMpin == NC);
-	if (!Result)
-	{
-		for (int i = 0; i < sizeof(ValidPins0); i++)
-		{
-			if (MDL.RPMpin == ValidPins0[i])
-			{
-				Result = true;
-				break;
-			}
-		}
-	}
+	// CAN pins are fixed by the PCB and never NC. A corrupt value here makes
+	// TWAI start on the wrong GPIO: the controller reads permanent dominant,
+	// never joins the bus, and hangs silently with ALL error counters at zero.
+	if (!PinValid(MDL.CanTxPin)) return false;
+	if (!PinValid(MDL.CanRxPin)) return false;
 
-	// complementary pin
-	if (Result && MDL.CompPin < NC)
-	{
-		for (int i = 0; i < sizeof(ValidPins0); i++)
-		{
-			if (MDL.CompPin == ValidPins0[i])
-			{
-				Result = true;
-				break;
-			}
-		}
-	}
+	if (MDL.CommMode > CommModeEth) return false;
 
-	// main pin
-	if (Result && MDL.MainPin < NC)
-	{
-		for (int i = 0; i < sizeof(ValidPins0); i++)
-		{
-			if (MDL.MainPin == ValidPins0[i])
-			{
-				Result = true;
-				break;
-			}
-		}
-	}
-
-	// alert pin
-	if (Result && MDL.AlertPin < NC)
-	{
-		for (int i = 0; i < sizeof(ValidPins0); i++)
-		{
-			if (MDL.AlertPin == ValidPins0[i])
-			{
-				Result = true;
-				break;
-			}
-		}
-	}
-
-	// analog pin
-	if (Result && MDL.AnalogPin < NC)
-	{
-		for (int i = 0; i < sizeof(ValidPins0); i++)
-		{
-			if (MDL.AnalogPin == ValidPins0[i])
-			{
-				Result = true;
-				break;
-			}
-		}
-	}
-
-	return Result;
+	return true;
 }
 
 void LoadDefaults()
