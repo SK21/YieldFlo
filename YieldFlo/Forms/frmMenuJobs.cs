@@ -21,6 +21,7 @@ namespace YieldFlo.Forms
 
         private int  _sortCol = 2;   // Date by default
         private bool _sortAsc = false; // newest first
+        private bool _creatingNew = false;  // true between New (prepare) and Save (commit)
 
         private string[] _colNames;
 
@@ -288,23 +289,37 @@ namespace YieldFlo.Forms
             int fi = _fieldIds.IndexOf(job.fieldId);
             cboField.SelectedIndex = fi >= 0 ? fi : 0;
 
+            _creatingNew = false;   // selecting an existing job leaves draft mode
             btnSave.Enabled = true;
         }
 
         // ── New ───────────────────────────────────────────────────────────────
         private void btnNew_Click(object sender, EventArgs e)
         {
+            // Prepare an editable draft only — nothing is written to the DB and no
+            // job is started until Save is pressed (see CreateAndStartNewJob).
+            _creatingNew = true;
+            lvJobs.SelectedItems.Clear();   // leave "edit existing job" mode
+            SetDefaultSelections();         // default name + current crop/header/profile, field (none)
+            txtNotes.Text = "";
+            btnSave.Enabled   = true;
+            btnLoad.Enabled   = false;
+            btnDelete.Enabled = false;
+            txtJobName.Focus();
+        }
+
+        // Commit a prepared draft: create the job, then start it (which closes and
+        // saves any job currently active). Called from Save when in draft mode.
+        private void CreateAndStartNewJob(string name)
+        {
             if (cboCrop.SelectedIndex < 0 || _cropIds.Count == 0)
             { Props.ShowMessage(Lang.lgSelectCropFirst, "", 3000, true); return; }
             if (cboHeader.SelectedIndex < 0 || _headerIds.Count == 0)
             { Props.ShowMessage(Lang.lgSelectHeaderFirst, "", 3000, true); return; }
 
-            string name = "Job " + DateTime.Now.ToString("yyyyMMdd-HHmm");
-
-            // Guard against accidentally abandoning a job in progress — starting a
-            // new job closes the current one. Prompt whenever a job is active,
-            // including while auto-paused (e.g. a headland turn), since IsRecording
-            // briefly drops to false there and would otherwise skip the prompt.
+            // Guard against accidentally abandoning a job in progress. Prompt
+            // whenever a job is active, including while auto-paused (e.g. a headland
+            // turn), since IsRecording briefly drops to false there.
             if (Core.Collector.ActiveJobId > 0)
             {
                 using var dlg = new frmMsgBox(string.Format(Lang.lgSwitchJobPrompt,
@@ -319,16 +334,18 @@ namespace YieldFlo.Forms
             int fieldId   = cboField.SelectedIndex   >= 0 ? _fieldIds[cboField.SelectedIndex]     : -1;
 
             int jobId = Core.Database.Jobs.Create(name, profileId, cropId, headerId, fieldId);
+            string notes = txtNotes.Text.Trim();
+            if (notes.Length > 0)
+                Core.Database.Jobs.Update(jobId, name, cropId, headerId, profileId, fieldId, notes);
 
-            // A valid new job becomes the active (recording) job immediately.
-            // Same sequence as StartSelectedJob: apply its config, mark it Active,
-            // then switch the collector — which saves and closes the previously
-            // active job so only this one is active. Totals start at zero.
+            // Start it: apply config, mark Active, then switch the collector —
+            // which saves and closes the previously active job. Totals start at zero.
             Core.LoadJobConfig(profileId, cropId, headerId);
             Core.Database.Jobs.Reopen(jobId);
             Core.Collector.LoadJob(jobId, name, 0, 0);
             Core.RaiseJobStateChanged();
 
+            _creatingNew = false;
             LoadRecentJobs();
 
             int idx = _jobData.FindIndex(j => j.jobId == jobId);
@@ -354,14 +371,22 @@ namespace YieldFlo.Forms
         // ── Save (create new or update existing) ─────────────────────────────
         private void btnSave_Click(object sender, EventArgs e)
         {
+            string name = txtJobName.Text.Trim();
+            if (string.IsNullOrEmpty(name))
+            { Props.ShowMessage(Lang.lgEnterJobName, "", 2000, true); return; }
+
+            // Draft from New: create and start the job.
+            if (_creatingNew)
+            {
+                CreateAndStartNewJob(name);
+                return;
+            }
+
+            // Otherwise update the selected existing job.
             if (lvJobs.SelectedIndices.Count == 0) return;
 
             int idx = lvJobs.SelectedIndices[0];
             if (idx < 0 || idx >= _jobData.Count) return;
-
-            string name = txtJobName.Text.Trim();
-            if (string.IsNullOrEmpty(name))
-            { Props.ShowMessage(Lang.lgEnterJobName, "", 2000, true); return; }
 
             var job2      = _jobData[idx];
             int cropId    = cboCrop.SelectedIndex    >= 0 ? _cropIds[cboCrop.SelectedIndex]       : job2.cropId;
