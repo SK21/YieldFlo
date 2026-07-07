@@ -136,19 +136,44 @@ namespace YieldFlo.Forms
 
         private void btnApplyFactor_Click(object sender, EventArgs e)
         {
-            double actualBushels = DisplayMassToInternalBushels((double)numActualWeight.Value);
+            // Diagnostic snapshot — captured before anything mutates, so a
+            // reported "wrong yield factor" can be reconstructed exactly from
+            // the log instead of from recollection. Records the raw entry, both
+            // test-weight sources (to catch a Props/Yield mismatch), and the
+            // computed result, including the two paths where Apply does nothing.
+            double enteredDisplay = (double)numActualWeight.Value;
+            double actualBushels  = DisplayMassToInternalBushels(enteredDisplay);
+            double oldFactor      = Core.Yield?.YieldFactor ?? 0;
+            double calRunBushels  = Core.Yield?.CalRunBushels ?? 0;
+            double twKgDisplay    = Props.TestWeightKgPerBu;
+            double twLbsYield     = Core.Yield?.TestWeightLbsBu ?? 0;
+
+            string diag = "ApplyCal: "
+                + $"entered={enteredDisplay:F1} {(Props.IsMetric ? "kg" : "lbs")}, "
+                + $"actualBushels={actualBushels:F4}, "
+                + $"calRunBushels={calRunBushels:F4}, "
+                + $"oldFactor={oldFactor:F4}, "
+                + $"TWkgDisplay={twKgDisplay:F4}, TWlbsYield={twLbsYield:F4}, "
+                + $"TWlbsYield*0.453592={twLbsYield * 0.453592:F4}, "
+                + $"isMetric={Props.IsMetric}, running={Core.Yield?.IsCalRunActive}, "
+                + $"profileId={Core.ActiveProfileId}, cropId={Core.ActiveCropId}";
+
             if (actualBushels <= 0)
             {
+                Props.WriteErrorLog(diag + " -> ABORT (entered weight <= 0)");
                 Props.ShowMessage(Lang.lgEnterWeighedAmt, "", 2000, true);
                 return;
             }
             if (Core.Yield.CalRunBushels <= 0)
             {
+                Props.WriteErrorLog(diag + " -> ABORT (no measured data)");
                 Props.ShowMessage(Lang.lgNoMeasuredData, "", 2000, true);
                 return;
             }
 
             double newFactor = Core.Yield.ComputeNewFactor(actualBushels);
+            Props.WriteErrorLog(diag + $" -> newFactor={newFactor:F4} "
+                + $"(ratio={actualBushels / calRunBushels:F4})");
             Core.Yield.ResetSmoothing();
 
             // Clamp to valid range and update the field
