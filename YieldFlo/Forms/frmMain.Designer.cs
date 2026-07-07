@@ -104,13 +104,13 @@ namespace YieldFlo.Forms
             this.btnStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(110)))), ((int)(((byte)(0)))));
             this.btnStart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnStart.Font = new System.Drawing.Font("Segoe UI Symbol", 14F, System.Drawing.FontStyle.Regular);
             this.btnStart.ForeColor = System.Drawing.Color.White;
             this.btnStart.Location = new System.Drawing.Point(67, 5);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(68, 34);
             this.btnStart.TabIndex = 1;
-            this.btnStart.Text = global::YieldFlo.Language.Lang.lgStart;
+            this.btnStart.Text = "▶";
             this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
@@ -119,13 +119,13 @@ namespace YieldFlo.Forms
             this.btnPause.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(88)))), ((int)(((byte)(0)))));
             this.btnPause.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnPause.Font = new System.Drawing.Font("Segoe UI Symbol", 14F, System.Drawing.FontStyle.Regular);
             this.btnPause.ForeColor = System.Drawing.Color.White;
             this.btnPause.Location = new System.Drawing.Point(138, 5);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(68, 34);
             this.btnPause.TabIndex = 2;
-            this.btnPause.Text = global::YieldFlo.Language.Lang.lgPause;
+            this.btnPause.Text = "❚❚";
             this.btnPause.UseVisualStyleBackColor = false;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
@@ -134,13 +134,13 @@ namespace YieldFlo.Forms
             this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnStop.Font = new System.Drawing.Font("Segoe UI Symbol", 14F, System.Drawing.FontStyle.Regular);
             this.btnStop.ForeColor = System.Drawing.Color.White;
             this.btnStop.Location = new System.Drawing.Point(209, 5);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(68, 34);
             this.btnStop.TabIndex = 3;
-            this.btnStop.Text = global::YieldFlo.Language.Lang.lgStop;
+            this.btnStop.Text = "■";
             this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 

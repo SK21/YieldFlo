@@ -330,9 +330,23 @@ namespace YieldFlo.Forms
 
         private void SetJobButtons(bool jobActive)
         {
-            btnStart.Enabled = !jobActive;
-            btnPause.Enabled = jobActive;
-            btnStop.Enabled = jobActive || Core.Collector.ActiveJobId > 0;
+            // jobActive param is ignored — button states are derived from the job
+            // lifecycle, not the moment-to-moment IsRecording flag. IsRecording
+            // toggles automatically as AOG sections come on/off (every headland
+            // turn), which must NOT restyle the buttons or the operator sees Start
+            // "light up" mid-harvest and thinks they need to press it.
+            var col = Core.Collector;
+            bool hasJob = col != null && col.ActiveJobId > 0;
+            // Manual pause zeroes both flags; auto-pause keeps IsAutoPaused set.
+            bool manuallyPaused = hasJob && !col.IsRecording && !col.IsAutoPaused;
+
+            // Start (▶) = create a new job (none active) or resume a manually
+            // paused one. Icon is constant; availability shows via lit/dark colour.
+            btnStart.Enabled = !hasJob || manuallyPaused;
+            // Pause = manually pause an armed/recording job (pointless once paused).
+            btnPause.Enabled = hasJob && !manuallyPaused;
+            // Stop = end the job; available whenever a job exists.
+            btnStop.Enabled  = hasJob;
 
             StyleJobButton(btnStart, StartActive);
             StyleJobButton(btnPause, PauseActive);
