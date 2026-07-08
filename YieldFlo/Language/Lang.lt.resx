@@ -148,6 +148,7 @@
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Tipas:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Plotis:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Prieš anteną:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Įveskite galvos pavadinimą.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Reikalinga bent viena galva.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Ištrinti šią galvą?</value></data>

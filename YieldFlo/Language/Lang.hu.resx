@@ -148,6 +148,7 @@ Az elevátor szalag üres legyen.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Típus:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Szélesség:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Az antenna előtt:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Adjon meg egy vágóasztal nevet.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Legalább egy vágóasztal szükséges.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Törli ezt a vágóasztalt?</value></data>

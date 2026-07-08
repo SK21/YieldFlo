@@ -148,6 +148,7 @@ Upewnij się, że elewator pracuje bez ziarna.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Typ:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Szerokość:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Przed anteną:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Wprowadź nazwę hedera.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Wymagany jest co najmniej jeden heder.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Usunąć ten heder?</value></data>

@@ -149,6 +149,7 @@ Elevator muss ohne Erntegut laufen.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Typ:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Breite:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Vor der Antenne:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Schneidwerknamen eingeben.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Mindestens ein Schneidwerk erforderlich.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Dieses Schneidwerk löschen?</value></data>

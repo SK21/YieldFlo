@@ -27,6 +27,9 @@ namespace YieldFlo.Forms
             this.lblWidth       = new System.Windows.Forms.Label();
             this.numWidth       = new System.Windows.Forms.NumericUpDown();
             this.lblWidthUnit   = new System.Windows.Forms.Label();
+            this.lblOffset      = new System.Windows.Forms.Label();
+            this.numOffset      = new System.Windows.Forms.NumericUpDown();
+            this.lblOffsetUnit  = new System.Windows.Forms.Label();
             this.btnNew         = new System.Windows.Forms.Button();
             this.btnSave        = new System.Windows.Forms.Button();
             this.btnDelete      = new System.Windows.Forms.Button();
@@ -65,7 +68,7 @@ namespace YieldFlo.Forms
             this.lbHeaders.SelectedIndexChanged += new System.EventHandler(this.lbHeaders_SelectedIndexChanged);
 
             this.pnlEdit.Location = new System.Drawing.Point(0, 150);
-            this.pnlEdit.Size     = new System.Drawing.Size(456, 110);
+            this.pnlEdit.Size     = new System.Drawing.Size(456, 142);
 
             var lf = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             var vf = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -96,9 +99,20 @@ namespace YieldFlo.Forms
             this.lblWidthUnit.Text = "m"; this.lblWidthUnit.Font = vf;
             this.lblWidthUnit.Location = new System.Drawing.Point(204, 67); this.lblWidthUnit.AutoSize = true;
 
+            // Header position ahead of the GPS antenna — pass boundaries are
+            // recorded at the header, matching where AOG paints its coverage
+            this.lblOffset.Text     = Lang.lgHeaderOffset; this.lblOffset.Font = lf;
+            this.lblOffset.Location = new System.Drawing.Point(8, 99); this.lblOffset.AutoSize = false; this.lblOffset.Width = 100;
+            this.numOffset.Font     = vf;
+            this.numOffset.Location = new System.Drawing.Point(116, 96); this.numOffset.Width = 80;
+            this.numOffset.Minimum  = -30; this.numOffset.Maximum = 100; this.numOffset.DecimalPlaces = 2;
+            this.numOffset.Increment = (decimal)0.1; this.numOffset.Value = 0;
+            this.lblOffsetUnit.Text = "m"; this.lblOffsetUnit.Font = vf;
+            this.lblOffsetUnit.Location = new System.Drawing.Point(204, 99); this.lblOffsetUnit.AutoSize = true;
+
             this.pnlEdit.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblHeaderName, txtHeaderName, lblHeaderType, cboHeaderType,
-                lblWidth, numWidth, lblWidthUnit });
+                lblWidth, numWidth, lblWidthUnit, lblOffset, numOffset, lblOffsetUnit });
 
             this.pnlContent.Controls.Add(this.lbHeaders);
             this.pnlContent.Controls.Add(this.pnlEdit);
@@ -106,31 +120,31 @@ namespace YieldFlo.Forms
             // Buttons
             this.btnNew.Text      = Lang.lgNew;    this.btnNew.Font    = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNew.Location  = new System.Drawing.Point(8, 272); this.btnNew.Size = new System.Drawing.Size(106, 36);
+            this.btnNew.Location  = new System.Drawing.Point(8, 304); this.btnNew.Size = new System.Drawing.Size(106, 36);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
             this.btnSave.Text      = Lang.lgSave;   this.btnSave.Font   = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location  = new System.Drawing.Point(118, 272); this.btnSave.Size = new System.Drawing.Size(106, 36);
+            this.btnSave.Location  = new System.Drawing.Point(118, 304); this.btnSave.Size = new System.Drawing.Size(106, 36);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
             this.btnDelete.Text      = Lang.lgDelete; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Location  = new System.Drawing.Point(228, 272); this.btnDelete.Size = new System.Drawing.Size(106, 36);
+            this.btnDelete.Location  = new System.Drawing.Point(228, 304); this.btnDelete.Size = new System.Drawing.Size(106, 36);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
             this.btnHeadersClose.Text      = Lang.lgClose; this.btnHeadersClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.btnHeadersClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHeadersClose.Location  = new System.Drawing.Point(338, 272); this.btnHeadersClose.Size = new System.Drawing.Size(106, 36);
+            this.btnHeadersClose.Location  = new System.Drawing.Point(338, 304); this.btnHeadersClose.Size = new System.Drawing.Size(106, 36);
             this.btnHeadersClose.Click    += new System.EventHandler(this.btnHeadersClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 btnNew, btnSave, btnDelete, btnHeadersClose });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 356);
-            this.MinimumSize     = new System.Drawing.Size(456, 356);
-            this.MaximumSize     = new System.Drawing.Size(456, 356);
+            this.ClientSize      = new System.Drawing.Size(456, 388);
+            this.MinimumSize     = new System.Drawing.Size(456, 388);
+            this.MaximumSize     = new System.Drawing.Size(456, 388);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
@@ -160,6 +174,9 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label         lblWidth;
         private System.Windows.Forms.NumericUpDown numWidth;
         private System.Windows.Forms.Label         lblWidthUnit;
+        private System.Windows.Forms.Label         lblOffset;
+        private System.Windows.Forms.NumericUpDown numOffset;
+        private System.Windows.Forms.Label         lblOffsetUnit;
         private System.Windows.Forms.Button        btnNew;
         private System.Windows.Forms.Button        btnSave;
         private System.Windows.Forms.Button        btnDelete;

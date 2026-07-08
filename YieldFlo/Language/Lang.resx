@@ -202,6 +202,7 @@ Make sure the elevator is running with no grain.</value></data>
   <!-- ── Headers form ───────────────────────────────────────────────────── -->
   <data name="lgType" xml:space="preserve"><value>Type:</value></data>
   <data name="lgWidth" xml:space="preserve"><value>Width:</value></data>
+  <data name="lgHeaderOffset" xml:space="preserve"><value>Ahead of antenna:</value></data>
   <data name="lgEnterHeaderName" xml:space="preserve"><value>Enter a header name.</value></data>
   <data name="lgMustHaveOneHeader" xml:space="preserve"><value>Must have at least one header.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Delete this header?</value></data>

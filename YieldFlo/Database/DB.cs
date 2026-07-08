@@ -85,7 +85,8 @@ CREATE TABLE IF NOT EXISTS headers (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     name        TEXT    NOT NULL,
     header_type TEXT    NOT NULL DEFAULT 'Draper',
-    cut_width   REAL    NOT NULL DEFAULT 9.144
+    cut_width   REAL    NOT NULL DEFAULT 9.144,
+    fwd_offset  REAL    NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS fields (
@@ -168,6 +169,13 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
             {
                 using var cmd = new SQLiteCommand(
                     "ALTER TABLE profiles ADD COLUMN moist_scale REAL NOT NULL DEFAULT 0.001;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE headers ADD COLUMN fwd_offset REAL NOT NULL DEFAULT 0;", conn);
                 cmd.ExecuteNonQuery();
             }
             catch { }

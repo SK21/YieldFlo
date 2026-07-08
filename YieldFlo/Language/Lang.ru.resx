@@ -148,6 +148,7 @@
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Тип:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Ширина:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Перед антенной:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Введите название жатки.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Необходима хотя бы одна жатка.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Удалить эту жатку?</value></data>

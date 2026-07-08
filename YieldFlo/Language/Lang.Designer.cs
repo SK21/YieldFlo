@@ -164,6 +164,7 @@ namespace YieldFlo.Language
         // ── Headers form ─────────────────────────────────────────────────────
         internal static string lgType               => Get("lgType");
         internal static string lgWidth              => Get("lgWidth");
+        internal static string lgHeaderOffset       => Get("lgHeaderOffset");
         internal static string lgEnterHeaderName    => Get("lgEnterHeaderName");
         internal static string lgMustHaveOneHeader  => Get("lgMustHaveOneHeader");
         internal static string lgDeleteHeaderPrompt => Get("lgDeleteHeaderPrompt");

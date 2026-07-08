@@ -199,7 +199,8 @@ namespace YieldFlo.Classes
             foreach (var h in Database.Headers.GetAll())
             {
                 if (h.id != headerId) continue;
-                Yield.HeaderWidthM = h.widthM;
+                Yield.HeaderWidthM     = h.widthM;
+                Yield.HeaderFwdOffsetM = h.fwdOffsetM;
                 break;
             }
 

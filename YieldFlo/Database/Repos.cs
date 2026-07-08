@@ -345,41 +345,43 @@ VALUES
         private readonly string _cs;
         public HeaderRepo(string connectionString) { _cs = connectionString; }
 
-        public int Create(string name, string headerType, double cutWidthM)
+        public int Create(string name, string headerType, double cutWidthM, double fwdOffsetM = 0)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "INSERT INTO headers (name, header_type, cut_width) VALUES (@n, @t, @w); SELECT last_insert_rowid();", conn);
+                "INSERT INTO headers (name, header_type, cut_width, fwd_offset) VALUES (@n, @t, @w, @o); SELECT last_insert_rowid();", conn);
             cmd.Parameters.AddWithValue("@n", name);
             cmd.Parameters.AddWithValue("@t", headerType);
             cmd.Parameters.AddWithValue("@w", cutWidthM);
+            cmd.Parameters.AddWithValue("@o", fwdOffsetM);
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public List<(int id, string name, string type, double widthM)> GetAll()
+        public List<(int id, string name, string type, double widthM, double fwdOffsetM)> GetAll()
         {
-            var result = new List<(int, string, string, double)>();
+            var result = new List<(int, string, string, double, double)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "SELECT id, name, header_type, cut_width FROM headers ORDER BY name", conn);
+                "SELECT id, name, header_type, cut_width, fwd_offset FROM headers ORDER BY name", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
                 result.Add((reader.GetInt32(0), reader.GetString(1),
-                            reader.GetString(2), reader.GetDouble(3)));
+                            reader.GetString(2), reader.GetDouble(3), reader.GetDouble(4)));
             return result;
         }
 
-        public void Update(int id, string name, string headerType, double cutWidthM)
+        public void Update(int id, string name, string headerType, double cutWidthM, double fwdOffsetM = 0)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "UPDATE headers SET name=@n, header_type=@t, cut_width=@w WHERE id=@id", conn);
+                "UPDATE headers SET name=@n, header_type=@t, cut_width=@w, fwd_offset=@o WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@n",  name);
             cmd.Parameters.AddWithValue("@t",  headerType);
             cmd.Parameters.AddWithValue("@w",  cutWidthM);
+            cmd.Parameters.AddWithValue("@o",  fwdOffsetM);
             cmd.Parameters.AddWithValue("@id", id);
             cmd.ExecuteNonQuery();
         }

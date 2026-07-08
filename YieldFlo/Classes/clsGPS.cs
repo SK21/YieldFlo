@@ -13,7 +13,18 @@ namespace YieldFlo.Classes
         public float Altitude { get; set; }     // meters
         public byte FixQuality { get; set; }    // 0=none 1=GPS 2=DGPS 4=RTK
         public bool IsConnected { get; set; }
-        public bool SectionsActive { get; set; } // true when ≥1 section is on (AOG PGN 229)
+
+        // True when ≥1 section is on (AOG PGN 229). AOG sends 229 every GPS tick
+        // while a job is open, so a value older than 4 s means AOG closed or the
+        // link dropped — treat that as sections off instead of latching the last
+        // state forever (same staleness window RateController uses).
+        private bool _sectionsActive;
+        private System.DateTime _sectionsAtUtc;
+        public bool SectionsActive
+        {
+            get => _sectionsActive && (System.DateTime.UtcNow - _sectionsAtUtc).TotalSeconds < 4.0;
+            set { _sectionsActive = value; _sectionsAtUtc = System.DateTime.UtcNow; }
+        }
 
         public void ParseByteData(byte[] data, byte subType)
         {

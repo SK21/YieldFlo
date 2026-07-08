@@ -148,6 +148,7 @@ Zorg dat de elevator leeg loopt.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Type:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Breedte:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Vóór de antenne:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Voer een maaikopnaam in.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Minstens één maaikop vereist.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Deze maaikop verwijderen?</value></data>

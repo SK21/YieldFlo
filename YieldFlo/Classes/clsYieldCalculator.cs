@@ -19,6 +19,7 @@ namespace YieldFlo.Classes
         // Crop / header
         public double TestWeightLbsBu { get; set; } = 60.0;    // lbs per bushel (wheat default)
         public double HeaderWidthM { get; set; } = 9.144;      // metres (30 ft default)
+        public double HeaderFwdOffsetM { get; set; } = 0;      // metres the header sits AHEAD of the GPS antenna
 
         // Latest calculated values (read by DataCollector / UI)
         public double InstantYield { get; private set; }        // bu/ac

@@ -104,7 +104,9 @@
       "WebFetch(domain:manualzz.com)",
       "WebFetch(domain:projectblue.blob.core.windows.net)",
       "WebFetch(domain:grdc.com.au)",
-      "WebFetch(domain:vantagenortheast.com)"
+      "WebFetch(domain:vantagenortheast.com)",
+      "Read(//f/Documents/AgOpenGPS/Fields/Mays North Qrt//**)",
+      "Read(//f/Documents/AgOpenGPS/Fields//**)"
     ]
   }
 }

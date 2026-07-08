@@ -11,7 +11,7 @@ namespace YieldFlo.Forms
     {
         private bool _dragging;
         private Point _dragStart;
-        private List<(int id, string name, string type, double widthM)> _headers;
+        private List<(int id, string name, string type, double widthM, double fwdOffsetM)> _headers;
         private int _editingId = -1;
 
         public frmMenuHeaders()
@@ -48,6 +48,8 @@ namespace YieldFlo.Forms
             string unit = Props.IsMetric ? "m" : "ft";
             NumpadHelper.Wire(this, numWidth, (double)numWidth.Minimum, (double)numWidth.Maximum,
                               1, $"Header Width ({unit})");
+            NumpadHelper.Wire(this, numOffset, (double)numOffset.Minimum, (double)numOffset.Maximum,
+                              1, $"Ahead of Antenna ({unit})");
             btnSave.Focus();
         }
 
@@ -61,6 +63,13 @@ namespace YieldFlo.Forms
                 numWidth.Increment     = (decimal)0.1;
                 numWidth.DecimalPlaces = 2;
                 numWidth.Value         = System.Math.Max((decimal)0.5, System.Math.Min(60, numWidth.Value));
+
+                lblOffsetUnit.Text      = "m";
+                numOffset.Minimum       = -30;
+                numOffset.Maximum       = 100;
+                numOffset.Increment     = (decimal)0.1;
+                numOffset.DecimalPlaces = 2;
+                numOffset.Value         = System.Math.Max(-30, System.Math.Min(100, numOffset.Value));
             }
             else
             {
@@ -70,6 +79,13 @@ namespace YieldFlo.Forms
                 numWidth.Increment     = (decimal)0.5;
                 numWidth.DecimalPlaces = 1;
                 numWidth.Value         = System.Math.Max(2, System.Math.Min(200, numWidth.Value));
+
+                lblOffsetUnit.Text      = "ft";
+                numOffset.Minimum       = -100;
+                numOffset.Maximum       = 330;
+                numOffset.Increment     = (decimal)0.5;
+                numOffset.DecimalPlaces = 1;
+                numOffset.Value         = System.Math.Max(-100, System.Math.Min(330, numOffset.Value));
             }
         }
 
@@ -128,6 +144,7 @@ namespace YieldFlo.Forms
             // Default 9 m / ~30 ft
             decimal def = Props.IsMetric ? 9 : (decimal)(9 * 3.28084);
             numWidth.Value = System.Math.Max(numWidth.Minimum, System.Math.Min(numWidth.Maximum, def));
+            numOffset.Value = 0;
             lbHeaders.ClearSelected();
         }
 
@@ -142,6 +159,8 @@ namespace YieldFlo.Forms
             if (cboHeaderType.SelectedIndex < 0) cboHeaderType.SelectedIndex = 0;
             decimal disp = MetresToDisplay(h.widthM);
             numWidth.Value = System.Math.Max(numWidth.Minimum, System.Math.Min(numWidth.Maximum, disp));
+            decimal dispOff = MetresToDisplay(h.fwdOffsetM);
+            numOffset.Value = System.Math.Max(numOffset.Minimum, System.Math.Min(numOffset.Maximum, dispOff));
         }
 
         private void btnNew_Click(object sender, EventArgs e) => ClearEdit();
@@ -150,13 +169,14 @@ namespace YieldFlo.Forms
         {
             string name = txtHeaderName.Text.Trim();
             if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterHeaderName, "", 2000, true); return; }
-            string type  = cboHeaderType.SelectedItem?.ToString() ?? "Draper";
-            double width = DisplayToMetres(numWidth.Value);
+            string type   = cboHeaderType.SelectedItem?.ToString() ?? "Draper";
+            double width  = DisplayToMetres(numWidth.Value);
+            double offset = DisplayToMetres(numOffset.Value);
 
             if (_editingId < 0)
-                Core.Database.Headers.Create(name, type, width);
+                Core.Database.Headers.Create(name, type, width, offset);
             else
-                Core.Database.Headers.Update(_editingId, name, type, width);
+                Core.Database.Headers.Update(_editingId, name, type, width, offset);
 
             Core.RaiseHeaderListChanged();
             LoadList();
