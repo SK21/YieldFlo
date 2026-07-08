@@ -210,15 +210,27 @@ Headers define the cutting width of the front attachment. Width is used to calcu
 | **Name** | Header name (e.g. 30ft Draper, 8-row Corn Head) |
 | **Type** | Header type category |
 | **Width** | Cutting width in feet (Imperial) or metres (Metric) |
+| **Ahead of antenna** | Distance the header sits ahead of the position AOG broadcasts. Enter AOG's **pivot-to-header** distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them. |
 
 ### Adding a header
 
 1. Press **Menu → Headers**
 2. Press **New** and enter a header name
 3. Enter the cutting width
-4. Press **Save**
+4. Enter the pivot-to-header distance from your AOG implement setup
+5. Press **Save**
 
-At least one header must exist at all times.
+At least one header must exist at all times. Changes to a header take effect
+when a job is started or loaded.
+
+> **Note — coverage painted slightly before AOG's:** AOG turns its section
+> bits on *early* by its turn-on look-ahead (anticipating valve opening time)
+> but paints its own coverage only where product actually applies. YieldFlo
+> records from the section bits, so each pass start on the yield map can begin
+> a metre or two before AOG's painted coverage. Pass *ends* match exactly.
+> This is normal and harmless for harvest — there is no valve delay on a
+> header — and can be removed in testing by setting AOG's section look-ahead
+> to zero.
 
 ---
 

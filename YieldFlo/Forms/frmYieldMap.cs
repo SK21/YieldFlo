@@ -60,6 +60,13 @@ namespace YieldFlo.Forms
         // Live-update timer
         private System.Windows.Forms.Timer _liveTimer;
 
+        // Heading-up rotation state (mini mode only)
+        private float _lastBearing;
+
+        // Suppresses cboJob_SelectedIndexChanged while the combo is being
+        // rebuilt, so a list refresh can't recentre/rezoom the map.
+        private bool _reloadingCombo;
+
         public frmYieldMap()
         {
             InitializeComponent();
@@ -70,8 +77,10 @@ namespace YieldFlo.Forms
         private void frmYieldMap_Load(object sender, EventArgs e)
         {
             InitMap();
+            _reloadingCombo = true;
             LoadJobCombo();
             SelectCurrentJob();
+            _reloadingCombo = false;
             SetMiniMode(true);
             LoadYieldData();
             Core.JobStateChanged += Core_JobStateChanged;
@@ -93,9 +102,18 @@ namespace YieldFlo.Forms
             if (this.IsDisposed || !this.IsHandleCreated) return;
             this.BeginInvoke((Action)(() =>
             {
+                // JobStateChanged also fires on every auto-pause/resume (grain
+                // flow stopping/starting). Rebuild the list with the selection
+                // event suppressed and recentre/rezoom ONLY when the job the
+                // map shows actually changed — never over a flow stop, which
+                // used to reset the operator's zoom.
+                _reloadingCombo = true;
                 LoadJobCombo();
                 SelectCurrentJob();
-                LoadYieldData();
+                _reloadingCombo = false;
+                int idx = cboJob.SelectedIndex;
+                bool jobChanged = idx >= 0 && idx < _jobIds.Count && _jobIds[idx] != _drawnJobId;
+                LoadYieldData(center: jobChanged);
             }));
         }
 
@@ -110,6 +128,21 @@ namespace YieldFlo.Forms
             if (gps == null || !gps.IsConnected) return;
             if (gps.Latitude == 0 && gps.Longitude == 0) return;
             gmap.Position = new PointLatLng(gps.Latitude, gps.Longitude);
+
+            // Heading-up (like AOG): rotate the mini map so the direction of
+            // travel points up. Rate-limited to >5° changes so tile redraws
+            // don't fire on every GPS tick; GPS heading is noise when parked,
+            // so below walking speed the last rotation is held.
+            if (gps.Speed > 0.5f)
+            {
+                float hdg = gps.Heading;
+                float diff = Math.Abs(((hdg - _lastBearing + 540f) % 360f) - 180f);
+                if (diff > 5f)
+                {
+                    _lastBearing = hdg;
+                    gmap.Bearing = hdg;
+                }
+            }
         }
 
         private void LiveTimer_Tick(object sender, EventArgs e)
@@ -170,6 +203,10 @@ namespace YieldFlo.Forms
                 this.Bounds          = wa;
                 gmap.CanDragMap      = true;
                 gmap.DragButton      = MouseButtons.Left;
+
+                // Full mode reviews the whole field north-up
+                gmap.Bearing = 0;
+                _lastBearing = 0;
 
                 int toolH   = pnlToolbar.Height;
                 int legendH = pnlLegend.Height;
@@ -269,6 +306,7 @@ namespace YieldFlo.Forms
 
         private void cboJob_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_reloadingCombo) return;
             LoadYieldData();
         }
 
@@ -316,13 +354,17 @@ namespace YieldFlo.Forms
             bool sameJob = jobId == _drawnJobId && _yieldOverlay != null && _scaleSet;
             if (sameJob && points.Count >= _drawnRawCount)
             {
-                bool outOfScale = false;
+                // The scale is percentile-based, so the odd point beyond it is
+                // EXPECTED (slow-down spikes clamp to the end colours). Only a
+                // run of out-of-scale points — the crop genuinely outgrew the
+                // frozen scale — justifies a full rebuild.
+                int outOfScale = 0;
                 for (int i = _drawnRawCount; i < points.Count; i++)
                 {
                     double y = points[i].YieldRate;
-                    if (y > 0 && (y < _scaleMin || y > _scaleMax)) { outOfScale = true; break; }
+                    if (y > 0 && (y < _scaleMin || y > _scaleMax)) outOfScale++;
                 }
-                if (!outOfScale)
+                if (outOfScale <= 3)
                 {
                     // Bridge each new point to its predecessor so coverage stays
                     // continuous (start at 1 so points[i-1] is valid; _drawnRawCount
@@ -359,13 +401,32 @@ namespace YieldFlo.Forms
                 break;
             }
 
-            // Colour scale = min..max of positive yields, frozen until the next rebuild.
+            // Colour scale = 2nd..98th percentile of positive yields, frozen until
+            // the next rebuild (RateController's TryComputeScale rule). Plain
+            // min..max let a single slow-down spike (yield ∝ 1/speed with grain
+            // still flowing) own the whole legend and squash the real crop into
+            // one colour band; percentile ends clamp such outliers instead.
             double minY = double.MaxValue, maxY = double.MinValue;
+            var vals = new List<double>();
             foreach (var pt in points)
             {
-                if (pt.YieldRate <= 0) continue;
-                if (pt.YieldRate < minY) minY = pt.YieldRate;
-                if (pt.YieldRate > maxY) maxY = pt.YieldRate;
+                double y = pt.YieldRate;
+                if (y > 0 && !double.IsNaN(y) && !double.IsInfinity(y)) vals.Add(y);
+            }
+            if (vals.Count > 0)
+            {
+                vals.Sort();
+                if (vals.Count < 10)
+                {
+                    minY = vals[0];
+                    maxY = vals[vals.Count - 1];
+                }
+                else
+                {
+                    minY = vals[(int)Math.Floor(0.02 * (vals.Count - 1))];
+                    maxY = vals[(int)Math.Ceiling(0.98 * (vals.Count - 1))];
+                    if (maxY <= minY) { minY = vals[0]; maxY = vals[vals.Count - 1]; }
+                }
             }
 
             var newOverlay = new GMapOverlay("yield");
