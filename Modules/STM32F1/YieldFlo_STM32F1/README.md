@@ -13,10 +13,11 @@ compile-time constants at the top of `YieldFlo_STM32F1.ino` — edit and reflash
 |---|---|---|
 | `ModuleID` | 0 | Module ID (informational, printed at boot) |
 | `UseCompSignal` | true | Main + Comp noise rejection. Set false when Comp is not wired (e.g. FarmTrx tap — Main only) |
-| `InvertSensor` | false | false = PNP (HIGH = beam clear, FarmTrx), true = NPN sensors (inverted logic) |
+| `InvertSensor` | true | true = NPN sensors (inverted logic — default for this port), false = PNP (HIGH = beam clear, FarmTrx) |
 | `RPMEnabled` | true | RPM sensor wired to `RPMPin`. When false the module reports the fixed reference 200 |
 | `ADS1115Enabled` | true | Moisture1 daughter board present |
 | `UseAnalogFallback` | false | Read moisture from the native ADC (`AnalogPin`) when there is no ADS1115 |
+| `DebugLED` | true | Onboard PC13 LED (active-low) mirrors the beam state — lit while blocked |
 
 ## Hardware
 
@@ -44,6 +45,10 @@ compile-time constants at the top of `YieldFlo_STM32F1.ino` — edit and reflash
 The interrupt pins (PB0, PB1, PB10, PB5) were chosen with distinct pin
 ordinals on purpose: EXTI lines are shared across ports by pin number
 (PA0 and PB0 both use EXTI0), so no two interrupt pins may share an ordinal.
+The firmware checks the enabled interrupt pins at boot and prints an EXTI
+conflict warning on the debug UART if the pin map clashes. The fast-read
+pin constants in `Flow.ino` are derived from the pin map automatically, so
+changing a pin only means editing the constant at the top of the sketch.
 
 ## Building (Arduino IDE)
 
@@ -51,10 +56,10 @@ ordinals on purpose: EXTI lines are shared across ports by pin number
    manager URLs →
    `https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json`
    then Boards Manager → install "STM32 MCU based boards".
-2. Library Manager → install **STM32_CAN** (pazi88).
-   The sketch folder's `hal_conf_extra.h` enables the HAL CAN module that the
-   core ships disabled — the library won't compile without it, so keep that
-   file with the sketch.
+2. No external CAN library is needed — the sketch uses the bundled `Can.h`,
+   a bare-metal bxCAN register driver (hardware-verified against a PCAN
+   adapter). The sketch folder's `hal_conf_extra.h` enables the HAL CAN module
+   the core ships disabled; keep it with the sketch.
 3. Tools menu:
    - Board: *Generic STM32F1 series* → Board part number: *Generic F103C8Tx*
      (or *…CBTx* for 128 KB parts)

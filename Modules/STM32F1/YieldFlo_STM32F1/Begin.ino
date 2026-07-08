@@ -37,6 +37,8 @@ void DoSetup()
 	Serial.println(ModuleID);
 	Serial.println("");
 
+	CheckExtiConflicts();
+
 	// I2C
 	Wire.begin();			// I2C1 on pins SCL PB6, SDA PB7
 	Wire.setClock(400000);	// Increase I2C data rate to 400kHz
@@ -110,6 +112,13 @@ void DoSetup()
 	SegStartUs = LastEdgeUs;
 	Serial.println(UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
 
+	// Debug LED — active-low onboard LED on PC13 mirrors the beam state
+	if (DebugLED)
+	{
+		pinMode(LedPin, OUTPUT);
+		digitalWrite(LedPin, BeamBlocked ? LOW : HIGH);	// LOW = lit when blocked
+	}
+
 	// RPM sensor
 	if (RPMEnabled)
 	{
@@ -120,14 +129,53 @@ void DoSetup()
 		Serial.println("OK.");
 	}
 
-	// CAN bus — bxCAN on PB8/PB9, single-shot TX (no auto-retransmission)
+	// CAN bus — bxCAN on PB8/PB9 via the Can.h register driver.
+	// remap 2 = CAN_RX on PB8, CAN_TX on PB9. CANInit() configures the GPIO,
+	// bit timing, accept-all filter, single-shot TX (NART) and automatic
+	// Bus-Off recovery (ABOM), then leaves the controller in normal mode.
+	// It returns false if the peripheral never reaches normal mode (usually
+	// a wiring/transceiver fault or missing 120R termination).
 	Serial.println("Starting CAN ...");
-	Can.begin();
-	Can.setBaudRate(250000);
-	EnableAutoBusOffRecovery();
-	Serial.println("CAN started at 250kbps.");
+	if (CANInit(CAN_250KBPS, 2))
+	{
+		Serial.println("CAN started at 250kbps.");
+	}
+	else
+	{
+		Serial.println("CAN init FAILED — check transceiver, wiring and termination.");
+	}
 
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
+}
+
+// EXTI lines are shared across ports by pin ordinal (PA5 and PB5 both use
+// EXTI5), and attachInterrupt() silently reassigns a line that is already
+// taken — the earlier pin just stops interrupting. Warn loudly at boot if
+// any two ENABLED interrupt pins clash.
+void CheckExtiConflicts()
+{
+	uint32_t pins[4];
+	const char* names[4];
+	uint8_t n = 0;
+	pins[n] = MainPin; names[n] = "MainPin"; n++;
+	if (UseCompSignal)  { pins[n] = CompPin;  names[n] = "CompPin";  n++; }
+	if (RPMEnabled)     { pins[n] = RPMPin;   names[n] = "RPMPin";   n++; }
+	if (ADS1115Enabled) { pins[n] = AlertPin; names[n] = "AlertPin"; n++; }
+
+	for (uint8_t i = 0; i < n; i++)
+	{
+		for (uint8_t j = i + 1; j < n; j++)
+		{
+			if (STM_PIN(digitalPinToPinName(pins[i])) == STM_PIN(digitalPinToPinName(pins[j])))
+			{
+				Serial.print("WARNING: EXTI conflict — ");
+				Serial.print(names[i]);
+				Serial.print(" and ");
+				Serial.print(names[j]);
+				Serial.println(" share one EXTI line; one of them will NOT interrupt.");
+			}
+		}
+	}
 }

@@ -36,25 +36,12 @@ static void BuildDataBody(byte body[8])
 
 // ── CAN bus health ───────────────────────────────────────────────────────
 // bxCAN differs from the ESP32 TWAI driver:
-//  - ABOM (automatic bus-off management) recovers from Bus Off in hardware
-//    after 128 × 11 recessive bits — no recovery state machine needed.
-//  - TX is single-shot (auto-retransmission disabled in Can.begin()), so a
-//    frame that gets no ACK is dropped instead of flooding the bus; the next
-//    one goes out 200ms later. No WiFi fallback — there is nothing to fall
-//    back to on this board.
-
-// Set the ABOM bit. MCR is only writable in initialisation mode, so briefly
-// re-enter it; called once after Can.begin()/setBaudRate().
-void EnableAutoBusOffRecovery()
-{
-	uint32_t t = millis();
-	CAN1->MCR |= CAN_MCR_INRQ;
-	while (!(CAN1->MSR & CAN_MSR_INAK)) { if (millis() - t > 10) return; }
-	CAN1->MCR |= CAN_MCR_ABOM;
-	CAN1->MCR &= ~CAN_MCR_INRQ;
-	t = millis();
-	while (CAN1->MSR & CAN_MSR_INAK) { if (millis() - t > 10) return; }
-}
+//  - ABOM (automatic bus-off management, set in CANInit) recovers from Bus
+//    Off in hardware after 128 × 11 recessive bits — no recovery state
+//    machine needed.
+//  - TX is single-shot (NART set in CANInit), so a frame that gets no ACK is
+//    dropped instead of flooding the bus; the next one goes out 200ms later.
+//    No WiFi fallback — there is nothing to fall back to on this board.
 
 static uint32_t LastBusOffMs = 0;
 
@@ -88,13 +75,14 @@ void SendCANPK1()
 	byte body[8];
 	BuildDataBody(body);
 
-	CAN_message_t msg = {};
+	CAN_msg_t msg = {};
 	msg.id = 0x18FF00F8;
-	msg.flags.extended = 1;
+	msg.format = EXTENDED_FORMAT;
+	msg.type = DATA_FRAME;
 	msg.len = 8;
-	memcpy(msg.buf, body, 8);
+	memcpy(msg.data, body, 8);
 
-	Can.write(msg);
+	CANSend(&msg);
 }
 
 // ── Second packet: temperature (1 Hz) ────────────────────────────────────
@@ -109,24 +97,26 @@ void SendCANPK2()
 		byte flags = ADSfound ? 0x01 : 0x00;
 		int16_t temp = TemperatureReading;
 
-		CAN_message_t msg = {};
+		CAN_msg_t msg = {};
 		msg.id = 0x18FF01F8;
-		msg.flags.extended = 1;
+		msg.format = EXTENDED_FORMAT;
+		msg.type = DATA_FRAME;
 		msg.len = 8;
-		msg.buf[0] = flags;
-		msg.buf[1] = (byte)(temp & 0xFF);
-		msg.buf[2] = (byte)((temp >> 8) & 0xFF);
+		msg.data[0] = flags;
+		msg.data[1] = (byte)(temp & 0xFF);
+		msg.data[2] = (byte)((temp >> 8) & 0xFF);
 
-		Can.write(msg);
+		CANSend(&msg);
 	}
 }
 
 // ── Receive (drain incoming frames) ──────────────────────────────────────
 void DrainCanRx()
 {
-	CAN_message_t rx;
-	while (Can.read(rx))
+	CAN_msg_t rx;
+	while (CANMsgAvail())
 	{
+		CANReceive(&rx);
 		// no downstream commands defined yet
 	}
 }

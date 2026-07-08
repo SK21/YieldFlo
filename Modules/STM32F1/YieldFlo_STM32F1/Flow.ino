@@ -1,9 +1,11 @@
 
 // Direct-register pin reads for use inside the ISR — digitalRead() goes
-// through the HAL and is noticeably slower on this core.
-// These MUST refer to the same pins as MainPin / CompPin in the main sketch.
-const PinName MainPinName = PB_0;
-const PinName CompPinName = PB_1;
+// through the HAL and is noticeably slower on this core. Derived from the
+// MainPin / CompPin / LedPin definitions in the main sketch so they can never
+// drift out of sync with the pin map.
+const PinName MainPinName = digitalPinToPinName(MainPin);
+const PinName CompPinName = digitalPinToPinName(CompPin);
+const PinName LedPinName  = digitalPinToPinName(LedPin);   // debug LED (active-low)
 
 void onSensorEdge()
 {
@@ -49,6 +51,10 @@ void onSensorEdge()
 	BeamBlocked = nowBlocked;
 	SegStartUs = now;
 	LastEdgeUs = now;
+
+	// Debug: drive the active-low onboard LED — lit while the beam is blocked.
+	// nowBlocked already accounts for InvertSensor, so this is polarity-correct.
+	if (DebugLED) digitalWriteFast(LedPinName, nowBlocked ? LOW : HIGH);
 }
 
 void onRPMedge()
