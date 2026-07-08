@@ -258,6 +258,7 @@ li { margin: 2px 0; }
 <tr><td><strong>Name</strong></td><td>Header name (e.g. 30ft Draper, 8-row Corn Head)</td></tr>
 <tr><td><strong>Type</strong></td><td>Header type category</td></tr>
 <tr><td><strong>Width</strong></td><td>Cutting width in feet (Imperial) or metres (Metric)</td></tr>
+<tr><td><strong>Ahead of antenna</strong></td><td>Distance the header sits ahead of the position AOG broadcasts. Enter AOG's <strong>pivot-to-header</strong> distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them.</td></tr>
 </table>
 
 <h3>Adding a header</h3>
@@ -265,10 +266,13 @@ li { margin: 2px 0; }
 <ol>
 <li>Press <strong>New</strong> and enter a header name</li>
 <li>Enter the cutting width</li>
+<li>Enter the pivot-to-header distance from your AOG implement setup</li>
 <li>Press <strong>Save</strong></li>
 </ol>
 
-<p>At least one header must exist at all times.</p>
+<p>At least one header must exist at all times. Changes to a header take effect when a job is started or loaded.</p>
+
+<p><strong>Note — coverage painted slightly before AOG's:</strong> AOG turns its section bits on <em>early</em> by its turn-on look-ahead (anticipating valve opening time) but paints its own coverage only where product actually applies. YieldFlo records from the section bits, so each pass start on the yield map can begin a metre or two before AOG's painted coverage. Pass <em>ends</em> match exactly. This is normal and harmless for harvest &mdash; there is no valve delay on a header &mdash; and can be removed in testing by setting AOG's section look-ahead to zero.</p>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
