@@ -350,6 +350,12 @@ li { margin: 2px 0; }
 
 <blockquote><strong>Tip:</strong> Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.</blockquote>
 
+<h3>Noise readout</h3>
+
+<p>Next to the <strong>Set Baseline</strong> button, the <strong>Noise</strong> readout shows how many electrical glitches per second the module is rejecting on the optical sensor signal, averaged over the last 5 seconds. On a healthy installation it reads <strong>0</strong>; the value turns orange when glitches are being rejected, and shows <strong>--</strong> when no module is connected.</p>
+
+<p>A rising noise value &mdash; especially one that climbs with elevator speed &mdash; indicates electrical interference on the sensor wire (static discharge from the elevator, a chafed or loose wire shaken by vibration, or pickup from nearby wiring). The module filters these glitches out of the yield reading automatically, but persistent noise is worth fixing at the source: check the sensor wire's routing and shielding, connector condition, and the ground path from the sensor bracket and elevator housing to the chassis. The readout works in both sensor signal modes, including Main only.</p>
+
 <h3>Processing delay</h3>
 
 <p>The processing delay accounts for the travel time of grain from the header to the elevator sensor. Set this value (in seconds) to match your combine. Typical range is 4–12 seconds.</p>
@@ -571,6 +577,8 @@ li { margin: 2px 0; }
 </table>
 
 <p>The module can also send the same UDP packets over <strong>wired Ethernet</strong> (W5500 board attached to the module). No app setting is needed &mdash; select Ethernet mode in the module's web portal and give the PC's wired adapter a static IP on the module's subnet (default <code>192.168.1.x</code>). The app receives WiFi and Ethernet packets on the same port.</p>
+
+<blockquote><strong>Module setup page:</strong> the module's own settings (communication mode, sensor signals, WiFi credentials, firmware update) are configured on its built-in web page at <code>http://192.168.200.1</code>, reached while connected to the module's WiFi hotspot &mdash; see <a href="#14-module-web-portal">Module Web Portal</a>.</blockquote>
 
 <h4>Supported CAN adapters</h4>
 

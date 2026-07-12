@@ -78,7 +78,7 @@
   <data name="lgLight"         xml:space="preserve"><value>Šviesi</value></data>
   <data name="lgModuleComm"    xml:space="preserve"><value>Modulio ryšys</value></data>
   <data name="lgWiFi"          xml:space="preserve"><value>WiFi / Ethernet</value></data>
-  <data name="lgWifiInfo"      xml:space="preserve"><value>Prijunkite kompiuterį prie modulio WiFi prieigos taško, WiFi tinklo arba laidiniu Ethernet (W5500).</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Prijunkite kompiuterį prie modulio WiFi prieigos taško, WiFi tinklo arba laidiniu Ethernet (W5500). Modulio nustatymų puslapis: http://192.168.200.1 (per modulio prieigos tašką).</value></data>
   <data name="lgCanDriver"     xml:space="preserve"><value>CAN tvarkyklė</value></data>
   <data name="lgComPort"       xml:space="preserve"><value>COM prievadas</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Tęsti darbą paleidžiant</value></data>
@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Jutiklio bazinė vertė:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>užtvėrimo santykis be grūdų (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Nustatyti bazinę vertę</value></data>
+  <data name="lgNoise"              xml:space="preserve"><value>Triukšmas</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modulis neprijungtas.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Derliaus koeficientas:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibravimo dauginamasis — padidinkite, kad padidintumėte rodmenis</value></data>

@@ -294,6 +294,12 @@ The baseline must be set before the first calibration run:
 
 > **Tip:** Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.
 
+### Noise readout
+
+Next to the **Set Baseline** button, the **Noise** readout shows how many electrical glitches per second the module is rejecting on the optical sensor signal, averaged over the last 5 seconds. On a healthy installation it reads **0**; the value turns orange when glitches are being rejected, and shows **--** when no module is connected.
+
+A rising noise value — especially one that climbs with elevator speed — indicates electrical interference on the sensor wire (static discharge from the elevator, a chafed or loose wire shaken by vibration, or pickup from nearby wiring). The module filters these glitches out of the yield reading automatically, but persistent noise is worth fixing at the source: check the sensor wire's routing and shielding, connector condition, and the ground path from the sensor bracket and elevator housing to the chassis. The readout works in both sensor signal modes, including Main only.
+
 ### Processing delay
 
 The processing delay accounts for the travel time of grain from the header to the elevator sensor. Grain cut at a given GPS position arrives at the sensor several seconds later.
@@ -447,6 +453,8 @@ Changing units takes effect immediately. Historical data is stored in metric uni
 | **COM Port** | Serial port for CAN interface (SLCAN driver only). |
 
 The module can also send the same UDP packets over **wired Ethernet** (W5500 board attached to the module). No app setting is needed — select Ethernet mode in the module's web portal and give the PC's wired adapter a static IP on the module's subnet (default `192.168.1.x`). The app receives WiFi and Ethernet packets on the same port.
+
+> **Module setup page:** the module's own settings (communication mode, sensor signals, WiFi credentials, firmware update) are configured on its built-in web page at `http://192.168.200.1`, reached while connected to the module's WiFi hotspot — see [Module Web Portal](#module-web-portal).
 
 #### Supported CAN adapters
 

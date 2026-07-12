@@ -12,37 +12,64 @@ void IRAM_ATTR onSensorEdge()
 	}
 
 	// PNP: HIGH on main = beam clear, LOW = blocked. NPN sensors are inverted.
-	// If state hasn't changed, this is a duplicate interrupt — discard.
+	// If state hasn't changed (including a held pending transition), this is
+	// a duplicate interrupt — discard.
 	bool nowBlocked = (mainHigh == MDL.InvertSensor);
-	if (nowBlocked == BeamBlocked) return;
+	bool effBlocked = PendingValid ? PendingBlocked : BeamBlocked;
+	if (nowBlocked == effBlocked) return;
 
 	uint32_t now = micros();
 
-	if (nowBlocked)
+	// Glitch filter: this edge returns to the pre-pending state within
+	// GlitchMinUs of the pending edge — an EMI pulse pair, not a paddle.
+	// Drop the pending transition; nothing was committed, so no trace is
+	// left in the cycle accounting.
+	if (PendingValid && (now - PendingTimeUs) < GlitchMinUs)
+	{
+		PendingValid = false;
+		NoiseCount++;
+		return;
+	}
+
+	// The pending transition outlived the glitch window — it was a real
+	// edge. Commit it with its original timestamp, then hold this edge as
+	// the new pending transition.
+	if (PendingValid) CommitEdge(PendingBlocked, PendingTimeUs);
+
+	PendingBlocked = nowBlocked;
+	PendingTimeUs = now;
+	PendingValid = true;
+}
+
+// Fold a confirmed transition into the cycle accounting. 'at' is the edge's
+// original micros() timestamp, so the deferred commit costs no timing accuracy.
+void IRAM_ATTR CommitEdge(bool blocked, uint32_t at)
+{
+	if (blocked)
 	{
 		// clear→blocked edge: the cycle that started at the previous
 		// clear→blocked edge is complete — fold it into the window sums.
 		if (CycStartUs != 0)
 		{
-			uint32_t cyc = now - CycStartUs;
+			uint32_t cyc = at - CycStartUs;
 			if (cyc < 2000000)		// discard absurd cycles (boot, signal resumed after a stall)
 			{
 				WinBlockedUs += CycBlockedUs;
 				WinTotalUs   += cyc;
 			}
 		}
-		CycStartUs = now;
+		CycStartUs = at;
 		CycBlockedUs = 0;
 	}
 	else
 	{
 		// blocked→clear edge: add the blocked segment to the current cycle
-		CycBlockedUs += now - SegStartUs;
+		CycBlockedUs += at - SegStartUs;
 	}
 
-	BeamBlocked = nowBlocked;
-	SegStartUs = now;
-	LastEdgeUs = now;
+	BeamBlocked = blocked;
+	SegStartUs = at;
+	LastEdgeUs = at;
 }
 
 void IRAM_ATTR onRPMedge()

@@ -111,7 +111,7 @@ namespace YieldFlo.Forms
             this.lblWifiInfo.ForeColor = System.Drawing.Color.Silver;
             this.lblWifiInfo.Location = new System.Drawing.Point(8, 152);
             this.lblWifiInfo.Name = "lblWifiInfo";
-            this.lblWifiInfo.Size = new System.Drawing.Size(434, 42);
+            this.lblWifiInfo.Size = new System.Drawing.Size(434, 58);
             this.lblWifiInfo.TabIndex = 9;
             this.lblWifiInfo.Text = global::YieldFlo.Language.Lang.lgWifiInfo;
             this.lblWifiInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

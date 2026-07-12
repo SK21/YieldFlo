@@ -40,6 +40,7 @@ namespace YieldFlo.Forms
             this.lblActualUnit = new System.Windows.Forms.Label();
             this.btnApplyFactor = new System.Windows.Forms.Button();
             this.lblCalResult = new System.Windows.Forms.Label();
+            this.lblNoise = new System.Windows.Forms.Label();
             this.pnlTitle.SuspendLayout();
             this.pnlContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
@@ -106,6 +107,7 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.lblActualUnit);
             this.pnlContent.Controls.Add(this.btnApplyFactor);
             this.pnlContent.Controls.Add(this.lblCalResult);
+            this.pnlContent.Controls.Add(this.lblNoise);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(2, 42);
             this.pnlContent.Name = "pnlContent";
@@ -374,9 +376,20 @@ namespace YieldFlo.Forms
             this.lblCalResult.Name = "lblCalResult";
             this.lblCalResult.Size = new System.Drawing.Size(0, 15);
             this.lblCalResult.TabIndex = 21;
-            // 
+            //
+            // lblNoise
+            //
+            this.lblNoise.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblNoise.ForeColor = System.Drawing.Color.Silver;
+            this.lblNoise.Location = new System.Drawing.Point(366, 56);
+            this.lblNoise.Name = "lblNoise";
+            this.lblNoise.Size = new System.Drawing.Size(80, 23);
+            this.lblNoise.TabIndex = 22;
+            this.lblNoise.Text = Lang.lgNoise;
+            this.lblNoise.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
             // frmMenuCalibrate
-            // 
+            //
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(456, 375);
             this.Controls.Add(this.pnlContent);
@@ -427,5 +440,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label         lblActualUnit;
         private System.Windows.Forms.Button        btnApplyFactor;
         private System.Windows.Forms.Label         lblCalResult;
+        private System.Windows.Forms.Label         lblNoise;
     }
 }

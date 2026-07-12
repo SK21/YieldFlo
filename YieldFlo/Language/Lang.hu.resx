@@ -78,7 +78,7 @@
   <data name="lgLight"         xml:space="preserve"><value>Világos</value></data>
   <data name="lgModuleComm"    xml:space="preserve"><value>Modul kommunikáció</value></data>
   <data name="lgWiFi"          xml:space="preserve"><value>WiFi / Ethernet</value></data>
-  <data name="lgWifiInfo"      xml:space="preserve"><value>Csatlakoztassa a PC-t a modul WiFi hozzáférési pontjához, más WiFi hálózathoz, vagy vezetékes Ethernettel (W5500).</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Csatlakoztassa a PC-t a modul WiFi hozzáférési pontjához, más WiFi hálózathoz, vagy vezetékes Ethernettel (W5500). Modul beállítási oldala: http://192.168.200.1 (a modul hozzáférési pontján át).</value></data>
   <data name="lgCanDriver"     xml:space="preserve"><value>CAN meghajtó</value></data>
   <data name="lgComPort"       xml:space="preserve"><value>COM port</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Munka folytatása indításkor</value></data>
@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Érzékelő alapérték:</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>elzárási arány szemterméka nélkül (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Alapérték beállítása</value></data>
+  <data name="lgNoise"              xml:space="preserve"><value>Zaj</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>A modul nincs csatlakoztatva.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Hozamtényező:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibrálási szorzó — növelje a hozamleolvasások emeléséhez</value></data>

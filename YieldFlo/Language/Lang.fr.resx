@@ -78,7 +78,7 @@
   <data name="lgLight"         xml:space="preserve"><value>Clair</value></data>
   <data name="lgModuleComm"    xml:space="preserve"><value>Communication module</value></data>
   <data name="lgWiFi"          xml:space="preserve"><value>WiFi / Ethernet</value></data>
-  <data name="lgWifiInfo"      xml:space="preserve"><value>Connecter le PC au point d'accès WiFi du module, à un réseau WiFi, ou par Ethernet câblé (W5500).</value></data>
+  <data name="lgWifiInfo"      xml:space="preserve"><value>Connecter le PC au point d'accès WiFi du module, à un réseau WiFi, ou par Ethernet câblé (W5500). Page de réglages du module : http://192.168.200.1 (via le point d'accès du module).</value></data>
   <data name="lgCanDriver"     xml:space="preserve"><value>Pilote CAN</value></data>
   <data name="lgComPort"       xml:space="preserve"><value>Port COM</value></data>
   <data name="lgResumeOnStart" xml:space="preserve"><value>Reprendre le travail au démarrage</value></data>
@@ -90,6 +90,7 @@
   <data name="lgSensorBaseline"     xml:space="preserve"><value>Valeur de référence :</value></data>
   <data name="lgBaselineNote"       xml:space="preserve"><value>ratio d'obstruction sans grain (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Définir la référence</value></data>
+  <data name="lgNoise"              xml:space="preserve"><value>Bruit</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module non connecté.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Facteur de rendement :</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>multiplicateur de calibration — augmenter pour hausser les lectures</value></data>

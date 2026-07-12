@@ -14,7 +14,7 @@
 // Build with USB support set to "None"; debug output is on USART1 (PA9/PA10).
 
 #define InoDescription "YieldFlo_STM32F1"
-#define InoID 8076          // firmware version — update with every build (DDMMY format)
+#define InoID 12076         // firmware version — update with every build (DDMMY format)
 
 // ── User settings (compile-time) ─────────────────────────────────────────
 const uint8_t ModuleID       = 0;     // module ID (informational)
@@ -61,12 +61,23 @@ volatile uint32_t CycStartUs = 0;		// micros() at the clear→blocked edge that 
 volatile uint32_t CycBlockedUs = 0;		// µs blocked within the current cycle
 volatile uint32_t WinBlockedUs = 0;		// blocked µs of completed cycles since last ReadFlow
 volatile uint32_t WinTotalUs = 0;		// total µs of completed cycles since last ReadFlow
-volatile uint32_t LastEdgeUs = 0;		// micros() at last valid edge — set ONLY in the ISR (sensor health)
+volatile uint32_t LastEdgeUs = 0;		// micros() at last committed edge — set ONLY by CommitEdge (sensor health)
 volatile uint32_t SegStartUs = 0;		// micros() at start of the current blocked/clear segment
-volatile bool BeamBlocked = false;		// current beam state
+volatile bool BeamBlocked = false;		// current committed beam state
 volatile uint16_t NoiseCount = 0;		// rejected noise edges this window
 bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
+
+// Glitch filter: an edge is committed only after the state it starts survives
+// GlitchMinUs. EMI pulses are ~0.1 ms wide; the shortest real paddle segment
+// is >10 ms on any elevator, so 2 ms separates them with wide margin on both
+// sides. A pending edge cancelled by a return edge inside the window is a
+// glitch pair — both edges are discarded and counted in NoiseCount (which
+// therefore works in Main-only mode too, where there is no Comp cross-check).
+const uint32_t GlitchMinUs = 2000;
+volatile bool     PendingValid = false;		// an uncommitted transition is held
+volatile bool     PendingBlocked = false;	// the state that transition switches to
+volatile uint32_t PendingTimeUs = 0;		// micros() of the pending edge
 
 // RPM ISR state
 volatile uint32_t RPMpulseCount = 0;

@@ -12,12 +12,19 @@ namespace YieldFlo.Forms
         private bool _dragging;
         private Point _dragStart;
         private System.Windows.Forms.Timer _calTimer;
+        private System.Windows.Forms.Timer _noiseTimer;
 
         // Baseline sampling (Set Baseline button)
         private System.Windows.Forms.Timer _baselineTimer;
         private readonly List<double> _baselineSamples = new List<double>();
         private const int BaselineSampleMs = 200;      // one module packet period
         private const int BaselineSampleCount = 25;    // ~5 seconds
+
+        // Noise readout: rolling average of sampled packet counts. A steady
+        // glitch rate quantizes to 4-or-5 per 200 ms packet, so the raw value
+        // flutters (20/25); averaging ~5 s of samples steadies it.
+        private readonly Queue<int> _noiseSamples = new Queue<int>();
+        private const int NoiseSampleCount = 10;       // 10 × 500 ms ticks = 5 s
 
         public frmMenuCalibrate()
         {
@@ -41,6 +48,13 @@ namespace YieldFlo.Forms
 
             _calTimer = new System.Windows.Forms.Timer { Interval = 1000 };
             _calTimer.Tick += CalTimer_Tick;
+
+            // Live noise readout — glitch edges the module rejected in the last
+            // 200 ms packet. Nonzero at idle means electrical noise on the
+            // sensor wire; it should read 0 on a healthy installation.
+            _noiseTimer = new System.Windows.Forms.Timer { Interval = 500 };
+            _noiseTimer.Tick += NoiseTimer_Tick;
+            _noiseTimer.Start();
 
             // Reflect state if a cal run was already active when form opened
             UpdateCalRunButtons();
@@ -219,6 +233,28 @@ namespace YieldFlo.Forms
             UpdateCalMeasuredLabel();
         }
 
+        private void NoiseTimer_Tick(object sender, EventArgs e)
+        {
+            if (!Core.ModuleConnected)
+            {
+                _noiseSamples.Clear();
+                lblNoise.Text = Lang.lgNoise + " --";
+                lblNoise.ForeColor = Color.Silver;
+                return;
+            }
+
+            _noiseSamples.Enqueue(Core.LastNoiseCount);
+            while (_noiseSamples.Count > NoiseSampleCount) _noiseSamples.Dequeue();
+
+            // Packet carries rejects per 200 ms window — ×5 = rejects per second
+            double sum = 0;
+            foreach (int s in _noiseSamples) sum += s;
+            int perSec = (int)Math.Round(sum * 5.0 / _noiseSamples.Count);
+
+            lblNoise.Text = Lang.lgNoise + " " + perSec + "/s";
+            lblNoise.ForeColor = perSec > 0 ? Color.Orange : Color.Silver;
+        }
+
         private void UpdateCalMeasuredLabel()
         {
             double bushels = Core.Yield?.CalRunBushels ?? 0;
@@ -259,6 +295,7 @@ namespace YieldFlo.Forms
         {
             _calTimer?.Stop();
             _baselineTimer?.Stop();
+            _noiseTimer?.Stop();
             base.OnFormClosing(e);
         }
 

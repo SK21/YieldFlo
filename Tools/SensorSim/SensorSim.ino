@@ -16,6 +16,12 @@
 // Serial commands (115200 baud, newline-terminated):
 //   d 35      duty — % of period blocked (0–100)
 //   f 100     frequency in Hz (1–2000)
+//   j 10      jitter — randomize each cycle's blocked time by ±% (0–50, 0 = off).
+//             Emulates paddle-to-paddle transit variation (worn/curled paddles,
+//             chain whip). Cycle period stays fixed; only the blocked segment moves.
+//   x 5       glitches per second (0–100, 0 = off) — brief ~100 µs opposite-polarity
+//             pulses at random times. Emulates EMI edge noise; in Main-only mode
+//             the module has no complementary check, so these pass straight through.
 //   p         toggle polarity: PNP (default, HIGH = clear) / NPN (inverted)
 //   s         stop — freeze outputs at the current level (no edges; tests
 //             the module's no-pulse handling: SensorOK must drop in 500 ms)
@@ -24,7 +30,7 @@
 //   c         freeze in the CLEAR state
 //   ?         print current settings
 //
-// Defaults: 100 Hz, 30 % blocked, PNP, running.
+// Defaults: 100 Hz, 30 % blocked, PNP, no jitter, no glitches, running.
 
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
@@ -41,6 +47,9 @@ uint16_t freqHz   = 100;
 bool     npn      = false;  // false = PNP (HIGH = clear), true = inverted
 bool     running  = true;
 
+uint16_t jitterPct    = 0;  // ± % applied to each cycle's blocked time
+uint16_t glitchPerSec = 0;  // brief opposite-polarity pulses per second
+
 uint32_t periodUs  = 10000;
 uint32_t blockedUs = 3000;
 
@@ -48,10 +57,14 @@ uint32_t blockedUs = 3000;
 bool     phaseBlocked = false;
 uint32_t phaseStartUs = 0;
 
+uint32_t cycleBlockedUs = 3000;  // this cycle's (possibly jittered) blocked time
+uint32_t nextGlitchUs   = 0;
+
 void applySettings()
 {
 	periodUs  = 1000000UL / freqHz;
 	blockedUs = (uint32_t)((uint64_t)periodUs * dutyPct / 100);
+	cycleBlockedUs = blockedUs;
 }
 
 // Set outputs for a beam state. PNP: clear = HIGH on main; NPN inverted.
@@ -69,7 +82,11 @@ void printStatus()
 	Serial.print(dutyPct);
 	Serial.print("%  freq=");
 	Serial.print(freqHz);
-	Serial.print("Hz  polarity=");
+	Serial.print("Hz  jitter=+/-");
+	Serial.print(jitterPct);
+	Serial.print("%  glitches=");
+	Serial.print(glitchPerSec);
+	Serial.print("/s  polarity=");
 	Serial.print(npn ? "NPN" : "PNP");
 	Serial.print("  ");
 	Serial.println(running ? "RUNNING" : (phaseBlocked ? "FROZEN (blocked)" : "FROZEN (clear)"));
@@ -87,11 +104,12 @@ void setup()
 	pinMode(MAIN_PIN, OUTPUT);
 	pinMode(COMP_PIN, OUTPUT);
 	Serial.begin(115200);
+	randomSeed(micros());
 	applySettings();
 	writeBeam(false);
 	phaseStartUs = micros();
 	Serial.println();
-	Serial.println("SensorSim ready. Commands: d <pct>, f <hz>, p, s, g, b, c, ?");
+	Serial.println("SensorSim ready. Commands: d <pct>, f <hz>, j <pct>, x <n>, p, s, g, b, c, ?");
 	printStatus();
 }
 
@@ -136,6 +154,12 @@ void processCommand()
 		case 'f':
 			if (val >= 1 && val <= 2000) { freqHz = (uint16_t)val; applySettings(); }
 			break;
+		case 'j':
+			if (val >= 0 && val <= 50) jitterPct = (uint16_t)val;
+			break;
+		case 'x':
+			if (val >= 0 && val <= 100) { glitchPerSec = (uint16_t)val; nextGlitchUs = micros(); }
+			break;
 		case 'p': npn = !npn; break;
 		case 's': running = false; break;
 		case 'g': running = true; phaseStartUs = micros(); break;
@@ -143,7 +167,7 @@ void processCommand()
 		case 'c': running = false; phaseBlocked = false; writeBeam(false); break;
 		case '?': break;
 		default:
-			Serial.println("unknown — d <pct>, f <hz>, p, s, g, b, c, ?");
+			Serial.println("unknown — d <pct>, f <hz>, j <pct>, x <n>, p, s, g, b, c, ?");
 			return;
 	}
 	printStatus();
@@ -159,10 +183,34 @@ void loop()
 	if (dutyPct == 100) { writeBeam(true);  phaseBlocked = true;  return; }
 
 	uint32_t now = micros();
-	uint32_t segLen = phaseBlocked ? blockedUs : (periodUs - blockedUs);
+
+	// EMI glitch: brief opposite-polarity pulse at a random moment,
+	// averaging glitchPerSec per second
+	if (glitchPerSec > 0 && (int32_t)(now - nextGlitchUs) >= 0)
+	{
+		writeBeam(!phaseBlocked);
+		delayMicroseconds(100);
+		writeBeam(phaseBlocked);
+		uint32_t meanUs = 1000000UL / glitchPerSec;
+		nextGlitchUs = now + (uint32_t)random(meanUs / 2, meanUs + meanUs / 2);
+	}
+
+	uint32_t segLen = phaseBlocked ? cycleBlockedUs : (periodUs - cycleBlockedUs);
 	if (now - phaseStartUs >= segLen)
 	{
 		phaseBlocked = !phaseBlocked;
+		if (phaseBlocked)
+		{
+			// new cycle — roll this cycle's blocked time; the period is
+			// untouched, matching a paddle whose transit past the beam
+			// varies while the chain spacing stays fixed
+			cycleBlockedUs = blockedUs;
+			if (jitterPct > 0)
+			{
+				int32_t dev = (int32_t)random(-(int32_t)jitterPct, (int32_t)jitterPct + 1);
+				cycleBlockedUs = blockedUs + (int32_t)(((int64_t)blockedUs * dev) / 100);
+			}
+		}
 		phaseStartUs = now;
 		writeBeam(phaseBlocked);
 	}

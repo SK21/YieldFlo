@@ -1,0 +1,80 @@
+SensorSim — optical grain-flow sensor simulator for YieldFlo bench testing
+===========================================================================
+
+Drives the module's Main + Comp inputs with a complementary square wave, like
+the elevator optical sensor. The blocked fraction of each period is the sensor
+ratio the module should report.
+
+Wiring
+------
+  MAIN pin  ->  module Main input
+  COMP pin  ->  module Comp input   (not needed when the module is in Main-only mode)
+  GND       ->  module GND          (always required)
+
+  Board pins:  ESP8266 D1 mini / D1 mini pro:  MAIN = pin labeled D1, COMP = D2
+               ESP32 devkit:                   MAIN = GPIO 25,       COMP = GPIO 26
+
+  3.3 V boards only. Do NOT drive the module's ESP32 pins from a 5 V board
+  (Nano/Uno) without a level divider.
+
+Serial commands (115200 baud, newline-terminated)
+-------------------------------------------------
+  d 25    Duty — % of each period the beam is blocked (0-100).
+          Use the empty-elevator baseline value from the app's Yield Cal
+          screen to mimic a real machine running empty.
+
+  f 7     Frequency in Hz (1-2000) = paddles per second.
+          From machine specs:  paddles/sec = rpm x sprocket teeth
+                                             / teeth-per-paddle / 60
+          Example: 350 rpm, 6-tooth sprocket, paddle every 5 teeth
+                   = 350 x 6 / 5 / 60 = 7 Hz.
+
+  j 10    Jitter — randomize each cycle's blocked time by +/- this % (0-50,
+          0 = off). Emulates MECHANICAL paddle-to-paddle variation: worn or
+          curled paddles, chain whip, paddle wobble. The cycle period stays
+          fixed (chain spacing is constant); only the blocked segment moves.
+
+  x 5     Glitches per second (0-100, 0 = off). Injects brief ~100 us
+          opposite-polarity pulses at random moments. Emulates ELECTRICAL
+          edge noise (EMI pickup on the sensor wire). In Main-only mode the
+          module has no complementary-signal check, so every glitch reaches
+          the measurement.
+
+  p       Toggle polarity: PNP (default, HIGH = beam clear, FarmTrx style)
+          or NPN (inverted).
+
+  s       Stop — freeze outputs at the current level (no more edges). Tests
+          the module's no-pulse handling: SensorOK must drop within 500 ms.
+  g       Go — resume pulsing.
+  b       Freeze in the BLOCKED state (reproduces "beam latched blocked").
+  c       Freeze in the CLEAR state.
+  ?       Print current settings.
+
+  Defaults on power-up: 100 Hz, 30 % blocked, PNP, no jitter, no glitches,
+  running.
+
+Bench test recipes
+------------------
+1. Clean-signal check (is the firmware OK at this machine's paddle rate?)
+     f <paddle rate>, d <empty baseline %>, j 0, x 0
+   Display steady  -> firmware OK; any field jumpiness is real signal.
+   Display jumpy   -> firmware problem; report it.
+
+2. Mechanical emulation (worn paddles / chain whip)
+     j 5, then j 10, j 15, j 20 ...
+   Find the level where the app's flow bar looks like the field behaviour.
+
+3. Electrical emulation (EMI on the sensor wire)
+     j 0, then x 5, x 20, x 50
+   Glitches give sharper, more erratic jumps than jitter's wander.
+   Whichever of (2) or (3) matches the field look identifies the cause:
+   mechanical -> averaging fix / machine maintenance;
+   electrical -> harness shielding/routing, and/or a firmware glitch filter.
+
+Display note
+------------
+The app's main-screen flow bar refreshes once per second and shows the single
+most recent 200 ms module packet — there is no averaging in between. At low
+pulse rates (f 1-2) the bar can look perfectly steady even while the module is
+flagging sensor-timeout packets, because the 1 Hz refresh phase-locks with the
+signal. Judge jumpiness at realistic paddle rates (f 5 and up).
