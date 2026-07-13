@@ -14,7 +14,7 @@
 // Build with USB support set to "None"; debug output is on USART1 (PA9/PA10).
 
 #define InoDescription "YieldFlo_STM32F1"
-#define InoID 12076         // firmware version — update with every build (DDMMY format)
+#define InoID 13076         // firmware version — update with every build (DDMMY format)
 
 // ── User settings (compile-time) ─────────────────────────────────────────
 const uint8_t ModuleID       = 0;     // module ID (informational)
@@ -65,6 +65,7 @@ volatile uint32_t LastEdgeUs = 0;		// micros() at last committed edge — set ON
 volatile uint32_t SegStartUs = 0;		// micros() at start of the current blocked/clear segment
 volatile bool BeamBlocked = false;		// current committed beam state
 volatile uint16_t NoiseCount = 0;		// rejected noise edges this window
+volatile uint16_t PaddleCycles = 0;		// completed paddle cycles since last TakePaddleHz()
 bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
 

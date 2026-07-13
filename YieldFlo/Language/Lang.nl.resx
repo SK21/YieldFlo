@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>afsluitingsverhouding zonder graan (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Basiswaarde instellen</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Ruis</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Schoepen</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Laatst opgeslagen:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module niet verbonden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Opbrengstfactor:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibratiemultiplicator — vergroot om opbrengstlezingen te verhogen</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Werkelijk gewicht:</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Tip: laat de lege elevator 10 s lopen om de basiswaarde te bepalen.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibratie opgeslagen en toegepast.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>Druk op „Opslaan &amp;&amp; Toepassen" om te bevestigen.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Voer het werkelijk gewogen gewicht in.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Geen meetgegevens — voer eerst een calibratierun uit.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Nieuwe factor: {0:F3}</value></data>
@@ -149,7 +152,7 @@ Zorg dat de elevator leeg loopt.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Type:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Breedte:</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Vóór de antenne:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Vóór het draaipunt:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Voer een maaikopnaam in.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Minstens één maaikop vereist.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Deze maaikop verwijderen?</value></data>

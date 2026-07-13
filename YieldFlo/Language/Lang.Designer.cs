@@ -110,6 +110,8 @@ namespace YieldFlo.Language
         internal static string lgSetBaseline        => Get("lgSetBaseline");
         internal static string lgBaselineNoModule   => Get("lgBaselineNoModule");
         internal static string lgNoise              => Get("lgNoise");
+        internal static string lgPaddles            => Get("lgPaddles");
+        internal static string lgLastSaved          => Get("lgLastSaved");
         internal static string lgYieldFactor        => Get("lgYieldFactor");
         internal static string lgFactorNote         => Get("lgFactorNote");
         internal static string lgCalibrationRun     => Get("lgCalibrationRun");
@@ -119,6 +121,7 @@ namespace YieldFlo.Language
         internal static string lgActualWeight       => Get("lgActualWeight");
         internal static string lgCalibrationTip     => Get("lgCalibrationTip");
         internal static string lgCalSaved           => Get("lgCalSaved");
+        internal static string lgPendingSave        => Get("lgPendingSave");
         internal static string lgEnterWeighedAmt    => Get("lgEnterWeighedAmt");
         internal static string lgNoMeasuredData     => Get("lgNoMeasuredData");
         internal static string lgNewFactorResult    => Get("lgNewFactorResult");

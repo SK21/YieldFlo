@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>współczynnik zasłonięcia bez ziarna (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Ustaw poziom bazowy</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Szum</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Łopatki</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Ostatnio zapisano:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Moduł nie jest połączony.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Współczynnik plonu:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>mnożnik kalibracji — zwiększ, aby podnieść odczyty plonu</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Rzeczywista masa:</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Wskazówka: uruchom pusty elewator na 10 s, aby wyznaczyć poziom bazowy.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibracja zapisana i zastosowana.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>Naciśnij „Zapisz &amp;&amp; Zastosuj", aby potwierdzić.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Wprowadź rzeczywistą zważoną masę.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Brak danych — najpierw wykonaj przebieg kalibracji.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Nowy współczynnik: {0:F3}</value></data>
@@ -149,7 +152,7 @@ Upewnij się, że elewator pracuje bez ziarna.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Typ:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Szerokość:</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Przed anteną:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Przed punktem obrotu:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Wprowadź nazwę hedera.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Wymagany jest co najmniej jeden heder.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Usunąć ten heder?</value></data>

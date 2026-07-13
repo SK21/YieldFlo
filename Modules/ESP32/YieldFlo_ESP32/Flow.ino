@@ -56,6 +56,7 @@ void IRAM_ATTR CommitEdge(bool blocked, uint32_t at)
 			{
 				WinBlockedUs += CycBlockedUs;
 				WinTotalUs   += cyc;
+				PaddleCycles++;
 			}
 		}
 		CycStartUs = at;
@@ -80,6 +81,26 @@ void IRAM_ATTR onRPMedge()
 	if (now - LastRPMedgeUs < 50000) return;
 	LastRPMedgeUs = now;
 	RPMpulseCount++;
+}
+
+// Paddle rate for the 1 Hz packet: completed cycles since the last call,
+// normalized by the actual elapsed time so a skipped send (CAN recovering)
+// doesn't double the next reading. Rounded to whole Hz — the app averages
+// several packets to recover the fraction.
+uint8_t TakePaddleHz()
+{
+	static uint32_t lastMs = 0;
+	noInterrupts();
+	uint16_t c = PaddleCycles;  PaddleCycles = 0;
+	interrupts();
+
+	uint32_t now = millis();
+	uint32_t elapsed = now - lastMs;
+	lastMs = now;
+	if (elapsed == 0) return 0;
+
+	uint32_t hz = ((uint32_t)c * 1000 + elapsed / 2) / elapsed;
+	return (hz > 255) ? 255 : (uint8_t)hz;
 }
 
 void ReadFlow()

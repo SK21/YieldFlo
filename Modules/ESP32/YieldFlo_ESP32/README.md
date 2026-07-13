@@ -80,13 +80,15 @@ port 30100 (Ethernet mode broadcasts to `subnet.255` on the wired network;
 packet format is identical):
 
 - Data packet, 5 Hz: 11 bytes — PGN 40001 LE, 8-byte body, CRC8 (byte sum)
-- Temperature packet, 1 Hz: 6 bytes — PGN 40002 LE, flags (bit0=TempOK),
-  temp_raw int16 LE (raw ADS1115 AIN2), CRC8
+- Temperature packet, 1 Hz: 7 bytes — PGN 40002 LE, flags (bit0=TempOK,
+  bit1=PaddleHzPresent), temp_raw int16 LE (raw ADS1115 AIN2),
+  paddle_hz uint8 (paddles/s), CRC8
 
 **CAN bus** — 250 kbps, extended IDs, DLC 8:
 
 - Data frame, 5 Hz: `0x18FF00F8`, 8-byte body (no CRC byte — CAN has its own)
-- Temperature frame, 1 Hz: `0x18FF01F8`, [0]=flags, [1-2]=temp_raw, [3-7]=0
+- Temperature frame, 1 Hz: `0x18FF01F8`, [0]=flags, [1-2]=temp_raw,
+  [3]=paddle_hz (paddles/s), [4-7]=0
 
 CAN Bus Off is retried every 3 s; after 5 failed recoveries the module falls
 back to WiFi for the session (EEPROM unchanged — CAN returns on restart).

@@ -88,9 +88,10 @@ changing a pin only means editing the constant at the top of the sketch.
 
 | Bytes | Field |
 |---|---|
-| 0 | flags: bit0=TempOK |
+| 0 | flags: bit0=TempOK, bit1=PaddleHzPresent |
 | 1-2 | temp_raw int16 LE (raw ADS1115 AIN2) |
-| 3-7 | 0 |
+| 3 | paddle_hz uint8 (completed paddle cycles per second) |
+| 4-7 | 0 |
 
 ## Differences from the ESP32 module
 

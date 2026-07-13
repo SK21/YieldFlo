@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>ratio d'obstruction sans grain (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Définir la référence</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Bruit</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Palettes</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Dernier enregistrement :</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module non connecté.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Facteur de rendement :</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>multiplicateur de calibration — augmenter pour hausser les lectures</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Poids réel :</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Conseil : faire tourner l'élévateur vide 10 s pour trouver la référence.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Calibration enregistrée et appliquée.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>Appuyez sur « Enregistrer &amp;&amp; Appliquer » pour confirmer.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Entrer le poids réel pesé.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Aucune donnée — effectuer d'abord une passe de calibration.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Nouveau facteur : {0:F3}</value></data>
@@ -149,7 +152,7 @@ S'assurer que l'élévateur tourne sans grain.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Type :</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Largeur :</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Devant l'antenne :</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Devant le pivot :</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Entrer un nom de coupe.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Au moins une coupe requise.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Supprimer cette coupe ?</value></data>

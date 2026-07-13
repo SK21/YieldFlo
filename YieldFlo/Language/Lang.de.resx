@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>Verschlussgrad ohne Erntegut (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Grundwert setzen</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Rauschen</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Paddel</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Zuletzt gespeichert:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modul nicht verbunden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Ertragsfaktor:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>Kalibrierungsmultiplikator — erhöhen um Ertragswerte anzuheben</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Tatsächliches Gewicht:</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Tipp: leeren Elevator 10 Sek. laufen lassen um den Grundwert zu ermitteln.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibrierung gespeichert und angewendet.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>Zum Bestätigen „Speichern &amp;&amp; Anwenden" drücken.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Tatsächliches gewogenes Gewicht eingeben.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Keine Messdaten — zuerst einen Kalibrierungslauf durchführen.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Neuer Faktor: {0:F3}</value></data>
@@ -149,7 +152,7 @@ Elevator muss ohne Erntegut laufen.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Typ:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Breite:</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Vor der Antenne:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Vor dem Drehpunkt:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Schneidwerknamen eingeben.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Mindestens ein Schneidwerk erforderlich.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Dieses Schneidwerk löschen?</value></data>

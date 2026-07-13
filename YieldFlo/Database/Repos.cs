@@ -469,6 +469,23 @@ SELECT last_insert_rowid();", conn);
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
+        // When the latest calibration for this profile/crop was saved (local time),
+        // or null if none has been saved yet. calibrated_at is written by SQLite
+        // as UTC (datetime('now')) — converted here so callers only see local.
+        public DateTime? GetLatestDate(int profileId, int cropId)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "SELECT datetime(calibrated_at, 'localtime') FROM calibrations " +
+                "WHERE profile_id=@p AND crop_id=@c ORDER BY id DESC LIMIT 1", conn);
+            cmd.Parameters.AddWithValue("@p", profileId);
+            cmd.Parameters.AddWithValue("@c", cropId);
+            if (cmd.ExecuteScalar() is string s && DateTime.TryParse(s, out var dt))
+                return dt;
+            return null;
+        }
+
         public (double baseline, double yieldFactor, int delaySec) GetLatest(int profileId, int cropId)
         {
             using var conn = new SQLiteConnection(_cs);

@@ -59,13 +59,13 @@ namespace YieldFlo.Classes
         /// <summary>
         /// Computes a corrected YieldFactor from the actual weighed mass.
         /// actualBushels must be in internal bushels (already converted from display unit).
-        /// Sets YieldFactor in place and returns the new value.
+        /// Pure calculation — does not change YieldFactor; the caller decides
+        /// whether/when to apply the result (Save & Apply).
         /// </summary>
         public double ComputeNewFactor(double actualBushels)
         {
             if (CalRunBushels <= 0) return YieldFactor;
-            YieldFactor = YieldFactor * (actualBushels / CalRunBushels);
-            return YieldFactor;
+            return YieldFactor * (actualBushels / CalRunBushels);
         }
 
         private double _smoothAccum = 0;

@@ -145,6 +145,8 @@
   <data name="lgBaselineNote" xml:space="preserve"><value>obstruction ratio with no grain (0–1)</value></data>
   <data name="lgSetBaseline" xml:space="preserve"><value>Set Baseline</value></data>
   <data name="lgNoise" xml:space="preserve"><value>Noise</value></data>
+  <data name="lgPaddles" xml:space="preserve"><value>Paddles</value></data>
+  <data name="lgLastSaved" xml:space="preserve"><value>Last saved:</value></data>
   <data name="lgBaselineNoModule" xml:space="preserve"><value>Module not connected.</value></data>
   <data name="lgYieldFactor" xml:space="preserve"><value>Yield Factor:</value></data>
   <data name="lgFactorNote" xml:space="preserve"><value>calibration multiplier — increase to raise yield readings</value></data>
@@ -155,6 +157,7 @@
   <data name="lgActualWeight" xml:space="preserve"><value>Actual weight:</value></data>
   <data name="lgCalibrationTip" xml:space="preserve"><value>Tip: run empty elevator for 10s to find baseline sensor reading.</value></data>
   <data name="lgCalSaved" xml:space="preserve"><value>Calibration saved and applied.</value></data>
+  <data name="lgPendingSave" xml:space="preserve"><value>Press Save &amp;&amp; Apply to confirm.</value></data>
   <data name="lgEnterWeighedAmt" xml:space="preserve"><value>Enter the actual weighed amount.</value></data>
   <data name="lgNoMeasuredData" xml:space="preserve"><value>No measured data — run a calibration pass first.</value></data>
   <data name="lgNewFactorResult" xml:space="preserve"><value>New factor: {0:F3}</value></data>
@@ -203,7 +206,7 @@ Make sure the elevator is running with no grain.</value></data>
   <!-- ── Headers form ───────────────────────────────────────────────────── -->
   <data name="lgType" xml:space="preserve"><value>Type:</value></data>
   <data name="lgWidth" xml:space="preserve"><value>Width:</value></data>
-  <data name="lgHeaderOffset" xml:space="preserve"><value>Ahead of antenna:</value></data>
+  <data name="lgHeaderOffset" xml:space="preserve"><value>Ahead of Pivot:</value></data>
   <data name="lgEnterHeaderName" xml:space="preserve"><value>Enter a header name.</value></data>
   <data name="lgMustHaveOneHeader" xml:space="preserve"><value>Must have at least one header.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Delete this header?</value></data>

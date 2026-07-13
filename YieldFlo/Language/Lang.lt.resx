@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>užtvėrimo santykis be grūdų (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Nustatyti bazinę vertę</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Triukšmas</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Mentelės</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Paskutinį kartą išsaugota:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modulis neprijungtas.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Derliaus koeficientas:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibravimo dauginamasis — padidinkite, kad padidintumėte rodmenis</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Tikrasis svoris:</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Patarimas: paleiskite tuščią elevatorių 10 s bazinei vertei nustatyti.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibravimas išsaugotas ir pritaikytas.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>Paspauskite „Išsaugoti &amp;&amp; Taikyti", kad patvirtintumėte.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Įveskite faktinį pasverto svorio kiekį.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Nėra matavimo duomenų — pirmiausia atlikite kalibravimo ciklą.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Naujas koeficientas: {0:F3}</value></data>
@@ -149,7 +152,7 @@
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Tipas:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Plotis:</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Prieš anteną:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Prieš sukimosi tašką:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Įveskite galvos pavadinimą.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Reikalinga bent viena galva.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Ištrinti šią galvą?</value></data>

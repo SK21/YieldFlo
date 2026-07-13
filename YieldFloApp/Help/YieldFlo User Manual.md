@@ -210,7 +210,7 @@ Headers define the cutting width of the front attachment. Width is used to calcu
 | **Name** | Header name (e.g. 30ft Draper, 8-row Corn Head) |
 | **Type** | Header type category |
 | **Width** | Cutting width in feet (Imperial) or metres (Metric) |
-| **Ahead of antenna** | Distance the header sits ahead of the position AOG broadcasts. Enter AOG's **pivot-to-header** distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them. |
+| **Ahead of Pivot** | Distance the header sits ahead of the position AOG broadcasts. Enter AOG's **pivot-to-header** distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them. |
 
 ### Adding a header
 
@@ -291,6 +291,9 @@ The baseline must be set before the first calibration run:
 2. Press **Menu → Yield Cal**
 3. When the reading is stable, press **Set Baseline**
 4. Confirm the prompt
+5. Press **Save && Apply**
+
+Nothing takes effect, and nothing is saved, until **Save && Apply** is pressed — this applies to both Set Baseline and Apply Cal.
 
 > **Tip:** Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.
 
@@ -299,6 +302,12 @@ The baseline must be set before the first calibration run:
 Next to the **Set Baseline** button, the **Noise** readout shows how many electrical glitches per second the module is rejecting on the optical sensor signal, averaged over the last 5 seconds. On a healthy installation it reads **0**; the value turns orange when glitches are being rejected, and shows **--** when no module is connected.
 
 A rising noise value — especially one that climbs with elevator speed — indicates electrical interference on the sensor wire (static discharge from the elevator, a chafed or loose wire shaken by vibration, or pickup from nearby wiring). The module filters these glitches out of the yield reading automatically, but persistent noise is worth fixing at the source: check the sensor wire's routing and shielding, connector condition, and the ground path from the sensor bracket and elevator housing to the chassis. The readout works in both sensor signal modes, including Main only.
+
+### Paddle rate readout
+
+Below the **Set Baseline** button, the **Paddles** readout shows how many elevator paddles per second the sensor is seeing, averaged over the last 5 seconds. It shows **--** when no module is connected or the module firmware predates the feature.
+
+Use it to verify the sensor is catching every paddle: the value should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). On combines with another optical yield monitor sharing the sensor, the value can be compared directly against that monitor's sensor calibration result (for FarmTrx, the "X% @ Y Hz" line on its Sensor Calibration page).
 
 ### Processing delay
 
@@ -326,6 +335,8 @@ A calibration pass measures the actual mass of grain harvested during a known ru
 7. Press **Apply Cal**
 
 YieldFlo calculates a new Yield Factor and displays the result. Press **Save && Apply** to save the new factor to the active profile.
+
+Below the **Save && Apply** button, a **Last saved** line shows the date and time the calibration for the active profile and crop was last saved with **Save && Apply**. It is blank until a calibration has been saved.
 
 ### Manual factor adjustment
 

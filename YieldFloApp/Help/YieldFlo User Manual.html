@@ -258,7 +258,7 @@ li { margin: 2px 0; }
 <tr><td><strong>Name</strong></td><td>Header name (e.g. 30ft Draper, 8-row Corn Head)</td></tr>
 <tr><td><strong>Type</strong></td><td>Header type category</td></tr>
 <tr><td><strong>Width</strong></td><td>Cutting width in feet (Imperial) or metres (Metric)</td></tr>
-<tr><td><strong>Ahead of antenna</strong></td><td>Distance the header sits ahead of the position AOG broadcasts. Enter AOG's <strong>pivot-to-header</strong> distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them.</td></tr>
+<tr><td><strong>Ahead of Pivot</strong></td><td>Distance the header sits ahead of the position AOG broadcasts. Enter AOG's <strong>pivot-to-header</strong> distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them.</td></tr>
 </table>
 
 <h3>Adding a header</h3>
@@ -346,7 +346,10 @@ li { margin: 2px 0; }
 <li>Open <strong>Menu &rarr; Yield Cal</strong></li>
 <li>When the reading is stable, press <strong>Set Baseline</strong></li>
 <li>Confirm the prompt</li>
+<li>Press <strong>Save &amp; Apply</strong></li>
 </ol>
+
+<p>Nothing takes effect, and nothing is saved, until <strong>Save &amp; Apply</strong> is pressed &mdash; this applies to both Set Baseline and Apply Cal.</p>
 
 <blockquote><strong>Tip:</strong> Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.</blockquote>
 
@@ -355,6 +358,12 @@ li { margin: 2px 0; }
 <p>Next to the <strong>Set Baseline</strong> button, the <strong>Noise</strong> readout shows how many electrical glitches per second the module is rejecting on the optical sensor signal, averaged over the last 5 seconds. On a healthy installation it reads <strong>0</strong>; the value turns orange when glitches are being rejected, and shows <strong>--</strong> when no module is connected.</p>
 
 <p>A rising noise value &mdash; especially one that climbs with elevator speed &mdash; indicates electrical interference on the sensor wire (static discharge from the elevator, a chafed or loose wire shaken by vibration, or pickup from nearby wiring). The module filters these glitches out of the yield reading automatically, but persistent noise is worth fixing at the source: check the sensor wire's routing and shielding, connector condition, and the ground path from the sensor bracket and elevator housing to the chassis. The readout works in both sensor signal modes, including Main only.</p>
+
+<h3>Paddle rate readout</h3>
+
+<p>Below the <strong>Set Baseline</strong> button, the <strong>Paddles</strong> readout shows how many elevator paddles per second the sensor is seeing, averaged over the last 5 seconds. It shows <strong>--</strong> when no module is connected or the module firmware predates the feature.</p>
+
+<p>Use it to verify the sensor is catching every paddle: the value should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). On combines with another optical yield monitor sharing the sensor, the value can be compared directly against that monitor's sensor calibration result (for FarmTrx, the &ldquo;X% @ Y Hz&rdquo; line on its Sensor Calibration page).</p>
 
 <h3>Processing delay</h3>
 
@@ -377,6 +386,8 @@ li { margin: 2px 0; }
 </ol>
 
 <p>YieldFlo calculates a new Yield Factor and displays the result. Press <strong>Save &amp; Apply</strong> to save the new factor to the active profile.</p>
+
+<p>Below the <strong>Save &amp; Apply</strong> button, a <strong>Last saved</strong> line shows the date and time the calibration for the active profile and crop was last saved with <strong>Save &amp; Apply</strong>. It is blank until a calibration has been saved.</p>
 
 <h3>Manual factor adjustment</h3>
 

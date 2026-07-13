@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>степень перекрытия без зерна (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Установить базовое значение</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Шум</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Лопатки</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Последнее сохранение:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Модуль не подключен.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Коэффициент урожайности:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>калибровочный множитель — увеличьте для повышения показаний</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Фактическая масса:</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Совет: запустите пустой элеватор на 10 с для определения базового значения.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Калибровка сохранена и применена.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>Нажмите «Сохранить &amp;&amp; Применить», чтобы подтвердить.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Введите фактическую взвешенную массу.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Нет данных — сначала выполните калибровочный прогон.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Новый коэффициент: {0:F3}</value></data>
@@ -149,7 +152,7 @@
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Тип:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Ширина:</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Перед антенной:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>Перед точкой поворота:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Введите название жатки.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Необходима хотя бы одна жатка.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Удалить эту жатку?</value></data>

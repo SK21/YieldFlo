@@ -199,13 +199,10 @@ namespace YieldFlo.Forms
             lblSpeed.Text = speed.ToString("F1");
             lblSpeedUnit.Text = Props.SpeedUnit;
 
-            // Bar 1 — Elevator flow (obstruction ratio 0–100%)
+            // Bar 1 — Elevator flow (raw obstruction ratio, 0–100%)
             double flow = Math.Min(1.0, Math.Max(0, Core.LastSensor1));
             pnlSensor1Fill.Width = (int)(pnlSensor1.Width * flow);
             lblSensor1Value.Text = (flow * 100).ToString("F0") + "%";
-            pnlSensor1Fill.BackColor = flow > 0.05
-                ? Color.FromArgb(50, 200, 50)
-                : Color.FromArgb(80, 80, 80);
 
             // Bar 2 — Moisture (0–30% range mapped to full bar width)
             const double MaxMoisture = 30.0;

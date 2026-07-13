@@ -199,11 +199,12 @@ namespace YieldFlo.Communication
 
         private void ParseTempPacket(byte[] data)
         {
-            // Temperature packet (6 bytes):
-            // [0-1] PGN 40002 little-endian
-            // [2]   flags  bit0=TempOK
-            // [3-4] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
-            // [5]   CRC8
+            // Temperature packet (7 bytes; 6 from firmware before 13076):
+            // [0-1]  PGN 40002 little-endian
+            // [2]    flags  bit0=TempOK, bit1=PaddleHzPresent
+            // [3-4]  temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
+            // [5]    paddle_hz uint8  (paddles/s — only when bit1 set)
+            // [last] CRC8
             if (data.Length < 6) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
@@ -211,6 +212,9 @@ namespace YieldFlo.Communication
             short tempRaw = BitConverter.ToInt16(data, 3);
 
             Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
+
+            bool hzOk = (data[2] & 0x02) != 0 && data.Length >= 7;
+            Core.LastPaddleHz = hzOk ? data[5] : -1;
         }
 
         // ── Socket callbacks ──────────────────────────────────────────────────

@@ -49,7 +49,7 @@ namespace YieldFlo.Forms
             NumpadHelper.Wire(this, numWidth, (double)numWidth.Minimum, (double)numWidth.Maximum,
                               1, $"Header Width ({unit})");
             NumpadHelper.Wire(this, numOffset, (double)numOffset.Minimum, (double)numOffset.Maximum,
-                              1, $"Ahead of Antenna ({unit})");
+                              1, $"Ahead of Pivot ({unit})");
             btnSave.Focus();
         }
 

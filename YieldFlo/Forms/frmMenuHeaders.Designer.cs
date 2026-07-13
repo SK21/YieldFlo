@@ -99,10 +99,14 @@ namespace YieldFlo.Forms
             this.lblWidthUnit.Text = "m"; this.lblWidthUnit.Font = vf;
             this.lblWidthUnit.Location = new System.Drawing.Point(204, 67); this.lblWidthUnit.AutoSize = true;
 
-            // Header position ahead of the GPS antenna — pass boundaries are
-            // recorded at the header, matching where AOG paints its coverage
+            // Header position ahead of the AOG pivot point (AOG's pivot-to-header
+            // distance) — pass boundaries are recorded at the header, matching
+            // where AOG paints its coverage. Label is two rows tall so the text
+            // can wrap instead of clipping at the 104 px column.
             this.lblOffset.Text     = Lang.lgHeaderOffset; this.lblOffset.Font = lf;
-            this.lblOffset.Location = new System.Drawing.Point(8, 99); this.lblOffset.AutoSize = false; this.lblOffset.Width = 100;
+            this.lblOffset.Location = new System.Drawing.Point(8, 90); this.lblOffset.AutoSize = false;
+            this.lblOffset.Size     = new System.Drawing.Size(104, 34);
+            this.lblOffset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.numOffset.Font     = vf;
             this.numOffset.Location = new System.Drawing.Point(116, 96); this.numOffset.Width = 80;
             this.numOffset.Minimum  = -30; this.numOffset.Maximum = 100; this.numOffset.DecimalPlaces = 2;

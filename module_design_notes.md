@@ -585,7 +585,7 @@ If FarmTrx only wired black through the harness, white/Comp never reaches the DB
 
 ### Reference measurement
 
-Empty-elevator duty cycle on the OEM install = baseline obstruction ratio (~20%, SensorRatio ≈ 200). Measure with only FarmTrx connected, again after Y-tap added (should not change), then compare FarmTrx yield trace vs YieldFlo SensorRatio/NoiseCount during a harvest pass. NoiseCount near zero = clean shared tap.
+Empty-elevator duty cycle on the OEM install = baseline obstruction ratio. **Measured 2026-07-12 via the Y-tap: ~6%, identical at idle and full rpm** (rpm-independence is expected — the ratio is pure paddle geometry, width ÷ spacing). The earlier ~20% planning estimate was wrong. FarmTrx exposes its own tare for comparison: app → Device Calibration → Sensor Calibration card, "Calibration Results: X% @ Y Hz" (blocked % + paddle frequency; operator's manual p. 20 example shows 5% @ 18.53 Hz — same ballpark). Cross-check: FarmTrx % vs YieldFlo empty flow % from the same run, FarmTrx Hz vs sprocket × chain-speed math. Then compare FarmTrx yield trace vs YieldFlo SensorRatio/NoiseCount during a harvest pass. NoiseCount near zero = clean shared tap.
 
 ---
 

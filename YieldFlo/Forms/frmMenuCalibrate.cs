@@ -26,6 +26,11 @@ namespace YieldFlo.Forms
         private readonly Queue<int> _noiseSamples = new Queue<int>();
         private const int NoiseSampleCount = 10;       // 10 × 500 ms ticks = 5 s
 
+        // Paddle-rate readout: the module reports whole paddles/s once a second,
+        // so a true 7.4 Hz reads 7-or-8 — the same rolling average recovers the
+        // fraction. Compare against the FarmTrx sensor cal result (X% @ Y Hz).
+        private readonly Queue<int> _hzSamples = new Queue<int>();
+
         public frmMenuCalibrate()
         {
             InitializeComponent();
@@ -44,6 +49,7 @@ namespace YieldFlo.Forms
                 c.MouseUp   += (s, ev) => _dragging = false;
             }
             LoadCurrentValues();
+            UpdateSavedLabel();
             this.Shown += frmMenuCalibrate_Shown;
 
             _calTimer = new System.Windows.Forms.Timer { Interval = 1000 };
@@ -121,6 +127,19 @@ namespace YieldFlo.Forms
                                 System.Math.Max((double)numFactor.Minimum, y.YieldFactor));
         }
 
+        // FarmTrx-style "last calibration" stamp — when the current profile/crop's
+        // calibration record was last written (Save && Apply or Apply Cal).
+        private void UpdateSavedLabel()
+        {
+            string when = "--";   // no profile/crop active, or nothing saved for them yet
+            if (Core.ActiveProfileId > 0 && Core.ActiveCropId > 0)
+            {
+                var dt = Core.Database.Calibrations.GetLatestDate(Core.ActiveProfileId, Core.ActiveCropId);
+                if (dt.HasValue) when = dt.Value.ToString("g");
+            }
+            lblCalSaved.Text = Lang.lgLastSaved + " " + when;
+        }
+
         private void btnSaveCal_Click(object sender, EventArgs e)
         {
             Core.Yield.ProcessingDelaySec = (int)numDelay.Value;
@@ -139,6 +158,7 @@ namespace YieldFlo.Forms
                     (double)numFactor.Value,
                     (int)numDelay.Value);
             }
+            UpdateSavedLabel();
 
             Props.ShowMessage(Lang.lgCalSaved);
         }
@@ -204,28 +224,15 @@ namespace YieldFlo.Forms
             double newFactor = Core.Yield.ComputeNewFactor(actualBushels);
             Props.WriteErrorLog(diag + $" -> newFactor={newFactor:F4} "
                 + $"(ratio={actualBushels / calRunBushels:F4})");
-            Core.Yield.ResetSmoothing();
 
-            // Clamp to valid range and update the field
+            // Clamp to valid range and stage in the field — nothing takes
+            // effect (Core.Yield, the database) until Save & Apply is pressed.
             decimal clamped = (decimal)System.Math.Min((double)numFactor.Maximum,
                                System.Math.Max((double)numFactor.Minimum, newFactor));
             numFactor.Value = clamped;
 
             lblCalResult.Text = string.Format(Lang.lgNewFactorResult, newFactor);
-
-            // Auto-persist
-            Properties.Settings.Default.ProcessingDelaySec = (int)numDelay.Value;
-            Properties.Settings.Default.Save();
-            if (Core.ActiveProfileId > 0 && Core.ActiveCropId > 0)
-            {
-                Core.Database.Calibrations.Save(
-                    Core.ActiveProfileId, Core.ActiveCropId,
-                    (double)numBaseline.Value,
-                    newFactor,
-                    (int)numDelay.Value);
-            }
-
-            Props.ShowMessage(string.Format(Lang.lgFactorUpdated, newFactor));
+            Props.ShowMessage(Lang.lgPendingSave);
         }
 
         private void CalTimer_Tick(object sender, EventArgs e)
@@ -240,6 +247,8 @@ namespace YieldFlo.Forms
                 _noiseSamples.Clear();
                 lblNoise.Text = Lang.lgNoise + " --";
                 lblNoise.ForeColor = Color.Silver;
+                _hzSamples.Clear();
+                lblPaddleHz.Text = Lang.lgPaddles + " --";
                 return;
             }
 
@@ -253,6 +262,22 @@ namespace YieldFlo.Forms
 
             lblNoise.Text = Lang.lgNoise + " " + perSec + "/s";
             lblNoise.ForeColor = perSec > 0 ? Color.Orange : Color.Silver;
+
+            if (Core.LastPaddleHz < 0)
+            {
+                // module firmware predates the paddle_hz field
+                _hzSamples.Clear();
+                lblPaddleHz.Text = Lang.lgPaddles + " --";
+            }
+            else
+            {
+                _hzSamples.Enqueue(Core.LastPaddleHz);
+                while (_hzSamples.Count > NoiseSampleCount) _hzSamples.Dequeue();
+
+                double hzSum = 0;
+                foreach (int s in _hzSamples) hzSum += s;
+                lblPaddleHz.Text = Lang.lgPaddles + " " + (hzSum / _hzSamples.Count).ToString("0.0") + " Hz";
+            }
         }
 
         private void UpdateCalMeasuredLabel()
@@ -358,21 +383,10 @@ namespace YieldFlo.Forms
                                Math.Max((double)numBaseline.Minimum, median));
             numBaseline.Value = clamped;
 
-            // Apply immediately — the user just confirmed this value, so the
-            // yield math must use it now, not only after Save Cal is pressed.
-            Core.Yield.SensorBaseline = (double)clamped;
-            Core.Yield.ResetSmoothing();
-
-            if (Core.ActiveProfileId > 0 && Core.ActiveCropId > 0)
-            {
-                Core.Database.Calibrations.Save(
-                    Core.ActiveProfileId, Core.ActiveCropId,
-                    (double)clamped,
-                    (double)numFactor.Value,
-                    (int)numDelay.Value);
-            }
-
-            Props.ShowMessage(Lang.lgCalSaved);
+            // Staged only — nothing reaches Core.Yield or the database until
+            // Save & Apply is pressed. A Calibration Run started before that
+            // still measures against the previous baseline.
+            Props.ShowMessage(Lang.lgPendingSave);
         }
 
         private void frmMenuCalibrate_Shown(object sender, EventArgs e)

@@ -123,13 +123,17 @@ namespace YieldFlo.Communication.Can
         private void ParseTempData(byte[] d)
         {
             // Temperature frame (0x18FF01F8), DLC=8:
-            // [0]   flags  bit0=TempOK
+            // [0]   flags  bit0=TempOK, bit1=PaddleHzPresent
             // [1-2] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
-            // [3-7] reserved / zero
+            // [3]   paddle_hz uint8  (paddles/s — only when bit1 set)
+            // [4-7] reserved / zero
             bool tempOk = (d[0] & 0x01) != 0;
             short tempRaw = (short)(d[1] | (d[2] << 8));
 
             Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
+
+            bool hzOk = (d[0] & 0x02) != 0 && d.Length >= 4;
+            Core.LastPaddleHz = hzOk ? d[3] : -1;
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)

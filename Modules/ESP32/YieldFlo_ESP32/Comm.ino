@@ -157,6 +157,7 @@ void SendCANPK2()
 		if (st.state != TWAI_STATE_RUNNING)      return;
 
 		byte flags = ADSfound ? 0x01 : 0x00;
+		flags |= 0x02;		// bit 1 — paddle_hz field present
 		int16_t temp = TemperatureReading;
 
 		twai_message_t msg;
@@ -167,6 +168,7 @@ void SendCANPK2()
 		msg.data[0] = flags;
 		msg.data[1] = (byte)(temp & 0xFF);
 		msg.data[2] = (byte)((temp >> 8) & 0xFF);
+		msg.data[3] = TakePaddleHz();
 
 		twai_transmit(&msg, pdMS_TO_TICKS(10));
 	}
@@ -222,13 +224,14 @@ void SendUdpPK1()
 	UdpSend(pkt, 11);
 }
 
-// ── Second packet: temperature (1 Hz) ────────────────────────────────────
-// UDP  — 6 bytes, PGN 40002
+// ── Second packet: temperature + paddle rate (1 Hz) ─────────────────────
+// UDP  — 7 bytes, PGN 40002
 //   [0-1] PGN 40002 LE  (0x42 0x9C)
-//   [2]   flags  bit0=TempOK
+//   [2]   flags  bit0=TempOK, bit1=PaddleHzPresent
 //   [3-4] temp_raw int16 LE  (raw ADS1115 AIN2 reading)
-//   [5]   CRC8
-// CAN  — ID 0x18FF01F8, DLC=8, [0]=flags, [1-2]=temp_raw, [3-7]=0
+//   [5]   paddle_hz uint8  (completed paddle cycles per second)
+//   [6]   CRC8
+// CAN  — ID 0x18FF01F8, DLC=8, [0]=flags, [1-2]=temp_raw, [3]=paddle_hz, [4-7]=0
 
 void SendUdpPK2()
 {
@@ -236,17 +239,19 @@ void SendUdpPK2()
 	{
 		SendLastPK2 = millis();
 		byte flags = ADSfound ? 0x01 : 0x00;
+		flags |= 0x02;		// bit 1 — paddle_hz field present
 		int16_t temp = TemperatureReading;
 
-		byte pkt[6];
+		byte pkt[7];
 		pkt[0] = 0x42;
 		pkt[1] = 0x9C;
 		pkt[2] = flags;
 		pkt[3] = (byte)(temp & 0xFF);
 		pkt[4] = (byte)((temp >> 8) & 0xFF);
-		pkt[5] = CRC(pkt, 5, 0);
+		pkt[5] = TakePaddleHz();
+		pkt[6] = CRC(pkt, 6, 0);
 
-		UdpSend(pkt, 6);
+		UdpSend(pkt, 7);
 	}
 }
 

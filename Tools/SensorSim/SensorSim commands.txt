@@ -71,6 +71,12 @@ Bench test recipes
    mechanical -> averaging fix / machine maintenance;
    electrical -> harness shielding/routing, and/or a firmware glitch filter.
 
+4. Paddle rate readout check (firmware 13076+)
+     f 7, j 0, x 0
+   Yield Cal page "Paddles" readout should settle on the f value (7.0 Hz)
+   within ~5 s. Glitches (x 20) must NOT change it — rejected pairs are
+   never counted as cycles.
+
 Display note
 ------------
 The app's main-screen flow bar refreshes once per second and shows the single

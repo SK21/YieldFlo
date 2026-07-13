@@ -41,6 +41,8 @@ namespace YieldFlo.Forms
             this.btnApplyFactor = new System.Windows.Forms.Button();
             this.lblCalResult = new System.Windows.Forms.Label();
             this.lblNoise = new System.Windows.Forms.Label();
+            this.lblPaddleHz = new System.Windows.Forms.Label();
+            this.lblCalSaved = new System.Windows.Forms.Label();
             this.pnlTitle.SuspendLayout();
             this.pnlContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
@@ -68,7 +70,7 @@ namespace YieldFlo.Forms
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(452, 40);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = Lang.lgTitleYieldCal;
+            this.lblTitle.Text = "Yield Cal";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnTitleClose
@@ -108,10 +110,12 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.btnApplyFactor);
             this.pnlContent.Controls.Add(this.lblCalResult);
             this.pnlContent.Controls.Add(this.lblNoise);
+            this.pnlContent.Controls.Add(this.lblPaddleHz);
+            this.pnlContent.Controls.Add(this.lblCalSaved);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(2, 42);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(452, 331);
+            this.pnlContent.Size = new System.Drawing.Size(452, 454);
             this.pnlContent.TabIndex = 0;
             // 
             // lblDelay
@@ -121,7 +125,7 @@ namespace YieldFlo.Forms
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(160, 23);
             this.lblDelay.TabIndex = 0;
-            this.lblDelay.Text = Lang.lgProcessingDelay;
+            this.lblDelay.Text = "Processing Delay:";
             // 
             // numDelay
             // 
@@ -149,16 +153,16 @@ namespace YieldFlo.Forms
             this.lblDelayUnit.Name = "lblDelayUnit";
             this.lblDelayUnit.Size = new System.Drawing.Size(53, 15);
             this.lblDelayUnit.TabIndex = 2;
-            this.lblDelayUnit.Text = Lang.lgSeconds;
+            this.lblDelayUnit.Text = "seconds";
             // 
             // lblBaseline
             // 
             this.lblBaseline.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.lblBaseline.Location = new System.Drawing.Point(8, 59);
+            this.lblBaseline.Location = new System.Drawing.Point(8, 120);
             this.lblBaseline.Name = "lblBaseline";
             this.lblBaseline.Size = new System.Drawing.Size(160, 23);
             this.lblBaseline.TabIndex = 3;
-            this.lblBaseline.Text = Lang.lgSensorBaseline;
+            this.lblBaseline.Text = "Sensor Baseline:";
             // 
             // numBaseline
             // 
@@ -169,7 +173,7 @@ namespace YieldFlo.Forms
             0,
             0,
             196608});
-            this.numBaseline.Location = new System.Drawing.Point(174, 56);
+            this.numBaseline.Location = new System.Drawing.Point(174, 117);
             this.numBaseline.Maximum = new decimal(new int[] {
             99,
             0,
@@ -184,31 +188,31 @@ namespace YieldFlo.Forms
             this.lblBaselineNote.AutoSize = true;
             this.lblBaselineNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblBaselineNote.ForeColor = System.Drawing.Color.Silver;
-            this.lblBaselineNote.Location = new System.Drawing.Point(8, 80);
+            this.lblBaselineNote.Location = new System.Drawing.Point(8, 141);
             this.lblBaselineNote.Name = "lblBaselineNote";
             this.lblBaselineNote.Size = new System.Drawing.Size(196, 15);
             this.lblBaselineNote.TabIndex = 5;
-            this.lblBaselineNote.Text = Lang.lgBaselineNote;
+            this.lblBaselineNote.Text = "obstruction ratio with no grain (0–1)";
             // 
             // btnSetBaseline
             // 
             this.btnSetBaseline.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSetBaseline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
-            this.btnSetBaseline.Location = new System.Drawing.Point(262, 54);
+            this.btnSetBaseline.Location = new System.Drawing.Point(262, 115);
             this.btnSetBaseline.Name = "btnSetBaseline";
             this.btnSetBaseline.Size = new System.Drawing.Size(100, 26);
             this.btnSetBaseline.TabIndex = 6;
-            this.btnSetBaseline.Text = Lang.lgSetBaseline;
+            this.btnSetBaseline.Text = global::YieldFlo.Language.Lang.lgSetBaseline;
             this.btnSetBaseline.Click += new System.EventHandler(this.btnSetBaseline_Click);
             // 
             // lblFactor
             // 
             this.lblFactor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.lblFactor.Location = new System.Drawing.Point(8, 118);
+            this.lblFactor.Location = new System.Drawing.Point(8, 203);
             this.lblFactor.Name = "lblFactor";
             this.lblFactor.Size = new System.Drawing.Size(160, 23);
             this.lblFactor.TabIndex = 7;
-            this.lblFactor.Text = Lang.lgYieldFactor;
+            this.lblFactor.Text = "Yield Factor:";
             // 
             // numFactor
             // 
@@ -219,7 +223,7 @@ namespace YieldFlo.Forms
             0,
             0,
             131072});
-            this.numFactor.Location = new System.Drawing.Point(174, 115);
+            this.numFactor.Location = new System.Drawing.Point(174, 200);
             this.numFactor.Minimum = new decimal(new int[] {
             1,
             0,
@@ -239,65 +243,65 @@ namespace YieldFlo.Forms
             this.lblFactorNote.AutoSize = true;
             this.lblFactorNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblFactorNote.ForeColor = System.Drawing.Color.Silver;
-            this.lblFactorNote.Location = new System.Drawing.Point(8, 139);
+            this.lblFactorNote.Location = new System.Drawing.Point(8, 224);
             this.lblFactorNote.Name = "lblFactorNote";
             this.lblFactorNote.Size = new System.Drawing.Size(300, 15);
             this.lblFactorNote.TabIndex = 9;
-            this.lblFactorNote.Text = Lang.lgFactorNote;
+            this.lblFactorNote.Text = "calibration multiplier — increase to raise yield readings";
             // 
             // btnSaveCal
             // 
             this.btnSaveCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.btnSaveCal.Location = new System.Drawing.Point(8, 166);
+            this.btnSaveCal.Location = new System.Drawing.Point(11, 263);
             this.btnSaveCal.Name = "btnSaveCal";
             this.btnSaveCal.Size = new System.Drawing.Size(160, 36);
             this.btnSaveCal.TabIndex = 10;
-            this.btnSaveCal.Text = Lang.lgSaveApply;
+            this.btnSaveCal.Text = global::YieldFlo.Language.Lang.lgSaveApply;
             this.btnSaveCal.Click += new System.EventHandler(this.btnSaveCal_Click);
             // 
             // btnCalClose
             // 
             this.btnCalClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.btnCalClose.Location = new System.Drawing.Point(346, 166);
+            this.btnCalClose.Location = new System.Drawing.Point(349, 263);
             this.btnCalClose.Name = "btnCalClose";
             this.btnCalClose.Size = new System.Drawing.Size(100, 36);
             this.btnCalClose.TabIndex = 11;
-            this.btnCalClose.Text = Lang.lgClose;
+            this.btnCalClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnCalClose.Click += new System.EventHandler(this.btnCalClose_Click);
             // 
             // lblHint
             // 
-            this.lblHint.AutoSize = true;
             this.lblHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblHint.ForeColor = System.Drawing.Color.Silver;
-            this.lblHint.Location = new System.Drawing.Point(8, 96);
+            this.lblHint.Location = new System.Drawing.Point(8, 78);
             this.lblHint.Name = "lblHint";
-            this.lblHint.Size = new System.Drawing.Size(344, 15);
+            this.lblHint.Size = new System.Drawing.Size(354, 32);
             this.lblHint.TabIndex = 12;
-            this.lblHint.Text = Lang.lgCalibrationTip;
+            this.lblHint.Text = "Tip: Run the elevator empty for a few seconds, then press Set Baseline (5 s sampl" +
+    "e).\r\n";
             // 
             // lblCalSep
             // 
             this.lblCalSep.AutoSize = true;
             this.lblCalSep.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblCalSep.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(140)))), ((int)(((byte)(160)))));
-            this.lblCalSep.Location = new System.Drawing.Point(8, 236);
+            this.lblCalSep.Location = new System.Drawing.Point(8, 338);
             this.lblCalSep.Name = "lblCalSep";
             this.lblCalSep.Size = new System.Drawing.Size(368, 15);
             this.lblCalSep.TabIndex = 13;
-            this.lblCalSep.Text = Lang.lgCalibrationRun;
+            this.lblCalSep.Text = "─── Calibration Run ───────────────────────────";
             // 
             // btnStartCal
             // 
             this.btnStartCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStartCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnStartCal.Location = new System.Drawing.Point(8, 258);
+            this.btnStartCal.Location = new System.Drawing.Point(8, 371);
             this.btnStartCal.Name = "btnStartCal";
             this.btnStartCal.Size = new System.Drawing.Size(100, 32);
             this.btnStartCal.TabIndex = 14;
-            this.btnStartCal.Text = Lang.lgStartRun;
+            this.btnStartCal.Text = global::YieldFlo.Language.Lang.lgStartRun;
             this.btnStartCal.Click += new System.EventHandler(this.btnStartCal_Click);
             // 
             // btnStopCal
@@ -305,37 +309,37 @@ namespace YieldFlo.Forms
             this.btnStopCal.Enabled = false;
             this.btnStopCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStopCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnStopCal.Location = new System.Drawing.Point(116, 258);
+            this.btnStopCal.Location = new System.Drawing.Point(116, 371);
             this.btnStopCal.Name = "btnStopCal";
             this.btnStopCal.Size = new System.Drawing.Size(100, 32);
             this.btnStopCal.TabIndex = 15;
-            this.btnStopCal.Text = Lang.lgStopRun;
+            this.btnStopCal.Text = global::YieldFlo.Language.Lang.lgStopRun;
             this.btnStopCal.Click += new System.EventHandler(this.btnStopCal_Click);
             // 
             // lblCalMeasured
             // 
             this.lblCalMeasured.AutoSize = true;
             this.lblCalMeasured.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.lblCalMeasured.Location = new System.Drawing.Point(228, 266);
+            this.lblCalMeasured.Location = new System.Drawing.Point(228, 379);
             this.lblCalMeasured.Name = "lblCalMeasured";
             this.lblCalMeasured.Size = new System.Drawing.Size(76, 15);
             this.lblCalMeasured.TabIndex = 16;
-            this.lblCalMeasured.Text = Lang.lgMeasuredBlank;
+            this.lblCalMeasured.Text = "Measured: —";
             // 
             // lblActualWeight
             // 
             this.lblActualWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.lblActualWeight.Location = new System.Drawing.Point(8, 301);
+            this.lblActualWeight.Location = new System.Drawing.Point(5, 417);
             this.lblActualWeight.Name = "lblActualWeight";
             this.lblActualWeight.Size = new System.Drawing.Size(160, 23);
             this.lblActualWeight.TabIndex = 17;
-            this.lblActualWeight.Text = Lang.lgActualWeight;
+            this.lblActualWeight.Text = "Actual weight:";
             // 
             // numActualWeight
             // 
             this.numActualWeight.DecimalPlaces = 1;
             this.numActualWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.numActualWeight.Location = new System.Drawing.Point(174, 298);
+            this.numActualWeight.Location = new System.Drawing.Point(171, 418);
             this.numActualWeight.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -349,7 +353,7 @@ namespace YieldFlo.Forms
             // 
             this.lblActualUnit.AutoSize = true;
             this.lblActualUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.lblActualUnit.Location = new System.Drawing.Point(282, 301);
+            this.lblActualUnit.Location = new System.Drawing.Point(279, 421);
             this.lblActualUnit.Name = "lblActualUnit";
             this.lblActualUnit.Size = new System.Drawing.Size(23, 15);
             this.lblActualUnit.TabIndex = 19;
@@ -360,11 +364,11 @@ namespace YieldFlo.Forms
             this.btnApplyFactor.Enabled = false;
             this.btnApplyFactor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyFactor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.btnApplyFactor.Location = new System.Drawing.Point(346, 294);
+            this.btnApplyFactor.Location = new System.Drawing.Point(343, 414);
             this.btnApplyFactor.Name = "btnApplyFactor";
             this.btnApplyFactor.Size = new System.Drawing.Size(96, 28);
             this.btnApplyFactor.TabIndex = 20;
-            this.btnApplyFactor.Text = Lang.lgApplyCal;
+            this.btnApplyFactor.Text = global::YieldFlo.Language.Lang.lgApplyCal;
             this.btnApplyFactor.Click += new System.EventHandler(this.btnApplyFactor_Click);
             // 
             // lblCalResult
@@ -372,26 +376,48 @@ namespace YieldFlo.Forms
             this.lblCalResult.AutoSize = true;
             this.lblCalResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblCalResult.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(200)))), ((int)(((byte)(100)))));
-            this.lblCalResult.Location = new System.Drawing.Point(220, 344);
+            this.lblCalResult.Location = new System.Drawing.Point(220, 573);
             this.lblCalResult.Name = "lblCalResult";
-            this.lblCalResult.Size = new System.Drawing.Size(0, 15);
+            this.lblCalResult.Size = new System.Drawing.Size(15, 15);
             this.lblCalResult.TabIndex = 21;
-            //
+            this.lblCalResult.Text = "--";
+            // 
             // lblNoise
-            //
+            // 
             this.lblNoise.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblNoise.ForeColor = System.Drawing.Color.Silver;
-            this.lblNoise.Location = new System.Drawing.Point(366, 56);
+            this.lblNoise.Location = new System.Drawing.Point(262, 142);
             this.lblNoise.Name = "lblNoise";
-            this.lblNoise.Size = new System.Drawing.Size(80, 23);
+            this.lblNoise.Size = new System.Drawing.Size(103, 23);
             this.lblNoise.TabIndex = 22;
-            this.lblNoise.Text = Lang.lgNoise;
+            this.lblNoise.Text = "Noise";
             this.lblNoise.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
+            // lblPaddleHz
+            // 
+            this.lblPaddleHz.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblPaddleHz.ForeColor = System.Drawing.Color.Silver;
+            this.lblPaddleHz.Location = new System.Drawing.Point(262, 166);
+            this.lblPaddleHz.Name = "lblPaddleHz";
+            this.lblPaddleHz.Size = new System.Drawing.Size(184, 23);
+            this.lblPaddleHz.TabIndex = 23;
+            this.lblPaddleHz.Text = "Paddles";
+            this.lblPaddleHz.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblCalSaved
+            // 
+            this.lblCalSaved.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblCalSaved.ForeColor = System.Drawing.Color.Silver;
+            this.lblCalSaved.Location = new System.Drawing.Point(11, 313);
+            this.lblCalSaved.Name = "lblCalSaved";
+            this.lblCalSaved.Size = new System.Drawing.Size(438, 15);
+            this.lblCalSaved.TabIndex = 24;
+            this.lblCalSaved.Text = "---";
+            // 
             // frmMenuCalibrate
-            //
+            // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(456, 375);
+            this.ClientSize = new System.Drawing.Size(456, 498);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlTitle);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -441,5 +467,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button        btnApplyFactor;
         private System.Windows.Forms.Label         lblCalResult;
         private System.Windows.Forms.Label         lblNoise;
+        private System.Windows.Forms.Label         lblPaddleHz;
+        private System.Windows.Forms.Label         lblCalSaved;
     }
 }

@@ -170,21 +170,23 @@ namespace ModuleSimulator
 
         private void SendPK2(short tempRaw)
         {
-            // PK2 — 6 bytes:
+            // PK2 — 7 bytes:
             // [0-1] PGN 40002 LE
-            // [2]   flags  bit0=TempOK
+            // [2]   flags  bit0=TempOK, bit1=PaddleHzPresent
             // [3-4] temp_raw  int16 LE  (raw ADS1115 AIN2 count)
-            // [5]   CRC8
-            byte[] pkt = new byte[6];
+            // [5]   paddle_hz uint8  (paddles/s)
+            // [6]   CRC8
+            byte[] pkt = new byte[7];
             pkt[0] = 0x42;
             pkt[1] = 0x9C;
-            pkt[2] = 0x01;  // TempOK
+            pkt[2] = 0x03;  // TempOK + PaddleHzPresent
             pkt[3] = (byte)(tempRaw & 0xFF);
             pkt[4] = (byte)((tempRaw >> 8) & 0xFF);
+            pkt[5] = 7;     // fixed simulated paddle rate
 
             int ck = 0;
-            for (int i = 0; i < 5; i++) ck += pkt[i];
-            pkt[5] = (byte)ck;
+            for (int i = 0; i < 6; i++) ck += pkt[i];
+            pkt[6] = (byte)ck;
 
             try { _udp.Send(pkt, pkt.Length, _target); } catch { }
         }

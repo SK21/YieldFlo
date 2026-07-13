@@ -29,6 +29,7 @@ namespace YieldFlo.Classes
         public static double LastTemperature  { get; set; }
         public static double LastSensor1      { get; set; }
         public static int    LastNoiseCount   { get; set; }
+        public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static bool   ModuleConnected  { get; set; }
         public static DateTime LastModuleReceive { get; set; }
 

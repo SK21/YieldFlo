@@ -91,6 +91,8 @@
   <data name="lgBaselineNote"       xml:space="preserve"><value>elzárási arány szemterméka nélkül (0–1)</value></data>
   <data name="lgSetBaseline"        xml:space="preserve"><value>Alapérték beállítása</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Zaj</value></data>
+  <data name="lgPaddles"            xml:space="preserve"><value>Lapátok</value></data>
+  <data name="lgLastSaved"          xml:space="preserve"><value>Utoljára mentve:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>A modul nincs csatlakoztatva.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Hozamtényező:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibrálási szorzó — növelje a hozamleolvasások emeléséhez</value></data>
@@ -101,6 +103,7 @@
   <data name="lgActualWeight"       xml:space="preserve"><value>Tényleges tömeg:</value></data>
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Tipp: futtassa 10 mp-ig üresen az elevátor szalagot az alapérték meghatározásához.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibrálás elmentve és alkalmazva.</value></data>
+  <data name="lgPendingSave"        xml:space="preserve"><value>A megerősítéshez nyomja meg a „Mentés &amp;&amp; Alkalmaz" gombot.</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Adja meg a tényleges mért tömeget.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Nincs mért adat — először végezzen kalibrálási futást.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Új tényező: {0:F3}</value></data>
@@ -149,7 +152,7 @@ Az elevátor szalag üres legyen.</value></data>
   <!-- Headers form -->
   <data name="lgType"               xml:space="preserve"><value>Típus:</value></data>
   <data name="lgWidth"              xml:space="preserve"><value>Szélesség:</value></data>
-  <data name="lgHeaderOffset"       xml:space="preserve"><value>Az antenna előtt:</value></data>
+  <data name="lgHeaderOffset"       xml:space="preserve"><value>A forgáspont előtt:</value></data>
   <data name="lgEnterHeaderName"    xml:space="preserve"><value>Adjon meg egy vágóasztal nevet.</value></data>
   <data name="lgMustHaveOneHeader"  xml:space="preserve"><value>Legalább egy vágóasztal szükséges.</value></data>
   <data name="lgDeleteHeaderPrompt" xml:space="preserve"><value>Törli ezt a vágóasztalt?</value></data>
