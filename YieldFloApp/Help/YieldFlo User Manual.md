@@ -289,9 +289,8 @@ The baseline must be set before the first calibration run:
 
 1. Start the clean-grain elevator with no grain
 2. Press **Menu → Yield Cal**
-3. When the reading is stable, press **Set Baseline**
-4. Confirm the prompt
-5. Press **Save && Apply**
+3. Press **Set Baseline** — it samples for 5 seconds and enters the result in the **Sensor Baseline** field
+4. Press **Save && Apply**
 
 Nothing takes effect, and nothing is saved, until **Save && Apply** is pressed — this applies to both Set Baseline and Apply Cal.
 
@@ -334,7 +333,7 @@ A calibration pass measures the actual mass of grain harvested during a known ru
 6. Enter the actual weight in the **Actual weight** field
 7. Press **Apply Cal**
 
-YieldFlo calculates a new Yield Factor and displays the result. Press **Save && Apply** to save the new factor to the active profile.
+YieldFlo calculates a new Yield Factor and enters it in the **Yield Factor** field. Press **Save && Apply** to save it to the active profile.
 
 Below the **Save && Apply** button, a **Last saved** line shows the date and time the calibration for the active profile and crop was last saved with **Save && Apply**. It is blank until a calibration has been saved.
 

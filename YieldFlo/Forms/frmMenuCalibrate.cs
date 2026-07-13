@@ -73,12 +73,10 @@ namespace YieldFlo.Forms
             {
                 UpdateCalMeasuredLabel();
                 _calTimer.Start();
-                btnApplyFactor.Enabled = false;
             }
             else if ((Core.Yield?.CalRunBushels ?? 0) > 0)
             {
                 UpdateCalMeasuredLabel();
-                btnApplyFactor.Enabled = true;
             }
         }
 
@@ -168,9 +166,7 @@ namespace YieldFlo.Forms
         private void btnStartCal_Click(object sender, EventArgs e)
         {
             Core.Yield.StartCalRun();
-            lblCalResult.Text = "";
             numActualWeight.Value = 0;   // stale weight from a previous run must not be reused
-            btnApplyFactor.Enabled = false;
             _calTimer.Start();
             UpdateCalRunButtons();
         }
@@ -180,7 +176,6 @@ namespace YieldFlo.Forms
             Core.Yield.StopCalRun();
             _calTimer.Stop();
             UpdateCalMeasuredLabel();
-            btnApplyFactor.Enabled = Core.Yield.CalRunBushels > 0;
             UpdateCalRunButtons();
         }
 
@@ -231,7 +226,6 @@ namespace YieldFlo.Forms
                                System.Math.Max((double)numFactor.Minimum, newFactor));
             numFactor.Value = clamped;
 
-            lblCalResult.Text = string.Format(Lang.lgNewFactorResult, newFactor);
             Props.ShowMessage(Lang.lgPendingSave);
         }
 
@@ -339,12 +333,9 @@ namespace YieldFlo.Forms
             // 100% reading) and store a baseline far off the true idle ratio.
             _baselineSamples.Clear();
 
-            // Park focus elsewhere first: disabling the focused button makes
-            // WinForms select the next control in tab order (numFactor), whose
-            // numpad focus hook would pop the number-entry screen open.
-            btnSaveCal.Focus();
-            btnSetBaseline.Enabled = false;
-
+            // Left enabled during sampling — the re-entrancy check above already
+            // blocks a second press, and disabling would render the countdown
+            // text in WinForms' dim system disabled color regardless of theme.
             if (_baselineTimer == null)
             {
                 _baselineTimer = new System.Windows.Forms.Timer { Interval = BaselineSampleMs };
@@ -364,20 +355,11 @@ namespace YieldFlo.Forms
             if (_baselineSamples.Count < BaselineSampleCount) return;
 
             _baselineTimer.Stop();
-            btnSetBaseline.Enabled = true;
             btnSetBaseline.Text = Lang.lgSetBaseline;
 
             _baselineSamples.Sort();
             double median = _baselineSamples[_baselineSamples.Count / 2];
             median = Math.Round(median, 3);
-
-            var answer = MessageBox.Show(
-                string.Format(Lang.lgSetBaselineConfirm, median),
-                Lang.lgSetBaseline,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (answer != DialogResult.Yes) return;
 
             decimal clamped = (decimal)Math.Min((double)numBaseline.Maximum,
                                Math.Max((double)numBaseline.Minimum, median));
@@ -400,5 +382,10 @@ namespace YieldFlo.Forms
 
         private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
         private void btnCalClose_Click(object sender, EventArgs e)    => this.Close();
+
+        private void lblCalSaved_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
