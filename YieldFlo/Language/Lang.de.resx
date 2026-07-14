@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Schließen</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Neu</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Importieren</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Alle auswählen</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Keine Feldordner gefunden.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>{0} Feld(er) importiert.</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (bereits hinzugefügt)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Speichern</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Löschen</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Laden</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Schneidwerke</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Profile</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Felder</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Felder importieren</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Ertrag Kalibrierung</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Feuchte Kalibrierung</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Auftragsbericht</value></data>

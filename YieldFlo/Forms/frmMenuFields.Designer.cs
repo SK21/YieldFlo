@@ -25,6 +25,7 @@ namespace YieldFlo.Forms
             this.btnDelete      = new System.Windows.Forms.Button();
             this.btnNew         = new System.Windows.Forms.Button();
             this.btnFieldsClose = new System.Windows.Forms.Button();
+            this.btnImport      = new System.Windows.Forms.Button();
 
             this.SuspendLayout();
 
@@ -74,38 +75,44 @@ namespace YieldFlo.Forms
 
             var btnFont = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
 
+            this.btnImport.Text      = Lang.lgImport; this.btnImport.Font      = btnFont;
+            this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImport.Size      = new System.Drawing.Size(436, 36);
+            this.btnImport.Location  = new System.Drawing.Point(8, 214);
+            this.btnImport.Click    += new System.EventHandler(this.btnImport_Click);
+
             this.btnNew.Text      = Lang.lgNew;    this.btnNew.Font      = btnFont;
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Size      = new System.Drawing.Size(106, 36);
-            this.btnNew.Location  = new System.Drawing.Point(8, 214);
+            this.btnNew.Location  = new System.Drawing.Point(8, 254);
             this.btnNew.Click    += new System.EventHandler(this.btnNew_Click);
 
             this.btnSave.Text      = Lang.lgSave;   this.btnSave.Font      = btnFont;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Size      = new System.Drawing.Size(106, 36);
-            this.btnSave.Location  = new System.Drawing.Point(118, 214);
+            this.btnSave.Location  = new System.Drawing.Point(118, 254);
             this.btnSave.Click    += new System.EventHandler(this.btnSave_Click);
 
             this.btnDelete.Text      = Lang.lgDelete; this.btnDelete.Font      = btnFont;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Size      = new System.Drawing.Size(106, 36);
-            this.btnDelete.Location  = new System.Drawing.Point(228, 214);
+            this.btnDelete.Location  = new System.Drawing.Point(228, 254);
             this.btnDelete.Click    += new System.EventHandler(this.btnDelete_Click);
 
             this.btnFieldsClose.Text      = Lang.lgClose; this.btnFieldsClose.Font      = btnFont;
             this.btnFieldsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFieldsClose.Size      = new System.Drawing.Size(106, 36);
-            this.btnFieldsClose.Location  = new System.Drawing.Point(338, 214);
+            this.btnFieldsClose.Location  = new System.Drawing.Point(338, 254);
             this.btnFieldsClose.Click    += new System.EventHandler(this.btnFieldsClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lbFields, lblNameLabel, txtName,
-                btnNew, btnSave, btnDelete, btnFieldsClose });
+                btnNew, btnSave, btnDelete, btnFieldsClose, btnImport });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 298);
-            this.MinimumSize     = new System.Drawing.Size(456, 298);
-            this.MaximumSize     = new System.Drawing.Size(456, 298);
+            this.ClientSize      = new System.Drawing.Size(456, 338);
+            this.MinimumSize     = new System.Drawing.Size(456, 338);
+            this.MaximumSize     = new System.Drawing.Size(456, 338);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
@@ -133,5 +140,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button  btnDelete;
         private System.Windows.Forms.Button  btnNew;
         private System.Windows.Forms.Button  btnFieldsClose;
+        private System.Windows.Forms.Button  btnImport;
     }
 }

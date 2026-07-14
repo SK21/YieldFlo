@@ -26,6 +26,11 @@ namespace YieldFlo.Language
         // ── Common ───────────────────────────────────────────────────────────
         internal static string lgClose          => Get("lgClose");
         internal static string lgNew            => Get("lgNew");
+        internal static string lgImport         => Get("lgImport");
+        internal static string lgSelectAll      => Get("lgSelectAll");
+        internal static string lgNoFieldsFound  => Get("lgNoFieldsFound");
+        internal static string lgFieldsImported => Get("lgFieldsImported");
+        internal static string lgAlreadyAdded   => Get("lgAlreadyAdded");
         internal static string lgSave           => Get("lgSave");
         internal static string lgDelete         => Get("lgDelete");
         internal static string lgLoad           => Get("lgLoad");
@@ -58,6 +63,7 @@ namespace YieldFlo.Language
         internal static string lgTitleHeaders     => Get("lgTitleHeaders");
         internal static string lgTitleProfiles    => Get("lgTitleProfiles");
         internal static string lgTitleFields      => Get("lgTitleFields");
+        internal static string lgTitleImportFields => Get("lgTitleImportFields");
         internal static string lgTitleYieldCal    => Get("lgTitleYieldCal");
         internal static string lgTitleMoistureCal => Get("lgTitleMoistureCal");
         internal static string lgTitleJobReport   => Get("lgTitleJobReport");

@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Fermer</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Nouveau</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Importer</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Tout sélectionner</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Aucun dossier de parcelle trouvé.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>{0} parcelle(s) importée(s).</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (déjà ajoutée)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Enregistrer</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Supprimer</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Charger</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Coupes</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Profils</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Parcelles</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Importer des parcelles</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Calibration Rendement</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Calibration Humidité</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Rapport de travail</value></data>

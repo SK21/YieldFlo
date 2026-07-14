@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Закрыть</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Новый</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Импорт</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Выбрать всё</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Папки полей не найдены.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>Импортировано полей: {0}.</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (уже добавлено)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Сохранить</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Удалить</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Загрузить</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Жатки</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Профили</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Поля</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Импорт полей</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Калибровка урожая</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Калибровка влажности</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Отчёт по заданию</value></data>

@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Sluiten</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Nieuw</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Importeren</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Alles selecteren</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Geen perceelmappen gevonden.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>{0} perceel/percelen geïmporteerd.</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (al toegevoegd)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Opslaan</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Verwijderen</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Laden</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Maakoppen</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Profielen</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Percelen</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Percelen importeren</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Opbrengst kalibratie</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Vocht kalibratie</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Taakrapport</value></data>

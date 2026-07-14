@@ -110,5 +110,14 @@ namespace YieldFlo.Forms
         private void btnNew_Click(object sender, EventArgs e)         => ClearEdit();
         private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
         private void btnFieldsClose_Click(object sender, EventArgs e) => this.Close();
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            this.TopMost = false;
+            using var dlg = new frmMenuFieldsImport();
+            dlg.ShowDialog(this);
+            this.TopMost = true;
+            LoadList();
+        }
     }
 }

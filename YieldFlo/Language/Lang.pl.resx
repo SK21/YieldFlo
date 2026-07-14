@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Zamknij</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Nowy</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Importuj</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Zaznacz wszystko</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Nie znaleziono folderów pól.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>Zaimportowano pól: {0}.</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (już dodano)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Zapisz</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Usuń</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Wczytaj</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Hedery</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Profile</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Pola</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Importuj pola</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Kalibracja plonu</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Kalibracja wilgotności</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Raport zadania</value></data>

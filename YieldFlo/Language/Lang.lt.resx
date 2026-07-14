@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Uždaryti</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Naujas</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Importuoti</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Pasirinkti viską</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Nerasta laukų aplankų.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>Importuota laukų: {0}.</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (jau pridėta)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Išsaugoti</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Ištrinti</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Įkelti</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Galvos</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Profiliai</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Laukai</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Importuoti laukus</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Derliaus kalibravimas</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Drėgmės kalibravimas</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Darbo ataskaita</value></data>

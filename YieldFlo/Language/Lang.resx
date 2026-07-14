@@ -62,6 +62,11 @@
   <!-- ── Common ─────────────────────────────────────────────────────────── -->
   <data name="lgClose" xml:space="preserve"><value>Close</value></data>
   <data name="lgNew" xml:space="preserve"><value>New</value></data>
+  <data name="lgImport" xml:space="preserve"><value>Import</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Select All</value></data>
+  <data name="lgNoFieldsFound" xml:space="preserve"><value>No field folders found.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>{0} field(s) imported.</value></data>
+  <data name="lgAlreadyAdded" xml:space="preserve"><value>{0} (already added)</value></data>
   <data name="lgSave" xml:space="preserve"><value>Save</value></data>
   <data name="lgDelete" xml:space="preserve"><value>Delete</value></data>
   <data name="lgLoad" xml:space="preserve"><value>Load</value></data>
@@ -94,6 +99,7 @@
   <data name="lgTitleHeaders" xml:space="preserve"><value>Headers</value></data>
   <data name="lgTitleProfiles" xml:space="preserve"><value>Profiles</value></data>
   <data name="lgTitleFields" xml:space="preserve"><value>Fields</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Import Fields</value></data>
   <data name="lgTitleYieldCal" xml:space="preserve"><value>Yield Cal</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Moisture Cal</value></data>
   <data name="lgTitleJobReport" xml:space="preserve"><value>Job Report</value></data>

@@ -8,6 +8,11 @@
   <!-- Common -->
   <data name="lgClose"     xml:space="preserve"><value>Bezárás</value></data>
   <data name="lgNew"       xml:space="preserve"><value>Új</value></data>
+  <data name="lgImport"    xml:space="preserve"><value>Importálás</value></data>
+  <data name="lgSelectAll" xml:space="preserve"><value>Összes kijelölése</value></data>
+  <data name="lgNoFieldsFound"  xml:space="preserve"><value>Nem található táblamappa.</value></data>
+  <data name="lgFieldsImported" xml:space="preserve"><value>{0} tábla importálva.</value></data>
+  <data name="lgAlreadyAdded"   xml:space="preserve"><value>{0} (már hozzáadva)</value></data>
   <data name="lgSave"      xml:space="preserve"><value>Mentés</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Törlés</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Betöltés</value></data>
@@ -40,6 +45,7 @@
   <data name="lgTitleHeaders"     xml:space="preserve"><value>Vágóasztalok</value></data>
   <data name="lgTitleProfiles"    xml:space="preserve"><value>Profilok</value></data>
   <data name="lgTitleFields"      xml:space="preserve"><value>Táblák</value></data>
+  <data name="lgTitleImportFields" xml:space="preserve"><value>Táblák importálása</value></data>
   <data name="lgTitleYieldCal"    xml:space="preserve"><value>Hozam kalibrálás</value></data>
   <data name="lgTitleMoistureCal" xml:space="preserve"><value>Nedvesség kalibrálás</value></data>
   <data name="lgTitleJobReport"   xml:space="preserve"><value>Munkajelentés</value></data>
