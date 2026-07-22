@@ -92,7 +92,7 @@
   <data name="lgLangNote" xml:space="preserve"><value>Select language. App will restart.</value></data>
 
   <!-- ── Form titles ────────────────────────────────────────────────────── -->
-  <data name="lgTitleMenu" xml:space="preserve"><value>Menu</value></data>
+  <data name="lgTitleMenu" xml:space="preserve"><value>YieldFlo Menu</value></data>
   <data name="lgTitleSettings" xml:space="preserve"><value>Settings</value></data>
   <data name="lgTitleJobs" xml:space="preserve"><value>Jobs</value></data>
   <data name="lgTitleCrops" xml:space="preserve"><value>Crops</value></data>

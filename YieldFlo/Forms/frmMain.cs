@@ -224,6 +224,13 @@ namespace YieldFlo.Forms
             lblWorkRate.Text = $"{workRate:F1} {Props.MassUnit}/hr";
         }
 
+        // Okabe-Ito colorblind-safe palette: bluish-green / vermillion instead of
+        // plain LimeGreen / Red, which are hard to tell apart under red-green color
+        // vision deficiency (the most common type). Separated by hue AND luminance
+        // so the difference survives protanopia/deuteranopia/tritanopia.
+        private static readonly Color StatusOk  = Color.FromArgb(0, 158, 115);
+        private static readonly Color StatusBad = Color.FromArgb(213, 94, 0);
+
         private void UpdateStatusBar()
         {
             bool gpsOk = Core.GPS.IsConnected;
@@ -231,10 +238,10 @@ namespace YieldFlo.Forms
                 && (DateTime.UtcNow - Core.LastModuleReceive).TotalSeconds < 5;
 
             lblStatusGPS.Text = Lang.lgGPS;
-            lblStatusGPS.ForeColor = gpsOk ? Color.LimeGreen : Color.Red;
+            lblStatusGPS.ForeColor = gpsOk ? StatusOk : StatusBad;
 
             lblStatusModule.Text = Lang.lgModule;
-            lblStatusModule.ForeColor = modOk ? Color.LimeGreen : Color.Red;
+            lblStatusModule.ForeColor = modOk ? StatusOk : StatusBad;
 
             string commType = Properties.Settings.Default.ModuleCommType;
             lblStatusComm.Text = commType;
@@ -245,7 +252,7 @@ namespace YieldFlo.Forms
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
                 lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
-                lblStatusJob.ForeColor = recording ? Color.LimeGreen : Color.Orange;
+                lblStatusJob.ForeColor = recording ? StatusOk : Color.Orange;
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else

@@ -38,7 +38,7 @@
   <data name="lgLangNote"  xml:space="preserve"><value>Änderung tritt nach dem Neustart in Kraft.</value></data>
 
   <!-- Form titles -->
-  <data name="lgTitleMenu"        xml:space="preserve"><value>Menü</value></data>
+  <data name="lgTitleMenu"        xml:space="preserve"><value>YieldFlo Menü</value></data>
   <data name="lgTitleSettings"    xml:space="preserve"><value>Einstellungen</value></data>
   <data name="lgTitleJobs"        xml:space="preserve"><value>Aufträge</value></data>
   <data name="lgTitleCrops"       xml:space="preserve"><value>Kulturen</value></data>

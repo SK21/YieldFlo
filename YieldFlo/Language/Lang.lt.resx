@@ -38,7 +38,7 @@
   <data name="lgLangNote"  xml:space="preserve"><value>Pakeitimas įsigalios po paleidimo iš naujo.</value></data>
 
   <!-- Form titles -->
-  <data name="lgTitleMenu"        xml:space="preserve"><value>Meniu</value></data>
+  <data name="lgTitleMenu"        xml:space="preserve"><value>YieldFlo Meniu</value></data>
   <data name="lgTitleSettings"    xml:space="preserve"><value>Nustatymai</value></data>
   <data name="lgTitleJobs"        xml:space="preserve"><value>Darbai</value></data>
   <data name="lgTitleCrops"       xml:space="preserve"><value>Kultūros</value></data>
