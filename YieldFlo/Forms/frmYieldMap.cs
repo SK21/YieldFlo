@@ -217,11 +217,11 @@ namespace YieldFlo.Forms
                 gmap.Zoom = _savedFullZoom;
 
                 // Anchor buttons to right edge of toolbar
-                btnClose.Location       = new Point(wa.Width - 76, 5);
-                btnZoomInFull.Location  = new Point(wa.Width - 118, 5);
-                btnZoomOutFull.Location = new Point(wa.Width - 158, 5);
-                btnPrint.Location       = new Point(wa.Width - 234, 5);
-                btnRecalc.Location      = new Point(wa.Width - 380, 5);
+                btnClose.Location       = new Point(wa.Width - 108, 6);
+                btnZoomInFull.Location  = new Point(wa.Width - 158, 6);
+                btnZoomOutFull.Location = new Point(wa.Width - 208, 6);
+                btnPrint.Location       = new Point(wa.Width - 314, 6);
+                btnRecalc.Location      = new Point(wa.Width - 530, 6);
 
                 // gmap is first in the Controls collection (= top of z-order);
                 // make sure toolbar and legend paint above it, and repaint the
@@ -729,7 +729,7 @@ namespace YieldFlo.Forms
 
             double[] tStops = { 0.0, 0.25, 0.5, 0.75, 1.0 };
             using var tickPen = new Pen(Color.White);
-            using var font    = new Font("Microsoft Sans Serif", 9f);
+            using var font    = new Font("Microsoft Sans Serif", 11f);
             using var brush   = new SolidBrush(Color.White);
 
             for (int i = 0; i < 5; i++)

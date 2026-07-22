@@ -44,7 +44,7 @@ namespace YieldFlo.Forms
             this.lblMiniJob.AutoSize   = false;
             this.lblMiniJob.Bounds     = new System.Drawing.Rectangle(4, 3, 176, 24);
             this.lblMiniJob.ForeColor  = System.Drawing.Color.Silver;
-            this.lblMiniJob.Font       = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.lblMiniJob.Font       = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.lblMiniJob.TextAlign  = System.Drawing.ContentAlignment.MiddleLeft;
 
             var miniBtn = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
@@ -93,17 +93,17 @@ namespace YieldFlo.Forms
             this.pnlMiniBar.Controls.Add(this.btnMiniClose);
 
             // ── Toolbar (full mode only) ───────────────────────────────────────
-            var btnFont = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            var btnFont = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
 
             this.pnlToolbar.BackColor = System.Drawing.Color.FromArgb(25, 35, 50);
-            this.pnlToolbar.Bounds    = new System.Drawing.Rectangle(0, 0, 800, 36);
+            this.pnlToolbar.Bounds    = new System.Drawing.Rectangle(0, 0, 800, 48);
             this.pnlToolbar.Visible   = false;
 
             this.cboJob.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboJob.Font          = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.cboJob.Font          = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.cboJob.BackColor     = System.Drawing.Color.FromArgb(50, 60, 75);
             this.cboJob.ForeColor     = System.Drawing.Color.White;
-            this.cboJob.Bounds        = new System.Drawing.Rectangle(8, 5, 300, 26);
+            this.cboJob.Bounds        = new System.Drawing.Rectangle(8, 6, 380, 36);
             this.cboJob.SelectedIndexChanged += new System.EventHandler(this.cboJob_SelectedIndexChanged);
 
             this.btnZoomOutFull.Text      = "\u2212";
@@ -112,8 +112,8 @@ namespace YieldFlo.Forms
             this.btnZoomOutFull.FlatAppearance.BorderSize = 0;
             this.btnZoomOutFull.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
             this.btnZoomOutFull.ForeColor = System.Drawing.Color.White;
-            this.btnZoomOutFull.Size      = new System.Drawing.Size(36, 26);
-            this.btnZoomOutFull.Location  = new System.Drawing.Point(700, 5);  // repositioned by SetMiniMode
+            this.btnZoomOutFull.Size      = new System.Drawing.Size(44, 36);
+            this.btnZoomOutFull.Location  = new System.Drawing.Point(700, 6);  // repositioned by SetMiniMode
             this.btnZoomOutFull.Click    += new System.EventHandler(this.btnZoomOut_Click);
 
             this.btnZoomInFull.Text      = "+";
@@ -122,8 +122,8 @@ namespace YieldFlo.Forms
             this.btnZoomInFull.FlatAppearance.BorderSize = 0;
             this.btnZoomInFull.BackColor = System.Drawing.Color.FromArgb(50, 65, 85);
             this.btnZoomInFull.ForeColor = System.Drawing.Color.White;
-            this.btnZoomInFull.Size      = new System.Drawing.Size(36, 26);
-            this.btnZoomInFull.Location  = new System.Drawing.Point(740, 5);  // repositioned by SetMiniMode
+            this.btnZoomInFull.Size      = new System.Drawing.Size(44, 36);
+            this.btnZoomInFull.Location  = new System.Drawing.Point(740, 6);  // repositioned by SetMiniMode
             this.btnZoomInFull.Click    += new System.EventHandler(this.btnZoomIn_Click);
 
             this.btnPrint.Text      = Lang.lgPrint;
@@ -132,8 +132,8 @@ namespace YieldFlo.Forms
             this.btnPrint.FlatAppearance.BorderSize = 0;
             this.btnPrint.BackColor = System.Drawing.Color.FromArgb(0, 70, 130);
             this.btnPrint.ForeColor = System.Drawing.Color.White;
-            this.btnPrint.Size      = new System.Drawing.Size(70, 26);
-            this.btnPrint.Location  = new System.Drawing.Point(640, 5);
+            this.btnPrint.Size      = new System.Drawing.Size(100, 36);
+            this.btnPrint.Location  = new System.Drawing.Point(640, 6);
             this.btnPrint.Click    += new System.EventHandler(this.btnPrint_Click);
 
             this.btnRecalc.Text      = Lang.lgRecalcMap;
@@ -142,8 +142,8 @@ namespace YieldFlo.Forms
             this.btnRecalc.FlatAppearance.BorderSize = 0;
             this.btnRecalc.BackColor = System.Drawing.Color.FromArgb(120, 85, 0);
             this.btnRecalc.ForeColor = System.Drawing.Color.White;
-            this.btnRecalc.Size      = new System.Drawing.Size(140, 26);
-            this.btnRecalc.Location  = new System.Drawing.Point(494, 5);  // repositioned by SetMiniMode
+            this.btnRecalc.Size      = new System.Drawing.Size(210, 36);
+            this.btnRecalc.Location  = new System.Drawing.Point(494, 6);  // repositioned by SetMiniMode
             this.btnRecalc.Click    += new System.EventHandler(this.btnRecalc_Click);
 
             this.btnClose.Text      = Lang.lgClose;
@@ -152,8 +152,8 @@ namespace YieldFlo.Forms
             this.btnClose.FlatAppearance.BorderSize = 0;
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(80, 30, 30);
             this.btnClose.ForeColor = System.Drawing.Color.White;
-            this.btnClose.Size      = new System.Drawing.Size(70, 26);
-            this.btnClose.Location  = new System.Drawing.Point(724, 5);
+            this.btnClose.Size      = new System.Drawing.Size(100, 36);
+            this.btnClose.Location  = new System.Drawing.Point(724, 6);
             this.btnClose.Click    += new System.EventHandler(this.btnClose_Click);
 
             this.pnlToolbar.Controls.AddRange(new System.Windows.Forms.Control[] {
@@ -161,7 +161,7 @@ namespace YieldFlo.Forms
 
             // ── Legend (full mode only) ────────────────────────────────────────
             this.pnlLegend.BackColor = System.Drawing.Color.FromArgb(15, 20, 30);
-            this.pnlLegend.Bounds    = new System.Drawing.Rectangle(0, 560, 800, 38);
+            this.pnlLegend.Bounds    = new System.Drawing.Rectangle(0, 560, 800, 42);
             this.pnlLegend.Visible   = false;
             this.pnlLegend.Paint    += new System.Windows.Forms.PaintEventHandler(this.pnlLegend_Paint);
 
