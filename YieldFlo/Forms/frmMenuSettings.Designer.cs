@@ -49,17 +49,17 @@ namespace YieldFlo.Forms
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(2, 2);
             this.pnlTitle.Name = "pnlTitle";
-            this.pnlTitle.Size = new System.Drawing.Size(452, 40);
+            this.pnlTitle.Size = new System.Drawing.Size(560, 48);
             this.pnlTitle.TabIndex = 0;
             // 
             // lblTitle
             // 
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(200)))), ((int)(((byte)(220)))));
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(452, 40);
+            this.lblTitle.Size = new System.Drawing.Size(560, 48);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Settings";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -69,11 +69,11 @@ namespace YieldFlo.Forms
             this.btnTitleClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.btnTitleClose.FlatAppearance.BorderSize = 0;
             this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
             this.btnTitleClose.ForeColor = System.Drawing.Color.White;
-            this.btnTitleClose.Location = new System.Drawing.Point(418, 5);
+            this.btnTitleClose.Location = new System.Drawing.Point(512, 4);
             this.btnTitleClose.Name = "btnTitleClose";
-            this.btnTitleClose.Size = new System.Drawing.Size(36, 30);
+            this.btnTitleClose.Size = new System.Drawing.Size(48, 40);
             this.btnTitleClose.TabIndex = 1;
             this.btnTitleClose.Text = "×";
             this.btnTitleClose.UseVisualStyleBackColor = false;
@@ -100,29 +100,31 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.btnSaveSettings);
             this.pnlContent.Controls.Add(this.btnSettingsClose);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContent.Location = new System.Drawing.Point(2, 42);
+            this.pnlContent.Location = new System.Drawing.Point(2, 50);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(452, 407);
+            this.pnlContent.Size = new System.Drawing.Size(560, 420);
             this.pnlContent.TabIndex = 1;
             // 
             // lblWifiInfo
             // 
-            this.lblWifiInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblWifiInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.lblWifiInfo.ForeColor = System.Drawing.Color.Silver;
-            this.lblWifiInfo.Location = new System.Drawing.Point(8, 152);
+            this.lblWifiInfo.Location = new System.Drawing.Point(8, 190);
             this.lblWifiInfo.Name = "lblWifiInfo";
-            this.lblWifiInfo.Size = new System.Drawing.Size(434, 58);
+            this.lblWifiInfo.Size = new System.Drawing.Size(544, 72);
             this.lblWifiInfo.TabIndex = 9;
-            this.lblWifiInfo.Text = global::YieldFlo.Language.Lang.lgWifiInfo;
+            this.lblWifiInfo.Text = "Connect the PC to the module\'s WiFi access point, a WiFi network, or by wired Eth" +
+    "ernet (W5500). Module setup page: http://192.168.200.1 (via the module\'s access " +
+    "point).";
             this.lblWifiInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUnits
             // 
-            this.lblUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.lblUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblUnits.ForeColor = System.Drawing.Color.Silver;
-            this.lblUnits.Location = new System.Drawing.Point(8, 8);
+            this.lblUnits.Location = new System.Drawing.Point(8, 10);
             this.lblUnits.Name = "lblUnits";
-            this.lblUnits.Size = new System.Drawing.Size(200, 16);
+            this.lblUnits.Size = new System.Drawing.Size(300, 26);
             this.lblUnits.TabIndex = 0;
             this.lblUnits.Text = "Units";
             // 
@@ -131,11 +133,11 @@ namespace YieldFlo.Forms
             this.btnImperial.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnImperial.FlatAppearance.BorderSize = 0;
             this.btnImperial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImperial.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnImperial.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnImperial.ForeColor = System.Drawing.Color.White;
-            this.btnImperial.Location = new System.Drawing.Point(8, 26);
+            this.btnImperial.Location = new System.Drawing.Point(8, 40);
             this.btnImperial.Name = "btnImperial";
-            this.btnImperial.Size = new System.Drawing.Size(210, 44);
+            this.btnImperial.Size = new System.Drawing.Size(267, 48);
             this.btnImperial.TabIndex = 1;
             this.btnImperial.Text = global::YieldFlo.Language.Lang.lgImperial;
             this.btnImperial.UseVisualStyleBackColor = false;
@@ -146,23 +148,23 @@ namespace YieldFlo.Forms
             this.btnMetric.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnMetric.FlatAppearance.BorderSize = 0;
             this.btnMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMetric.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnMetric.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnMetric.ForeColor = System.Drawing.Color.White;
-            this.btnMetric.Location = new System.Drawing.Point(226, 26);
+            this.btnMetric.Location = new System.Drawing.Point(285, 40);
             this.btnMetric.Name = "btnMetric";
-            this.btnMetric.Size = new System.Drawing.Size(210, 44);
+            this.btnMetric.Size = new System.Drawing.Size(267, 48);
             this.btnMetric.TabIndex = 2;
             this.btnMetric.Text = global::YieldFlo.Language.Lang.lgMetric;
             this.btnMetric.UseVisualStyleBackColor = false;
             this.btnMetric.Click += new System.EventHandler(this.btnMetric_Click);
-            //
+            // 
             // lblNetwork
-            //
-            this.lblNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            // 
+            this.lblNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblNetwork.ForeColor = System.Drawing.Color.Silver;
-            this.lblNetwork.Location = new System.Drawing.Point(8, 80);
+            this.lblNetwork.Location = new System.Drawing.Point(8, 100);
             this.lblNetwork.Name = "lblNetwork";
-            this.lblNetwork.Size = new System.Drawing.Size(300, 16);
+            this.lblNetwork.Size = new System.Drawing.Size(400, 26);
             this.lblNetwork.TabIndex = 6;
             this.lblNetwork.Text = "Module Communication";
             // 
@@ -171,11 +173,11 @@ namespace YieldFlo.Forms
             this.btnEthernet.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnEthernet.FlatAppearance.BorderSize = 0;
             this.btnEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnEthernet.ForeColor = System.Drawing.Color.White;
-            this.btnEthernet.Location = new System.Drawing.Point(8, 98);
+            this.btnEthernet.Location = new System.Drawing.Point(8, 130);
             this.btnEthernet.Name = "btnEthernet";
-            this.btnEthernet.Size = new System.Drawing.Size(210, 44);
+            this.btnEthernet.Size = new System.Drawing.Size(267, 48);
             this.btnEthernet.TabIndex = 7;
             this.btnEthernet.Text = global::YieldFlo.Language.Lang.lgWiFi;
             this.btnEthernet.UseVisualStyleBackColor = false;
@@ -186,11 +188,11 @@ namespace YieldFlo.Forms
             this.btnCAN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnCAN.FlatAppearance.BorderSize = 0;
             this.btnCAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCAN.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnCAN.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCAN.ForeColor = System.Drawing.Color.White;
-            this.btnCAN.Location = new System.Drawing.Point(226, 98);
+            this.btnCAN.Location = new System.Drawing.Point(285, 130);
             this.btnCAN.Name = "btnCAN";
-            this.btnCAN.Size = new System.Drawing.Size(210, 44);
+            this.btnCAN.Size = new System.Drawing.Size(267, 48);
             this.btnCAN.TabIndex = 8;
             this.btnCAN.Text = "CAN";
             this.btnCAN.UseVisualStyleBackColor = false;
@@ -198,44 +200,44 @@ namespace YieldFlo.Forms
             // 
             // lblCanDriver
             // 
-            this.lblCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.lblCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblCanDriver.ForeColor = System.Drawing.Color.Silver;
-            this.lblCanDriver.Location = new System.Drawing.Point(8, 152);
+            this.lblCanDriver.Location = new System.Drawing.Point(8, 190);
             this.lblCanDriver.Name = "lblCanDriver";
-            this.lblCanDriver.Size = new System.Drawing.Size(200, 16);
+            this.lblCanDriver.Size = new System.Drawing.Size(267, 26);
             this.lblCanDriver.TabIndex = 10;
             this.lblCanDriver.Text = "CAN Driver";
             // 
             // cbCanDriver
             // 
             this.cbCanDriver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.cbCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.cbCanDriver.Items.AddRange(new object[] {
             "SLCAN",
             "InnoMaker",
             "PCAN"});
-            this.cbCanDriver.Location = new System.Drawing.Point(8, 170);
+            this.cbCanDriver.Location = new System.Drawing.Point(8, 222);
             this.cbCanDriver.Name = "cbCanDriver";
-            this.cbCanDriver.Size = new System.Drawing.Size(200, 23);
+            this.cbCanDriver.Size = new System.Drawing.Size(267, 32);
             this.cbCanDriver.TabIndex = 11;
             // 
             // lblCanPort
             // 
-            this.lblCanPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.lblCanPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblCanPort.ForeColor = System.Drawing.Color.Silver;
-            this.lblCanPort.Location = new System.Drawing.Point(228, 152);
+            this.lblCanPort.Location = new System.Drawing.Point(285, 190);
             this.lblCanPort.Name = "lblCanPort";
-            this.lblCanPort.Size = new System.Drawing.Size(180, 16);
+            this.lblCanPort.Size = new System.Drawing.Size(267, 26);
             this.lblCanPort.TabIndex = 12;
             this.lblCanPort.Text = "COM Port";
             // 
             // cbCanPort
             // 
             this.cbCanPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCanPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.cbCanPort.Location = new System.Drawing.Point(228, 170);
+            this.cbCanPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.cbCanPort.Location = new System.Drawing.Point(285, 222);
             this.cbCanPort.Name = "cbCanPort";
-            this.cbCanPort.Size = new System.Drawing.Size(174, 23);
+            this.cbCanPort.Size = new System.Drawing.Size(195, 32);
             this.cbCanPort.TabIndex = 13;
             // 
             // btnRescanPorts
@@ -246,9 +248,9 @@ namespace YieldFlo.Forms
             this.btnRescanPorts.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescanPorts.ForeColor = System.Drawing.Color.White;
             this.btnRescanPorts.Image = ((System.Drawing.Image)(resources.GetObject("btnRescanPorts.Image")));
-            this.btnRescanPorts.Location = new System.Drawing.Point(406, 168);
+            this.btnRescanPorts.Location = new System.Drawing.Point(488, 218);
             this.btnRescanPorts.Name = "btnRescanPorts";
-            this.btnRescanPorts.Size = new System.Drawing.Size(36, 26);
+            this.btnRescanPorts.Size = new System.Drawing.Size(64, 40);
             this.btnRescanPorts.TabIndex = 14;
             this.btnRescanPorts.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnRescanPorts.UseVisualStyleBackColor = false;
@@ -256,11 +258,11 @@ namespace YieldFlo.Forms
             // 
             // lblResumeJob
             // 
-            this.lblResumeJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.lblResumeJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblResumeJob.ForeColor = System.Drawing.Color.Silver;
-            this.lblResumeJob.Location = new System.Drawing.Point(8, 212);
+            this.lblResumeJob.Location = new System.Drawing.Point(8, 274);
             this.lblResumeJob.Name = "lblResumeJob";
-            this.lblResumeJob.Size = new System.Drawing.Size(300, 16);
+            this.lblResumeJob.Size = new System.Drawing.Size(400, 26);
             this.lblResumeJob.TabIndex = 15;
             this.lblResumeJob.Text = "Resume Job on Start";
             // 
@@ -269,11 +271,11 @@ namespace YieldFlo.Forms
             this.btnResumeOn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnResumeOn.FlatAppearance.BorderSize = 0;
             this.btnResumeOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResumeOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnResumeOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnResumeOn.ForeColor = System.Drawing.Color.White;
-            this.btnResumeOn.Location = new System.Drawing.Point(8, 230);
+            this.btnResumeOn.Location = new System.Drawing.Point(8, 304);
             this.btnResumeOn.Name = "btnResumeOn";
-            this.btnResumeOn.Size = new System.Drawing.Size(210, 44);
+            this.btnResumeOn.Size = new System.Drawing.Size(267, 48);
             this.btnResumeOn.TabIndex = 16;
             this.btnResumeOn.Text = global::YieldFlo.Language.Lang.lgOn;
             this.btnResumeOn.UseVisualStyleBackColor = false;
@@ -284,11 +286,11 @@ namespace YieldFlo.Forms
             this.btnResumeOff.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnResumeOff.FlatAppearance.BorderSize = 0;
             this.btnResumeOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResumeOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnResumeOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnResumeOff.ForeColor = System.Drawing.Color.White;
-            this.btnResumeOff.Location = new System.Drawing.Point(226, 230);
+            this.btnResumeOff.Location = new System.Drawing.Point(285, 304);
             this.btnResumeOff.Name = "btnResumeOff";
-            this.btnResumeOff.Size = new System.Drawing.Size(210, 44);
+            this.btnResumeOff.Size = new System.Drawing.Size(267, 48);
             this.btnResumeOff.TabIndex = 17;
             this.btnResumeOff.Text = global::YieldFlo.Language.Lang.lgOff;
             this.btnResumeOff.UseVisualStyleBackColor = false;
@@ -298,11 +300,11 @@ namespace YieldFlo.Forms
             // 
             this.btnSaveSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(110)))), ((int)(((byte)(0)))));
             this.btnSaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnSaveSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSaveSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSaveSettings.Location = new System.Drawing.Point(8, 290);
+            this.btnSaveSettings.Location = new System.Drawing.Point(8, 364);
             this.btnSaveSettings.Name = "btnSaveSettings";
-            this.btnSaveSettings.Size = new System.Drawing.Size(160, 36);
+            this.btnSaveSettings.Size = new System.Drawing.Size(260, 48);
             this.btnSaveSettings.TabIndex = 18;
             this.btnSaveSettings.Text = global::YieldFlo.Language.Lang.lgSaveApply;
             this.btnSaveSettings.UseVisualStyleBackColor = false;
@@ -312,11 +314,11 @@ namespace YieldFlo.Forms
             // 
             this.btnSettingsClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnSettingsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettingsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnSettingsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSettingsClose.ForeColor = System.Drawing.Color.White;
-            this.btnSettingsClose.Location = new System.Drawing.Point(336, 290);
+            this.btnSettingsClose.Location = new System.Drawing.Point(372, 364);
             this.btnSettingsClose.Name = "btnSettingsClose";
-            this.btnSettingsClose.Size = new System.Drawing.Size(112, 36);
+            this.btnSettingsClose.Size = new System.Drawing.Size(180, 48);
             this.btnSettingsClose.TabIndex = 19;
             this.btnSettingsClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnSettingsClose.UseVisualStyleBackColor = false;
@@ -324,13 +326,11 @@ namespace YieldFlo.Forms
             // 
             // frmMenuSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(456, 379);
+            this.ClientSize = new System.Drawing.Size(564, 472);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlTitle);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenuSettings";
             this.Padding = new System.Windows.Forms.Padding(2);
