@@ -39,21 +39,21 @@ namespace YieldFlo.Forms
 
             // ── Title bar ────────────────────────────────────────────────────
             this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
-            this.pnlTitle.Height = 40;
+            this.pnlTitle.Height = 48;
 
             this.lblTitle.Text      = Lang.lgTitleCrops;
-            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.Dock      = System.Windows.Forms.DockStyle.Fill;
             this.lblTitle.AutoSize  = false;
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
             this.btnTitleClose.Text      = "×";
-            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
             this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.Size     = new System.Drawing.Size(36, 30);
-            this.btnTitleClose.Location = new System.Drawing.Point(418, 5);
+            this.btnTitleClose.Size     = new System.Drawing.Size(48, 40);
+            this.btnTitleClose.Location = new System.Drawing.Point(504, 4);
             this.btnTitleClose.Click   += new System.EventHandler(this.btnTitleClose_Click);
 
             this.pnlTitle.Controls.Add(this.lblTitle);
@@ -63,47 +63,47 @@ namespace YieldFlo.Forms
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
 
             this.lbCrops.Location      = new System.Drawing.Point(4, 4);
-            this.lbCrops.Size          = new System.Drawing.Size(448, 152);
-            this.lbCrops.Font          = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lbCrops.Size          = new System.Drawing.Size(552, 170);
+            this.lbCrops.Font          = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lbCrops.SelectedIndexChanged += new System.EventHandler(this.lbCrops_SelectedIndexChanged);
 
             // Edit panel
-            this.pnlEdit.Location  = new System.Drawing.Point(0, 160);
-            this.pnlEdit.Size      = new System.Drawing.Size(456, 160);
+            this.pnlEdit.Location  = new System.Drawing.Point(4, 180);
+            this.pnlEdit.Size      = new System.Drawing.Size(552, 164);
 
-            var lf = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            var vf = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            var lf = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            var vf = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
 
             // Name
-            this.lblCropName.Text = Lang.lgName; this.lblCropName.Font = lf; this.lblCropName.Location = new System.Drawing.Point(8, 3); this.lblCropName.AutoSize = false; this.lblCropName.Width = 108;
-            this.txtCropName.Font = vf; this.txtCropName.Location = new System.Drawing.Point(120, 0); this.txtCropName.Height = 24; this.txtCropName.Width = 320;
+            this.lblCropName.Text = Lang.lgName; this.lblCropName.Font = lf; this.lblCropName.Location = new System.Drawing.Point(8, 4); this.lblCropName.AutoSize = false; this.lblCropName.Size = new System.Drawing.Size(220, 32);
+            this.txtCropName.Font = vf; this.txtCropName.Location = new System.Drawing.Point(236, 4); this.txtCropName.Height = 32; this.txtCropName.Width = 310;
             pnlEdit.Controls.Add(this.lblCropName); pnlEdit.Controls.Add(this.txtCropName);
             // Category
-            this.lblCategory.Text = Lang.lgCategoryLabel; this.lblCategory.Font = lf; this.lblCategory.Location = new System.Drawing.Point(8, 35); this.lblCategory.AutoSize = false; this.lblCategory.Width = 108;
-            this.cboCropCategory.Font = vf; this.cboCropCategory.Location = new System.Drawing.Point(120, 32); this.cboCropCategory.Width = 160;
+            this.lblCategory.Text = Lang.lgCategoryLabel; this.lblCategory.Font = lf; this.lblCategory.Location = new System.Drawing.Point(8, 44); this.lblCategory.AutoSize = false; this.lblCategory.Size = new System.Drawing.Size(220, 32);
+            this.cboCropCategory.Font = vf; this.cboCropCategory.Location = new System.Drawing.Point(236, 44); this.cboCropCategory.Width = 180;
             this.cboCropCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboCropCategory.Items.AddRange(new object[] { "Cereal", "OilSeed", "Corn", "Pulse", "Other" });
             this.cboCropCategory.SelectedIndex = 0;
             pnlEdit.Controls.Add(this.lblCategory); pnlEdit.Controls.Add(this.cboCropCategory);
             // Test Weight
-            this.lblTestWeight.Text = Lang.lgTestWeight; this.lblTestWeight.Font = lf; this.lblTestWeight.Location = new System.Drawing.Point(8, 67); this.lblTestWeight.AutoSize = false; this.lblTestWeight.Width = 108;
-            this.numTestWeight.Font = vf; this.numTestWeight.Location = new System.Drawing.Point(120, 64); this.numTestWeight.Width = 80; this.numTestWeight.Minimum = 0; this.numTestWeight.Maximum = 200; this.numTestWeight.Increment = 1; this.numTestWeight.Value = 60; this.numTestWeight.DecimalPlaces = 0;
-            this.lblTestWeightUnit.Text = "lb/bu"; this.lblTestWeightUnit.Font = vf; this.lblTestWeightUnit.Location = new System.Drawing.Point(210, 67); this.lblTestWeightUnit.AutoSize = true;
+            this.lblTestWeight.Text = Lang.lgTestWeight; this.lblTestWeight.Font = lf; this.lblTestWeight.Location = new System.Drawing.Point(8, 84); this.lblTestWeight.AutoSize = false; this.lblTestWeight.Size = new System.Drawing.Size(220, 32);
+            this.numTestWeight.Font = vf; this.numTestWeight.Location = new System.Drawing.Point(236, 84); this.numTestWeight.Width = 100; this.numTestWeight.Height = 32; this.numTestWeight.Minimum = 0; this.numTestWeight.Maximum = 200; this.numTestWeight.Increment = 1; this.numTestWeight.Value = 60; this.numTestWeight.DecimalPlaces = 0;
+            this.lblTestWeightUnit.Text = "lb/bu"; this.lblTestWeightUnit.Font = vf; this.lblTestWeightUnit.Location = new System.Drawing.Point(344, 88); this.lblTestWeightUnit.AutoSize = true;
             pnlEdit.Controls.Add(this.lblTestWeight); pnlEdit.Controls.Add(this.numTestWeight); pnlEdit.Controls.Add(this.lblTestWeightUnit);
             // Market Moisture
-            this.lblMktMoisture.Text = Lang.lgMktMoisture; this.lblMktMoisture.Font = lf; this.lblMktMoisture.Location = new System.Drawing.Point(8, 99); this.lblMktMoisture.AutoSize = false; this.lblMktMoisture.Width = 108;
-            this.numMarketMoisture.Font = vf; this.numMarketMoisture.Location = new System.Drawing.Point(120, 96); this.numMarketMoisture.Width = 80; this.numMarketMoisture.Minimum = 0; this.numMarketMoisture.Maximum = 40; this.numMarketMoisture.Increment = 1; this.numMarketMoisture.Value = 14; this.numMarketMoisture.DecimalPlaces = 0;
-            this.lblMktMoistureUnit.Text = "%"; this.lblMktMoistureUnit.Font = vf; this.lblMktMoistureUnit.Location = new System.Drawing.Point(210, 99); this.lblMktMoistureUnit.AutoSize = true;
+            this.lblMktMoisture.Text = Lang.lgMktMoisture; this.lblMktMoisture.Font = lf; this.lblMktMoisture.Location = new System.Drawing.Point(8, 124); this.lblMktMoisture.AutoSize = false; this.lblMktMoisture.Size = new System.Drawing.Size(220, 32);
+            this.numMarketMoisture.Font = vf; this.numMarketMoisture.Location = new System.Drawing.Point(236, 124); this.numMarketMoisture.Width = 100; this.numMarketMoisture.Height = 32; this.numMarketMoisture.Minimum = 0; this.numMarketMoisture.Maximum = 40; this.numMarketMoisture.Increment = 1; this.numMarketMoisture.Value = 14; this.numMarketMoisture.DecimalPlaces = 0;
+            this.lblMktMoistureUnit.Text = "%"; this.lblMktMoistureUnit.Font = vf; this.lblMktMoistureUnit.Location = new System.Drawing.Point(344, 128); this.lblMktMoistureUnit.AutoSize = true;
             pnlEdit.Controls.Add(this.lblMktMoisture); pnlEdit.Controls.Add(this.numMarketMoisture); pnlEdit.Controls.Add(this.lblMktMoistureUnit);
 
             this.pnlContent.Controls.Add(this.lbCrops);
             this.pnlContent.Controls.Add(this.pnlEdit);
 
             // Buttons row
-            this.btnNew.Text = Lang.lgNew; this.btnNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnNew.Location = new System.Drawing.Point(8, 328); this.btnNew.Size = new System.Drawing.Size(106, 36);
-            this.btnSave.Text = Lang.lgSave; this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSave.Location = new System.Drawing.Point(118, 328); this.btnSave.Size = new System.Drawing.Size(106, 36);
-            this.btnDelete.Text = Lang.lgDelete; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDelete.Location = new System.Drawing.Point(228, 328); this.btnDelete.Size = new System.Drawing.Size(106, 36);
-            this.btnCropsClose.Text = Lang.lgClose; this.btnCropsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold); this.btnCropsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCropsClose.Location = new System.Drawing.Point(338, 328); this.btnCropsClose.Size = new System.Drawing.Size(106, 36);
+            this.btnNew.Text = Lang.lgNew; this.btnNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold); this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnNew.Location = new System.Drawing.Point(8, 352); this.btnNew.Size = new System.Drawing.Size(130, 44);
+            this.btnSave.Text = Lang.lgSave; this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold); this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnSave.Location = new System.Drawing.Point(146, 352); this.btnSave.Size = new System.Drawing.Size(130, 44);
+            this.btnDelete.Text = Lang.lgDelete; this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold); this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnDelete.Location = new System.Drawing.Point(284, 352); this.btnDelete.Size = new System.Drawing.Size(130, 44);
+            this.btnCropsClose.Text = Lang.lgClose; this.btnCropsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold); this.btnCropsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat; this.btnCropsClose.Location = new System.Drawing.Point(422, 352); this.btnCropsClose.Size = new System.Drawing.Size(130, 44);
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] { btnNew, btnSave, btnDelete, btnCropsClose });
 
             btnNew.Click        += new System.EventHandler(this.btnNew_Click);
@@ -112,16 +112,16 @@ namespace YieldFlo.Forms
             btnCropsClose.Click += new System.EventHandler(this.btnCropsClose_Click);
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 412);
-            this.MinimumSize     = new System.Drawing.Size(456, 412);
-            this.MaximumSize     = new System.Drawing.Size(456, 412);
+            this.ClientSize      = new System.Drawing.Size(564, 456);
+            this.MinimumSize     = new System.Drawing.Size(564, 456);
+            this.MaximumSize     = new System.Drawing.Size(564, 456);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
             this.TopMost         = true;
             this.ShowInTaskbar   = false;
             this.StartPosition   = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Font            = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font            = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.Name            = "frmMenuCrops";
             this.Text            = "Crops";
             this.Controls.Add(this.pnlContent);
