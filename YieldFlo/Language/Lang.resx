@@ -230,6 +230,8 @@ Make sure the elevator is running with no grain.</value></data>
   <!-- ── Job Report form ────────────────────────────────────────────────── -->
   <data name="lgJobReport" xml:space="preserve"><value>Job Report</value></data>
   <data name="lgPrint" xml:space="preserve"><value>Print</value></data>
+  <data name="lgRecalcMap" xml:space="preserve"><value>Recalculate</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Recalculate this job's yield map using the current calibration? Previously plotted values will be overwritten.</value></data>
   <data name="lgFieldColon" xml:space="preserve"><value>Field:</value></data>
   <data name="lgAreaColon" xml:space="preserve"><value>Area:</value></data>
   <data name="lgTotalColon" xml:space="preserve"><value>Total:</value></data>

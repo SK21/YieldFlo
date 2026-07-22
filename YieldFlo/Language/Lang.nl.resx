@@ -176,6 +176,8 @@ Zorg dat de elevator leeg loopt.</value></data>
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Taakrapport</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Afdrukken</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Herberekenen</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Deze opbrengstkaart herberekenen met de huidige kalibratie? Reeds getekende waarden worden overschreven.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Perceel:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Oppervlakte:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Totaal:</value></data>

@@ -221,6 +221,7 @@ namespace YieldFlo.Forms
                 btnZoomInFull.Location  = new Point(wa.Width - 118, 5);
                 btnZoomOutFull.Location = new Point(wa.Width - 158, 5);
                 btnPrint.Location       = new Point(wa.Width - 234, 5);
+                btnRecalc.Location      = new Point(wa.Width - 380, 5);
 
                 // gmap is first in the Controls collection (= top of z-order);
                 // make sure toolbar and legend paint above it, and repaint the
@@ -662,6 +663,46 @@ namespace YieldFlo.Forms
 
                 Props.ShowMessage(string.Format(Lang.lgExported, sfd.FileName));
             }
+        }
+
+        // Re-derives every point's yield in the selected job from its stored raw
+        // sensor reading using the crop's CURRENT calibration, then repaints. Only
+        // the recompute is new — RebuildSwaths already recolors purely from the
+        // stored YieldRate, so no drawing logic changes.
+        private void btnRecalc_Click(object sender, EventArgs e)
+        {
+            int idx = cboJob.SelectedIndex;
+            if (idx < 0 || idx >= _jobIds.Count) return;
+            int jobId = _jobIds[idx];
+
+            var answer = MessageBox.Show(Lang.lgRecalcMapPrompt, Lang.lgRecalcMap,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != DialogResult.Yes) return;
+
+            int profileId = -1, cropId = -1, headerId = -1;
+            foreach (var j in Core.Database.Jobs.GetAll())
+            {
+                if (j.id != jobId) continue;
+                profileId = j.profileId;
+                cropId    = j.cropId;
+                headerId  = j.headerId;
+                break;
+            }
+            if (profileId <= 0 || cropId <= 0) return;
+
+            double testWeightLbsBu = 60.0;
+            foreach (var c in Core.Database.Crops.GetAll())
+                if (c.id == cropId) { testWeightLbsBu = c.testWeight; break; }
+
+            double headerWidthM = 9.144;
+            foreach (var h in Core.Database.Headers.GetAll())
+                if (h.id == headerId) { headerWidthM = h.widthM; break; }
+
+            var cal = Core.Database.Calibrations.GetLatest(profileId, cropId);
+            Core.Database.YieldData.RecalculateJob(
+                jobId, cal.baseline, cal.yieldFactor, headerWidthM, testWeightLbsBu);
+
+            RebuildSwaths(Core.Database.YieldData.GetByJob(jobId), jobId, center: false);
         }
 
         // ── Legend paint ──────────────────────────────────────────────────────

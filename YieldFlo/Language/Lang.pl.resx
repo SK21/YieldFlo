@@ -176,6 +176,8 @@ Upewnij się, że elewator pracuje bez ziarna.</value></data>
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Raport zadania</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Drukuj</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Przelicz ponownie</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Przeliczyć mapę plonu tego zadania przy użyciu bieżącej kalibracji? Wcześniej naniesione wartości zostaną nadpisane.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Pole:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Obszar:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Łącznie:</value></data>

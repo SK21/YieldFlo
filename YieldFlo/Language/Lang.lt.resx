@@ -176,6 +176,8 @@
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Užduoties ataskaita</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Spausdinti</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Perskaičiuoti</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Perskaičiuoti šio darbo derliaus žemėlapį naudojant esamą kalibravimą? Ankstesnės pavaizduotos reikšmės bus perrašytos.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Laukas:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Plotas:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Iš viso:</value></data>

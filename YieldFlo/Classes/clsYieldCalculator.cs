@@ -172,5 +172,29 @@ namespace YieldFlo.Classes
             SmoothedYield = 0;
             SmoothedWorkRate = 0;
         }
+
+        /// <summary>
+        /// Recomputes a single yield value from a stored raw sensor reading, using
+        /// the same math as Calculate() but with no instance state (no smoothing,
+        /// no side effects). Used to re-derive already-logged YieldDataPoints under
+        /// a new calibration (see YieldDataRepo.RecalculateJob) without disturbing
+        /// the live calculator mid-job.
+        /// </summary>
+        public static double ComputeYieldRate(double sensor1Raw, double speedKmh, double baseline,
+            double yieldFactor, double headerWidthM, double testWeightLbsBu)
+        {
+            if (speedKmh < 0.5 || headerWidthM <= 0 || testWeightLbsBu <= 0) return 0;
+
+            double ratio = Math.Max(0.0, Math.Min(1.0, sensor1Raw - baseline));
+            if (ratio <= 0.01) return 0;
+
+            double speedMs = speedKmh / 3.6;
+            double areaRateM2s = speedMs * headerWidthM;
+            double grainFlowIndex = ratio * yieldFactor;
+            double yieldLbsPerM2 = grainFlowIndex / areaRateM2s;
+            double yieldBuAc = yieldLbsPerM2 * M2_PER_ACRE / testWeightLbsBu;
+
+            return Math.Round(yieldBuAc, 1);
+        }
     }
 }

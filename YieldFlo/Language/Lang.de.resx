@@ -176,6 +176,8 @@ Elevator muss ohne Erntegut laufen.</value></data>
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Jobbericht</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Drucken</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Neu berechnen</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Diese Ertragskarte mit der aktuellen Kalibrierung neu berechnen? Bereits dargestellte Werte werden überschrieben.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Feld:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Fläche:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Gesamt:</value></data>

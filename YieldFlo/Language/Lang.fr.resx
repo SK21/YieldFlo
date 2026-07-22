@@ -176,6 +176,8 @@ S'assurer que l'élévateur tourne sans grain.</value></data>
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Rapport de travail</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Imprimer</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Recalculer</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Recalculer la carte de rendement de ce travail avec l'étalonnage actuel ? Les valeurs déjà tracées seront écrasées.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Parcelle :</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Surface :</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Total :</value></data>

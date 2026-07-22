@@ -177,6 +177,50 @@ VALUES
             }
             return result;
         }
+
+        // Re-derives YieldRate for every point in a job from its stored raw sensor
+        // reading and speed, using the given (typically just-updated) calibration.
+        // Returns the number of rows rewritten. Caller is responsible for repainting
+        // the map afterwards — this only touches the database.
+        public int RecalculateJob(int jobId, double baseline, double yieldFactor,
+                                   double headerWidthM, double testWeightLbsBu)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var tx = conn.BeginTransaction();
+
+            var updates = new List<(int id, double rate)>();
+            using (var selCmd = new SQLiteCommand(
+                "SELECT id, speed, sensor1_raw FROM yield_data WHERE job_id=@jid", conn, tx))
+            {
+                selCmd.Parameters.AddWithValue("@jid", jobId);
+                using var reader = selCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    double speed = reader.GetFloat(1);
+                    double sensor1Raw = reader.GetDouble(2);
+                    double rate = clsYieldCalculator.ComputeYieldRate(
+                        sensor1Raw, speed, baseline, yieldFactor, headerWidthM, testWeightLbsBu);
+                    updates.Add((id, rate));
+                }
+            }
+
+            using (var updCmd = new SQLiteCommand("UPDATE yield_data SET yield_rate=@yr WHERE id=@id", conn, tx))
+            {
+                var pYr = updCmd.Parameters.Add("@yr", System.Data.DbType.Double);
+                var pId = updCmd.Parameters.Add("@id", System.Data.DbType.Int32);
+                foreach (var (id, rate) in updates)
+                {
+                    pYr.Value = rate;
+                    pId.Value = id;
+                    updCmd.ExecuteNonQuery();
+                }
+            }
+
+            tx.Commit();
+            return updates.Count;
+        }
     }
 
     // ── ProfileRepo ───────────────────────────────────────────────────────────

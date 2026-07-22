@@ -192,6 +192,8 @@ namespace YieldFlo.Language
         // ── Job Report form ──────────────────────────────────────────────────
         internal static string lgJobReport    => Get("lgJobReport");
         internal static string lgPrint        => Get("lgPrint");
+        internal static string lgRecalcMap       => Get("lgRecalcMap");
+        internal static string lgRecalcMapPrompt => Get("lgRecalcMapPrompt");
         internal static string lgFieldColon   => Get("lgFieldColon");
         internal static string lgAreaColon    => Get("lgAreaColon");
         internal static string lgTotalColon   => Get("lgTotalColon");

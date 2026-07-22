@@ -176,6 +176,8 @@ Az elevátor szalag üres legyen.</value></data>
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Feladatjelentés</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Nyomtatás</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Újraszámítás</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Újraszámítja ezt a hozamtérképet az aktuális kalibrációval? A már ábrázolt értékek felülíródnak.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Tábla:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Terület:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Összesen:</value></data>

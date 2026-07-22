@@ -176,6 +176,8 @@
   <!-- Job Report form -->
   <data name="lgJobReport"    xml:space="preserve"><value>Отчёт о работе</value></data>
   <data name="lgPrint"       xml:space="preserve"><value>Печать</value></data>
+  <data name="lgRecalcMap"       xml:space="preserve"><value>Пересчитать</value></data>
+  <data name="lgRecalcMapPrompt" xml:space="preserve"><value>Пересчитать карту урожайности этого задания с текущей калибровкой? Ранее отображённые значения будут перезаписаны.</value></data>
   <data name="lgFieldColon"   xml:space="preserve"><value>Поле:</value></data>
   <data name="lgAreaColon"    xml:space="preserve"><value>Площадь:</value></data>
   <data name="lgTotalColon"   xml:space="preserve"><value>Итого:</value></data>
