@@ -89,5 +89,35 @@ namespace YieldFlo.Properties {
                 return ((global::System.Drawing.Bitmap)(obj));
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static global::System.Drawing.Bitmap PlayLight {
+            get {
+                object obj = ResourceManager.GetObject("PlayLight", resourceCulture);
+                return ((global::System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static global::System.Drawing.Bitmap PauseLight {
+            get {
+                object obj = ResourceManager.GetObject("PauseLight", resourceCulture);
+                return ((global::System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static global::System.Drawing.Bitmap StopLight {
+            get {
+                object obj = ResourceManager.GetObject("StopLight", resourceCulture);
+                return ((global::System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

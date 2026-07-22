@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using YieldFlo.Classes;
 using YieldFlo.Language;
@@ -9,10 +8,6 @@ namespace YieldFlo.Forms
 {
     public partial class frmMain : Form
     {
-        [DllImport("user32.dll")]
-        private static extern int GetSystemMetrics(int nIndex);
-        private static bool IsTabletPC() => GetSystemMetrics(86) != 0;
-
         // Status message fade timer
         private System.Windows.Forms.Timer _msgTimer;
         private int _msgCountdown;
@@ -32,13 +27,10 @@ namespace YieldFlo.Forms
         {
             ApplyTheme();
 
-            // Enable drag on toolbar and title label (no title bar)
-            pnlToolbar.MouseDown += Drag_MouseDown;
-            pnlToolbar.MouseMove += Drag_MouseMove;
-            pnlToolbar.MouseUp += Drag_MouseUp;
-            lblTitle.MouseDown += Drag_MouseDown;
-            lblTitle.MouseMove += Drag_MouseMove;
-            lblTitle.MouseUp += Drag_MouseUp;
+            // No title bar and no title label to grab — wire dragging onto every
+            // non-button surface (panels, labels) so the form is draggable from
+            // anywhere except the toolbar's icon buttons.
+            WireDragRecursive(this);
 
             RestorePosition();
             Core.Initialize(this);
@@ -51,10 +43,6 @@ namespace YieldFlo.Forms
 
             UpdateStatusBar();
             SetJobButtons(Core.Collector?.IsRecording ?? false);
-
-            // Tablet mode: slightly larger controls
-            if (IsTabletPC())
-                lblYield.Font = new Font(lblYield.Font.FontFamily, 36f, FontStyle.Bold);
 
             lblVersion.Text = "v" + Props.AppVersion;
         }
@@ -112,18 +100,14 @@ namespace YieldFlo.Forms
             lblYield.ForeColor = dispFore;
             lblMoisture.BackColor = dispBack;
             lblMoisture.ForeColor = dispFore;
-            lblSpeed.BackColor = dispBack;
-            lblSpeed.ForeColor = dispFore;
 
             lblYieldTitle.ForeColor = fore;
             lblMoistureTitle.ForeColor = fore;
-            lblSpeedTitle.ForeColor = fore;
             lblTotArea.ForeColor = fore;
             lblTotTotal.ForeColor = fore;
             lblTotRate.ForeColor = fore;
             lblWorkRate.ForeColor = fore;
             lblMoistureUnit.ForeColor = System.Drawing.Color.White;
-            lblMoistureUnit.BackColor = dispBack;
 
             pnlSensor1.BackColor = Color.FromArgb(30, 120, 30);
             pnlSensor2.BackColor = Color.FromArgb(30, 120, 30);
@@ -160,6 +144,24 @@ namespace YieldFlo.Forms
             _dragging = false;
         }
 
+        // Wires drag onto every descendant control except Buttons (the toolbar's
+        // icon buttons need their Click behaviour, not drag). Recurses into panels
+        // so labels/bars nested several levels deep (e.g. inside pnlGauges/pnlYield)
+        // are draggable too.
+        private void WireDragRecursive(Control parent)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                if (!(c is Button))
+                {
+                    c.MouseDown += Drag_MouseDown;
+                    c.MouseMove += Drag_MouseMove;
+                    c.MouseUp   += Drag_MouseUp;
+                }
+                if (c.HasChildren) WireDragRecursive(c);
+            }
+        }
+
         // ── Core events ───────────────────────────────────────────────────────
 
         private void Core_UpdateDisplay(object sender, EventArgs e)
@@ -191,13 +193,10 @@ namespace YieldFlo.Forms
 
             double yield = Props.DisplayRate(Core.Yield?.SmoothedYield ?? 0);
             double moisture = Core.LastMoisture > 0 ? Core.LastMoisture + Core.ActiveMoistureOffset : 0;
-            double speed = Props.DisplaySpeed(Core.GPS.Speed);
 
             lblYield.Text = yield.ToString("F1");
             lblYieldUnit.Text = Props.RateUnit;
             lblMoisture.Text = moisture > 0 ? moisture.ToString("F1") : "--.-";
-            lblSpeed.Text = speed.ToString("F1");
-            lblSpeedUnit.Text = Props.SpeedUnit;
 
             // Bar 1 — Elevator flow (raw obstruction ratio, 0–100%)
             double flow = Math.Min(1.0, Math.Max(0, Core.LastSensor1));
@@ -219,7 +218,7 @@ namespace YieldFlo.Forms
 
             double workRate = Props.DisplayMass(Core.Yield?.SmoothedWorkRate ?? 0);   // t/hr metric, bu/hr imperial
 
-            lblTotArea.Text = $"{area:F2} {Props.AreaUnit}";
+            lblTotArea.Text = $"{area:F1} {Props.AreaUnit}";
             lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
             lblTotRate.Text = $"{avg:F1} {Props.RateUnit}";
             lblWorkRate.Text = $"{workRate:F1} {Props.MassUnit}/hr";
