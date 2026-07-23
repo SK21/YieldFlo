@@ -32,22 +32,22 @@ namespace YieldFlo.Forms
             this.SuspendLayout();
 
             // ── GMap ──────────────────────────────────────────────────────────
-            this.gmap.Bounds         = new System.Drawing.Rectangle(0, 30, 300, 270);
+            this.gmap.Bounds         = new System.Drawing.Rectangle(0, 44, 300, 270);
             this.gmap.CanDragMap     = false;
             this.gmap.MouseDown     += new System.Windows.Forms.MouseEventHandler(this.Gmap_MouseDown);
             this.gmap.MouseUp       += new System.Windows.Forms.MouseEventHandler(this.Gmap_MouseUp);
 
             // ── Mini bar (title bar + drag + zoom, mini mode only) ────────────
             this.pnlMiniBar.BackColor  = System.Drawing.Color.FromArgb(20, 30, 40);
-            this.pnlMiniBar.Bounds     = new System.Drawing.Rectangle(0, 0, 300, 30);
+            this.pnlMiniBar.Bounds     = new System.Drawing.Rectangle(0, 0, 300, 44);
 
             this.lblMiniJob.AutoSize   = false;
-            this.lblMiniJob.Bounds     = new System.Drawing.Rectangle(4, 3, 176, 24);
+            this.lblMiniJob.Bounds     = new System.Drawing.Rectangle(4, 6, 172, 32);
             this.lblMiniJob.ForeColor  = System.Drawing.Color.Silver;
-            this.lblMiniJob.Font       = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lblMiniJob.Font       = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.lblMiniJob.TextAlign  = System.Drawing.ContentAlignment.MiddleLeft;
 
-            var miniBtn = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            var miniBtn = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
 
             this.btnZoomOut.Text      = "\u2212";
             this.btnZoomOut.Font      = miniBtn;
@@ -55,8 +55,8 @@ namespace YieldFlo.Forms
             this.btnZoomOut.FlatAppearance.BorderSize = 0;
             this.btnZoomOut.BackColor = System.Drawing.Color.FromArgb(40, 55, 70);
             this.btnZoomOut.ForeColor = System.Drawing.Color.White;
-            this.btnZoomOut.Size      = new System.Drawing.Size(24, 24);
-            this.btnZoomOut.Location  = new System.Drawing.Point(184, 3);
+            this.btnZoomOut.Size      = new System.Drawing.Size(32, 32);
+            this.btnZoomOut.Location  = new System.Drawing.Point(184, 6);
             this.btnZoomOut.Click    += new System.EventHandler(this.btnZoomOut_Click);
 
             this.btnZoomIn.Text      = "+";
@@ -65,8 +65,8 @@ namespace YieldFlo.Forms
             this.btnZoomIn.FlatAppearance.BorderSize = 0;
             this.btnZoomIn.BackColor = System.Drawing.Color.FromArgb(40, 55, 70);
             this.btnZoomIn.ForeColor = System.Drawing.Color.White;
-            this.btnZoomIn.Size      = new System.Drawing.Size(24, 24);
-            this.btnZoomIn.Location  = new System.Drawing.Point(212, 3);
+            this.btnZoomIn.Size      = new System.Drawing.Size(32, 32);
+            this.btnZoomIn.Location  = new System.Drawing.Point(224, 6);
             this.btnZoomIn.Click    += new System.EventHandler(this.btnZoomIn_Click);
 
             this.btnMiniClose.Text      = "\u00d7";
@@ -75,8 +75,8 @@ namespace YieldFlo.Forms
             this.btnMiniClose.FlatAppearance.BorderSize = 0;
             this.btnMiniClose.BackColor = System.Drawing.Color.FromArgb(100, 30, 30);
             this.btnMiniClose.ForeColor = System.Drawing.Color.White;
-            this.btnMiniClose.Size      = new System.Drawing.Size(24, 24);
-            this.btnMiniClose.Location  = new System.Drawing.Point(240, 3);
+            this.btnMiniClose.Size      = new System.Drawing.Size(32, 32);
+            this.btnMiniClose.Location  = new System.Drawing.Point(264, 6);
             this.btnMiniClose.Click    += new System.EventHandler(this.btnMiniClose_Click);
 
             // Wire drag on bar and label (buttons absorb their own clicks)
@@ -167,7 +167,7 @@ namespace YieldFlo.Forms
 
 
             // ── Form (starts in mini size, SetMiniMode will resize) ───────────
-            this.ClientSize      = new System.Drawing.Size(300, 300);
+            this.ClientSize      = new System.Drawing.Size(300, 314);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(0);
             this.BackColor       = System.Drawing.Color.Black;

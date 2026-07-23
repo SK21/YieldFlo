@@ -51,7 +51,7 @@ namespace YieldFlo.Forms
             FormPositions.Restore(this);
             this.FormClosed += (s, e) => FormPositions.Save(this);
 
-            foreach (var ctl in new Control[] { tboxDisplay, pnlContent })
+            foreach (var ctl in new Control[] { lblTitle, tboxDisplay, pnlContent })
             {
                 ctl.MouseDown += (s, e) => { if (((MouseEventArgs)e).Button == MouseButtons.Left) { _dragging = true;  _dragStart = ((MouseEventArgs)e).Location; } };
                 ctl.MouseMove += (s, e) => { if (_dragging) { Left += ((MouseEventArgs)e).X - _dragStart.X; Top += ((MouseEventArgs)e).Y - _dragStart.Y; } };

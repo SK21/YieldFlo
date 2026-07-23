@@ -23,11 +23,11 @@ namespace YieldFlo.Forms
 
             // ── Title bar ────────────────────────────────────────────────────
             this.pnlTitle.Dock      = System.Windows.Forms.DockStyle.Top;
-            this.pnlTitle.Height    = 36;
+            this.pnlTitle.Height    = 44;
             this.pnlTitle.BackColor = System.Drawing.Color.FromArgb(30, 30, 30);
 
             this.lblTitle.Dock      = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblTitle.Text      = "";
@@ -39,31 +39,31 @@ namespace YieldFlo.Forms
             this.pnlContent.BackColor = System.Drawing.Color.FromArgb(45, 45, 45);
 
             // ── Message ───────────────────────────────────────────────────────
-            this.lblMsg.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lblMsg.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblMsg.ForeColor = System.Drawing.Color.White;
             this.lblMsg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblMsg.Location  = new System.Drawing.Point(0, 10);
-            this.lblMsg.Size      = new System.Drawing.Size(336, 60);
+            this.lblMsg.Location  = new System.Drawing.Point(0, 14);
+            this.lblMsg.Size      = new System.Drawing.Size(420, 90);
             this.lblMsg.Text      = "";
 
             // ── Buttons ───────────────────────────────────────────────────────
             this.btnYes.Text      = "Yes";
-            this.btnYes.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.btnYes.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnYes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnYes.BackColor = System.Drawing.Color.FromArgb(0, 100, 0);
             this.btnYes.ForeColor = System.Drawing.Color.White;
-            this.btnYes.Size      = new System.Drawing.Size(100, 38);
-            this.btnYes.Location  = new System.Drawing.Point(56, 80);
+            this.btnYes.Size      = new System.Drawing.Size(140, 48);
+            this.btnYes.Location  = new System.Drawing.Point(60, 120);
             this.btnYes.TabStop   = false;
             this.btnYes.Click    += new System.EventHandler(this.btnYes_Click);
 
             this.btnNo.Text      = "No";
-            this.btnNo.Font      = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.btnNo.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNo.BackColor = System.Drawing.Color.FromArgb(80, 30, 30);
             this.btnNo.ForeColor = System.Drawing.Color.White;
-            this.btnNo.Size      = new System.Drawing.Size(100, 38);
-            this.btnNo.Location  = new System.Drawing.Point(180, 80);
+            this.btnNo.Size      = new System.Drawing.Size(140, 48);
+            this.btnNo.Location  = new System.Drawing.Point(220, 120);
             this.btnNo.TabStop   = false;
             this.btnNo.Click    += new System.EventHandler(this.btnNo_Click);
 
@@ -72,9 +72,9 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.btnNo);
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(340, 170);
-            this.MinimumSize     = new System.Drawing.Size(340, 170);
-            this.MaximumSize     = new System.Drawing.Size(340, 170);
+            this.ClientSize      = new System.Drawing.Size(424, 232);
+            this.MinimumSize     = new System.Drawing.Size(424, 232);
+            this.MaximumSize     = new System.Drawing.Size(424, 232);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.StartPosition   = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ShowInTaskbar   = false;

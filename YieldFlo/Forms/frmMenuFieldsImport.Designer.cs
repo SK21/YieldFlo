@@ -27,21 +27,21 @@ namespace YieldFlo.Forms
 
             // ── Title bar ────────────────────────────────────────────────────
             this.pnlTitle.Dock   = System.Windows.Forms.DockStyle.Top;
-            this.pnlTitle.Height = 40;
+            this.pnlTitle.Height = 48;
 
             this.lblTitle.Text      = Lang.lgTitleImportFields;
-            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Font      = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(180, 200, 220);
             this.lblTitle.AutoSize  = false;
             this.lblTitle.Dock      = System.Windows.Forms.DockStyle.Fill;
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
             this.btnTitleClose.Text      = "×";
-            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
             this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.Size     = new System.Drawing.Size(36, 30);
-            this.btnTitleClose.Location = new System.Drawing.Point(418, 5);
+            this.btnTitleClose.Size     = new System.Drawing.Size(48, 40);
+            this.btnTitleClose.Location = new System.Drawing.Point(508, 4);
             this.btnTitleClose.Click   += new System.EventHandler(this.btnTitleClose_Click);
 
             this.pnlTitle.Controls.Add(this.lblTitle);
@@ -50,11 +50,11 @@ namespace YieldFlo.Forms
             // ── Content ───────────────────────────────────────────────────────
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            var inputFont = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            var btnFont   = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            var inputFont = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            var btnFont   = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
 
             this.clbFields.Location    = new System.Drawing.Point(4, 4);
-            this.clbFields.Size        = new System.Drawing.Size(448, 220);
+            this.clbFields.Size        = new System.Drawing.Size(552, 240);
             this.clbFields.Font        = inputFont;
             this.clbFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.clbFields.CheckOnClick = true;
@@ -62,36 +62,36 @@ namespace YieldFlo.Forms
 
             this.btnSelectAll.Text      = Lang.lgSelectAll; this.btnSelectAll.Font = btnFont;
             this.btnSelectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSelectAll.Size      = new System.Drawing.Size(140, 36);
-            this.btnSelectAll.Location  = new System.Drawing.Point(8, 232);
+            this.btnSelectAll.Size      = new System.Drawing.Size(176, 48);
+            this.btnSelectAll.Location  = new System.Drawing.Point(8, 252);
             this.btnSelectAll.Click    += new System.EventHandler(this.btnSelectAll_Click);
 
             this.btnImport.Text      = Lang.lgImport; this.btnImport.Font = btnFont;
             this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImport.Size      = new System.Drawing.Size(148, 36);
-            this.btnImport.Location  = new System.Drawing.Point(154, 232);
+            this.btnImport.Size      = new System.Drawing.Size(176, 48);
+            this.btnImport.Location  = new System.Drawing.Point(194, 252);
             this.btnImport.Click    += new System.EventHandler(this.btnImport_Click);
 
             this.btnFieldsImportClose.Text      = Lang.lgClose; this.btnFieldsImportClose.Font = btnFont;
             this.btnFieldsImportClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFieldsImportClose.Size      = new System.Drawing.Size(140, 36);
-            this.btnFieldsImportClose.Location  = new System.Drawing.Point(308, 232);
+            this.btnFieldsImportClose.Size      = new System.Drawing.Size(176, 48);
+            this.btnFieldsImportClose.Location  = new System.Drawing.Point(380, 252);
             this.btnFieldsImportClose.Click    += new System.EventHandler(this.btnFieldsImportClose_Click);
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 clbFields, btnSelectAll, btnImport, btnFieldsImportClose });
 
             // ── Form ──────────────────────────────────────────────────────────
-            this.ClientSize      = new System.Drawing.Size(456, 316);
-            this.MinimumSize     = new System.Drawing.Size(456, 316);
-            this.MaximumSize     = new System.Drawing.Size(456, 316);
+            this.ClientSize      = new System.Drawing.Size(564, 360);
+            this.MinimumSize     = new System.Drawing.Size(564, 360);
+            this.MaximumSize     = new System.Drawing.Size(564, 360);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Padding         = new System.Windows.Forms.Padding(2);
             this.BackColor       = System.Drawing.Color.White;
             this.TopMost         = true;
             this.ShowInTaskbar   = false;
             this.StartPosition   = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Font            = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font            = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.Name            = "frmMenuFieldsImport";
             this.Text            = "Import Fields";
             this.Controls.Add(this.pnlContent);

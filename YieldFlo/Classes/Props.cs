@@ -11,7 +11,7 @@ namespace YieldFlo.Classes
     {
         public static readonly string AppName = "YieldFlo";
         public static readonly string AppVersion = "1.0.0";
-        public static readonly string AppDate = "30-Apr-2026";
+        public static readonly string AppDate = "22-Jul-2026";
 
         private static string cApplicationFolder;
         private static string cDataFolder;
@@ -62,7 +62,7 @@ namespace YieldFlo.Classes
         // as lb/bu (US Winchester bushel = 35.239 L). Metric users work in kg/hL,
         // the standard European/Canadian grain unit: 1 lb/bu = 1.287184 kg/hL.
         private const double KgHlPerLbBu = 1.287184;
-        public static double DisplayTestWeight(double lbBu)     => IsMetric ? lbBu * KgHlPerLbBu : lbBu;
+        public static double DisplayTestWeight(double lbBu) => IsMetric ? lbBu * KgHlPerLbBu : lbBu;
         public static double TestWeightToLbBu(double displayTw) => IsMetric ? displayTw / KgHlPerLbBu : displayTw;
 
         public static double DisplayArea(double acres) => IsMetric ? acres * 0.404686 : acres;

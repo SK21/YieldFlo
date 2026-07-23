@@ -189,11 +189,11 @@ namespace YieldFlo.Forms
             if (mini)
             {
                 this.FormBorderStyle = FormBorderStyle.None;
-                this.Size            = new Size(300, 300);
+                this.Size            = new Size(300, 314);
                 gmap.CanDragMap      = true;
                 gmap.DragButton      = MouseButtons.Left;
-                gmap.Bounds          = new Rectangle(0, 30, 300, 270);
-                pnlMiniBar.Bounds    = new Rectangle(0, 0, 300, 30);
+                gmap.Bounds          = new Rectangle(0, 44, 300, 270);
+                pnlMiniBar.Bounds    = new Rectangle(0, 0, 300, 44);
                 FormPositions.Restore(this);
             }
             else

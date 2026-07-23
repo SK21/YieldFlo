@@ -37,7 +37,7 @@ namespace YieldFlo.Forms
             this.FormClosed += (s, e) => FormPositions.Save(this);
 
             // Drag on the display box and the panel background
-            foreach (var ctl in new System.Windows.Forms.Control[] { tboxDisplay, pnlContent })
+            foreach (var ctl in new System.Windows.Forms.Control[] { lblTitle, tboxDisplay, pnlContent })
             {
                 ctl.MouseDown += (s, e) => { if (((MouseEventArgs)e).Button == MouseButtons.Left) { _dragging = true;  _dragStart = ((MouseEventArgs)e).Location; } };
                 ctl.MouseMove += (s, e) => { if (_dragging) { Left += ((MouseEventArgs)e).X - _dragStart.X; Top += ((MouseEventArgs)e).Y - _dragStart.Y; } };
