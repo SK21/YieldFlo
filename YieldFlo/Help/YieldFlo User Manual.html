@@ -21,6 +21,7 @@ a { color: #1a56cc; text-decoration: underline; cursor: pointer; }
 ul, ol { margin: 0.4em 0 0.4em 1.5em; }
 li { margin: 2px 0; }
 .back-link { text-align: right; margin: 1.8em 0 0; font-size: 10pt; }
+.btn-icon { width: 28px; height: 28px; vertical-align: middle; margin-right: 8px; border-radius: 5px; }
 @media print {
   a { color: #1a56cc; }
   div[style*="page-break-before"] { page-break-before: always; break-before: page; }
@@ -111,14 +112,16 @@ li { margin: 2px 0; }
 
 <h3>Toolbar buttons</h3>
 
+<p>Left to right, as they appear on screen:</p>
+
 <table>
 <tr><th>Button</th><th>Action</th></tr>
-<tr><td><strong>Menu</strong></td><td>Open the main menu</td></tr>
-<tr><td><strong>Start</strong></td><td>Start a new job (opens Jobs menu) or resume the paused active job</td></tr>
-<tr><td><strong>Pause</strong></td><td>Manually pause recording</td></tr>
-<tr><td><strong>Stop</strong></td><td>Stop and close the current job (requires confirmation)</td></tr>
-<tr><td><strong>Exit</strong></td><td>Close YieldFlo</td></tr>
-<tr><td><strong>─</strong></td><td>Switch to compact (mini) view — see below</td></tr>
+<tr><td><img class="btn-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAO5SURBVGhD7ZjbK3xRFMd//9W4xaCYXELKg0spGpIn4YFikoR4cylPUjQpt1JueXIr5cWLXMIDKQ+E3C/L77vqnOYcy8zeZ6ZO6qz61HTWd/Y+33P2Ze3zz+fz+f8T+qvAAH7QX8Uz4DaeAbfxDLiNZ8BtPAPRyMnJobKyMjGXKBJiIC8v78e1lJQU2tnZocfHR2poaPiRz8rKYuzXdYnLAJ7wwsIC3d7e0uDgoCWXkZFBV1dXhOju7rbkCgsL6fT0lE5OTqixsdGS08WxgeLiYtrf3+cbRIyPj1vy6enpdH5+zrnOzk5LrrS0lF5fXzn39vZGfX19lrwOjgzk5+fT4eEh38DHxweNjY2R3++3aKIZAMFg0Gzj6+uLenp6fmhU0DaQmppKm5ub3DGeYkdHh6iLZQBg7uzt7bEGbdXX14u6aGgbGBgY4A4Rvb29ogaoGAAwcXZ2xrqjoyPKzMwUdb+hZQCdXV9fc2dra2uixkDVAMBENuaEfTGIhZYB4+ljaYy1vusYAEtLS6zFW7DPp2goG0hKSqLd3V3uZHl5WdREomsA4x+TGVFXVydqJJQNFBUV0c3NDXcQCoVETSS6BrBvYG9ADA8PixoJZQO1tbXc+Pv7O1VVVYmaSHQNgNXVVdYvLi6KeQllA01NTdz43d0dFRQUiJpI8EQvLi74P11dXaLGTjgcZv3GxoaYl1A20NzczI2jbJBqHztpaWnmRoX/Sho7U1NTrN/e3hbzEsoGsNQhnp6euBSQNHYqKyuptbWVzUh5O/Pz89zH+vq6mJdQNlBeXk4vLy+8UsRbgEkkJyebqxzehKSRUDaAHdJYJUZHR0VNPKBCvb+/5/ZVJz1QNgDm5ua4g4ODA+VhoQoqUsTDwwOVlJSIGgktAziYGNHe3i5qnICd15jwKFGwaUo6CS0DqERxykJgjc/NzRV1umBIIj4/P7nMljS/oWUA1NTUmIUXnhZMSTpVsMQ+Pz9zexiikiYa2gbA0NAQd4jArqlTfEXS0tJiTtzj42NHb9SRAYzR6elp7hiB5a+6ulrUSuAwj2GD4yTi8vKSKioqRG0sHBkAWLcnJib4BhAosWdmZngMS18boEdB2N/fb05YBH5jj7HrVXFswKCtrc0s2ozA1wYUZqhtJicneYfFWzKGCwITdnZ2ls/XUruqxG0ABAIBLoFxGIkVMLGysiJ+K3JCQgwYZGdn842NjIzw5Mbhf2tri2sblAf4AKCzSamQUANu4BlwG8+A23gG3MYz4DZ/3ICPvgHrsDkSFjQkVwAAAABJRU5ErkJggg==" alt="Exit icon"><strong>Exit</strong></td><td>Close YieldFlo</td></tr>
+<tr><td><img class="btn-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAS4SURBVGhD7ZjpK31dFMef/8qcWUoIhReIMg8hZHj1mMlMGaIMeSVjEm9MeUckkkyRqcxlfGFYv993u/t2Hetc+16e56buqk9u9vfss7/n7LPWOucfBwcHj7/8+1uBAfyg34rdgK2xG7A1dgO2xm5Ai4+PD8XHx1NRURFVVVVRdXU1lZSUUGZmJoWGhrLHfIcfMeDk5CQWOD4+TsfHx/T6+kpc3Nzc0PLyMjU2NlJwcDA7l6V820BGRgYtLi4alvgeb29vdHFxQQcHB7S3t0cnJyd0f39vGH2Ps7MzamtrIw8PD3ZeVaw24OLiQt3d3fT8/GxYEtHq6io1NTVRYmIiBQQEkLu7O7m5uYltFRkZKbYV7tLt7a3hCKL19XWKi4tjz6GCVQa8vLxoenrasASizc1Nys/PF1uJ02sJDw+noaEh41a7urqirKwsVvsVFhtwdXWlmZkZcWLEwMAAeXt7s9qvyM3NpfPzczHP3d0dJScnszpzWGygp6dHnBDR1dXFaiwhOjpaPCMIJICgoCBWp4dFBlJTU417fnBwkNVYQ0JCgvG5mJqaYjV6KBvA1kEKRGxvb387e2hpaGgQcyODpaWlsRoOZQPI8/IEeXl5n8Y9PT2puLiYYmJiPo2pgGy1sbEhzjE3N0eOjo6sTouygYmJCTH52toam23Ky8vFODKKNQ8jKCsrE3M8PDxQREQEq9GiZAB5/PT0VEyOKsppkMuvr6+FBn85E7iqqAeYTzsG/P396fLyUsxRWVnJarQoGUBvg5yNBxi/OQ3AouUCcCeSkpI+jGdnZ9PT0xPNzs7qbpH5+Xlx/NjYGDuuRckAKigC7QEqLKeRYNFYPEK7nerr68X/0WI4Ozt/OE7S29srNGhPuHEtSgbQUSJwYrQHnMYUmEDjhjA1IefZ2trSNYAtKjUqlV3JQE1NjZgUjRnSKafRgkWbPhNRUVHGO2nOgLxLSNV6GlOUDKCfR6Bi6j2AHDAht9Ph4aHY1whzBtChIpDtVFKpkgFZA9ASoxHjNHog6+DOmYY5A9Ik+i1uXIuSgbCwMGOpLywsZDUSXDUYrq2tFXtettAogDL0DKBFx9ZBdHZ2fhrnUDKARa2srIiJsRhOI8EV/yqQDLgHFCn65eVFaNLT0z+NcygZADI74E6EhISwGuDn5yduP7YNrrSW3d1dam1tZY+V2wfHojXhNFqUDQQGBhqzyvDwMKsxBVtED04fGxtLj4+PYv6WlhZWw6FsAMgMgYqck5PDaqwBtUVu0aOjI/L19WV1HBYZwKuk7BjxUo6XEU5nCXgWRkdHxZyIgoICVqeHRQYAFi2rLBo8vIxwOhVw5UdGRsRciP7+flZnDosNALyA4x0WgYca1RP9PKfVAxlHviAhkN2QRjmtOawyAFJSUkQ6lIHPI6WlpWabPbQhqM7INuhKZeDK6z3cX2G1AYCva5OTk4ZlvAc61oWFBerr6xOpt66ujtrb28WikUZNv9rt7++LQsfNrcq3DEjwdQ65X/v1TS92dnaoubnZomyjx48YkKAKV1RUiKyytLRkLF5ozPAhrKOjQ1RY1SKlwo8a0IIUae3eVuU/NfB/YDdga+wGbI3dgK355QYc6A/ZSOwuy+eZOgAAAABJRU5ErkJggg==" alt="─ icon"><strong>─</strong></td><td>Switch to compact (mini) view — see below</td></tr>
+<tr><td><img class="btn-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIhSURBVGhD7Zi7iiJBFIb3vbwHookGooEogggaiW8g7Q2v6AsYGBsoKqipT2Ci4l0UczHyhp6ZKnaXabcGqsfqrp3dOvDR0NX8pz6L5jT+0Ol05nek7woSkPR6PXxXhABvhABvhABvhABv/h8Bg8EAgUAAQqEQBINB1UD5DoeDuAcSVAJWqxX6/T5cLhdA9Xg8VOFX7XY7iEajxL08QyUQj8d/RgOcz2fVOJ1OcLvdcJ/hcIhPnbSfj1AJlMtlHLper8Hv94PX6wWfz8cct9sN1WoV91oul2AymYj7+QiVQLFYxKGTyYS4zpJMJoN7zWYz9gK0oa+gtJcQcLlckM/noVQq4edoqVQqEIvFZFkItPZZLxIvC3S7Xbz2lbrf7+DxeGR5mgskk0mYTqd4TQmr1QrPFpvNJsvTXIA1XATQPYvFogiz2fxHDkJzgWw2C5vNBrbbLb7Sst/vYTAYgN1ul+VpLtDpdPDaV+p6vfJ/iZ1OJ0iSBKlUChKJBDXpdBoikYgsC6G5AGs0F0CDLJfLKR5k6ANRDLJ3Xhb4JwaZ0WjE95XynIPgIsAS1QXQr016hhWFQuF3L+YC4/GYuM4SNB9Qzedz9gLH4xG/eL1eD19Z0263YTQa4V6LxYLqtKkE0P9Bh8MBB2tVtVqNuJdnqAQQ4XAY6vU6tFotaDQaqtBsNvEpoKH42dfqM9QCfytCgDdCgDdCgDdCgDdCgC96eANXUfkOYTVm9AAAAABJRU5ErkJggg==" alt="Menu icon"><strong>Menu</strong></td><td>Open the main menu</td></tr>
+<tr><td><img class="btn-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVWSURBVGhD7ZhZTJRXFMfHfd8fXOKWuMQ3l/jkWqPRuMTtWX1xeTFsZbMii0IfVLRKQbHQaCACkQoIsjQGkILshVRKKasIDZRNZNFSWU7zP+UjA3NmvDPQTkjmJD+YzP1/937/b+4999xPp3PQfaGz0/mMW/iPvY7GLTYD1sZmwNrYDFgbm4ERLPNcRtvvbKdTYafI7gc7cnjqQBeiLtCh4EO03m89TXGaIl5nMWNhYNqX0+jk9ycpojCCalpryFi0f2yntIo0colzodU+q8W+zGa0Bg4GH6SMqozBW/w3+vr7qKqlivLf5lNubS6VNJTwzetHQ0cDeSV50YJLC8R+lbHUwAznGeSf5s83q0VqeSpPm803NtPSK0tpjuscmuUyixZ9tYjW+a6jE6EnKDQnlJq7mgevIMp+k01bbmwRx1DCEgO4objXcYO3QJRZnclzfILDBFE/kg1fb6CgzKAh8/g19t/bL2o/i7kGZrrMpPiSeB4YcTP1Js12nS1qP8fhB4epvr2e+2ntbqWdd3eKOpOYa+B2+m0eEHE54bKoMYet/luHFn5FcwWt9F4p6oxijgEs2N7+Xh7sVtotUWMJePLvPrzjfsPyw0SNUVQNIFXmvMnhQbDwsIgl3Y47O+hq8lXaeH2j2G4Mpxgn7hsPaG/gXlEjomrgeMhxHqB/oJ9/CUmDRZzwawLrMKfd4905C0nakeCBFNYV8rVPip+IGhFVA9ikEOmV6TTJcZKogYHE0kTWafGq5pVyhjkbcZav6ezppLXX1ooaA1QMLLmyhGrbarnzi9EXRQ2AAS1DYWF29XTxZ6TLgIwAWu61XLxOA+2NHY18zfnI86LGABUDqG0Qn/o+0abrm0QN0DeADIX1oE0LRGVLJZ0OP21yv0j+LZm1wVnBYrsBKgYwKKK6tZoWeywWNUDfgE+yD3+HUgGf3398z98jooujjT4I7O6IlLIUmugwUdQMQ8WA/VN77rTgbQGXB5IG6BvwTfEd1oZyIfLnyKHdF4v86HdHh2mA2zM3bs+qzqLpztMN2g1QMeAY48idojAzlVVMGQBnws9Q99/d3I5AlhqpQaWKwOLHrj+y3QAVA6jnEagqF15aKGqAvgG/H/2GvkdxF/s6lr9HtH1o40p0nvu8YdcD7CEIlN2THScbtBugYgCFGgIl8Zpra0QN0Dfg+syVDy8ezz14umiBdlPVZ3hBOOuiiqLEdgNUDOAkpS3CYyHHRA2AAW0ji/klZtiegLSK1GhsDwGYnqWNpayHcUljgIqBqU5T6WXlS+4Y9bykAfq/gBbYuUOyQ2iVzyrxGn32fLuHU/XAwADturtL1BigYgBgSiBauluMTiMYePH7C9YhkLWMlR0SKOQQRfVFXHtJGgNUDazwWjF0kgr8KVDUwAAyS9mfZeSd5E1z3eaKOolt32yjnt4e7h9pW9KIqBoAnomePAAGwmFE0gBzbhwgG6HCRSDTzXefL+pEzDGAjrEXIOra60Z3lh0EU0XLPJj/Rx4cEXVGMccAwE03dTbxgMgsyotNALu6Nu8RmHaSziTmGgAH7h3gxYzApoTDiNKuqQcyDnZbLVCtmkqxRrHEAMCTL28qHxye+LR2LvKcyRdWOPzvC9pHj/Ie8XRB4D/WlqRXwlIDAPX7w9yHw94N4RUJKkmcmVGYOcc6c3nwuPDx0CalRfEfxSY3RiVGY0ADZ1hs/R1/dQzemvHAJpVXm8epEu+XpP7MYiwMaODtG8qF+1n3Kak0iV94oSzGGzuU0jjk7A7Yrb5JqTCWBkaCgzpQqiot5b808L9gM2BtbAasjc2AtRnfBnT0D1SSTXkvZLHVAAAAAElFTkSuQmCC" alt="Start icon"><strong>Start</strong></td><td>Start a new job (opens Jobs menu) or resume the paused active job</td></tr>
+<tr><td><img class="btn-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUSSURBVGhD7Zh5UJVVGMZv+77XtEw1TdvUf9X0V03btE3LTMtMaSmRimYZm4AsKouKI4SGBARigixCoqSCaKkoAoIskgrEDkIDsUWsOQq8+bxxme9e3ns593KLYea+Mz+Y+c7znXOe757lPUfnOkf3svMcXeBsRYc/LnN1NFuxG5hp7AZmGruBmcZuwJjVX95H4QHPU2LkfNoV70y7t7tSWtwSitnwNq1zf5zc510lvmctNjGw3OEa+mHTh1RasIO6OxrJVAwP9VJtRQ7tSfakQOeHxLosZdoGYja8RfVVueNd/DdGR0eo6496OldfTM11RdTWcpY7r42+3jbKTvcnn0W3ifWqYrUBj8+uo5ysMO6sPmoqjvCwCfV5mlYtvZe8FtxEno43kK/THbTW7THauvEDKszZSgN9neNvEDXVnqBQ32fENlSwygA6dKZkz3gXiBqq83iMu35ymag3Jnj5E5T3S9SEefwa0evfELVTYbEBT8fr6WzZPm4YcSTzG/L6/EZROxWxIe9Qb08r1zM40E2bA18Qdeaw2MDR/Zu4QURmmp+osYQwv2cnJn5ney0FfP2gqDOFRQYwYUdHLnJjOVkbRY014MsPDf7J9RYfTxQ1plA2gKWyqbaQG8HEwySWdNaSkejOdeMDRa57VdRIKBuIC3ufGxgbG+VfQtLAVHK0I0UEvTSpDKvSjthFFOzx5KQygHdbGku5jfLCnaJGQtkANilEXeVRcvv0ClGDlQjR1V5HKxbcbFCWnR7AZSV5yQbPtcAg4vxwP61xe1TUGKNkYNXSe6inq5krT9+2TNSAhIi5rOntbqGVX9xtUIY5gzhdnGHwXIv/V/dfWlLbWZe6ZbGoMUbJAHIbxMjIBQrxfkrUgG3hH7Gup7OJ/JbcZVB2eF8Il001PKp+PcC6/MMxYrkxSgaSohy40u6OhklfVostDGB3R/x2+uCljfFyUaNFycDuBBeu9FxDCacHkgbYwsDelBWsa6jOJw+Ha0WNFiUDGdvduFIkZshtJA2whQFkqojGmgLe9SWNFiUDyOcRyCp9nG4XNcAWBg7sCmId0m63eVeKGi1KBvTLI1LiNa6PiBpgCwMleUmsO3UiTSw3RskATlLDQ39xxXFh74kaEB/+MWuw5E42EMpl5UXpBs+1YHi2t1ayLuvHlaLGGCUD7vOvprqqY1wx8nlJA/T7APJ938V3GpTpk8CKskyD51q+W/sKL9VjY2O0OehFUWOMkgGwN8WLOzDY32VyGAW5PMzrOIaL8W4dFfw6VZ85xKmG9rkWJHKI1qZTnHtJGmOUDfgve2DiJHX850hRA8wdasxNym/9n6OLF85z/Vi2JY2EsgGwf+dqbgAN4TAiaazBe+EtnOEisNJ5L7xV1ElYZAAVYy9AIN+ZzllWD4aKfuXB+I8NfVfUmcIiAwCd7u/r4AZxklKdbBLY1fXjHoGMVdKZw2IDIHr9mzyZEUMDPXwYUdk1tWDFwW6rj9yDESbTdHNYZQDgy3e01Yw3j1NaIaXGOpm9sMLhPyr4NTqZm8DDBYH/mFuSXgWrDQDk70XH4g3uhnBFgkwS+T8Ss5+SPDg9KM1Pmdik9PF7c7nZjVGFaRnQgzMstv6/h/vGu2Y6sEk115/kpRL3S1J9lmATA3pw+4aTVP6h76myPJsvvJAW48aurCCVr2FwXlbdpFSwqQFjcFAHKlmltfynBv4P7AZmGruBmcZuYKaZ5QZ09A+HCdmMuVKCOgAAAABJRU5ErkJggg==" alt="Pause icon"><strong>Pause</strong></td><td>Manually pause recording</td></tr>
+<tr><td><img class="btn-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUPSURBVGhD7ZhZTJRXFMfHfY/bg0vUmLjERzU+adQajcYlcXnWB+OSuGtcHjRqEbeKUEuhGjWFQgHlpQQti1YWF0CguCBJsaAICgFZtSpV4HT+h7mT6TfnG+58TDshmZP84OH+5977/757zz33swXbbF8F2Wxf91Rs+HPCZqOeSsCAvwkY8DcBA/4mYMDIt+PHU9S8efTL+vWUumsXpe3ZQze3bqX4FSsocvp0Otmvn/g7q/jEwKkBAyhx3Toqjo+nphcvyCw+NTXRy4wMun3gAIVPniz25S3dNhC/fDm9ys52TLEzOtraqLGsjN7k59PrvDyqLS7mybvG++pqyjp2jM6NHCn2q4tlA6cHDaLc8+d5sipe3rnDy+byrFkUNm4cnR02jM4MGUIho0dTxLRplLh2LRVdvUof6uocvyCqysmhK7Nni2PoYMkAJvRHUpJjCkSV9+7xGj/Rq5eoN/LDjBlUEBnpNI+38fPSpaK2K7w2cGbwYCpNTuaBETkhIXR26FBR2xUJK1dSS1UV9/Oxvp6i588XdZ7w2kBeWBgPiMg4fFjUeMOVOXOcG7/h+XP6btIkUWeGVwawYdu/fOHBckNDRY0V8OQ/NTZyv09iYkSNGdoGkCpf5+byINh42MSSzirp+/Zx33hAsYsXixoJbQPX16zhATra2/lNGNu/GT6ckjdupPS9ezkTSaTt3k2pO3fS5Zkz3X6PB1JdWMhjlCQmurWboW0AhxSiIjOTgvv0cWu/sWkTt+sE0u2p/v1N+/j73TuKmDrVrV1Cy0DY2LHUXFHBnafs2CFq1BLA4FUPHtCru3c5vSoqsrKosbycNViCyGbGPi5MmEDva2pYc3PLFrd2CS0DqG0Q7Z8/i68fYIkgMHEsp9MDB/KyUOCJYwkhKu/fN91DZamprPn90iWx3YiWgaQNG7hTPMHQMWNEjauBk337ipqU7dtZgzdiZgCnO6IsLY2Ce/cWNa5oGVBPrrqggMsDSaMMeJqcjua3Q4c6NXhL9rcoaVzRMoDMgkBhhtpG0vjKACpVBPaRtE+MaBlAPY9AVRkyapSo8ZWB7KAg1qDsNluKrmgZQKGGQEn8/ZQpokZNDgNL7UClSU8GnsbGsubZtWtiuxEtA7hJtTY3c8fXV68WNWqf4B6AlIp0C1OKX7dt4wMKYZaFsDzrSkpYk3HkiFu7hJYBpEDkcQTqeUmjzgGdwIkrGYhZtIhTNXV0UPSCBW7tEloGwO2DB3nwD2/fissIl5jy9HTefFgibtifOv4jzSIpSHcHFHKImqIirr2M7RLaBi5MnOi8SRVERIga5G1kDjxdU0xS449z51Jbayv3j+UoaSS0DYDMo0d5AAyEy4iksQJObpQXCGS6cyNGiDoJrwygY5wFiJbKym7dZRVYKirzYP0nrFol6szwygDApP+qreUBcZPS3WwSONXVukdkHT8u6jzhtQEQt2wZb2bEx4YGzkA6p6YryDjY8Cryw8PFMr0rLBkAePL1paWO4e1lhv22dmPzZo8frHD5j12yhB5HR3emS3vgP/aWpNfBsgGA+v1xVNS/vg3hEwkqSdyZUZjd2r+fy4PiuDjnIaWi5tEj04NRl24ZUOAOi6O/taXFMTUPYT+k3jx8yKkS35ek/rzBJwYU+PqGm1ThxYv0Z0qK8wDDFfJZQgJ/hvlp4ULtQ0oHnxowog4vnarSKv+pgf+DgAF/EzDgbwIG/E0PN2CjfwCA2AFhBdY7qgAAAABJRU5ErkJggg==" alt="Stop icon"><strong>Stop</strong></td><td>Stop and close the current job (requires confirmation)</td></tr>
 </table>
 
 <h3>Data panels</h3>
@@ -127,7 +130,6 @@ li { margin: 2px 0; }
 <tr><th>Panel</th><th>Description</th></tr>
 <tr><td><strong>YIELD</strong></td><td>Instantaneous yield rate (bu/ac or t/ha), smoothed over recent readings</td></tr>
 <tr><td><strong>MOISTURE</strong></td><td>Live grain moisture percentage from the capacitance sensor</td></tr>
-<tr><td><strong>SPEED</strong></td><td>Ground speed received from AOG GPS</td></tr>
 <tr><td>Totals area</td><td>Total area harvested, total mass, and average yield for the current job</td></tr>
 </table>
 
@@ -146,7 +148,6 @@ li { margin: 2px 0; }
 <tr><th>Indicator</th><th>Green</th><th>Orange</th><th>Red / Silver</th></tr>
 <tr><td><strong>GPS</strong></td><td>AOG connected and sending position</td><td>—</td><td>No AOG data</td></tr>
 <tr><td><strong>Module</strong></td><td>Module data received within 5 s</td><td>—</td><td>No module data</td></tr>
-<tr><td><strong>Comm</strong></td><td>—</td><td>—</td><td>Shows active comm type (UDP or CAN)</td></tr>
 <tr><td><strong>Job name</strong></td><td>Job recording (active)</td><td>Job paused</td><td>No active job (silver)</td></tr>
 </table>
 
@@ -171,10 +172,11 @@ li { margin: 2px 0; }
 
 <ol>
 <li>Press <strong>Menu</strong> on the main screen, then <strong>Jobs</strong></li>
-<li>Press <strong>New</strong> and enter a job name</li>
-<li>Select a <strong>Crop</strong>, <strong>Header</strong>, <strong>Profile</strong>, and optionally a <strong>Field</strong></li>
+<li>Press <strong>New</strong> — a draft job is prepared with a default name and the current Crop/Header/Profile, and the <strong>Field</strong> drop-down is focused</li>
+<li>Select a <strong>Field</strong> (optional) — this replaces the default job name with the field name; the <strong>Job Name</strong> can still be edited afterward</li>
+<li>Adjust <strong>Crop</strong>, <strong>Header</strong>, and <strong>Profile</strong> if needed</li>
 <li>Enter any <strong>Notes</strong> for the job (optional)</li>
-<li>Press <strong>Start Job</strong></li>
+<li>Press <strong>Save</strong> — this creates the job and starts it immediately (prompts for confirmation if another job is currently active)</li>
 </ol>
 
 <p>Recording begins automatically when harvesting conditions are met (speed &gt; 0.5 km/h and AOG sections are on).</p>
@@ -324,6 +326,10 @@ li { margin: 2px 0; }
 </ol>
 
 <p>Fields are not required. A job can be created without a field selected.</p>
+
+<h3>Importing fields from AgOpenGPS</h3>
+
+<p>Press <strong>Import</strong> to open a checklist of field names found in AgOpenGPS's and TWOL's field folders (<code>Documents\AgOpenGPS\Fields</code> and <code>Documents\TWOL\Fields</code>). Fields already present in YieldFlo are shown but cannot be re-checked. Tick the fields to bring in (or press <strong>Select All</strong>), then press <strong>Import</strong> to add them as new field records — only the field name is imported, not boundary data.</p>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
@@ -485,6 +491,7 @@ li { margin: 2px 0; }
 <tr><th>Control</th><th>Action</th></tr>
 <tr><td>Job selector (drop-down)</td><td>Choose which job to display</td></tr>
 <tr><td><strong>─</strong> / <strong>+</strong></td><td>Zoom out / in</td></tr>
+<tr><td><strong>Recalculate</strong></td><td>Re-derives every point's yield for the selected job from its stored raw sensor reading using the crop's <em>current</em> calibration, then repaints the map — see below</td></tr>
 <tr><td><strong>Print</strong></td><td>Export the map as a PNG image — see below</td></tr>
 <tr><td><strong>Close</strong></td><td>Return to mini mode</td></tr>
 </table>
@@ -493,7 +500,11 @@ li { margin: 2px 0; }
 
 <h3>Live update during harvest</h3>
 
-<p>When the yield map is open and a job is actively recording, the map updates automatically every 5 seconds. New swath polygons are added without re-centering the view.</p>
+<p>When the yield map is open and a job is actively recording, the map updates automatically every 2 seconds. New swath polygons are added without re-centering the view.</p>
+
+<h3>Recalculating yield</h3>
+
+<p>If you change a crop's calibration (Sensor Baseline or Yield Factor) <em>after</em> a job was recorded, the job's existing points still reflect the old calibration. Press <strong>Recalculate</strong> in the full-screen toolbar, then confirm the prompt, to re-derive every point's yield from its stored raw sensor reading using the crop's current calibration and repaint the map with the corrected values. This only affects the selected job and does not change the raw sensor data.</p>
 
 <h3>Exporting the map as a PNG</h3>
 
@@ -522,6 +533,7 @@ li { margin: 2px 0; }
 <tr><th>Field</th><th>Description</th></tr>
 <tr><td><strong>Job name</strong></td><td>Name entered when the job was created</td></tr>
 <tr><td><strong>Field</strong></td><td>Field name assigned to the job (if set)</td></tr>
+<tr><td><strong>Crop</strong></td><td>Crop assigned to the job (if set)</td></tr>
 <tr><td><strong>Area</strong></td><td>Total area harvested (ac or ha)</td></tr>
 <tr><td><strong>Total</strong></td><td>Total mass harvested (bu or tonnes)</td></tr>
 <tr><td><strong>Avg Yield</strong></td><td>Average yield rate across all data points</td></tr>
@@ -585,6 +597,8 @@ li { margin: 2px 0; }
 <tr><td><strong>CAN Driver</strong></td><td>Select the CAN interface driver (SLCAN, InnoMaker, or PCAN).</td></tr>
 <tr><td><strong>COM Port</strong></td><td>Serial/USB port for the CAN interface (SLCAN driver only).</td></tr>
 </table>
+
+<p>When <strong>CAN</strong> mode is selected, an <strong>Adapter: Connected</strong> / <strong>Not Connected</strong> indicator appears below the port settings, showing whether the CAN adapter that is actually running (from previously saved settings) is open and seeing bus traffic. It updates live and does not reflect the driver/port currently selected in the drop-downs until they are saved and applied.</p>
 
 <p>The module can also send the same UDP packets over <strong>wired Ethernet</strong> (W5500 board attached to the module). No app setting is needed &mdash; select Ethernet mode in the module's web portal and give the PC's wired adapter a static IP on the module's subnet (default <code>192.168.1.x</code>). The app receives WiFi and Ethernet packets on the same port.</p>
 
