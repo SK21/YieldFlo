@@ -12,7 +12,13 @@ namespace YieldFlo.Classes
         public float Speed { get; set; }        // km/h
         public float Altitude { get; set; }     // meters
         public byte FixQuality { get; set; }    // 0=none 1=GPS 2=DGPS 4=RTK
-        public bool IsConnected { get; set; }
+
+        // Connected = a position packet within the last 4 s. Same staleness
+        // window RateController uses (PGN208.TWOLconnected) — a plain latch
+        // would stay "connected" forever after the first fix even if AOG
+        // closes or the link drops.
+        private System.DateTime _lastFixUtc;
+        public bool IsConnected => (System.DateTime.UtcNow - _lastFixUtc).TotalSeconds < 4.0;
 
         // True when ≥1 section is on (AOG PGN 229). AOG sends 229 every GPS tick
         // while a job is open, so a value older than 4 s means AOG closed or the
@@ -50,7 +56,7 @@ namespace YieldFlo.Classes
                 Heading = (float)System.BitConverter.ToDouble(data, 21);
 
             FixQuality = 1;
-            IsConnected = true;
+            _lastFixUtc = System.DateTime.UtcNow;
         }
 
         public void ParseSpeedPgn254(byte[] data)
@@ -77,7 +83,7 @@ namespace YieldFlo.Classes
             if (data.Length > 36)
                 Altitude = (float)System.BitConverter.ToDouble(data, 29);
 
-            IsConnected = true;
+            _lastFixUtc = System.DateTime.UtcNow;
         }
     }
 }

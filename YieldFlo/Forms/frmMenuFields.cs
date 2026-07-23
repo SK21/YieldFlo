@@ -42,8 +42,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor      = back;
             pnlContent.BackColor    = back;
             lblTitle.ForeColor      = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
             foreach (Control c in pnlContent.Controls)
             {
                 c.ForeColor = fore;
@@ -108,7 +106,6 @@ namespace YieldFlo.Forms
         }
 
         private void btnNew_Click(object sender, EventArgs e)         => ClearEdit();
-        private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
         private void btnFieldsClose_Click(object sender, EventArgs e) => this.Close();
 
         private void btnImport_Click(object sender, EventArgs e)

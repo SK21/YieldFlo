@@ -142,8 +142,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor   = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor   = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
 
             foreach (Control c in pnlContent.Controls)
             {
@@ -216,7 +214,7 @@ namespace YieldFlo.Forms
                 var item = lvJobs.Items.Add(j.jobName);
                 item.SubItems.Add(j.status);
                 item.SubItems.Add(j.startedAt);
-                item.SubItems.Add(Props.DisplayArea(j.acres).ToString("F2") + " " + Props.AreaUnit);
+                item.SubItems.Add(Props.DisplayArea(j.acres).ToString("F1"));
                 item.SubItems.Add(j.fieldName);
             }
             int newSel = _jobData.FindIndex(j => j.jobId == selJobId);
@@ -274,6 +272,10 @@ namespace YieldFlo.Forms
 
             var job = _jobData[idx];
 
+            _creatingNew = false;   // selecting an existing job leaves draft mode —
+                                     // set before cboField.SelectedIndex below so the
+                                     // field->name auto-fill doesn't clobber job.jobName
+
             txtJobName.Text = job.jobName;
             txtNotes.Text   = job.notes;
 
@@ -289,7 +291,6 @@ namespace YieldFlo.Forms
             int fi = _fieldIds.IndexOf(job.fieldId);
             cboField.SelectedIndex = fi >= 0 ? fi : 0;
 
-            _creatingNew = false;   // selecting an existing job leaves draft mode
             btnSave.Enabled = true;
         }
 
@@ -305,7 +306,18 @@ namespace YieldFlo.Forms
             btnSave.Enabled   = true;
             btnLoad.Enabled   = false;
             btnDelete.Enabled = false;
-            txtJobName.Focus();
+            cboField.Focus();
+        }
+
+        // Defaults the job name to the selected field plus today's date, but only
+        // while drafting a new job — picking a field while browsing/editing an
+        // existing job (lvJobs_SelectedIndexChanged) must not overwrite its name.
+        private void cboField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_creatingNew) return;
+            if (cboField.SelectedIndex <= 0) return;   // "(none)" - leave job name as-is
+
+            txtJobName.Text = cboField.Text;
         }
 
         // Commit a prepared draft: create the job, then start it (which closes and
@@ -475,7 +487,6 @@ namespace YieldFlo.Forms
                 TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();
         private void btnJobsClose_Click(object sender, EventArgs e)  => this.Close();
     }
 }

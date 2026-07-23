@@ -58,8 +58,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor   = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor   = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
             lbCrops.BackColor    = ctrl;
             lbCrops.ForeColor    = fore;
             pnlEdit.BackColor    = back;
@@ -150,7 +148,6 @@ namespace YieldFlo.Forms
             ClearEdit();
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
         private void btnCropsClose_Click(object sender, EventArgs e)  => this.Close();
     }
 }

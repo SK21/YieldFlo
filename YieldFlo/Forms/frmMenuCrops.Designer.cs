@@ -16,7 +16,6 @@ namespace YieldFlo.Forms
         {
             this.pnlTitle      = new System.Windows.Forms.Panel();
             this.lblTitle      = new System.Windows.Forms.Label();
-            this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlContent    = new System.Windows.Forms.Panel();
             this.lbCrops       = new System.Windows.Forms.ListBox();
             this.pnlEdit       = new System.Windows.Forms.Panel();
@@ -48,16 +47,7 @@ namespace YieldFlo.Forms
             this.lblTitle.AutoSize  = false;
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
-            this.btnTitleClose.Text      = "×";
-            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.Size     = new System.Drawing.Size(48, 40);
-            this.btnTitleClose.Location = new System.Drawing.Point(504, 4);
-            this.btnTitleClose.Click   += new System.EventHandler(this.btnTitleClose_Click);
-
             this.pnlTitle.Controls.Add(this.lblTitle);
-            this.pnlTitle.Controls.Add(this.btnTitleClose);
 
             // ── Content ───────────────────────────────────────────────────────
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -133,7 +123,6 @@ namespace YieldFlo.Forms
 
         private System.Windows.Forms.Panel         pnlTitle;
         private System.Windows.Forms.Label         lblTitle;
-        private System.Windows.Forms.Button        btnTitleClose;
         private System.Windows.Forms.Panel         pnlContent;
         private System.Windows.Forms.ListBox       lbCrops;
         private System.Windows.Forms.Panel         pnlEdit;

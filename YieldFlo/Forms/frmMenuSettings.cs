@@ -58,8 +58,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
 
             foreach (Control c in pnlContent.Controls)
             {
@@ -125,6 +123,19 @@ namespace YieldFlo.Forms
             lblCanPort.Visible = !isWifi;
             cbCanPort.Visible = !isWifi;
             btnRescanPorts.Visible = !isWifi;
+            lblCanStatus.Visible = !isWifi;
+        }
+
+        // Reflects the CAN adapter actually running (started from previously
+        // saved settings), not whatever driver/port is currently selected in
+        // the combo boxes — those only take effect after Save & Apply + restart.
+        private void tmrCanStatus_Tick(object sender, EventArgs e)
+        {
+            if (!lblCanStatus.Visible) return;
+
+            bool connected = Core.CanModule.AdapterConnected;
+            lblCanStatus.Text = "Adapter: " + (connected ? "Connected" : "Not Connected");
+            lblCanStatus.ForeColor = connected ? Color.FromArgb(0, 158, 115) : Color.FromArgb(213, 94, 0);
         }
 
         private void btnRescanPorts_Click(object sender, EventArgs e)
@@ -209,7 +220,6 @@ namespace YieldFlo.Forms
             }
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e) => this.Close();
         private void btnSettingsClose_Click(object sender, EventArgs e) => this.Close();
     }
 }

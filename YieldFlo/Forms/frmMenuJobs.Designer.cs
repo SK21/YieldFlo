@@ -16,7 +16,6 @@ namespace YieldFlo.Forms
         {
             this.pnlTitle        = new System.Windows.Forms.Panel();
             this.lblTitle        = new System.Windows.Forms.Label();
-            this.btnTitleClose   = new System.Windows.Forms.Button();
             this.pnlContent      = new System.Windows.Forms.Panel();
             this.lvJobs          = new System.Windows.Forms.ListView();
             this.lblJobName      = new System.Windows.Forms.Label();
@@ -50,16 +49,7 @@ namespace YieldFlo.Forms
             this.lblTitle.AutoSize  = false;
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
-            this.btnTitleClose.Text      = "×";
-            this.btnTitleClose.Font      = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.Size     = new System.Drawing.Size(48, 40);
-            this.btnTitleClose.Location = new System.Drawing.Point(542, 4);
-            this.btnTitleClose.Click   += new System.EventHandler(this.btnTitleClose_Click);
-
             this.pnlTitle.Controls.Add(this.lblTitle);
-            this.pnlTitle.Controls.Add(this.btnTitleClose);
 
             // ── Content ───────────────────────────────────────────────────────
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -81,9 +71,9 @@ namespace YieldFlo.Forms
             this.lvJobs.BorderStyle     = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lvJobs.Font        = inputFont;
             this.lvJobs.Columns.Add(Lang.lgColJobName, 170);
-            this.lvJobs.Columns.Add(Lang.lgColStatus,   90);
+            this.lvJobs.Columns.Add(Lang.lgColStatus,  120);
             this.lvJobs.Columns.Add(Lang.lgColDate,    120);
-            this.lvJobs.Columns.Add(Lang.lgColAcres,   100);
+            this.lvJobs.Columns.Add(Lang.lgColAcres,    70);
             this.lvJobs.Columns.Add(Lang.lgColField,   110);
             this.lvJobs.OwnerDraw = true;
             this.lvJobs.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.lvJobs_DrawColumnHeader);
@@ -97,25 +87,26 @@ namespace YieldFlo.Forms
             this.txtJobName.Font     = inputFont;
             this.txtJobName.Location = new System.Drawing.Point(146, 186); this.txtJobName.Size = new System.Drawing.Size(436, 32);
 
+            this.lblFieldLabel.Text     = Lang.lgField; this.lblFieldLabel.Font = labelFont;
+            this.lblFieldLabel.Location = new System.Drawing.Point(8, 232); this.lblFieldLabel.Size = new System.Drawing.Size(130, 26); this.lblFieldLabel.AutoSize = false;
+            this.cboField.Font          = inputFont;
+            this.cboField.Location      = new System.Drawing.Point(146, 228); this.cboField.Size = new System.Drawing.Size(436, 32); this.cboField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboField.SelectedIndexChanged += new System.EventHandler(this.cboField_SelectedIndexChanged);
+
             this.lblCropLabel.Text     = Lang.lgCrop; this.lblCropLabel.Font = labelFont;
-            this.lblCropLabel.Location = new System.Drawing.Point(8, 232); this.lblCropLabel.Size = new System.Drawing.Size(130, 26); this.lblCropLabel.AutoSize = false;
+            this.lblCropLabel.Location = new System.Drawing.Point(8, 274); this.lblCropLabel.Size = new System.Drawing.Size(130, 26); this.lblCropLabel.AutoSize = false;
             this.cboCrop.Font          = inputFont;
-            this.cboCrop.Location      = new System.Drawing.Point(146, 228); this.cboCrop.Size = new System.Drawing.Size(436, 32); this.cboCrop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboCrop.Location      = new System.Drawing.Point(146, 270); this.cboCrop.Size = new System.Drawing.Size(436, 32); this.cboCrop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
             this.lblHeaderLabel.Text     = Lang.lgHeader; this.lblHeaderLabel.Font = labelFont;
-            this.lblHeaderLabel.Location = new System.Drawing.Point(8, 274); this.lblHeaderLabel.Size = new System.Drawing.Size(130, 26); this.lblHeaderLabel.AutoSize = false;
+            this.lblHeaderLabel.Location = new System.Drawing.Point(8, 316); this.lblHeaderLabel.Size = new System.Drawing.Size(130, 26); this.lblHeaderLabel.AutoSize = false;
             this.cboHeader.Font          = inputFont;
-            this.cboHeader.Location      = new System.Drawing.Point(146, 270); this.cboHeader.Size = new System.Drawing.Size(436, 32); this.cboHeader.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboHeader.Location      = new System.Drawing.Point(146, 312); this.cboHeader.Size = new System.Drawing.Size(436, 32); this.cboHeader.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
             this.lblProfileLabel.Text     = Lang.lgProfile; this.lblProfileLabel.Font = labelFont;
-            this.lblProfileLabel.Location = new System.Drawing.Point(8, 316); this.lblProfileLabel.Size = new System.Drawing.Size(130, 26); this.lblProfileLabel.AutoSize = false;
+            this.lblProfileLabel.Location = new System.Drawing.Point(8, 358); this.lblProfileLabel.Size = new System.Drawing.Size(130, 26); this.lblProfileLabel.AutoSize = false;
             this.cboProfile.Font          = inputFont;
-            this.cboProfile.Location      = new System.Drawing.Point(146, 312); this.cboProfile.Size = new System.Drawing.Size(436, 32); this.cboProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
-            this.lblFieldLabel.Text     = Lang.lgField; this.lblFieldLabel.Font = labelFont;
-            this.lblFieldLabel.Location = new System.Drawing.Point(8, 358); this.lblFieldLabel.Size = new System.Drawing.Size(130, 26); this.lblFieldLabel.AutoSize = false;
-            this.cboField.Font          = inputFont;
-            this.cboField.Location      = new System.Drawing.Point(146, 354); this.cboField.Size = new System.Drawing.Size(436, 32); this.cboField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboProfile.Location      = new System.Drawing.Point(146, 354); this.cboProfile.Size = new System.Drawing.Size(436, 32); this.cboProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 
             this.lblNotesLabel.Text     = Lang.lgNotes; this.lblNotesLabel.Font = labelFont;
             this.lblNotesLabel.Location = new System.Drawing.Point(8, 400); this.lblNotesLabel.Size = new System.Drawing.Size(130, 26); this.lblNotesLabel.AutoSize = false;
@@ -155,9 +146,8 @@ namespace YieldFlo.Forms
 
             this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lvJobs,
-                lblJobName, txtJobName, lblCropLabel, cboCrop,
-                lblHeaderLabel, cboHeader, lblProfileLabel, cboProfile,
-                lblFieldLabel, cboField,
+                lblJobName, txtJobName, lblFieldLabel, cboField,
+                lblCropLabel, cboCrop, lblHeaderLabel, cboHeader, lblProfileLabel, cboProfile,
                 lblNotesLabel, txtNotes,
                 btnNew, btnLoad, btnSave, btnDelete, btnJobsClose });
 
@@ -183,7 +173,6 @@ namespace YieldFlo.Forms
 
         private System.Windows.Forms.Panel    pnlTitle;
         private System.Windows.Forms.Label    lblTitle;
-        private System.Windows.Forms.Button   btnTitleClose;
         private System.Windows.Forms.Panel    pnlContent;
         private System.Windows.Forms.ListView lvJobs;
         private System.Windows.Forms.Label    lblJobName;

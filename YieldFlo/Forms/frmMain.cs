@@ -243,10 +243,6 @@ namespace YieldFlo.Forms
             lblStatusModule.Text = Lang.lgModule;
             lblStatusModule.ForeColor = modOk ? StatusOk : StatusBad;
 
-            string commType = Properties.Settings.Default.ModuleCommType;
-            lblStatusComm.Text = commType;
-            lblStatusComm.ForeColor = Color.Silver;
-
             if (Core.Collector.ActiveJobId > 0)
             {
                 bool recording = Core.Collector.IsRecording;
