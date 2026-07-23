@@ -135,7 +135,7 @@ namespace YieldFlo.Forms
 
             bool connected = Core.CanModule.AdapterConnected;
             lblCanStatus.Text = "Adapter: " + (connected ? "Connected" : "Not Connected");
-            lblCanStatus.ForeColor = connected ? Color.FromArgb(0, 158, 115) : Color.FromArgb(213, 94, 0);
+            lblCanStatus.ForeColor = connected ? OkabeIto.BluishGreen : OkabeIto.Vermillion;
         }
 
         private void btnRescanPorts_Click(object sender, EventArgs e)

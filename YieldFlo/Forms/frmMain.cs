@@ -228,8 +228,8 @@ namespace YieldFlo.Forms
         // plain LimeGreen / Red, which are hard to tell apart under red-green color
         // vision deficiency (the most common type). Separated by hue AND luminance
         // so the difference survives protanopia/deuteranopia/tritanopia.
-        private static readonly Color StatusOk  = Color.FromArgb(0, 158, 115);
-        private static readonly Color StatusBad = Color.FromArgb(213, 94, 0);
+        private static readonly Color StatusOk  = OkabeIto.BluishGreen;
+        private static readonly Color StatusBad = OkabeIto.Vermillion;
 
         private void UpdateStatusBar()
         {
@@ -248,7 +248,7 @@ namespace YieldFlo.Forms
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
                 lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
-                lblStatusJob.ForeColor = recording ? StatusOk : Color.Orange;
+                lblStatusJob.ForeColor = recording ? StatusOk : OkabeIto.Orange;
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else
@@ -323,9 +323,11 @@ namespace YieldFlo.Forms
         }
 
         // Full-strength colours for each job button when it is available.
-        private static readonly Color StartActive = Color.FromArgb(0, 150, 0);    // green
-        private static readonly Color PauseActive = Color.FromArgb(200, 150, 0);  // amber
-        private static readonly Color StopActive  = Color.FromArgb(170, 0, 0);    // red
+        // Okabe-Ito: same hues used for the status-bar dots, so "good/active",
+        // "warning/paused" and "bad/stopped" mean the same color everywhere.
+        private static readonly Color StartActive = OkabeIto.BluishGreen;
+        private static readonly Color PauseActive = OkabeIto.Orange;
+        private static readonly Color StopActive  = OkabeIto.Vermillion;
         // Shared "unavailable" look — clearly off, not just a dimmed word.
         private static readonly Color BtnOffBack   = Color.FromArgb(40, 40, 40);
         private static readonly Color BtnOffFore   = Color.FromArgb(95, 95, 95);
