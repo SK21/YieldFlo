@@ -231,13 +231,17 @@ bool CANInit(BITRATE bitrate, int remap)
                                      //   MODE=00(Input mode)
                                      //   CNF=00(Analog mode)
 
-    GPIOA->CRH   |= 0xB8FFFUL;       // Configure PA12(0b1011) and PA11(0b1000)
+    GPIOA->CRH   |= 0xB8000UL;       // Configure PA12(0b1011) and PA11(0b1000)
                                      // 0b1011
                                      //   MODE=11(Output mode, max speed 50 MHz)
                                      //   CNF=10(Alternate function output Push-pull
                                      // 0b1000
                                      //   MODE=00(Input mode)
                                      //   CNF=10(Input with pull-up / pull-down)
+                                     // (low 12 bits must stay 0 — they fall in
+                                     // PA8/PA9/PA10's CRH fields, PA9/PA10 being
+                                     // the debug UART pins; 0xB8FFF here would
+                                     // spuriously reconfigure them as AF outputs)
 
     GPIOA->ODR |= 0x1UL << 11;       // PA11 pull-up
   }
@@ -264,7 +268,7 @@ bool CANInit(BITRATE bitrate, int remap)
   }
 
   if (remap == 3) {
-    AFIO->MAPR   |= 0x00005000;      // set CAN remap
+    AFIO->MAPR   |= 0x00006000;      // set CAN remap (CAN_REMAP[14:13]=11)
                                      // CAN_RX mapped to PD0, CAN_TX mapped to PD1 (available on 100-pin and 144-pin package)
 
     RCC->APB2ENR |= 0x20UL;          // Enable GPIOD clock
@@ -273,7 +277,7 @@ bool CANInit(BITRATE bitrate, int remap)
                                      //   MODE=00(Input mode)
                                      //   CNF=00(Analog mode)
 
-    GPIOD->CRH   |= 0xB8UL;          // Configure PD1(0b1011) and PD0(0b1000)
+    GPIOD->CRL   |= 0xB8UL;          // Configure PD1(0b1011) and PD0(0b1000)
                                      // 0b1000
                                      //   MODE=00(Input mode)
                                      //   CNF=10(Input with pull-up / pull-down)
@@ -285,7 +289,13 @@ bool CANInit(BITRATE bitrate, int remap)
   }
 
   CAN1->MCR |= 0x1UL;                   // Require CAN1 to Initialization mode
-  while (!(CAN1->MSR & 0x1UL));         // Wait for Initialization mode
+
+  // Wait for Initialization mode. Bounded like the normal-mode wait below —
+  // a clocking/silicon fault must not hang setup() forever.
+  for (uint16_t wait_init = 0; !(CAN1->MSR & 0x1UL); wait_init++) {
+    if (wait_init >= 1000) return false;
+    delayMicroseconds(1000);
+  }
 
   // MCR = INRQ(0x01) | NART(0x10) | ABOM(0x40):
   //   NART — single-shot TX, no automatic retransmission (deliberate: see
