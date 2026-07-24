@@ -11,7 +11,7 @@ namespace YieldFlo.Classes
     {
         public static readonly string AppName = "YieldFlo";
         public static readonly string AppVersion = "1.0.0";
-        public static readonly string AppDate = "22-Jul-2026";
+        public static readonly string AppDate = "24-Jul-2026";
 
         private static string cApplicationFolder;
         private static string cDataFolder;

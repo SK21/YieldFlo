@@ -192,7 +192,7 @@ namespace YieldFlo.Forms
             if (Core.IsShuttingDown) return;
 
             double yield = Props.DisplayRate(Core.Yield?.SmoothedYield ?? 0);
-            double moisture = Core.LastMoisture > 0 ? Core.LastMoisture + Core.ActiveMoistureOffset : 0;
+            double moisture = Core.LastMoistureOk ? Core.LastMoisture + Core.ActiveMoistureOffset : 0;
 
             lblYield.Text = yield.ToString("F1");
             lblYieldUnit.Text = Props.RateUnit;
@@ -247,8 +247,16 @@ namespace YieldFlo.Forms
             {
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
-                lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
-                lblStatusJob.ForeColor = recording ? StatusOk : OkabeIto.Orange;
+                if (recording && !Core.LastDataWriteOk)
+                {
+                    lblStatusJob.Text = jobName + Lang.lgDataWriteError;
+                    lblStatusJob.ForeColor = StatusBad;
+                }
+                else
+                {
+                    lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
+                    lblStatusJob.ForeColor = recording ? StatusOk : OkabeIto.Orange;
+                }
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else

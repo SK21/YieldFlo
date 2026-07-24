@@ -77,7 +77,7 @@ namespace YieldFlo.Forms
             pnlEdit.Controls.Add(this.lblCategory); pnlEdit.Controls.Add(this.cboCropCategory);
             // Test Weight
             this.lblTestWeight.Text = Lang.lgTestWeight; this.lblTestWeight.Font = lf; this.lblTestWeight.Location = new System.Drawing.Point(8, 84); this.lblTestWeight.AutoSize = false; this.lblTestWeight.Size = new System.Drawing.Size(220, 32);
-            this.numTestWeight.Font = vf; this.numTestWeight.Location = new System.Drawing.Point(236, 84); this.numTestWeight.Width = 100; this.numTestWeight.Height = 32; this.numTestWeight.Minimum = 0; this.numTestWeight.Maximum = 200; this.numTestWeight.Increment = 1; this.numTestWeight.Value = 60; this.numTestWeight.DecimalPlaces = 0;
+            this.numTestWeight.Font = vf; this.numTestWeight.Location = new System.Drawing.Point(236, 84); this.numTestWeight.Width = 100; this.numTestWeight.Height = 32; this.numTestWeight.Minimum = 1; this.numTestWeight.Maximum = 200; this.numTestWeight.Increment = 1; this.numTestWeight.Value = 60; this.numTestWeight.DecimalPlaces = 0;
             this.lblTestWeightUnit.Text = "lb/bu"; this.lblTestWeightUnit.Font = vf; this.lblTestWeightUnit.Location = new System.Drawing.Point(344, 88); this.lblTestWeightUnit.AutoSize = true;
             pnlEdit.Controls.Add(this.lblTestWeight); pnlEdit.Controls.Add(this.numTestWeight); pnlEdit.Controls.Add(this.lblTestWeightUnit);
             // Market Moisture

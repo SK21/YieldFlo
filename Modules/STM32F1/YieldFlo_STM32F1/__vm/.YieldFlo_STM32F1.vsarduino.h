@@ -18,5 +18,9 @@
 #include <arduino.h>
 #include <pins_arduino.h> 
 #include "..\YieldFlo_STM32F1.ino"
+#include "..\Analog.ino"
+#include "..\Begin.ino"
+#include "..\Comm.ino"
+#include "..\Flow.ino"
 #endif
 #endif

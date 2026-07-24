@@ -121,7 +121,8 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteProfilePrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Profiles.Delete(_editingId);
+            try { Core.Database.Profiles.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseProfileListChanged();
             LoadList();
             ClearEdit();

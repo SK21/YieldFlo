@@ -64,6 +64,7 @@
   <data name="lgNoActiveJob"   xml:space="preserve"><value>Nincs aktív munka</value></data>
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Be</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Ki</value></data>
+  <data name="lgDataWriteError" xml:space="preserve"><value> - MENTÉSI HIBA</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Leállítja és bezárja ezt a munkát?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Munka leállítása</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menü</value></data>
@@ -146,12 +147,15 @@ Az elevátor szalag üres legyen.</value></data>
   <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Legalább egy munka szükséges.</value></data>
   <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>„{0}" munka törlése?</value></data>
   <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>„{0}" munka aktív. Váltás erre: „{1}"?</value></data>
+  <data name="lgCannotDeleteActiveJob" xml:space="preserve"><value>A(z) „{0}" munka nem törölhető, amíg aktív. Először állítsa le, vagy váltson munkát.</value></data>
+  <data name="lgItemInUseByJob"    xml:space="preserve"><value>Nem törölhető — legalább egy munka használja.</value></data>
 
   <!-- Crops form -->
   <data name="lgCategoryLabel"    xml:space="preserve"><value>Kategória:</value></data>
   <data name="lgTestWeight"       xml:space="preserve"><value>Testtömeg:</value></data>
   <data name="lgMktMoisture"      xml:space="preserve"><value>Piaci nedvesség:</value></data>
   <data name="lgEnterCropName"    xml:space="preserve"><value>Adjon meg egy növénynevet.</value></data>
+  <data name="lgTestWeightRequired" xml:space="preserve"><value>Adjon meg egy nullánál nagyobb hektolitertömeget.</value></data>
   <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Legalább egy növény szükséges.</value></data>
   <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Törli ezt a növényt?</value></data>
 

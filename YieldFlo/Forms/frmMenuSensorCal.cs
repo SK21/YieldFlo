@@ -122,16 +122,16 @@ namespace YieldFlo.Forms
         private void tmrLive_Tick(object sender, EventArgs e)
         {
             double m = Core.LastMoisture;
-            lblMoistLive.Text = m > 0 ? $"{m:F1}%" : "—";
+            lblMoistLive.Text = Core.LastMoistureOk ? $"{m:F1}%" : "—";
 
             double t = Core.LastTemperature;
-            lblTempLive.Text = t != 0 ? $"{t:F1}°C" : "—";
+            lblTempLive.Text = Core.LastTemperatureOk ? $"{t:F1}°C" : "—";
         }
 
         private void btnApplyMoist_Click(object sender, EventArgs e)
         {
             double appReading = Core.LastMoisture;
-            if (appReading <= 0) { Props.ShowMessage(Lang.lgNoLiveMoistReading, "", 2000, true); return; }
+            if (!Core.LastMoistureOk) { Props.ShowMessage(Lang.lgNoLiveMoistReading, "", 2000, true); return; }
             double offset = System.Math.Round((double)numCalMeter.Value - appReading, 1);
             offset = System.Math.Max((double)numMoistOffset.Minimum,
                      System.Math.Min((double)numMoistOffset.Maximum, offset));
@@ -141,7 +141,7 @@ namespace YieldFlo.Forms
         private void btnApplyTemp_Click(object sender, EventArgs e)
         {
             double appReading = Core.LastTemperature;
-            if (appReading == 0) { Props.ShowMessage(Lang.lgNoLiveTempReading, "", 2000, true); return; }
+            if (!Core.LastTemperatureOk) { Props.ShowMessage(Lang.lgNoLiveTempReading, "", 2000, true); return; }
             double offset = System.Math.Round((double)numCalThermo.Value - appReading, 1);
             offset = System.Math.Max((double)numTempOffset.Minimum,
                      System.Math.Min((double)numTempOffset.Maximum, offset));

@@ -10,19 +10,39 @@
 
 static void BuildDataBody(byte body[8])
 {
+	static uint32_t lastMs = 0;
+
 	noInterrupts();
 	uint32_t pulses = RPMpulseCount;  RPMpulseCount = 0;
 	uint16_t noise = NoiseCount;     NoiseCount = 0;
 	interrupts();
 
-	// RPM: 1 magnet/rev, 200ms window → pulses × 300 = RPM.
+	uint32_t now = millis();
+	uint32_t elapsed = now - lastMs;
+	lastMs = now;
+
+	// RPM: 1 magnet/rev, normalized by the ACTUAL elapsed time since the last
+	// call rather than an assumed fixed 200ms window — a skipped send (e.g.
+	// CAN Bus Off recovery) lets pulses accumulate over a longer window, and
+	// the old fixed-300 multiplier would report a spurious RPM spike on the
+	// next send. Same fix TakePaddleHz() already applies to paddle Hz.
 	// Fixed reference 200 when no RPM sensor — app uses this to detect absence.
-	uint16_t rpm = (MDL.RPMpin < NC) ? (uint16_t)(pulses * 300) : 200;
+	uint16_t rpm;
+	if (MDL.RPMpin < NC)
+	{
+		uint32_t rpmCalc = (elapsed == 0) ? 0
+			: (uint32_t)(((uint64_t)pulses * 60000 + elapsed / 2) / elapsed);
+		rpm = (rpmCalc > 65535) ? 65535 : (uint16_t)rpmCalc;
+	}
+	else
+	{
+		rpm = 200;
+	}
 
 	byte flags = 0;
 	if (SensorOK)        flags |= 0x01;  // bit 0 — SensorOK
 	if (MDL.RPMpin < NC) flags |= 0x02;  // bit 1 — RPM sensor present
-	if (ADSfound)        flags |= 0x04;  // bit 2 — MoistureOK
+	if (ADSFresh())      flags |= 0x04;  // bit 2 — MoistureOK
 
 	body[0] = flags;
 	body[1] = SensorRatio & 0xFF;
@@ -156,7 +176,7 @@ void SendCANPK2()
 		if (twai_get_status_info(&st) != ESP_OK) return;
 		if (st.state != TWAI_STATE_RUNNING)      return;
 
-		byte flags = ADSfound ? 0x01 : 0x00;
+		byte flags = ADSFresh() ? 0x01 : 0x00;
 		flags |= 0x02;		// bit 1 — paddle_hz field present
 		int16_t temp = TemperatureReading;
 
@@ -238,7 +258,7 @@ void SendUdpPK2()
 	if (millis() - SendLastPK2 > SendTimePK2)
 	{
 		SendLastPK2 = millis();
-		byte flags = ADSfound ? 0x01 : 0x00;
+		byte flags = ADSFresh() ? 0x01 : 0x00;
 		flags |= 0x02;		// bit 1 — paddle_hz field present
 		int16_t temp = TemperatureReading;
 

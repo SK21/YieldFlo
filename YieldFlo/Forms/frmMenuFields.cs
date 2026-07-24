@@ -100,7 +100,8 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteFieldPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Fields.Delete(_editingId);
+            try { Core.Database.Fields.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseFieldListChanged();
             LoadList();
         }

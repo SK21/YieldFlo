@@ -21,7 +21,7 @@ namespace YieldFlo.Database
 
         public DB(string dbPath)
         {
-            _connectionString = $"Data Source={dbPath}";
+            _connectionString = $"Data Source={dbPath};Foreign Keys=True;";
         }
 
         public void Initialize()

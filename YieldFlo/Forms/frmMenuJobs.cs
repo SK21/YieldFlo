@@ -434,6 +434,13 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobData.Count) return;
 
             var job = _jobData[idx];
+
+            if (job.jobId == Core.Collector.ActiveJobId)
+            {
+                Props.ShowMessage(string.Format(Lang.lgCannotDeleteActiveJob, job.jobName), "", 3000, true);
+                return;
+            }
+
             using var dlg = new frmMsgBox(string.Format(Lang.lgDeleteJobPrompt, job.jobName));
             dlg.ShowDialog(this);
             if (!dlg.Result) return;

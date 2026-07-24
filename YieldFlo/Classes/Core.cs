@@ -27,11 +27,14 @@ namespace YieldFlo.Classes
         // Live sensor state (written by UDPComm/CanModuleComm, read by UI + DataCollector)
         public static double LastMoisture     { get; set; }
         public static double LastTemperature  { get; set; }
+        public static bool   LastMoistureOk   { get; set; }
+        public static bool   LastTemperatureOk { get; set; }
         public static double LastSensor1      { get; set; }
         public static int    LastNoiseCount   { get; set; }
         public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static bool   ModuleConnected  { get; set; }
         public static DateTime LastModuleReceive { get; set; }
+        public static bool   LastDataWriteOk  { get; set; } = true;
 
         // Active session configuration
         public static int    ActiveProfileId      { get; set; } = -1;
@@ -386,6 +389,7 @@ namespace YieldFlo.Classes
             if (forms.TryGetValue(key, out Form existing) && !existing.IsDisposed)
             {
                 existing.BringToFront();
+                frm.Dispose();
                 return;
             }
 

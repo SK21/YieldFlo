@@ -38,6 +38,7 @@ int16_t MoistureReading = 0;
 int16_t TemperatureReading = 0;
 bool ADSfound = false;
 volatile bool ADSconversionReady = false;
+uint32_t LastADSReadMs = 0;   // set on every successful conversion-register read
 
 void IRAM_ATTR onADSReady()
 {

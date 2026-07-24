@@ -5,6 +5,14 @@ using YieldFlo.Classes;
 
 namespace YieldFlo.Database
 {
+    // Thrown when a delete is blocked by a foreign-key constraint (the row is
+    // still referenced by a job or calibration) so callers can show a friendly
+    // message instead of letting the raw SQLiteException surface.
+    public class ItemInUseException : Exception
+    {
+        public ItemInUseException() : base("Item is referenced by one or more jobs.") { }
+    }
+
     // ── JobRepo ───────────────────────────────────────────────────────────────
     public class JobRepo
     {
@@ -102,9 +110,20 @@ namespace YieldFlo.Database
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
-            using var cmd = new SQLiteCommand("DELETE FROM jobs WHERE id=@id", conn);
-            cmd.Parameters.AddWithValue("@id", jobId);
-            cmd.ExecuteNonQuery();
+            using var tx = conn.BeginTransaction();
+            // Deleting a job takes its recorded readings with it — with FK
+            // enforcement on, yield_data.job_id would otherwise block this delete.
+            using (var cmd = new SQLiteCommand("DELETE FROM yield_data WHERE job_id=@id", conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@id", jobId);
+                cmd.ExecuteNonQuery();
+            }
+            using (var cmd = new SQLiteCommand("DELETE FROM jobs WHERE id=@id", conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@id", jobId);
+                cmd.ExecuteNonQuery();
+            }
+            tx.Commit();
         }
     }
 
@@ -114,7 +133,7 @@ namespace YieldFlo.Database
         private readonly string _cs;
         public YieldDataRepo(string connectionString) { _cs = connectionString; }
 
-        public void Insert(YieldDataPoint pt)
+        public bool Insert(YieldDataPoint pt)
         {
             try
             {
@@ -140,10 +159,12 @@ VALUES
                 cmd.Parameters.AddWithValue("@s1", pt.Sensor1Raw);
                 cmd.Parameters.AddWithValue("@s2", pt.Sensor2Raw);
                 cmd.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("YieldDataRepo/Insert: " + ex.Message);
+                return false;
             }
         }
 
@@ -303,7 +324,9 @@ VALUES
             conn.Open();
             using var cmd = new SQLiteCommand("DELETE FROM profiles WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@id", id);
-            cmd.ExecuteNonQuery();
+            try { cmd.ExecuteNonQuery(); }
+            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
+            { throw new ItemInUseException(); }
         }
     }
 
@@ -379,7 +402,9 @@ VALUES
             conn.Open();
             using var cmd = new SQLiteCommand("DELETE FROM crops WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@id", id);
-            cmd.ExecuteNonQuery();
+            try { cmd.ExecuteNonQuery(); }
+            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
+            { throw new ItemInUseException(); }
         }
     }
 
@@ -436,7 +461,9 @@ VALUES
             conn.Open();
             using var cmd = new SQLiteCommand("DELETE FROM headers WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@id", id);
-            cmd.ExecuteNonQuery();
+            try { cmd.ExecuteNonQuery(); }
+            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
+            { throw new ItemInUseException(); }
         }
     }
 
@@ -485,7 +512,9 @@ VALUES
             conn.Open();
             using var cmd = new SQLiteCommand("DELETE FROM fields WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@id", id);
-            cmd.ExecuteNonQuery();
+            try { cmd.ExecuteNonQuery(); }
+            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
+            { throw new ItemInUseException(); }
         }
     }
 

@@ -1,4 +1,21 @@
 
+// Writes the ADS1115 config register to start a conversion on the given
+// channel. Retries a transient I2C NACK before giving up — a lost write must
+// not be assumed to have succeeded, or the local ADSstate desyncs from the
+// ADC's actual channel and moisture/temperature silently swap.
+static bool WriteADSConfig(byte hi, byte lo)
+{
+	for (uint8_t attempt = 0; attempt < 3; attempt++)
+	{
+		Wire.beginTransmission(ADS1115_Address);
+		Wire.write(0x01);
+		Wire.write(hi);
+		Wire.write(lo);
+		if (Wire.endTransmission() == 0) return true;
+	}
+	return false;
+}
+
 void ReadAnalog()
 {
 	// ADS1115 channel assignments (Moisture1 daughter board):
@@ -32,7 +49,10 @@ void ReadAnalog()
 
 			if (Wire.requestFrom(ADS1115_Address, 2) == 2)
 			{
-				int16_t raw = (int16_t)(Wire.read() << 8 | Wire.read());
+				uint8_t hiByte = Wire.read();
+				uint8_t loByte = Wire.read();
+				int16_t raw = (int16_t)((uint16_t)hiByte << 8 | loByte);
+				LastADSReadMs = millis();
 
 				if (ADSstate == 0)
 				{
@@ -40,26 +60,24 @@ void ReadAnalog()
 					if (raw < 0) raw = 0;
 					MoistureReading = raw;
 
-					// Request temperature conversion (AIN2 single-ended)
-					Wire.beginTransmission(ADS1115_Address);
-					Wire.write(0x01);		// Config register
-					Wire.write(0b11100011);	// OS=1, MUX=110 (AIN2 vs GND), PGA=001, MODE=1
-					Wire.write(0b00100000);	// DR=001 (16 SPS), COMP_QUE=00
-					Wire.endTransmission();
-					ADSstate = 1;
+					// Request temperature conversion (AIN2 single-ended). Only
+					// advance ADSstate if the switch actually took — otherwise
+					// the ADC is still on the moisture channel and flipping
+					// our state here would label its next (moisture) result
+					// as temperature.
+					// OS=1, MUX=110 (AIN2 vs GND), PGA=001, MODE=1 / DR=001 (16 SPS), COMP_QUE=00
+					if (WriteADSConfig(0b11100011, 0b00100000))	ADSstate = 1;
 				}
 				else
 				{
 					// Temperature result (AIN2 single-ended)
 					TemperatureReading = raw;
 
-					// Request moisture conversion (AIN0-AIN1 differential)
-					Wire.beginTransmission(ADS1115_Address);
-					Wire.write(0x01);		// Config register
-					Wire.write(0b10000011);	// OS=1, MUX=000 (AIN0-AIN1 diff), PGA=001, MODE=1
-					Wire.write(0b00100000);	// DR=001 (16 SPS), COMP_QUE=00
-					Wire.endTransmission();
-					ADSstate = 0;
+					// Request moisture conversion (AIN0-AIN1 differential).
+					// Only advance ADSstate if the switch actually took (see
+					// note above).
+					// OS=1, MUX=000 (AIN0-AIN1 diff), PGA=001, MODE=1 / DR=001 (16 SPS), COMP_QUE=00
+					if (WriteADSConfig(0b10000011, 0b00100000))	ADSstate = 0;
 				}
 			}
 		}
@@ -69,6 +87,16 @@ void ReadAnalog()
 		// Fallback: ESP32 native ADC
 		if (MDL.AnalogPin < NC) MoistureReading = (int16_t)analogRead(MDL.AnalogPin);
 	}
+}
+
+// ADS1115 is only "OK" if it was actually found AND has produced a
+// conversion recently — a dropped I2C connection stops ADSconversionReady
+// from firing without ever clearing ADSfound, which would otherwise report
+// stale/frozen moisture+temperature as good indefinitely.
+const uint32_t ADS_STALE_MS = 1000;
+bool ADSFresh()
+{
+	return ADSfound && (millis() - LastADSReadMs) < ADS_STALE_MS;
 }
 
 

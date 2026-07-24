@@ -58,6 +58,14 @@ namespace YieldFlo.Classes
 
         private DateTime _lastWriteTime = DateTime.MinValue;
         private double _lastLat = 0, _lastLon = 0;
+        private DateTime _lastFixTime = DateTime.MinValue;
+
+        // Max plausible combine ground speed, used to bound a single GPS-tick's
+        // distance step — guards TotalAcres/TotalBushels against a corrupt fix
+        // (e.g. a momentary (0,0) glitch) producing a bogus multi-km jump.
+        private const double MaxPlausibleSpeedMps = 15.0; // ~34 mph, generous ceiling
+        private const double MinFixIntervalSec = 0.05;
+
         private double _moistureSum = 0;
         private int _moistureCount = 0;
 
@@ -79,6 +87,7 @@ namespace YieldFlo.Classes
             _moistureCount = 0;
             _lastLat = 0;
             _lastLon = 0;
+            _lastFixTime = DateTime.MinValue;
             _lastWriteTime = DateTime.MinValue;
             ResetPipeline();
             IsRecording  = false;
@@ -156,6 +165,7 @@ namespace YieldFlo.Classes
             _moistureCount = 0;
             _lastLat = 0;
             _lastLon = 0;
+            _lastFixTime = DateTime.MinValue;
             _lastWriteTime = DateTime.MinValue;
             ResetPipeline();
             IsRecording  = false;
@@ -197,17 +207,27 @@ namespace YieldFlo.Classes
                 // reaches the sensor ProcessingDelaySec from now.
                 bool passStart = _lastLat == 0 && _lastLon == 0;
                 double acresInc = 0;
+                DateTime now = DateTime.UtcNow;
                 if (!passStart)
                 {
                     double distM = HaversineMetres(_lastLat, _lastLon, lat, lon);
-                    acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM);
+                    double dtSec = Math.Max((now - _lastFixTime).TotalSeconds, MinFixIntervalSec);
+                    if (distM <= MaxPlausibleSpeedMps * dtSec)
+                        acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM);
+                    // else: implausible GPS jump (e.g. a momentary 0,0 glitch fix) —
+                    // skip this tick's acreage/yield contribution instead of adding a
+                    // bogus multi-km increment to the job total. The point is still
+                    // enqueued below; the map's own AddSwath/MaxBridgeMeters guard
+                    // already refuses to bridge a gap this large, so the ribbon is
+                    // unaffected.
                 }
                 _lastLat = lat;
                 _lastLon = lon;
+                _lastFixTime = now;
 
                 _pipeline.Enqueue(new PendingPoint
                 {
-                    Time = DateTime.UtcNow,
+                    Time = now,
                     Lat = lat,
                     Lon = lon,
                     Altitude = gps.Altitude,
@@ -241,6 +261,7 @@ namespace YieldFlo.Classes
                 }
                 _lastLat = 0;
                 _lastLon = 0;
+                _lastFixTime = DateTime.MinValue;
             }
 
             // Drain positions older than the transport delay — their grain is at
@@ -339,7 +360,7 @@ namespace YieldFlo.Classes
                 Sensor2Raw = Core.LastNoiseCount
             };
 
-            Core.Database?.YieldData.Insert(point);
+            Core.LastDataWriteOk = Core.Database?.YieldData.Insert(point) ?? true;
         }
 
         private static double HaversineMetres(double lat1, double lon1, double lat2, double lon2)

@@ -188,7 +188,8 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteHeaderPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Headers.Delete(_editingId);
+            try { Core.Database.Headers.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseHeaderListChanged();
             LoadList();
             ClearEdit();

@@ -117,6 +117,7 @@ namespace YieldFlo.Forms
             if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterCropName, "", 2000, true); return; }
             string cat = cboCropCategory.SelectedItem?.ToString() ?? "Cereal";
             double tw  = Props.TestWeightToLbBu((double)numTestWeight.Value);   // store internally as lb/bu
+            if (tw <= 0) { Props.ShowMessage(Lang.lgTestWeightRequired, "", 2000, true); return; }
             double mm  = (double)numMarketMoisture.Value;
 
             int savedId;
@@ -142,7 +143,8 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteCropPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Crops.Delete(_editingId);
+            try { Core.Database.Crops.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseCropListChanged();
             LoadList();
             ClearEdit();

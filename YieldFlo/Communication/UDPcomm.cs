@@ -189,7 +189,8 @@ namespace YieldFlo.Communication
             bool moistureOk = (flags & 0x04) != 0;
 
             Core.LastSensor1 = s1Ok ? ratio / 1000.0 : 0;
-            Core.LastMoisture = moistureOk ? moistureRaw * Core.ActiveMoistScale : 0;
+            Core.LastMoisture = moistureRaw * Core.ActiveMoistScale;
+            Core.LastMoistureOk = moistureOk;
             Core.LastNoiseCount = noiseCount;
             Core.ModuleConnected = true;
             Core.LastModuleReceive = DateTime.UtcNow;
@@ -211,7 +212,8 @@ namespace YieldFlo.Communication
             bool tempOk = (data[2] & 0x01) != 0;
             short tempRaw = BitConverter.ToInt16(data, 3);
 
-            Core.LastTemperature = tempOk ? tempRaw * Core.ActiveTempScale : 0;
+            Core.LastTemperature = tempRaw * Core.ActiveTempScale;
+            Core.LastTemperatureOk = tempOk;
 
             bool hzOk = (data[2] & 0x02) != 0 && data.Length >= 7;
             Core.LastPaddleHz = hzOk ? data[5] : -1;
