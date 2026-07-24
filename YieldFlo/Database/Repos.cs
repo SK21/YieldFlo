@@ -322,11 +322,24 @@ VALUES
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
-            using var cmd = new SQLiteCommand("DELETE FROM profiles WHERE id=@id", conn);
-            cmd.Parameters.AddWithValue("@id", id);
-            try { cmd.ExecuteNonQuery(); }
-            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
-            { throw new ItemInUseException(); }
+            using var tx = conn.BeginTransaction();
+            // Deleting a profile takes its calibration history with it — with FK
+            // enforcement on, calibrations.profile_id would otherwise block this
+            // delete on any profile that has ever been calibrated (the normal
+            // Save & Apply workflow), which is every profile in practice.
+            using (var cmd = new SQLiteCommand("DELETE FROM calibrations WHERE profile_id=@id", conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            using (var cmd = new SQLiteCommand("DELETE FROM profiles WHERE id=@id", conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                try { cmd.ExecuteNonQuery(); }
+                catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
+                { tx.Rollback(); throw new ItemInUseException(); }
+            }
+            tx.Commit();
         }
     }
 
@@ -400,11 +413,23 @@ VALUES
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
-            using var cmd = new SQLiteCommand("DELETE FROM crops WHERE id=@id", conn);
-            cmd.Parameters.AddWithValue("@id", id);
-            try { cmd.ExecuteNonQuery(); }
-            catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
-            { throw new ItemInUseException(); }
+            using var tx = conn.BeginTransaction();
+            // Deleting a crop takes its calibration history with it — same reason
+            // as ProfileRepo.Delete (calibrations.crop_id would otherwise block
+            // this delete on any crop that has ever been calibrated).
+            using (var cmd = new SQLiteCommand("DELETE FROM calibrations WHERE crop_id=@id", conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            using (var cmd = new SQLiteCommand("DELETE FROM crops WHERE id=@id", conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                try { cmd.ExecuteNonQuery(); }
+                catch (SQLiteException ex) when (ex.ResultCode == SQLiteErrorCode.Constraint)
+                { tx.Rollback(); throw new ItemInUseException(); }
+            }
+            tx.Commit();
         }
     }
 
