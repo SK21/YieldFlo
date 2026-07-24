@@ -219,9 +219,9 @@ namespace YieldFlo.Forms
             double workRate = Props.DisplayMass(Core.Yield?.SmoothedWorkRate ?? 0);   // t/hr metric, bu/hr imperial
 
             lblTotArea.Text = $"{area:F1} {Props.AreaUnit}";
-            lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
+            lblTotTotal.Text = Props.IsMetric ? $"{total:F1} {Props.MassUnit}" : $"{total:F0} {Props.MassUnit}";
             lblTotRate.Text = $"{avg:F1} {Props.RateUnit}";
-            lblWorkRate.Text = $"{workRate:F1} {Props.MassUnit}/hr";
+            lblWorkRate.Text = Props.IsMetric ? $"{workRate:F1} {Props.MassUnit}/hr" : $"{workRate:F0} {Props.MassUnit}/hr";
         }
 
         // Okabe-Ito colorblind-safe palette: bluish-green / vermillion instead of
