@@ -106,7 +106,8 @@
       "WebFetch(domain:grdc.com.au)",
       "WebFetch(domain:vantagenortheast.com)",
       "Read(//f/Documents/AgOpenGPS/Fields/Mays North Qrt//**)",
-      "Read(//f/Documents/AgOpenGPS/Fields//**)"
+      "Read(//f/Documents/AgOpenGPS/Fields//**)",
+      "Read(//c/Users/CoxDa/.nuget/packages/**)"
     ]
   }
 }
