@@ -20,5 +20,17 @@ namespace YieldFlo.Database
         public int ModuleRpm { get; set; }      // elevator RPM from the module packet; fixed reference 200 when no RPM sensor fitted
         public int PaddleHz { get; set; } = -1;      // paddles/s from the 1 Hz packet; -1 = not reported
         public int MinCycleMs { get; set; } = -1;    // shortest completed paddle cycle in the 1 Hz packet's window, ms; -1 = not reported
+
+        // Paddle-event channel, logged raw alongside the duty channel
+        // (Sensor1Raw) so a stored job can be re-derived on either channel under
+        // any baseline. -1 = the module sent no paddle frame for this point.
+        public double FlowRate { get; set; } = -1;      // per-paddle obstruction per second, uncorrected
+        public double PaddlesPerS { get; set; } = -1;   // paddle rate over the same window
+        public int FlowFlags { get; set; }              // bit0=UsedPaddleChannel, bit1=Saturated, bit2=Unaccounted, bit3=ChannelsDisagree
+
+        public const int FlagUsedPaddleChannel = 0x01;
+        public const int FlagSaturated         = 0x02;
+        public const int FlagUnaccounted       = 0x04;
+        public const int FlagChannelsDisagree  = 0x08;
     }
 }

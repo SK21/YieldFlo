@@ -13,6 +13,7 @@ namespace YieldFlo.Communication.Can
     {
         private const uint ModuleFrameId = 0x18FF00F8u;
         private const uint TempFrameId = 0x18FF01F8u;
+        private const uint FlowFrameId = 0x18FF02F8u;
         private const int AdapterTimeoutMs = 4000;
         private const int ModuleTimeoutMs = 2000;
 
@@ -93,6 +94,12 @@ namespace YieldFlo.Communication.Can
                 try { mf.BeginInvoke((Action)(() => ParseTempData(data))); }
                 catch (InvalidOperationException) { }
             }
+            else if (e.Frame.Id == FlowFrameId)
+            {
+                byte[] data = e.Frame.Data;
+                try { mf.BeginInvoke((Action)(() => ParseFlowData(data))); }
+                catch (InvalidOperationException) { }
+            }
         }
 
         private void ParseModuleData(byte[] d)
@@ -142,6 +149,39 @@ namespace YieldFlo.Communication.Can
 
             bool minCycleOk = (d[0] & 0x04) != 0 && d.Length >= 5;
             Core.LastMinCycleMs = minCycleOk ? d[4] : -1;
+        }
+
+        private void ParseFlowData(byte[] d)
+        {
+            // Paddle-event flow frame (0x18FF02F8), DLC=8, 5 Hz — the second,
+            // independent reduction of the module's edge stream. Covers the same
+            // window as the module frame that precedes it.
+            // [0]   flags  bit0=PaddleValid, bit1=Saturated, bit2=Unaccounted, bit3=RepairsApplied
+            // [1-2] flow_sum     uint16 LE  Σ(per-paddle duty × pitches) × 1000
+            // [3-4] accounted_ms uint16 LE  window time inside accepted cycles
+            // [5]   paddles      uint8      pitches accounted
+            // [6]   rejects      uint8      cycles repaired this window
+            // [7]   sat_paddles  uint8      paddles at/above 90% duty
+            byte flags = d[0];
+            ushort flowSum = (ushort)(d[1] | (d[2] << 8));
+            ushort accountedMs = (ushort)(d[3] | (d[4] << 8));
+            byte paddles = d[5];
+
+            bool valid = (flags & 0x01) != 0 && accountedMs > 0 && paddles > 0;
+
+            // Rates come off the module's own accounted time, not the packet
+            // period: a frame delayed by bus arbitration or a skipped send must
+            // not scale the flow. Both derive from the same window, so their
+            // ratio — which is what the yield math actually uses — stays exact.
+            double windowSec = accountedMs / 1000.0;
+            Core.LastFlowRate = valid ? (flowSum / 1000.0) / windowSec : 0;
+            Core.LastPaddlesPerS = valid ? paddles / windowSec : 0;
+            Core.LastFlowRejects = d[6];
+            Core.LastFlowSaturated = (flags & 0x02) != 0;
+            Core.LastFlowUnaccounted = (flags & 0x04) != 0;
+            Core.LastFlowReceive = DateTime.UtcNow;
+
+            Core.Yield?.PushPaddleReading(Core.LastFlowRate, Core.LastPaddlesPerS, valid);
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)

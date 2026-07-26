@@ -143,11 +143,11 @@ namespace YieldFlo.Database
 INSERT INTO yield_data
     (job_id, timestamp, latitude, longitude, elevation, speed, heading,
      yield_rate, moisture, acres_accumulated, sensor1_raw, sensor2_raw,
-     rpm, paddle_hz, min_cycle_ms)
+     rpm, paddle_hz, min_cycle_ms, flow_rate, paddles_per_s, flow_flags)
 VALUES
     (@jid, @ts, @lat, @lon, @elev, @spd, @hdg,
      @yr, @mst, @ac, @s1, @s2,
-     @rpm, @phz, @mcm)", conn);
+     @rpm, @phz, @mcm, @fr, @pps, @ff)", conn);
                 cmd.Parameters.AddWithValue("@jid", pt.JobId);
                 cmd.Parameters.AddWithValue("@ts", pt.Timestamp.ToString("o"));
                 cmd.Parameters.AddWithValue("@lat", pt.Latitude);
@@ -163,6 +163,9 @@ VALUES
                 cmd.Parameters.AddWithValue("@rpm", pt.ModuleRpm);
                 cmd.Parameters.AddWithValue("@phz", pt.PaddleHz);
                 cmd.Parameters.AddWithValue("@mcm", pt.MinCycleMs);
+                cmd.Parameters.AddWithValue("@fr", pt.FlowRate);
+                cmd.Parameters.AddWithValue("@pps", pt.PaddlesPerS);
+                cmd.Parameters.AddWithValue("@ff", pt.FlowFlags);
                 cmd.ExecuteNonQuery();
                 return true;
             }
@@ -201,18 +204,25 @@ VALUES
                     Sensor2Raw = reader.GetDouble(12),
                     ModuleRpm = reader.GetInt32(13),
                     PaddleHz = reader.GetInt32(14),
-                    MinCycleMs = reader.GetInt32(15)
+                    MinCycleMs = reader.GetInt32(15),
+                    FlowRate = reader.GetDouble(16),
+                    PaddlesPerS = reader.GetDouble(17),
+                    FlowFlags = reader.GetInt32(18)
                 });
             }
             return result;
         }
 
         // Re-derives YieldRate for every point in a job from its stored raw sensor
-        // reading and speed, using the given (typically just-updated) calibration.
+        // readings and speed, using the given (typically just-updated) calibration.
+        // Each point recalculates on the channel it was logged with: points that
+        // carry a paddle reading use it, the rest fall back to the duty channel,
+        // so a job spanning a firmware upgrade comes out consistent.
         // Returns the number of rows rewritten. Caller is responsible for repainting
         // the map afterwards — this only touches the database.
         public int RecalculateJob(int jobId, double baseline, double yieldFactor,
-                                   double headerWidthM, double testWeightLbsBu)
+                                   double headerWidthM, double testWeightLbsBu,
+                                   double refPaddleHz = 0)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
@@ -220,7 +230,7 @@ VALUES
 
             var updates = new List<(int id, double rate)>();
             using (var selCmd = new SQLiteCommand(
-                "SELECT id, speed, sensor1_raw FROM yield_data WHERE job_id=@jid", conn, tx))
+                "SELECT id, speed, sensor1_raw, flow_rate, paddles_per_s FROM yield_data WHERE job_id=@jid", conn, tx))
             {
                 selCmd.Parameters.AddWithValue("@jid", jobId);
                 using var reader = selCmd.ExecuteReader();
@@ -229,8 +239,11 @@ VALUES
                     int id = reader.GetInt32(0);
                     double speed = reader.GetFloat(1);
                     double sensor1Raw = reader.GetDouble(2);
+                    double flowRate = reader.GetDouble(3);
+                    double paddlesPerS = reader.GetDouble(4);
                     double rate = clsYieldCalculator.ComputeYieldRate(
-                        sensor1Raw, speed, baseline, yieldFactor, headerWidthM, testWeightLbsBu);
+                        sensor1Raw, flowRate, paddlesPerS, speed, baseline, refPaddleHz,
+                        yieldFactor, headerWidthM, testWeightLbsBu);
                     updates.Add((id, rate));
                 }
             }
@@ -558,20 +571,23 @@ VALUES
         public CalibrationRepo(string connectionString) { _cs = connectionString; }
 
         public int Save(int profileId, int cropId, double baseline,
-                        double yieldFactor, int delaySec)
+                        double yieldFactor, int delaySec, double refPaddleHz = 0,
+                        bool preferPaddleChannel = true)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(@"
 INSERT INTO calibrations
-    (profile_id, crop_id, sensor_baseline, yield_factor, processing_delay_sec)
-VALUES (@p, @c, @b, @f, @d);
+    (profile_id, crop_id, sensor_baseline, yield_factor, processing_delay_sec, ref_paddle_hz, prefer_paddle_channel)
+VALUES (@p, @c, @b, @f, @d, @r, @pp);
 SELECT last_insert_rowid();", conn);
             cmd.Parameters.AddWithValue("@p", profileId);
             cmd.Parameters.AddWithValue("@c", cropId);
             cmd.Parameters.AddWithValue("@b", baseline);
             cmd.Parameters.AddWithValue("@f", yieldFactor);
             cmd.Parameters.AddWithValue("@d", delaySec);
+            cmd.Parameters.AddWithValue("@r", refPaddleHz);
+            cmd.Parameters.AddWithValue("@pp", preferPaddleChannel ? 1 : 0);
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
@@ -592,20 +608,22 @@ SELECT last_insert_rowid();", conn);
             return null;
         }
 
-        public (double baseline, double yieldFactor, int delaySec) GetLatest(int profileId, int cropId)
+        public (double baseline, double yieldFactor, int delaySec, double refPaddleHz, bool preferPaddleChannel)
+            GetLatest(int profileId, int cropId)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var cmd = new SQLiteCommand(
-                "SELECT sensor_baseline, yield_factor, processing_delay_sec " +
+                "SELECT sensor_baseline, yield_factor, processing_delay_sec, ref_paddle_hz, prefer_paddle_channel " +
                 "FROM calibrations WHERE profile_id=@p AND crop_id=@c " +
                 "ORDER BY id DESC LIMIT 1", conn);
             cmd.Parameters.AddWithValue("@p", profileId);
             cmd.Parameters.AddWithValue("@c", cropId);
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
-                return (reader.GetDouble(0), reader.GetDouble(1), reader.GetInt32(2));
-            return (0, 1, 10);  // defaults
+                return (reader.GetDouble(0), reader.GetDouble(1), reader.GetInt32(2), reader.GetDouble(3),
+                        reader.GetInt32(4) != 0);
+            return (0, 1, 10, 0, true);  // defaults — refPaddleHz 0 = not captured yet, prefer paddle by default
         }
     }
 }

@@ -99,6 +99,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Nustatyti bazinę vertę</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Triukšmas</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Mentelės</value></data>
+  <data name="lgPreferPaddle"       xml:space="preserve"><value>Naudoti mentelių kanalą, kai jis pasiekiamas</value></data>
   <data name="lgLastSaved"          xml:space="preserve"><value>Paskutinį kartą išsaugota:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modulis neprijungtas.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Derliaus koeficientas:</value></data>

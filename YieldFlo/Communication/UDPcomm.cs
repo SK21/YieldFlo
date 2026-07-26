@@ -159,6 +159,11 @@ namespace YieldFlo.Communication
                     case 40002:
                         ParseTempPacket(data);
                         break;
+
+                    // ── YieldFlo paddle-event flow packet (PGN 40003, 5 Hz) ───
+                    case 40003:
+                        ParseFlowPacket(data);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -223,6 +228,45 @@ namespace YieldFlo.Communication
 
             bool minCycleOk = (data[2] & 0x04) != 0 && data.Length >= 8;
             Core.LastMinCycleMs = minCycleOk ? data[6] : -1;
+        }
+
+        private void ParseFlowPacket(byte[] data)
+        {
+            // Paddle-event flow packet (11 bytes) — the second, independent
+            // reduction of the module's edge stream. Covers the same window as
+            // the module packet (PGN 40001) that precedes it. Same field layout
+            // as CAN frame 0x18FF02F8, offset by the 2-byte PGN header here.
+            // [0-1]  PGN 40003 little-endian
+            // [2]    flags  bit0=PaddleValid, bit1=Saturated, bit2=Unaccounted, bit3=RepairsApplied
+            // [3-4]  flow_sum     uint16 LE  Σ(per-paddle duty × pitches) × 1000
+            // [5-6]  accounted_ms uint16 LE  window time inside accepted cycles
+            // [7]    paddles      uint8      pitches accounted this window
+            // [8]    rejects      uint8      cycles repaired this window
+            // [9]    sat_paddles  uint8      paddles at/above 90% duty this window
+            // [10]   CRC8
+            if (data.Length < 11) return;
+            if (!Core.Tls.GoodCRC(data)) return;
+
+            byte flags = data[2];
+            ushort flowSum = BitConverter.ToUInt16(data, 3);
+            ushort accountedMs = BitConverter.ToUInt16(data, 5);
+            byte paddles = data[7];
+
+            bool valid = (flags & 0x01) != 0 && accountedMs > 0 && paddles > 0;
+
+            // Rates come off the module's own accounted time, not the packet
+            // period: a frame delayed in transit must not scale the flow. Both
+            // derive from the same window, so their ratio — which is what the
+            // yield math actually uses — stays exact.
+            double windowSec = accountedMs / 1000.0;
+            Core.LastFlowRate = valid ? (flowSum / 1000.0) / windowSec : 0;
+            Core.LastPaddlesPerS = valid ? paddles / windowSec : 0;
+            Core.LastFlowRejects = data[8];
+            Core.LastFlowSaturated = (flags & 0x02) != 0;
+            Core.LastFlowUnaccounted = (flags & 0x04) != 0;
+            Core.LastFlowReceive = DateTime.UtcNow;
+
+            Core.Yield?.PushPaddleReading(Core.LastFlowRate, Core.LastPaddlesPerS, valid);
         }
 
         // ── Socket callbacks ──────────────────────────────────────────────────

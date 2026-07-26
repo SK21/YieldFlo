@@ -99,6 +99,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Basiswaarde instellen</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Ruis</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Schoepen</value></data>
+  <data name="lgPreferPaddle"       xml:space="preserve"><value>Schoepenkanaal gebruiken indien beschikbaar</value></data>
   <data name="lgLastSaved"          xml:space="preserve"><value>Laatst opgeslagen:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module niet verbonden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Opbrengstfactor:</value></data>

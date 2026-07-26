@@ -118,6 +118,14 @@ void DoSetup()
 		LastEdgeUs = micros();
 		SegStartUs = LastEdgeUs;
 		Serial.println(MDL.UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
+
+		// Both flow channels run off this one edge stream — duty on PK1, paddle
+		// events on PK3/PGN 40003. The pitch is not used in either calculation;
+		// it is the factor that turns the flow rate into a grain column speed.
+		Serial.println("Flow channels: duty (PK1) + paddle events (PK3 0x18FF02F8 / PGN 40003).");
+		Serial.print("Paddle pitch (display only): ");
+		Serial.print(PaddlePitchMm);
+		Serial.println(" mm");
 	}
 	else
 	{

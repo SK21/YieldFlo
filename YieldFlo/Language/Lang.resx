@@ -153,6 +153,7 @@
   <data name="lgSetBaseline" xml:space="preserve"><value>Set Baseline</value></data>
   <data name="lgNoise" xml:space="preserve"><value>Noise</value></data>
   <data name="lgPaddles" xml:space="preserve"><value>Paddles</value></data>
+  <data name="lgPreferPaddle" xml:space="preserve"><value>Use paddle channel when available</value></data>
   <data name="lgLastSaved" xml:space="preserve"><value>Last saved:</value></data>
   <data name="lgBaselineNoModule" xml:space="preserve"><value>Module not connected.</value></data>
   <data name="lgYieldFactor" xml:space="preserve"><value>Yield Factor:</value></data>

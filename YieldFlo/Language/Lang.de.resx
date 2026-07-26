@@ -99,6 +99,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Grundwert setzen</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Rauschen</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Paddel</value></data>
+  <data name="lgPreferPaddle"       xml:space="preserve"><value>Paddelkanal verwenden, wenn verfügbar</value></data>
   <data name="lgLastSaved"          xml:space="preserve"><value>Zuletzt gespeichert:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modul nicht verbunden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Ertragsfaktor:</value></data>

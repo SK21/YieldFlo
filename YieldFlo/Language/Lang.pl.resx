@@ -99,6 +99,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Ustaw poziom bazowy</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Szum</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Łopatki</value></data>
+  <data name="lgPreferPaddle"       xml:space="preserve"><value>Używaj kanału łopatek, gdy dostępny</value></data>
   <data name="lgLastSaved"          xml:space="preserve"><value>Ostatnio zapisano:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Moduł nie jest połączony.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Współczynnik plonu:</value></data>

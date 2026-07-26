@@ -734,7 +734,8 @@ namespace YieldFlo.Forms
 
             var cal = Core.Database.Calibrations.GetLatest(profileId, cropId);
             Core.Database.YieldData.RecalculateJob(
-                jobId, cal.baseline, cal.yieldFactor, headerWidthM, testWeightLbsBu);
+                jobId, cal.baseline, cal.yieldFactor, headerWidthM, testWeightLbsBu,
+                cal.refPaddleHz);
 
             RebuildSwaths(Core.Database.YieldData.GetByJob(jobId), jobId, center: false);
         }

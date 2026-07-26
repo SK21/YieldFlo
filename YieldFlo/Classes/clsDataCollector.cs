@@ -360,10 +360,32 @@ namespace YieldFlo.Classes
                 Sensor2Raw = Core.LastNoiseCount,
                 ModuleRpm = Core.LastModuleRpm,
                 PaddleHz = Core.LastPaddleHz,
-                MinCycleMs = Core.LastMinCycleMs
+                MinCycleMs = Core.LastMinCycleMs,
+
+                // Both channels are logged raw at every point: the duty ratio in
+                // Sensor1Raw and the paddle reading here. Which one produced this
+                // point's YieldRate is recorded in the flags, so a map can be
+                // re-derived on either channel later without guessing.
+                FlowRate = Core.PaddleChannelLive ? Core.LastFlowRate : -1,
+                PaddlesPerS = Core.PaddleChannelLive ? Core.LastPaddlesPerS : -1,
+                FlowFlags = FlowFlagsNow()
             };
 
             Core.LastDataWriteOk = Core.Database?.YieldData.Insert(point) ?? true;
+        }
+
+        private static int FlowFlagsNow()
+        {
+            int f = 0;
+            var y = Core.Yield;
+            if (y != null && y.UsingPaddleChannel) f |= YieldDataPoint.FlagUsedPaddleChannel;
+            if (Core.PaddleChannelLive)
+            {
+                if (Core.LastFlowSaturated)   f |= YieldDataPoint.FlagSaturated;
+                if (Core.LastFlowUnaccounted) f |= YieldDataPoint.FlagUnaccounted;
+            }
+            if (y != null && y.ChannelsDisagree) f |= YieldDataPoint.FlagChannelsDisagree;
+            return f;
         }
 
         private static double HaversineMetres(double lat1, double lon1, double lat2, double lon2)

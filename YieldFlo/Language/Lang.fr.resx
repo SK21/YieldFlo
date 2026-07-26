@@ -99,6 +99,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Définir la référence</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Bruit</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Palettes</value></data>
+  <data name="lgPreferPaddle"       xml:space="preserve"><value>Utiliser le canal des palettes si disponible</value></data>
   <data name="lgLastSaved"          xml:space="preserve"><value>Dernier enregistrement :</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module non connecté.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Facteur de rendement :</value></data>

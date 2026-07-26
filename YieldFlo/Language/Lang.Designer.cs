@@ -118,6 +118,7 @@ namespace YieldFlo.Language
         internal static string lgBaselineNoModule   => Get("lgBaselineNoModule");
         internal static string lgNoise              => Get("lgNoise");
         internal static string lgPaddles            => Get("lgPaddles");
+        internal static string lgPreferPaddle       => Get("lgPreferPaddle");
         internal static string lgLastSaved          => Get("lgLastSaved");
         internal static string lgYieldFactor        => Get("lgYieldFactor");
         internal static string lgFactorNote         => Get("lgFactorNote");

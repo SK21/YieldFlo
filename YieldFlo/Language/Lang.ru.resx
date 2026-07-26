@@ -99,6 +99,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Установить базовое значение</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Шум</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Лопатки</value></data>
+  <data name="lgPreferPaddle"       xml:space="preserve"><value>Использовать канал лопаток, если доступен</value></data>
   <data name="lgLastSaved"          xml:space="preserve"><value>Последнее сохранение:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Модуль не подключен.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Коэффициент урожайности:</value></data>

@@ -34,6 +34,22 @@ namespace YieldFlo.Classes
         public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static int    LastModuleRpm    { get; set; }         // elevator RPM from the 5 Hz packet; fixed reference 200 when no RPM sensor fitted
         public static int    LastMinCycleMs   { get; set; } = -1;   // shortest completed paddle cycle in the 1 Hz packet's window, ms; -1 = not reported (old firmware)
+
+        // Paddle-event flow channel (module frame 0x18FF02F8, 5 Hz). Absent on
+        // ESP32 modules and on firmware older than 2026.07.26 — everything here
+        // stays at its default and PaddleChannelLive reads false, which makes
+        // the yield calculator fall back to the duty channel on its own.
+        public static double LastFlowRate     { get; set; }         // per-paddle obstruction per second, NOT baseline-corrected
+        public static double LastPaddlesPerS  { get; set; }         // paddle rate derived from the same window
+        public static int    LastFlowRejects  { get; set; }         // cycles the module merged/scaled/reseeded this window
+        public static bool   LastFlowSaturated   { get; set; }      // most paddles pinned at full obstruction — channel under-reads
+        public static bool   LastFlowUnaccounted { get; set; }      // module lost track of the paddle phase this window
+        public static DateTime LastFlowReceive   { get; set; } = DateTime.MinValue;
+
+        /// <summary>True while the module is sending a usable paddle-event frame (within 1.5 s).</summary>
+        public static bool PaddleChannelLive =>
+            (DateTime.UtcNow - LastFlowReceive).TotalMilliseconds < 1500;
+
         public static bool   ModuleConnected  { get; set; }
         public static DateTime LastModuleReceive { get; set; }
         public static bool   LastDataWriteOk  { get; set; } = true;
@@ -224,6 +240,8 @@ namespace YieldFlo.Classes
                 var cal = Database.Calibrations.GetLatest(profileId, cropId);
                 Yield.SensorBaseline     = cal.baseline;
                 Yield.YieldFactor        = cal.yieldFactor;
+                Yield.RefPaddleHz        = cal.refPaddleHz;
+                Yield.PreferPaddleChannel = cal.preferPaddleChannel;
                 Yield.ProcessingDelaySec = cal.delaySec > 0
                     ? cal.delaySec
                     : Properties.Settings.Default.ProcessingDelaySec;

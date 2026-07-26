@@ -198,10 +198,24 @@ namespace YieldFlo.Forms
             lblYieldUnit.Text = Props.RateUnit;
             lblMoisture.Text = moisture > 0 ? moisture.ToString("F1") : "--.-";
 
-            // Bar 1 — Elevator flow (raw obstruction ratio, 0–100%)
+            // Bar 1 — Elevator flow. The bar still shows the raw duty ratio, which
+            // is what the beam is physically doing; the value is suffixed "P"
+            // while the paddle-event channel is the one driving the yield figure,
+            // so it is visible at a glance which reduction produced the map.
+            var y = Core.Yield;
             double flow = Math.Min(1.0, Math.Max(0, Core.LastSensor1));
             pnlSensor1Fill.Width = (int)(pnlSensor1.Width * flow);
-            lblSensor1Value.Text = (flow * 100).ToString("F0") + "%";
+            lblSensor1Value.Text = (flow * 100).ToString("F0") + "%"
+                + ((y?.UsingPaddleChannel ?? false) ? " P" : "");
+
+            // Amber while the two channels disagree: the elevator is far off the
+            // speed it was calibrated at, or the module lost the paddle phase.
+            // A bar colour rather than a popup — it is not worth stopping for
+            // mid-pass, but the operator should not find out only when the
+            // finished map looks wrong.
+            pnlSensor1Fill.BackColor = (y?.ChannelsDisagree ?? false)
+                ? OkabeIto.Orange
+                : Color.FromArgb(50, 200, 50);
 
             // Bar 2 — Moisture (0–30% range mapped to full bar width)
             const double MaxMoisture = 30.0;

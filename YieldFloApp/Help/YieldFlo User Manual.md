@@ -91,7 +91,7 @@ Left to right, as they appear on screen:
 
 Two horizontal bar gauges below the data panels:
 
-- **Elev Flow:** Grain obstruction percentage in the clean-grain elevator. Higher = more grain flowing.
+- **Elev Flow:** Grain obstruction percentage in the clean-grain elevator. Higher = more grain flowing. A **P** suffix means the paddle flow channel (see [Yield Calibration](#8-yield-calibration)) is driving the reading; the bar turns orange if the two flow channels disagree, which usually means the elevator is running well off the speed it was calibrated at.
 - **Moisture:** Relative moisture sensor reading scaled to a 0–30% range.
 
 ### Status bar
@@ -290,11 +290,19 @@ Next to the **Set Baseline** button, the **Noise** readout shows how many electr
 
 A rising noise value — especially one that climbs with elevator speed — indicates electrical interference on the sensor wire (static discharge from the elevator, a chafed or loose wire shaken by vibration, or pickup from nearby wiring). The module filters these glitches out of the yield reading automatically, but persistent noise is worth fixing at the source: check the sensor wire's routing and shielding, connector condition, and the ground path from the sensor bracket and elevator housing to the chassis. The readout works in both sensor signal modes, including Main only.
 
+On module firmware that reports the paddle flow channel, a second figure appears next to Noise: **R:n/s**, the rate of paddle cycles the module had to repair — merging a cycle a grain kernel split in two, or scaling a cycle where an edge was missed. This is not an electrical fault; a low, steady rate at high flow is normal. A high rate at low flow points to the sensor mounting or a damaged paddle rather than wiring.
+
 ### Paddle rate readout
 
-Below the **Set Baseline** button, the **Paddles** readout shows how many elevator paddles per second the sensor is seeing, averaged over the last 5 seconds. It shows **--** when no module is connected or the module firmware predates the feature.
+Below the **Set Baseline** button, the **Paddles** readout shows the paddle rate the sensor is seeing, and — separated by `>` — the reference rate captured the last time **Set Baseline** was run (e.g. "7.4 Hz > 7.4"). The reference reads **--** until a baseline has been set. It shows **--** entirely when no module is connected or the module firmware predates the feature.
 
-Use it to verify the sensor is catching every paddle: the value should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). On combines with another optical yield monitor sharing the sensor, the value can be compared directly against that monitor's sensor calibration result (for FarmTrx, the "X% @ Y Hz" line on its Sensor Calibration page).
+Use it to verify the sensor is catching every paddle: the live rate should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). A live rate that has drifted from the reference means the elevator is running off the speed it was calibrated at — expected with normal engine load changes, but worth investigating if it persists. On combines with another optical yield monitor sharing the sensor, the live rate can be compared directly against that monitor's sensor calibration result (for FarmTrx, the "X% @ Y Hz" line on its Sensor Calibration page).
+
+### Flow channel selection
+
+Module firmware that reports the paddle flow channel tracks grain flow per paddle rather than as a simple percent-of-time-blocked average, and adjusts automatically if elevator speed changes — normally the more accurate of the two readings, which is why it drives the yield figure automatically whenever the module provides it.
+
+The **Use paddle channel when available** checkbox (checked by default) controls this choice. Leave it checked for normal use. Uncheck it to force the simpler duty-only reading — useful as a fallback if the paddle reading looks wrong on your machine, or to compare the two methods directly. Like Sensor Baseline and Yield Factor, this setting is saved per profile and crop and only takes effect after **Save & Apply**.
 
 ### Processing delay
 

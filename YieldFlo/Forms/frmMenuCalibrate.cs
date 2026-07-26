@@ -20,6 +20,14 @@ namespace YieldFlo.Forms
         private const int BaselineSampleMs = 200;      // one module packet period
         private const int BaselineSampleCount = 25;    // ~5 seconds
 
+        // The nominal paddle rate is captured by the same run: Set Baseline is
+        // pressed with the elevator turning empty at working speed, which is
+        // precisely the condition that defines it. It normalises the paddle
+        // channel onto the duty channel's scale, so capturing it here keeps one
+        // YieldFactor valid for both and needs no separate operator step.
+        private readonly List<double> _refHzSamples = new List<double>();
+        private double _stagedRefPaddleHz;
+
         // Noise readout: rolling average of sampled packet counts. A steady
         // glitch rate quantizes to 4-or-5 per 200 ms packet, so the raw value
         // flutters (20/25); averaging ~5 s of samples steadies it.
@@ -121,6 +129,8 @@ namespace YieldFlo.Forms
                                 System.Math.Max((double)numBaseline.Minimum, y.SensorBaseline));
             numFactor.Value   = (decimal)System.Math.Min((double)numFactor.Maximum,
                                 System.Math.Max((double)numFactor.Minimum, y.YieldFactor));
+            _stagedRefPaddleHz = y.RefPaddleHz;
+            chkPreferPaddle.Checked = y.PreferPaddleChannel;
         }
 
         // FarmTrx-style "last calibration" stamp — when the current profile/crop's
@@ -141,6 +151,8 @@ namespace YieldFlo.Forms
             Core.Yield.ProcessingDelaySec = (int)numDelay.Value;
             Core.Yield.SensorBaseline     = (double)numBaseline.Value;
             Core.Yield.YieldFactor        = (double)numFactor.Value;
+            Core.Yield.RefPaddleHz        = _stagedRefPaddleHz;
+            Core.Yield.PreferPaddleChannel = chkPreferPaddle.Checked;
             Core.Yield.ResetSmoothing();
 
             Properties.Settings.Default.ProcessingDelaySec = (int)numDelay.Value;
@@ -152,7 +164,9 @@ namespace YieldFlo.Forms
                     Core.ActiveProfileId, Core.ActiveCropId,
                     (double)numBaseline.Value,
                     (double)numFactor.Value,
-                    (int)numDelay.Value);
+                    (int)numDelay.Value,
+                    _stagedRefPaddleHz,
+                    chkPreferPaddle.Checked);
             }
             UpdateSavedLabel();
 
@@ -252,24 +266,51 @@ namespace YieldFlo.Forms
             foreach (int s in _noiseSamples) sum += s;
             int perSec = (int)Math.Round(sum * 5.0 / _noiseSamples.Count);
 
-            lblNoise.Text = Lang.lgNoise + " " + perSec + "/s";
+            // Second figure "R:n" is the module's paddle-cycle repair rate —
+            // cycles it had to merge (a kernel bridged the inter-paddle gap and
+            // split one paddle in two) or scale (an edge was missed and two
+            // paddles came through as one). Unlike noise it is not an electrical
+            // fault: a low steady rate at high flow is normal. A high rate at
+            // low flow points at the sensor mounting or a damaged paddle.
+            int repairsPerSec = Core.PaddleChannelLive ? Core.LastFlowRejects * 5 : 0;
+            lblNoise.Text = Lang.lgNoise + " " + perSec + "/s"
+                + (Core.PaddleChannelLive ? "  R:" + repairsPerSec + "/s" : "");
             lblNoise.ForeColor = perSec > 0 ? Color.Orange : Color.Silver;
 
-            if (Core.LastPaddleHz < 0)
+            // Live paddle rate. The paddle-event frame carries it at full
+            // resolution five times a second; the 1 Hz whole-Hz field is the
+            // fallback for firmware that sends no paddle frame, and needs the
+            // rolling average to recover the fraction it rounded away.
+            string live = null;
+            if (Core.PaddleChannelLive && Core.LastPaddlesPerS > 0)
             {
-                // module firmware predates the paddle_hz field
                 _hzSamples.Clear();
-                lblPaddleHz.Text = Lang.lgPaddles + " --";
+                live = Core.LastPaddlesPerS.ToString("0.0");
             }
-            else
+            else if (Core.LastPaddleHz >= 0)
             {
                 _hzSamples.Enqueue(Core.LastPaddleHz);
                 while (_hzSamples.Count > NoiseSampleCount) _hzSamples.Dequeue();
 
                 double hzSum = 0;
                 foreach (int s in _hzSamples) hzSum += s;
-                lblPaddleHz.Text = Lang.lgPaddles + " " + (hzSum / _hzSamples.Count).ToString("0.0") + " Hz";
+                live = (hzSum / _hzSamples.Count).ToString("0.0");
             }
+            else
+            {
+                // module firmware predates the paddle_hz field
+                _hzSamples.Clear();
+            }
+
+            // "7.4 Hz > 7.4" — measured now, then the stored nominal rate the
+            // paddle channel is normalised against. A large gap between them
+            // means the elevator is not at the speed the machine was calibrated
+            // at, which the paddle channel corrects for and the duty channel
+            // cannot; a dash means it has never been captured.
+            string reference = _stagedRefPaddleHz > 0 ? _stagedRefPaddleHz.ToString("0.0") : "--";
+            lblPaddleHz.Text = live == null
+                ? Lang.lgPaddles + " --"
+                : Lang.lgPaddles + " " + live + " Hz > " + reference;
         }
 
         private void UpdateCalMeasuredLabel()
@@ -330,6 +371,7 @@ namespace YieldFlo.Forms
             // instantaneous read can catch a spiked packet (e.g. a no-pulse
             // 100% reading) and store a baseline far off the true idle ratio.
             _baselineSamples.Clear();
+            _refHzSamples.Clear();
 
             // Left enabled during sampling — the re-entrancy check above already
             // blocks a second press, and disabling would render the countdown
@@ -345,7 +387,16 @@ namespace YieldFlo.Forms
 
         private void BaselineTimer_Tick(object sender, EventArgs e)
         {
-            _baselineSamples.Add(Core.LastSensor1);
+            // Prefer the paddle channel's mean per-paddle obstruction over the
+            // windowed duty ratio. Both are on the same scale, but the paddle
+            // figure is the empty-paddle constant the baseline is meant to be,
+            // measured per paddle and with split/merged cycles already repaired,
+            // rather than a time average that also carries whatever the beam did
+            // between paddles.
+            bool paddle = Core.PaddleChannelLive && Core.LastPaddlesPerS > 0;
+            _baselineSamples.Add(paddle ? Core.LastFlowRate / Core.LastPaddlesPerS
+                                        : Core.LastSensor1);
+            if (paddle) _refHzSamples.Add(Core.LastPaddlesPerS);
 
             int secondsLeft = (BaselineSampleCount - _baselineSamples.Count) * BaselineSampleMs / 1000;
             btnSetBaseline.Text = Lang.lgSetBaseline + " " + (secondsLeft + 1);
@@ -362,6 +413,16 @@ namespace YieldFlo.Forms
             decimal clamped = (decimal)Math.Min((double)numBaseline.Maximum,
                                Math.Max((double)numBaseline.Minimum, median));
             numBaseline.Value = clamped;
+
+            // Nominal paddle rate from the same run — median for the same reason
+            // the baseline uses one. Only replaced if the paddle channel was
+            // actually live for most of the run; a couple of stray samples must
+            // not overwrite a good stored value with a half-measured one.
+            if (_refHzSamples.Count > BaselineSampleCount / 2)
+            {
+                _refHzSamples.Sort();
+                _stagedRefPaddleHz = Math.Round(_refHzSamples[_refHzSamples.Count / 2], 2);
+            }
 
             // Staged only — nothing reaches Core.Yield or the database until
             // Save & Apply is pressed. A Calibration Run started before that

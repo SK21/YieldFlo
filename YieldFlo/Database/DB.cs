@@ -116,7 +116,9 @@ CREATE TABLE IF NOT EXISTS calibrations (
     sensor_baseline      REAL    NOT NULL DEFAULT 0,
     yield_factor         REAL    NOT NULL DEFAULT 1,
     processing_delay_sec INTEGER NOT NULL DEFAULT 10,
-    calibrated_at        TEXT    NOT NULL DEFAULT (datetime('now'))
+    calibrated_at        TEXT    NOT NULL DEFAULT (datetime('now')),
+    ref_paddle_hz        REAL    NOT NULL DEFAULT 0,
+    prefer_paddle_channel INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS yield_data (
@@ -135,7 +137,10 @@ CREATE TABLE IF NOT EXISTS yield_data (
     sensor2_raw        REAL    NOT NULL DEFAULT 0,
     rpm                INTEGER NOT NULL DEFAULT 0,
     paddle_hz          INTEGER NOT NULL DEFAULT -1,
-    min_cycle_ms       INTEGER NOT NULL DEFAULT -1
+    min_cycle_ms       INTEGER NOT NULL DEFAULT -1,
+    flow_rate          REAL    NOT NULL DEFAULT -1,
+    paddles_per_s      REAL    NOT NULL DEFAULT -1,
+    flow_flags         INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
@@ -207,6 +212,45 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
             {
                 using var cmd = new SQLiteCommand(
                     "ALTER TABLE yield_data ADD COLUMN min_cycle_ms INTEGER NOT NULL DEFAULT -1;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            // Paddle-event channel. Added in this order so the column positions
+            // match the CREATE TABLE above — YieldDataRepo.GetByJob reads
+            // SELECT * by ordinal, so a fresh database and a migrated one must
+            // end up with the same layout.
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE yield_data ADD COLUMN flow_rate REAL NOT NULL DEFAULT -1;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE yield_data ADD COLUMN paddles_per_s REAL NOT NULL DEFAULT -1;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE yield_data ADD COLUMN flow_flags INTEGER NOT NULL DEFAULT 0;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE calibrations ADD COLUMN ref_paddle_hz REAL NOT NULL DEFAULT 0;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE calibrations ADD COLUMN prefer_paddle_channel INTEGER NOT NULL DEFAULT 1;", conn);
                 cmd.ExecuteNonQuery();
             }
             catch { }

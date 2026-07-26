@@ -20,8 +20,15 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 24076         // firmware version — update with every build (DDMMY format)
+#define InoID 26076         // firmware version — update with every build (DDMMY format)
 #define StructVersion 4     // EEPROM layout version — increment ONLY when ModuleData fields change
+
+// Paddle pitch of the clean-grain elevator chain, mm. NOT used in any
+// calculation — the wire payload is deliberately pitch-free (see Flow.ino) so a
+// wrong value here can never bias the yield. It is printed at boot as the
+// conversion factor an operator needs to read the paddle channel as a grain
+// column speed:  mm/s = flow_sum/1000 / window_s × PaddlePitchMm.
+const uint16_t PaddlePitchMm = 190;
 
 // Comm modes
 const uint8_t CommModeWifi = 0;
@@ -50,6 +57,7 @@ void IRAM_ATTR onADSReady()
 void IRAM_ATTR onSensorEdge();
 void IRAM_ATTR onRPMedge();
 void IRAM_ATTR CommitEdge(bool blocked, uint32_t at);
+void IRAM_ATTR AccountPaddle(uint32_t cyc, uint32_t blockedUs);
 
 // optical sensor ISR state — ratio is accounted per signal CYCLE (closed at each
 // clear→blocked edge), so the reported value is exact at any pulse rate and a
@@ -66,6 +74,46 @@ volatile uint16_t PaddleCycles = 0;		// completed paddle cycles since last TakeP
 volatile uint32_t MinCycleUs = 0xFFFFFFFF;	// shortest completed paddle cycle since last TakeMinCycleMs()
 bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
+
+// ── Paddle-event channel ─────────────────────────────────────────────────
+// Second, independent reduction of the SAME committed edge stream. The duty
+// channel above answers "what fraction of the time is the beam blocked"; this
+// one answers "how much beam obstruction went past, per paddle". They differ
+// exactly where the duty channel is weakest — a paddle cycle split in two by a
+// kernel bridging the inter-paddle gap, a missed edge merging two paddles into
+// one, or the elevator running off its nominal speed — so disagreement between
+// them is a usable fault signal rather than redundancy. Nothing here feeds back
+// into the duty channel: its numbers are bit-identical to the previous firmware.
+volatile uint32_t PeriodEmaUs = 0;			// running mean accepted paddle period (µs)
+volatile uint32_t CarryCycUs = 0;			// duration of a too-short cycle held for merging
+volatile uint32_t CarryBlockedUs = 0;		// its blocked µs, carried with it
+volatile uint32_t WinFlowSumX1000 = 0;		// Σ(per-paddle duty × pitches spanned) × 1000
+volatile uint32_t WinAccountedUs = 0;		// Σ duration of accepted paddle cycles
+volatile uint16_t WinPaddles = 0;			// Σ pitches spanned by accepted cycles
+volatile uint16_t WinRejects = 0;			// cycles merged, resynced or scaled this window
+volatile uint16_t WinSatPaddles = 0;		// paddles at/above SatDutyX1000
+
+// Per-paddle duty at or above this is saturated: the beam is blocked for
+// essentially the whole pitch, so extra grain adds no signal and the channel
+// under-reads. Reported so the app can flag it instead of mapping a false low.
+const uint16_t SatDutyX1000 = 900;
+
+// Cycle length limits, as a fraction of the running period estimate. Below
+// MinCycNum/MinCycDen the cycle is a fragment and is carried into the next one.
+// MaxPitchSpan caps how many paddles one cycle may be credited with, so a beam
+// parked blocked cannot inject a large phantom flow.
+const uint32_t MinCycNum = 1;
+const uint32_t MinCycDen = 2;		// < 0.5 × period estimate = fragment
+const uint32_t MaxPitchSpan = 8;
+
+// Snapshots taken by ReadFlow() for the 5 Hz paddle packet
+bool     FlowValid = false;		// at least one paddle accounted this window
+uint16_t FlowSumX1000 = 0;		// Σ(duty × pitches) × 1000
+uint16_t FlowAccountedMs = 0;	// ms of window time inside accepted cycles
+uint8_t  FlowPaddles = 0;		// pitches accounted
+uint8_t  FlowRejects = 0;
+uint8_t  FlowSatPaddles = 0;
+bool     FlowUnaccounted = false;	// >25% of the window fell outside accepted cycles
 
 // Glitch filter: an edge is committed only after the state it starts survives
 // GlitchMinUs. EMI pulses are ~0.1 ms wide; the shortest real paddle segment
@@ -166,6 +214,8 @@ const uint16_t SendTimePK1 = 200;  // ms = 5 Hz  (main data packet)
 uint32_t       SendLastPK1 = SendTimePK1;
 const uint16_t SendTimePK2 = 1000; // ms = 1 Hz  (temperature packet)
 uint32_t       SendLastPK2 = SendTimePK2;
+const uint16_t SendTimePK3 = 200;  // ms = 5 Hz  (paddle-event flow packet — same
+uint32_t       SendLastPK3 = SendTimePK3;   // window as PK1 so both channels pair up)
 
 void setup()
 {

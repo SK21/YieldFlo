@@ -112,6 +112,14 @@ void DoSetup()
 	SegStartUs = LastEdgeUs;
 	Serial.println(UseCompSignal ? "OK (Main + Comp)." : "OK (Main only).");
 
+	// Both flow channels run off this one edge stream — duty on PK1, paddle
+	// events on PK3. The pitch is not used in either calculation; it is the
+	// factor that turns the PK3 flow rate into a grain column speed in mm/s.
+	Serial.println("Flow channels: duty (PK1 0x18FF00F8) + paddle events (PK3 0x18FF02F8).");
+	Serial.print("Paddle pitch (display only): ");
+	Serial.print(PaddlePitchMm);
+	Serial.println(" mm");
+
 	// Debug LED — active-low onboard LED on PC13 mirrors the beam state
 	if (DebugLED)
 	{
