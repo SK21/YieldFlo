@@ -336,7 +336,10 @@ namespace YieldFlo.Classes
                 Moisture = moisture,
                 AcresAccumulated = TotalAcres,
                 Sensor1Raw = Core.LastSensor1,
-                Sensor2Raw = Core.LastNoiseCount
+                Sensor2Raw = Core.LastNoiseCount,
+                ModuleRpm = Core.LastModuleRpm,
+                PaddleHz = Core.LastPaddleHz,
+                MinCycleMs = Core.LastMinCycleMs
             };
 
             Core.Database?.YieldData.Insert(point);

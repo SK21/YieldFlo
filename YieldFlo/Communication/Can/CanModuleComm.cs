@@ -106,6 +106,7 @@ namespace YieldFlo.Communication.Can
             byte flags = d[0];
             ushort ratio = (ushort)(d[1] | (d[2] << 8));
             ushort moisture = (ushort)(d[3] | (d[4] << 8));
+            ushort rpm = (ushort)(d[5] | (d[6] << 8));
             byte noise = d[7];
 
             bool s1Ok = (flags & 0x01) != 0;
@@ -113,6 +114,7 @@ namespace YieldFlo.Communication.Can
 
             Core.LastSensor1  = s1Ok       ? ratio    / 1000.0              : 0;
             Core.LastMoisture = moistureOk ? moisture * Core.ActiveMoistScale : 0;
+            Core.LastModuleRpm = rpm;
             Core.LastNoiseCount = noise;
             Core.ModuleConnected = true;
             Core.LastModuleReceive = DateTime.UtcNow;
@@ -123,10 +125,11 @@ namespace YieldFlo.Communication.Can
         private void ParseTempData(byte[] d)
         {
             // Temperature frame (0x18FF01F8), DLC=8:
-            // [0]   flags  bit0=TempOK, bit1=PaddleHzPresent
+            // [0]   flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent
             // [1-2] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
             // [3]   paddle_hz uint8  (paddles/s — only when bit1 set)
-            // [4-7] reserved / zero
+            // [4]   min_cycle_ms uint8  (shortest paddle cycle this window, ms — only when bit2 set)
+            // [5-7] reserved / zero
             bool tempOk = (d[0] & 0x01) != 0;
             short tempRaw = (short)(d[1] | (d[2] << 8));
 
@@ -134,6 +137,9 @@ namespace YieldFlo.Communication.Can
 
             bool hzOk = (d[0] & 0x02) != 0 && d.Length >= 4;
             Core.LastPaddleHz = hzOk ? d[3] : -1;
+
+            bool minCycleOk = (d[0] & 0x04) != 0 && d.Length >= 5;
+            Core.LastMinCycleMs = minCycleOk ? d[4] : -1;
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)

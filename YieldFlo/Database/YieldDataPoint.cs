@@ -17,5 +17,8 @@ namespace YieldFlo.Database
         public double AcresAccumulated { get; set; }
         public double Sensor1Raw { get; set; }
         public double Sensor2Raw { get; set; }
+        public int ModuleRpm { get; set; }      // elevator RPM from the module packet; fixed reference 200 when no RPM sensor fitted
+        public int PaddleHz { get; set; } = -1;      // paddles/s from the 1 Hz packet; -1 = not reported
+        public int MinCycleMs { get; set; } = -1;    // shortest completed paddle cycle in the 1 Hz packet's window, ms; -1 = not reported
     }
 }

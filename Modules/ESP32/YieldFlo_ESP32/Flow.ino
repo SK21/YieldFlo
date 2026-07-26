@@ -57,6 +57,7 @@ void IRAM_ATTR CommitEdge(bool blocked, uint32_t at)
 				WinBlockedUs += CycBlockedUs;
 				WinTotalUs   += cyc;
 				PaddleCycles++;
+				if (cyc < MinCycleUs) MinCycleUs = cyc;
 			}
 		}
 		CycStartUs = at;
@@ -101,6 +102,22 @@ uint8_t TakePaddleHz()
 
 	uint32_t hz = ((uint32_t)c * 1000 + elapsed / 2) / elapsed;
 	return (hz > 255) ? 255 : (uint8_t)hz;
+}
+
+// Shortest completed paddle cycle for the 1 Hz packet, in ms (255 = none
+// completed this window, or genuinely >=255ms). A cycle much shorter than
+// the elevator's normal paddle period means a spurious edge — e.g. a grain
+// kernel bridging the inter-paddle gap — got committed as if it were a
+// full paddle cycle.
+uint8_t TakeMinCycleMs()
+{
+	noInterrupts();
+	uint32_t m = MinCycleUs;  MinCycleUs = 0xFFFFFFFF;
+	interrupts();
+
+	if (m == 0xFFFFFFFF) return 255;
+	uint32_t ms = m / 1000;
+	return (ms > 255) ? 255 : (uint8_t)ms;
 }
 
 void ReadFlow()

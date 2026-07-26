@@ -123,10 +123,12 @@ namespace YieldFlo.Database
                 using var cmd = new SQLiteCommand(@"
 INSERT INTO yield_data
     (job_id, timestamp, latitude, longitude, elevation, speed, heading,
-     yield_rate, moisture, acres_accumulated, sensor1_raw, sensor2_raw)
+     yield_rate, moisture, acres_accumulated, sensor1_raw, sensor2_raw,
+     rpm, paddle_hz, min_cycle_ms)
 VALUES
     (@jid, @ts, @lat, @lon, @elev, @spd, @hdg,
-     @yr, @mst, @ac, @s1, @s2)", conn);
+     @yr, @mst, @ac, @s1, @s2,
+     @rpm, @phz, @mcm)", conn);
                 cmd.Parameters.AddWithValue("@jid", pt.JobId);
                 cmd.Parameters.AddWithValue("@ts", pt.Timestamp.ToString("o"));
                 cmd.Parameters.AddWithValue("@lat", pt.Latitude);
@@ -139,6 +141,9 @@ VALUES
                 cmd.Parameters.AddWithValue("@ac", pt.AcresAccumulated);
                 cmd.Parameters.AddWithValue("@s1", pt.Sensor1Raw);
                 cmd.Parameters.AddWithValue("@s2", pt.Sensor2Raw);
+                cmd.Parameters.AddWithValue("@rpm", pt.ModuleRpm);
+                cmd.Parameters.AddWithValue("@phz", pt.PaddleHz);
+                cmd.Parameters.AddWithValue("@mcm", pt.MinCycleMs);
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -172,7 +177,10 @@ VALUES
                     Moisture = reader.GetDouble(9),
                     AcresAccumulated = reader.GetDouble(10),
                     Sensor1Raw = reader.GetDouble(11),
-                    Sensor2Raw = reader.GetDouble(12)
+                    Sensor2Raw = reader.GetDouble(12),
+                    ModuleRpm = reader.GetInt32(13),
+                    PaddleHz = reader.GetInt32(14),
+                    MinCycleMs = reader.GetInt32(15)
                 });
             }
             return result;

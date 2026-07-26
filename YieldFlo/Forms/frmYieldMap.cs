@@ -489,7 +489,7 @@ namespace YieldFlo.Forms
             if (dt <= 0 || dt > MaxBridgeSeconds) return;
 
             var corners = ComputeSegmentCorners(
-                a.Latitude, a.Longitude, b.Latitude, b.Longitude, _headerWidthM, MaxBridgeMeters);
+                a.Latitude, a.Longitude, b.Latitude, b.Longitude, a.Heading, b.Heading, _headerWidthM, MaxBridgeMeters);
             if (corners == null) return;   // points coincide or spatial gap too large
 
             double t   = Math.Max(0, Math.Min(1, (b.YieldRate - _scaleMin) / _scaleRange));
@@ -525,7 +525,8 @@ namespace YieldFlo.Forms
         // width, so consecutive segments share an edge and tile without gaps on
         // straight runs. Returns null if the points coincide (no direction).
         private static List<PointLatLng> ComputeSegmentCorners(
-            double lat1, double lon1, double lat2, double lon2, double widthM, double maxLenM)
+            double lat1, double lon1, double lat2, double lon2,
+            double heading1, double heading2, double widthM, double maxLenM)
         {
             double midLat  = (lat1 + lat2) / 2.0;
             double mPerLat = 111320.0;
@@ -536,10 +537,27 @@ namespace YieldFlo.Forms
             double len    = Math.Sqrt(dEast * dEast + dNorth * dNorth);
             if (len < 0.05 || len > maxLenM) return null;   // no movement, or gap too large to bridge
 
+            // Direction from the GPS-reported heading (circular mean of the two
+            // endpoints), not from the raw position delta: at typical 1 Hz point
+            // spacing and harvest speed, consecutive fixes are only ~1m apart, and
+            // ordinary GPS position noise is a large fraction of that — differencing
+            // position swung the computed bearing by up to ~175° between segments
+            // (verified against a real job log), producing a herringbone/zigzag
+            // ribbon on a dead-straight pass. AOG's own heading stayed within ~1-2°
+            // step to step on the same data.
+            double h1 = heading1 * Math.PI / 180.0;
+            double h2 = heading2 * Math.PI / 180.0;
+            double sinAvg = (Math.Sin(h1) + Math.Sin(h2)) / 2.0;
+            double cosAvg = (Math.Cos(h1) + Math.Cos(h2)) / 2.0;
+            double mag = Math.Sqrt(sinAvg * sinAvg + cosAvg * cosAvg);
+            double uE, uN;
+            if (mag > 1e-6) { uE = sinAvg / mag; uN = cosAvg / mag; }
+            else { uE = dEast / len; uN = dNorth / len; }   // headings ~180° apart — fall back to position delta
+
             // Unit perpendicular (travel direction rotated 90°), scaled to half width.
             double hW    = widthM / 2.0;
-            double pLat  = ( dEast  / len) * hW / mPerLat;
-            double pLon  = (-dNorth / len) * hW / mPerLon;
+            double pLat  = uE * hW / mPerLat;
+            double pLon  = -uN * hW / mPerLon;
 
             return new List<PointLatLng>
             {

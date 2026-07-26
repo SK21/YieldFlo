@@ -183,6 +183,7 @@ namespace YieldFlo.Communication
             byte flags = data[2];
             ushort ratio = BitConverter.ToUInt16(data, 3);
             ushort moistureRaw = BitConverter.ToUInt16(data, 5);
+            ushort rpm = BitConverter.ToUInt16(data, 7);
             byte noiseCount = data[9];
 
             bool s1Ok = (flags & 0x01) != 0;
@@ -190,6 +191,7 @@ namespace YieldFlo.Communication
 
             Core.LastSensor1 = s1Ok ? ratio / 1000.0 : 0;
             Core.LastMoisture = moistureOk ? moistureRaw * Core.ActiveMoistScale : 0;
+            Core.LastModuleRpm = rpm;
             Core.LastNoiseCount = noiseCount;
             Core.ModuleConnected = true;
             Core.LastModuleReceive = DateTime.UtcNow;
@@ -199,11 +201,12 @@ namespace YieldFlo.Communication
 
         private void ParseTempPacket(byte[] data)
         {
-            // Temperature packet (7 bytes; 6 from firmware before 13076):
+            // Temperature packet (8 bytes; 7 before min_cycle_ms added, 6 before paddle_hz):
             // [0-1]  PGN 40002 little-endian
-            // [2]    flags  bit0=TempOK, bit1=PaddleHzPresent
+            // [2]    flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent
             // [3-4]  temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
             // [5]    paddle_hz uint8  (paddles/s — only when bit1 set)
+            // [6]    min_cycle_ms uint8  (shortest paddle cycle this window, ms — only when bit2 set)
             // [last] CRC8
             if (data.Length < 6) return;
             if (!Core.Tls.GoodCRC(data)) return;
@@ -215,6 +218,9 @@ namespace YieldFlo.Communication
 
             bool hzOk = (data[2] & 0x02) != 0 && data.Length >= 7;
             Core.LastPaddleHz = hzOk ? data[5] : -1;
+
+            bool minCycleOk = (data[2] & 0x04) != 0 && data.Length >= 8;
+            Core.LastMinCycleMs = minCycleOk ? data[6] : -1;
         }
 
         // ── Socket callbacks ──────────────────────────────────────────────────

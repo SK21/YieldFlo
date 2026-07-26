@@ -86,8 +86,10 @@ void SendCANPK1()
 }
 
 // ── Second packet: temperature + paddle rate (1 Hz) ─────────────────────
-// ID 0x18FF01F8, DLC=8, [0]=flags bit0=TempOK bit1=PaddleHzPresent,
-// [1-2]=temp_raw int16 LE, [3]=paddle_hz uint8 (paddles/s), [4-7]=0
+// ID 0x18FF01F8, DLC=8, [0]=flags bit0=TempOK bit1=PaddleHzPresent
+// bit2=MinCycleMsPresent, [1-2]=temp_raw int16 LE, [3]=paddle_hz uint8
+// (paddles/s), [4]=min_cycle_ms uint8 (shortest paddle cycle this window,
+// ms; 255=none/clipped), [5-7]=0
 void SendCANPK2()
 {
 	if (millis() - SendLastPK2 > SendTimePK2)
@@ -97,6 +99,7 @@ void SendCANPK2()
 
 		byte flags = ADSfound ? 0x01 : 0x00;
 		flags |= 0x02;		// bit 1 — paddle_hz field present
+		flags |= 0x04;		// bit 2 — min_cycle_ms field present
 		int16_t temp = TemperatureReading;
 
 		CAN_msg_t msg = {};
@@ -108,6 +111,7 @@ void SendCANPK2()
 		msg.data[1] = (byte)(temp & 0xFF);
 		msg.data[2] = (byte)((temp >> 8) & 0xFF);
 		msg.data[3] = TakePaddleHz();
+		msg.data[4] = TakeMinCycleMs();
 
 		CANSend(&msg);
 	}

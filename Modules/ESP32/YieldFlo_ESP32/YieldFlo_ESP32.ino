@@ -62,6 +62,7 @@ volatile uint32_t SegStartUs = 0;		// micros() at start of the current blocked/c
 volatile bool BeamBlocked = false;		// current committed beam state
 volatile uint16_t NoiseCount = 0;		// rejected noise edges this window
 volatile uint16_t PaddleCycles = 0;		// completed paddle cycles since last TakePaddleHz()
+volatile uint32_t MinCycleUs = 0xFFFFFFFF;	// shortest completed paddle cycle since last TakeMinCycleMs()
 bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
 
