@@ -399,3 +399,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 Modules/ESP32/YieldFlo_ESP32/build/
+Modules/STM32F1/YieldFlo_STM32F1/build.bat
