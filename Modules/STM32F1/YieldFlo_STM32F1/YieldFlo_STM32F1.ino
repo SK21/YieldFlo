@@ -14,7 +14,7 @@
 // Build with USB support set to "None"; debug output is on USART1 (PA9/PA10).
 
 #define InoDescription "YieldFlo_STM32F1"
-#define InoID 13076         // firmware version — update with every build (DDMMY format)
+#define InoID 24076          // firmware version — update with every build (DDMMY format)
 
 // ── User settings (compile-time) ─────────────────────────────────────────
 const uint8_t ModuleID       = 0;     // module ID (informational)
@@ -48,6 +48,7 @@ int16_t MoistureReading = 0;
 int16_t TemperatureReading = 0;
 bool ADSfound = false;
 volatile bool ADSconversionReady = false;
+uint32_t LastADSReadMs = 0;   // set on every successful conversion-register read
 
 void onADSReady()
 {

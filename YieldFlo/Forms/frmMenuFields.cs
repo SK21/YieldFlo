@@ -42,8 +42,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor      = back;
             pnlContent.BackColor    = back;
             lblTitle.ForeColor      = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
             foreach (Control c in pnlContent.Controls)
             {
                 c.ForeColor = fore;
@@ -102,13 +100,13 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteFieldPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Fields.Delete(_editingId);
+            try { Core.Database.Fields.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseFieldListChanged();
             LoadList();
         }
 
         private void btnNew_Click(object sender, EventArgs e)         => ClearEdit();
-        private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
         private void btnFieldsClose_Click(object sender, EventArgs e) => this.Close();
 
         private void btnImport_Click(object sender, EventArgs e)

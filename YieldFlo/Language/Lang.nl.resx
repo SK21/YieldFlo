@@ -64,6 +64,7 @@
   <data name="lgNoActiveJob"   xml:space="preserve"><value>Geen actieve taak</value></data>
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Aan</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Uit</value></data>
+  <data name="lgDataWriteError" xml:space="preserve"><value> - OPSLAGFOUT</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Taak stoppen en sluiten?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Taak stoppen</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>
@@ -146,12 +147,15 @@ Zorg dat de elevator leeg loopt.</value></data>
   <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Minstens één taak vereist.</value></data>
   <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Taak "{0}" verwijderen?</value></data>
   <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Taak "{0}" is actief. Overschakelen naar "{1}"?</value></data>
+  <data name="lgCannotDeleteActiveJob" xml:space="preserve"><value>Taak "{0}" kan niet worden verwijderd terwijl deze actief is. Stop de taak eerst of schakel over.</value></data>
+  <data name="lgItemInUseByJob"    xml:space="preserve"><value>Verwijderen niet mogelijk — wordt gebruikt door een of meer taken.</value></data>
 
   <!-- Crops form -->
   <data name="lgCategoryLabel"    xml:space="preserve"><value>Categorie:</value></data>
   <data name="lgTestWeight"       xml:space="preserve"><value>Testgewicht:</value></data>
   <data name="lgMktMoisture"      xml:space="preserve"><value>Marktvochtgehalte:</value></data>
   <data name="lgEnterCropName"    xml:space="preserve"><value>Voer een gewasnaam in.</value></data>
+  <data name="lgTestWeightRequired" xml:space="preserve"><value>Voer een hectolitergewicht groter dan nul in.</value></data>
   <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Minstens één gewas vereist.</value></data>
   <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Dit gewas verwijderen?</value></data>
 

@@ -64,6 +64,7 @@
   <data name="lgNoActiveJob"   xml:space="preserve"><value>Aucun travail actif</value></data>
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Actif</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Inactif</value></data>
+  <data name="lgDataWriteError" xml:space="preserve"><value> - ERREUR D'ENREGISTREMENT</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Arrêter et fermer ce travail ?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Arrêter le travail</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>
@@ -146,12 +147,15 @@ S'assurer que l'élévateur tourne sans grain.</value></data>
   <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Au moins un travail requis.</value></data>
   <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Supprimer le travail « {0} » ?</value></data>
   <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Le travail « {0} » est actif. Passer à « {1} » ?</value></data>
+  <data name="lgCannotDeleteActiveJob" xml:space="preserve"><value>Impossible de supprimer le travail « {0} » pendant qu'il est actif. Arrêtez-le ou changez de travail d'abord.</value></data>
+  <data name="lgItemInUseByJob"    xml:space="preserve"><value>Suppression impossible — utilisé par un ou plusieurs travaux.</value></data>
 
   <!-- Crops form -->
   <data name="lgCategoryLabel"    xml:space="preserve"><value>Catégorie :</value></data>
   <data name="lgTestWeight"       xml:space="preserve"><value>Poids test :</value></data>
   <data name="lgMktMoisture"      xml:space="preserve"><value>Humidité marché :</value></data>
   <data name="lgEnterCropName"    xml:space="preserve"><value>Entrer un nom de culture.</value></data>
+  <data name="lgTestWeightRequired" xml:space="preserve"><value>Entrer un poids spécifique supérieur à zéro.</value></data>
   <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Au moins une culture requise.</value></data>
   <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Supprimer cette culture ?</value></data>
 

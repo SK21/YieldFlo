@@ -16,9 +16,9 @@ namespace YieldFlo.Forms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuSettings));
+            this.components = new System.ComponentModel.Container();
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.lblWifiInfo = new System.Windows.Forms.Label();
             this.lblUnits = new System.Windows.Forms.Label();
@@ -32,6 +32,8 @@ namespace YieldFlo.Forms
             this.lblCanPort = new System.Windows.Forms.Label();
             this.cbCanPort = new System.Windows.Forms.ComboBox();
             this.btnRescanPorts = new System.Windows.Forms.Button();
+            this.lblCanStatus = new System.Windows.Forms.Label();
+            this.tmrCanStatus = new System.Windows.Forms.Timer(this.components);
             this.lblResumeJob = new System.Windows.Forms.Label();
             this.btnResumeOn = new System.Windows.Forms.Button();
             this.btnResumeOff = new System.Windows.Forms.Button();
@@ -45,7 +47,6 @@ namespace YieldFlo.Forms
             // 
             this.pnlTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.pnlTitle.Controls.Add(this.lblTitle);
-            this.pnlTitle.Controls.Add(this.btnTitleClose);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(2, 2);
             this.pnlTitle.Name = "pnlTitle";
@@ -63,24 +64,9 @@ namespace YieldFlo.Forms
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Settings";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnTitleClose
-            // 
-            this.btnTitleClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
-            this.btnTitleClose.ForeColor = System.Drawing.Color.White;
-            this.btnTitleClose.Location = new System.Drawing.Point(512, 4);
-            this.btnTitleClose.Name = "btnTitleClose";
-            this.btnTitleClose.Size = new System.Drawing.Size(48, 40);
-            this.btnTitleClose.TabIndex = 1;
-            this.btnTitleClose.Text = "×";
-            this.btnTitleClose.UseVisualStyleBackColor = false;
-            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
-            // 
+            //
             // pnlContent
-            // 
+            //
             this.pnlContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.pnlContent.Controls.Add(this.lblWifiInfo);
             this.pnlContent.Controls.Add(this.lblUnits);
@@ -94,6 +80,7 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.lblCanPort);
             this.pnlContent.Controls.Add(this.cbCanPort);
             this.pnlContent.Controls.Add(this.btnRescanPorts);
+            this.pnlContent.Controls.Add(this.lblCanStatus);
             this.pnlContent.Controls.Add(this.lblResumeJob);
             this.pnlContent.Controls.Add(this.btnResumeOn);
             this.pnlContent.Controls.Add(this.btnResumeOff);
@@ -255,9 +242,25 @@ namespace YieldFlo.Forms
             this.btnRescanPorts.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnRescanPorts.UseVisualStyleBackColor = false;
             this.btnRescanPorts.Click += new System.EventHandler(this.btnRescanPorts_Click);
-            // 
+            //
+            // lblCanStatus
+            //
+            this.lblCanStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.lblCanStatus.ForeColor = System.Drawing.Color.Silver;
+            this.lblCanStatus.Location = new System.Drawing.Point(8, 256);
+            this.lblCanStatus.Name = "lblCanStatus";
+            this.lblCanStatus.Size = new System.Drawing.Size(400, 18);
+            this.lblCanStatus.TabIndex = 20;
+            this.lblCanStatus.Text = "Adapter: --";
+            //
+            // tmrCanStatus
+            //
+            this.tmrCanStatus.Enabled = true;
+            this.tmrCanStatus.Interval = 500;
+            this.tmrCanStatus.Tick += new System.EventHandler(this.tmrCanStatus_Tick);
+            //
             // lblResumeJob
-            // 
+            //
             this.lblResumeJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblResumeJob.ForeColor = System.Drawing.Color.Silver;
             this.lblResumeJob.Location = new System.Drawing.Point(8, 274);
@@ -347,7 +350,6 @@ namespace YieldFlo.Forms
 
         private System.Windows.Forms.Panel    pnlTitle;
         private System.Windows.Forms.Label    lblTitle;
-        private System.Windows.Forms.Button   btnTitleClose;
         private System.Windows.Forms.Panel    pnlContent;
         private System.Windows.Forms.Label    lblUnits;
         private System.Windows.Forms.Button   btnImperial;
@@ -361,6 +363,8 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label    lblCanPort;
         private System.Windows.Forms.ComboBox cbCanPort;
         private System.Windows.Forms.Button   btnRescanPorts;
+        private System.Windows.Forms.Label    lblCanStatus;
+        private System.Windows.Forms.Timer    tmrCanStatus;
         private System.Windows.Forms.Label    lblResumeJob;
         private System.Windows.Forms.Button   btnResumeOn;
         private System.Windows.Forms.Button   btnResumeOff;

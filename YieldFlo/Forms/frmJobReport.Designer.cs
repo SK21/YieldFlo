@@ -16,11 +16,11 @@ namespace YieldFlo.Forms
         {
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.lbJobs = new System.Windows.Forms.ListBox();
             this.lblReportJobName = new System.Windows.Forms.Label();
             this.lblReportField = new System.Windows.Forms.Label();
+            this.lblReportCrop = new System.Windows.Forms.Label();
             this.lblReportArea = new System.Windows.Forms.Label();
             this.lblReportTotal = new System.Windows.Forms.Label();
             this.lblReportAvgYield = new System.Windows.Forms.Label();
@@ -38,7 +38,6 @@ namespace YieldFlo.Forms
             // pnlTitle
             //
             this.pnlTitle.Controls.Add(this.lblTitle);
-            this.pnlTitle.Controls.Add(this.btnTitleClose);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(2, 2);
             this.pnlTitle.Name = "pnlTitle";
@@ -57,23 +56,12 @@ namespace YieldFlo.Forms
             this.lblTitle.Text = "Job Report";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             //
-            // btnTitleClose
-            //
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
-            this.btnTitleClose.Location = new System.Drawing.Point(512, 4);
-            this.btnTitleClose.Name = "btnTitleClose";
-            this.btnTitleClose.Size = new System.Drawing.Size(48, 40);
-            this.btnTitleClose.TabIndex = 1;
-            this.btnTitleClose.Text = "×";
-            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
-            //
             // pnlContent
             //
             this.pnlContent.Controls.Add(this.lbJobs);
             this.pnlContent.Controls.Add(this.lblReportJobName);
             this.pnlContent.Controls.Add(this.lblReportField);
+            this.pnlContent.Controls.Add(this.lblReportCrop);
             this.pnlContent.Controls.Add(this.lblReportNotesTitle);
             this.pnlContent.Controls.Add(this.lblReportNotes);
             this.pnlContent.Controls.Add(this.lblReportArea);
@@ -87,7 +75,7 @@ namespace YieldFlo.Forms
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(2, 50);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(560, 512);
+            this.pnlContent.Size = new System.Drawing.Size(560, 544);
             this.pnlContent.TabIndex = 0;
             //
             // lbJobs
@@ -117,10 +105,19 @@ namespace YieldFlo.Forms
             this.lblReportField.TabIndex = 2;
             this.lblReportField.Text = "Field: --";
             //
+            // lblReportCrop
+            //
+            this.lblReportCrop.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.lblReportCrop.Location = new System.Drawing.Point(8, 206);
+            this.lblReportCrop.Name = "lblReportCrop";
+            this.lblReportCrop.Size = new System.Drawing.Size(544, 28);
+            this.lblReportCrop.TabIndex = 13;
+            this.lblReportCrop.Text = "Crop: --";
+            //
             // lblReportArea
             //
             this.lblReportArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.lblReportArea.Location = new System.Drawing.Point(8, 206);
+            this.lblReportArea.Location = new System.Drawing.Point(8, 238);
             this.lblReportArea.Name = "lblReportArea";
             this.lblReportArea.Size = new System.Drawing.Size(544, 28);
             this.lblReportArea.TabIndex = 3;
@@ -129,7 +126,7 @@ namespace YieldFlo.Forms
             // lblReportTotal
             //
             this.lblReportTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.lblReportTotal.Location = new System.Drawing.Point(8, 238);
+            this.lblReportTotal.Location = new System.Drawing.Point(8, 270);
             this.lblReportTotal.Name = "lblReportTotal";
             this.lblReportTotal.Size = new System.Drawing.Size(544, 28);
             this.lblReportTotal.TabIndex = 4;
@@ -138,7 +135,7 @@ namespace YieldFlo.Forms
             // lblReportAvgYield
             //
             this.lblReportAvgYield.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.lblReportAvgYield.Location = new System.Drawing.Point(8, 270);
+            this.lblReportAvgYield.Location = new System.Drawing.Point(8, 302);
             this.lblReportAvgYield.Name = "lblReportAvgYield";
             this.lblReportAvgYield.Size = new System.Drawing.Size(544, 28);
             this.lblReportAvgYield.TabIndex = 5;
@@ -147,7 +144,7 @@ namespace YieldFlo.Forms
             // lblReportAvgMoist
             //
             this.lblReportAvgMoist.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.lblReportAvgMoist.Location = new System.Drawing.Point(8, 302);
+            this.lblReportAvgMoist.Location = new System.Drawing.Point(8, 334);
             this.lblReportAvgMoist.Name = "lblReportAvgMoist";
             this.lblReportAvgMoist.Size = new System.Drawing.Size(544, 28);
             this.lblReportAvgMoist.TabIndex = 6;
@@ -156,7 +153,7 @@ namespace YieldFlo.Forms
             // lblReportPoints
             //
             this.lblReportPoints.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.lblReportPoints.Location = new System.Drawing.Point(8, 334);
+            this.lblReportPoints.Location = new System.Drawing.Point(8, 366);
             this.lblReportPoints.Name = "lblReportPoints";
             this.lblReportPoints.Size = new System.Drawing.Size(544, 28);
             this.lblReportPoints.TabIndex = 7;
@@ -165,7 +162,7 @@ namespace YieldFlo.Forms
             // lblReportNotesTitle
             //
             this.lblReportNotesTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.lblReportNotesTitle.Location = new System.Drawing.Point(8, 366);
+            this.lblReportNotesTitle.Location = new System.Drawing.Point(8, 398);
             this.lblReportNotesTitle.Name = "lblReportNotesTitle";
             this.lblReportNotesTitle.Size = new System.Drawing.Size(544, 28);
             this.lblReportNotesTitle.TabIndex = 12;
@@ -174,7 +171,7 @@ namespace YieldFlo.Forms
             // lblReportNotes
             //
             this.lblReportNotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.lblReportNotes.Location = new System.Drawing.Point(8, 398);
+            this.lblReportNotes.Location = new System.Drawing.Point(8, 430);
             this.lblReportNotes.Name = "lblReportNotes";
             this.lblReportNotes.Size = new System.Drawing.Size(544, 50);
             this.lblReportNotes.TabIndex = 11;
@@ -184,7 +181,7 @@ namespace YieldFlo.Forms
             //
             this.btnExportCsv.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExportCsv.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnExportCsv.Location = new System.Drawing.Point(8, 456);
+            this.btnExportCsv.Location = new System.Drawing.Point(8, 488);
             this.btnExportCsv.Name = "btnExportCsv";
             this.btnExportCsv.Size = new System.Drawing.Size(180, 48);
             this.btnExportCsv.TabIndex = 8;
@@ -195,7 +192,7 @@ namespace YieldFlo.Forms
             //
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnPrint.Location = new System.Drawing.Point(196, 456);
+            this.btnPrint.Location = new System.Drawing.Point(196, 488);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(170, 48);
             this.btnPrint.TabIndex = 10;
@@ -206,7 +203,7 @@ namespace YieldFlo.Forms
             //
             this.btnReportClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReportClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnReportClose.Location = new System.Drawing.Point(374, 456);
+            this.btnReportClose.Location = new System.Drawing.Point(374, 488);
             this.btnReportClose.Name = "btnReportClose";
             this.btnReportClose.Size = new System.Drawing.Size(178, 48);
             this.btnReportClose.TabIndex = 9;
@@ -216,7 +213,7 @@ namespace YieldFlo.Forms
             // frmJobReport
             //
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(564, 564);
+            this.ClientSize = new System.Drawing.Size(564, 596);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -235,11 +232,11 @@ namespace YieldFlo.Forms
 
         private System.Windows.Forms.Panel   pnlTitle;
         private System.Windows.Forms.Label   lblTitle;
-        private System.Windows.Forms.Button  btnTitleClose;
         private System.Windows.Forms.Panel   pnlContent;
         private System.Windows.Forms.ListBox lbJobs;
         private System.Windows.Forms.Label   lblReportJobName;
         private System.Windows.Forms.Label   lblReportField;
+        private System.Windows.Forms.Label   lblReportCrop;
         private System.Windows.Forms.Label   lblReportArea;
         private System.Windows.Forms.Label   lblReportTotal;
         private System.Windows.Forms.Label   lblReportAvgYield;

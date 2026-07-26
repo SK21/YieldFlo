@@ -17,7 +17,6 @@ namespace YieldFlo.Forms
             this.components = new System.ComponentModel.Container();
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.lblCropLbl = new System.Windows.Forms.Label();
             this.cboCrop = new System.Windows.Forms.ComboBox();
@@ -68,7 +67,6 @@ namespace YieldFlo.Forms
             // pnlTitle
             // 
             this.pnlTitle.Controls.Add(this.lblTitle);
-            this.pnlTitle.Controls.Add(this.btnTitleClose);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(2, 2);
             this.pnlTitle.Name = "pnlTitle";
@@ -86,21 +84,9 @@ namespace YieldFlo.Forms
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Moisture Cal";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnTitleClose
-            // 
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold);
-            this.btnTitleClose.Location = new System.Drawing.Point(532, 4);
-            this.btnTitleClose.Name = "btnTitleClose";
-            this.btnTitleClose.Size = new System.Drawing.Size(48, 40);
-            this.btnTitleClose.TabIndex = 1;
-            this.btnTitleClose.Text = "×";
-            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
-            // 
+            //
             // pnlContent
-            // 
+            //
             this.pnlContent.Controls.Add(this.lblCropLbl);
             this.pnlContent.Controls.Add(this.cboCrop);
             this.pnlContent.Controls.Add(this.lblProfileLbl);
@@ -611,7 +597,6 @@ namespace YieldFlo.Forms
 
         private System.Windows.Forms.Panel         pnlTitle;
         private System.Windows.Forms.Label         lblTitle;
-        private System.Windows.Forms.Button        btnTitleClose;
         private System.Windows.Forms.Panel         pnlContent;
         private System.Windows.Forms.Label         lblCropLbl;
         private System.Windows.Forms.ComboBox      cboCrop;

@@ -470,7 +470,23 @@ namespace YieldFlo.Forms
             foreach (var d in oldGdi) d.Dispose();   // old polygons no longer referenced
 
             gmap.Refresh();
+            NudgeRepaint();
             if (center) CenterOnData(points);
+        }
+
+        // GMap.NET 1.7.5 quirk: swapping Overlays' *content* (Clear + Add a new
+        // GMapOverlay) while Position/Zoom/Size all stay unchanged does not
+        // actually repaint — gmap.Refresh() alone leaves the old polygons on
+        // screen (confirmed: btnRecalc_Click's rebuild never visibly updates
+        // until something resizes gmap, e.g. toggling mini/full mode via
+        // SetMiniMode's gmap.Bounds reassignment). A real Bounds change is what
+        // forces GMap.NET to redraw, so replicate that here with an invisible
+        // 1px nudge instead of relying on the caller to happen to resize/recenter.
+        private void NudgeRepaint()
+        {
+            var b = gmap.Bounds;
+            gmap.Bounds = new Rectangle(b.X, b.Y, Math.Max(1, b.Width - 1), b.Height);
+            gmap.Bounds = b;
         }
 
         // Adds one swath as a ribbon quad spanning from point a to point b, coloured

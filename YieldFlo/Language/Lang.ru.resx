@@ -64,6 +64,7 @@
   <data name="lgNoActiveJob"   xml:space="preserve"><value>Нет активного задания</value></data>
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Вкл</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Выкл</value></data>
+  <data name="lgDataWriteError" xml:space="preserve"><value> - ОШИБКА ЗАПИСИ</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Остановить и закрыть это задание?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Остановить задание</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Меню</value></data>
@@ -146,12 +147,15 @@
   <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Необходимо хотя бы одно задание.</value></data>
   <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Удалить задание «{0}»?</value></data>
   <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Задание «{0}» активно. Переключиться на «{1}»?</value></data>
+  <data name="lgCannotDeleteActiveJob" xml:space="preserve"><value>Невозможно удалить задание «{0}», пока оно активно. Сначала остановите его или переключитесь на другое задание.</value></data>
+  <data name="lgItemInUseByJob"    xml:space="preserve"><value>Невозможно удалить — используется в одном или нескольких заданиях.</value></data>
 
   <!-- Crops form -->
   <data name="lgCategoryLabel"    xml:space="preserve"><value>Категория:</value></data>
   <data name="lgTestWeight"       xml:space="preserve"><value>Удельная масса:</value></data>
   <data name="lgMktMoisture"      xml:space="preserve"><value>Рыночная влажность:</value></data>
   <data name="lgEnterCropName"    xml:space="preserve"><value>Введите название культуры.</value></data>
+  <data name="lgTestWeightRequired" xml:space="preserve"><value>Введите натурный вес больше нуля.</value></data>
   <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Необходима хотя бы одна культура.</value></data>
   <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Удалить эту культуру?</value></data>
 

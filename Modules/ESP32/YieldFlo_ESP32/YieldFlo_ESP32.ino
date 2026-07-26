@@ -20,7 +20,7 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 13076         // firmware version — update with every build (DDMMY format)
+#define InoID 24076         // firmware version — update with every build (DDMMY format)
 #define StructVersion 4     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 // Comm modes
@@ -38,6 +38,7 @@ int16_t MoistureReading = 0;
 int16_t TemperatureReading = 0;
 bool ADSfound = false;
 volatile bool ADSconversionReady = false;
+uint32_t LastADSReadMs = 0;   // set on every successful conversion-register read
 
 void IRAM_ATTR onADSReady()
 {

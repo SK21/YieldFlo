@@ -64,6 +64,7 @@
   <data name="lgNoActiveJob"   xml:space="preserve"><value>Brak aktywnego zadania</value></data>
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Wł.</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Wył.</value></data>
+  <data name="lgDataWriteError" xml:space="preserve"><value> - BŁĄD ZAPISU</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Zatrzymać i zamknąć to zadanie?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Zatrzymaj zadanie</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>
@@ -146,12 +147,15 @@ Upewnij się, że elewator pracuje bez ziarna.</value></data>
   <data name="lgMustHaveOneJob"    xml:space="preserve"><value>Wymagane jest co najmniej jedno zadanie.</value></data>
   <data name="lgDeleteJobPrompt"   xml:space="preserve"><value>Usunąć zadanie „{0}"?</value></data>
   <data name="lgSwitchJobPrompt"   xml:space="preserve"><value>Zadanie „{0}" jest aktywne. Przełączyć na „{1}"?</value></data>
+  <data name="lgCannotDeleteActiveJob" xml:space="preserve"><value>Nie można usunąć zadania „{0}", gdy jest aktywne. Najpierw zatrzymaj je lub przełącz zadanie.</value></data>
+  <data name="lgItemInUseByJob"    xml:space="preserve"><value>Nie można usunąć — jest używane przez co najmniej jedno zadanie.</value></data>
 
   <!-- Crops form -->
   <data name="lgCategoryLabel"    xml:space="preserve"><value>Kategoria:</value></data>
   <data name="lgTestWeight"       xml:space="preserve"><value>Masa testowa:</value></data>
   <data name="lgMktMoisture"      xml:space="preserve"><value>Wilgotność rynkowa:</value></data>
   <data name="lgEnterCropName"    xml:space="preserve"><value>Wprowadź nazwę uprawy.</value></data>
+  <data name="lgTestWeightRequired" xml:space="preserve"><value>Wprowadź masę objętościową większą od zera.</value></data>
   <data name="lgMustHaveOneCrop"  xml:space="preserve"><value>Wymagana jest co najmniej jedna uprawa.</value></data>
   <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Usunąć tę uprawę?</value></data>
 

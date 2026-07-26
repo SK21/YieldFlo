@@ -82,6 +82,7 @@ namespace YieldFlo.Language
         internal static string lgNoActiveJob   => Get("lgNoActiveJob");
         internal static string lgJobStatusOn   => Get("lgJobStatusOn");
         internal static string lgJobStatusOff  => Get("lgJobStatusOff");
+        internal static string lgDataWriteError => Get("lgDataWriteError");
         internal static string lgStopJobPrompt => Get("lgStopJobPrompt");
         internal static string lgStopJob       => Get("lgStopJob");
         internal static string lgMenu          => Get("lgMenu");
@@ -162,12 +163,15 @@ namespace YieldFlo.Language
         internal static string lgMustHaveOneJob    => Get("lgMustHaveOneJob");
         internal static string lgDeleteJobPrompt   => Get("lgDeleteJobPrompt");
         internal static string lgSwitchJobPrompt   => Get("lgSwitchJobPrompt");
+        internal static string lgCannotDeleteActiveJob => Get("lgCannotDeleteActiveJob");
+        internal static string lgItemInUseByJob    => Get("lgItemInUseByJob");
 
         // ── Crops form ───────────────────────────────────────────────────────
         internal static string lgCategoryLabel    => Get("lgCategoryLabel");
         internal static string lgTestWeight       => Get("lgTestWeight");
         internal static string lgMktMoisture      => Get("lgMktMoisture");
         internal static string lgEnterCropName    => Get("lgEnterCropName");
+        internal static string lgTestWeightRequired => Get("lgTestWeightRequired");
         internal static string lgMustHaveOneCrop  => Get("lgMustHaveOneCrop");
         internal static string lgDeleteCropPrompt => Get("lgDeleteCropPrompt");
 

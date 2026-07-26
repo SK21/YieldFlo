@@ -6,7 +6,7 @@
 			All non-arduino files created by visual micro and all visual studio project or solution files can be freely deleted and are not required to compile a sketch (do not delete your own code!).
 			Note: debugger breakpoints are stored in '.sln' or '.asln' files, knowledge of last uploaded breakpoints is stored in the upload.vmps.xml file. Both files are required to continue a previous debug session without needing to compile and upload again
 	
-	Hardware: DOIT ESP32 DEVKIT V1 (esp32_esp32doit-devkit-v1), Platform=esp32, Package=esp32
+	Hardware: Arduino Leonardo ETH (leonardoeth), Platform=avr, Package=arduino
 */
 
 #if defined(_VMICRO_INTELLISENSE)
@@ -18,5 +18,9 @@
 #include <arduino.h>
 #include <pins_arduino.h> 
 #include "..\YieldFlo_STM32F1.ino"
+#include "..\Analog.ino"
+#include "..\Begin.ino"
+#include "..\Comm.ino"
+#include "..\Flow.ino"
 #endif
 #endif

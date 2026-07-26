@@ -14,8 +14,8 @@ namespace YieldFlo.Forms
         private bool _dragging;
         private Point _dragStart;
 
-        private readonly List<(int id, string name, string startedAt, double acres, double volume, string fieldName, int cropId, int headerId, string notes)> _jobs
-            = new List<(int, string, string, double, double, string, int, int, string)>();
+        private readonly List<(int id, string name, string startedAt, double acres, double volume, string fieldName, string cropName, int cropId, int headerId, string notes)> _jobs
+            = new List<(int, string, string, double, double, string, string, int, int, string)>();
 
         private int _selectedJobId     = -1;
         private string _selectedName   = "";
@@ -59,8 +59,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor      = back;
             pnlContent.BackColor    = back;
             lblTitle.ForeColor      = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
 
             lbJobs.BackColor = ctrl;
             lbJobs.ForeColor = fore;
@@ -92,15 +90,20 @@ namespace YieldFlo.Forms
             foreach (var f in Core.Database.Fields.GetAll())
                 fieldMap[f.id] = f.name;
 
+            var cropMap = new System.Collections.Generic.Dictionary<int, string>();
+            foreach (var c in Core.Database.Crops.GetAll())
+                cropMap[c.id] = c.name;
+
             foreach (var j in Core.Database.Jobs.GetAll())
             {
                 string date  = j.startedAt.Length >= 10 ? j.startedAt.Substring(0, 10) : j.startedAt;
                 string fname = j.fieldId > 0 && fieldMap.TryGetValue(j.fieldId, out string fn) ? fn : "";
+                string cname = cropMap.TryGetValue(j.cropId, out string cn) ? cn : "";
                 string entry = string.IsNullOrEmpty(fname)
                     ? $"{j.name}  |  {date}  |  {j.status}"
                     : $"{j.name}  |  {date}  |  {j.status}  |  {fname}";
                 lbJobs.Items.Add(entry);
-                _jobs.Add((j.id, j.name, date, j.acres, j.volume, fname, j.cropId, j.headerId, j.notes));
+                _jobs.Add((j.id, j.name, date, j.acres, j.volume, fname, cname, j.cropId, j.headerId, j.notes));
             }
 
             int activeId  = Core.Collector?.ActiveJobId ?? -1;
@@ -124,6 +127,7 @@ namespace YieldFlo.Forms
 
             lblReportJobName.Text  = job.name;
             lblReportField.Text    = string.IsNullOrEmpty(job.fieldName) ? $"{Lang.lgFieldColon} --" : $"{Lang.lgFieldColon} {job.fieldName}";
+            lblReportCrop.Text     = string.IsNullOrEmpty(job.cropName)  ? $"{Lang.lgCrop} --"       : $"{Lang.lgCrop} {job.cropName}";
             lblReportNotes.Text         = job.notes;
             lblReportNotesTitle.Visible = !string.IsNullOrEmpty(job.notes);
             lblReportNotes.Visible      = !string.IsNullOrEmpty(job.notes);
@@ -165,6 +169,7 @@ namespace YieldFlo.Forms
             _selectedDate  = "";
             lblReportJobName.Text  = "--";
             lblReportField.Text    = $"{Lang.lgFieldColon} --";
+            lblReportCrop.Text     = $"{Lang.lgCrop} --";
             lblReportNotes.Text         = "";
             lblReportNotesTitle.Visible = false;
             lblReportNotes.Visible      = false;
@@ -220,11 +225,9 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobs.Count) return;
             var job = _jobs[idx];
 
-            // Resolve crop and header names
-            string cropName   = "";
+            // Resolve header description (crop name is already on the job tuple)
+            string cropName   = job.cropName;
             string headerDesc = "";
-            foreach (var c in Core.Database.Crops.GetAll())
-                if (c.id == job.cropId) { cropName = c.name; break; }
             foreach (var h in Core.Database.Headers.GetAll())
                 if (h.id == job.headerId)
                 {
@@ -304,7 +307,6 @@ namespace YieldFlo.Forms
             rtb.Dispose();
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e)    => this.Close();
         private void btnReportClose_Click(object sender, EventArgs e)   => this.Close();
     }
 }

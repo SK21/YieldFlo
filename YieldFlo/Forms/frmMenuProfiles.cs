@@ -56,8 +56,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor   = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor   = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
             lbProfiles.BackColor = ctrl;
             lbProfiles.ForeColor = fore;
             pnlEdit.BackColor    = back;
@@ -123,13 +121,13 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteProfilePrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Profiles.Delete(_editingId);
+            try { Core.Database.Profiles.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseProfileListChanged();
             LoadList();
             ClearEdit();
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e)    => this.Close();
         private void btnProfilesClose_Click(object sender, EventArgs e) => this.Close();
     }
 }

@@ -49,7 +49,6 @@ namespace YieldFlo.Forms
             this.pnlStatus = new System.Windows.Forms.Panel();
             this.lblStatusGPS = new System.Windows.Forms.Label();
             this.lblStatusModule = new System.Windows.Forms.Label();
-            this.lblStatusComm = new System.Windows.Forms.Label();
             this.lblStatusJob = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
             this.lblStatusMsg = new System.Windows.Forms.Label();
@@ -63,9 +62,9 @@ namespace YieldFlo.Forms
             this.pnlSensor2.SuspendLayout();
             this.pnlStatus.SuspendLayout();
             this.SuspendLayout();
-            //
-            // pnlToolbar — icon-only toolbar, width fitted to the icon row (no title label)
-            //
+            // 
+            // pnlToolbar
+            // 
             this.pnlToolbar.Controls.Add(this.btnMenu);
             this.pnlToolbar.Controls.Add(this.btnStart);
             this.pnlToolbar.Controls.Add(this.btnPause);
@@ -77,9 +76,9 @@ namespace YieldFlo.Forms
             this.pnlToolbar.Name = "pnlToolbar";
             this.pnlToolbar.Size = new System.Drawing.Size(398, 68);
             this.pnlToolbar.TabIndex = 3;
-            //
+            // 
             // btnMenu
-            //
+            // 
             this.btnMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnMenu.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -91,9 +90,9 @@ namespace YieldFlo.Forms
             this.btnMenu.TabIndex = 0;
             this.btnMenu.UseVisualStyleBackColor = false;
             this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
-            //
+            // 
             // btnStart
-            //
+            // 
             this.btnStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(110)))), ((int)(((byte)(0)))));
             this.btnStart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -105,9 +104,9 @@ namespace YieldFlo.Forms
             this.btnStart.TabIndex = 1;
             this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            //
+            // 
             // btnPause
-            //
+            // 
             this.btnPause.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(88)))), ((int)(((byte)(0)))));
             this.btnPause.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -119,9 +118,9 @@ namespace YieldFlo.Forms
             this.btnPause.TabIndex = 2;
             this.btnPause.UseVisualStyleBackColor = false;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
-            //
+            // 
             // btnStop
-            //
+            // 
             this.btnStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -133,9 +132,9 @@ namespace YieldFlo.Forms
             this.btnStop.TabIndex = 3;
             this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            //
+            // 
             // btnExit
-            //
+            // 
             this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
             this.btnExit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -147,9 +146,9 @@ namespace YieldFlo.Forms
             this.btnExit.TabIndex = 4;
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            //
+            // 
             // btnMini
-            //
+            // 
             this.btnMini.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
             this.btnMini.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnMini.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -161,9 +160,9 @@ namespace YieldFlo.Forms
             this.btnMini.TabIndex = 6;
             this.btnMini.UseVisualStyleBackColor = false;
             this.btnMini.Click += new System.EventHandler(this.btnMini_Click);
-            //
-            // pnlGauges — Yield / Moisture only (Speed removed, not needed for this app)
-            //
+            // 
+            // pnlGauges
+            // 
             this.pnlGauges.Controls.Add(this.pnlYield);
             this.pnlGauges.Controls.Add(this.pnlMoisture);
             this.pnlGauges.Dock = System.Windows.Forms.DockStyle.Top;
@@ -171,9 +170,9 @@ namespace YieldFlo.Forms
             this.pnlGauges.Name = "pnlGauges";
             this.pnlGauges.Size = new System.Drawing.Size(398, 132);
             this.pnlGauges.TabIndex = 2;
-            //
+            // 
             // pnlYield
-            //
+            // 
             this.pnlYield.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlYield.Controls.Add(this.lblYieldUnit);
             this.pnlYield.Controls.Add(this.lblYield);
@@ -182,9 +181,9 @@ namespace YieldFlo.Forms
             this.pnlYield.Name = "pnlYield";
             this.pnlYield.Size = new System.Drawing.Size(216, 128);
             this.pnlYield.TabIndex = 0;
-            //
+            // 
             // lblYieldUnit
-            //
+            // 
             this.lblYieldUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblYieldUnit.ForeColor = System.Drawing.Color.White;
             this.lblYieldUnit.Location = new System.Drawing.Point(0, 100);
@@ -193,9 +192,9 @@ namespace YieldFlo.Forms
             this.lblYieldUnit.TabIndex = 0;
             this.lblYieldUnit.Text = "bu/ac";
             this.lblYieldUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblYield
-            //
+            // 
             this.lblYield.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.lblYield.Location = new System.Drawing.Point(0, 28);
             this.lblYield.Name = "lblYield";
@@ -203,9 +202,9 @@ namespace YieldFlo.Forms
             this.lblYield.TabIndex = 1;
             this.lblYield.Text = "--.-";
             this.lblYield.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblYieldTitle
-            //
+            // 
             this.lblYieldTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblYieldTitle.Location = new System.Drawing.Point(0, 0);
             this.lblYieldTitle.Name = "lblYieldTitle";
@@ -213,9 +212,9 @@ namespace YieldFlo.Forms
             this.lblYieldTitle.TabIndex = 2;
             this.lblYieldTitle.Text = "YIELD";
             this.lblYieldTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // pnlMoisture
-            //
+            // 
             this.pnlMoisture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlMoisture.Controls.Add(this.lblMoistureUnit);
             this.pnlMoisture.Controls.Add(this.lblMoisture);
@@ -224,9 +223,9 @@ namespace YieldFlo.Forms
             this.pnlMoisture.Name = "pnlMoisture";
             this.pnlMoisture.Size = new System.Drawing.Size(176, 128);
             this.pnlMoisture.TabIndex = 1;
-            //
+            // 
             // lblMoistureUnit
-            //
+            // 
             this.lblMoistureUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblMoistureUnit.ForeColor = System.Drawing.Color.White;
             this.lblMoistureUnit.Location = new System.Drawing.Point(0, 100);
@@ -235,9 +234,9 @@ namespace YieldFlo.Forms
             this.lblMoistureUnit.TabIndex = 0;
             this.lblMoistureUnit.Text = "%";
             this.lblMoistureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblMoisture
-            //
+            // 
             this.lblMoisture.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold);
             this.lblMoisture.Location = new System.Drawing.Point(0, 28);
             this.lblMoisture.Name = "lblMoisture";
@@ -245,9 +244,9 @@ namespace YieldFlo.Forms
             this.lblMoisture.TabIndex = 1;
             this.lblMoisture.Text = "--.-";
             this.lblMoisture.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblMoistureTitle
-            //
+            // 
             this.lblMoistureTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblMoistureTitle.Location = new System.Drawing.Point(0, 0);
             this.lblMoistureTitle.Name = "lblMoistureTitle";
@@ -255,9 +254,9 @@ namespace YieldFlo.Forms
             this.lblMoistureTitle.TabIndex = 2;
             this.lblMoistureTitle.Text = "MOISTURE";
             this.lblMoistureTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
-            // pnlTotals — 2x2 stacked (form is too narrow now for 4 across)
-            //
+            // 
+            // pnlTotals
+            // 
             this.pnlTotals.Controls.Add(this.lblTotRate);
             this.pnlTotals.Controls.Add(this.lblWorkRate);
             this.pnlTotals.Controls.Add(this.lblTotTotal);
@@ -267,9 +266,9 @@ namespace YieldFlo.Forms
             this.pnlTotals.Name = "pnlTotals";
             this.pnlTotals.Size = new System.Drawing.Size(398, 64);
             this.pnlTotals.TabIndex = 1;
-            //
+            // 
             // lblTotRate
-            //
+            // 
             this.lblTotRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblTotRate.ForeColor = System.Drawing.Color.Silver;
             this.lblTotRate.Location = new System.Drawing.Point(0, 0);
@@ -278,9 +277,9 @@ namespace YieldFlo.Forms
             this.lblTotRate.TabIndex = 0;
             this.lblTotRate.Text = "0.0 bu/ac";
             this.lblTotRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblWorkRate
-            //
+            // 
             this.lblWorkRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblWorkRate.ForeColor = System.Drawing.Color.Silver;
             this.lblWorkRate.Location = new System.Drawing.Point(0, 32);
@@ -289,9 +288,9 @@ namespace YieldFlo.Forms
             this.lblWorkRate.TabIndex = 1;
             this.lblWorkRate.Text = "0.0 bu/hr";
             this.lblWorkRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblTotTotal
-            //
+            // 
             this.lblTotTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblTotTotal.ForeColor = System.Drawing.Color.Silver;
             this.lblTotTotal.Location = new System.Drawing.Point(199, 0);
@@ -300,9 +299,9 @@ namespace YieldFlo.Forms
             this.lblTotTotal.TabIndex = 2;
             this.lblTotTotal.Text = "0 bu";
             this.lblTotTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblTotArea
-            //
+            // 
             this.lblTotArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.lblTotArea.ForeColor = System.Drawing.Color.Silver;
             this.lblTotArea.Location = new System.Drawing.Point(199, 32);
@@ -311,9 +310,9 @@ namespace YieldFlo.Forms
             this.lblTotArea.TabIndex = 3;
             this.lblTotArea.Text = "0.0 ac";
             this.lblTotArea.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // pnlSensors
-            //
+            // 
             this.pnlSensors.Controls.Add(this.lblSensorHeader);
             this.pnlSensors.Controls.Add(this.lblSensor1Title);
             this.pnlSensors.Controls.Add(this.pnlSensor1);
@@ -326,20 +325,20 @@ namespace YieldFlo.Forms
             this.pnlSensors.Name = "pnlSensors";
             this.pnlSensors.Size = new System.Drawing.Size(398, 66);
             this.pnlSensors.TabIndex = 0;
-            //
+            // 
             // lblSensorHeader
-            //
+            // 
             this.lblSensorHeader.AutoSize = true;
             this.lblSensorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensorHeader.ForeColor = System.Drawing.Color.Silver;
             this.lblSensorHeader.Location = new System.Drawing.Point(4, 2);
             this.lblSensorHeader.Name = "lblSensorHeader";
-            this.lblSensorHeader.Size = new System.Drawing.Size(77, 18);
+            this.lblSensorHeader.Size = new System.Drawing.Size(76, 18);
             this.lblSensorHeader.TabIndex = 0;
             this.lblSensorHeader.Text = "Sensors:";
-            //
+            // 
             // lblSensor1Title
-            //
+            // 
             this.lblSensor1Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensor1Title.ForeColor = System.Drawing.Color.Silver;
             this.lblSensor1Title.Location = new System.Drawing.Point(4, 22);
@@ -347,9 +346,9 @@ namespace YieldFlo.Forms
             this.lblSensor1Title.Size = new System.Drawing.Size(78, 20);
             this.lblSensor1Title.TabIndex = 1;
             this.lblSensor1Title.Text = "Elev Flow";
-            //
+            // 
             // pnlSensor1
-            //
+            // 
             this.pnlSensor1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.pnlSensor1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlSensor1.Controls.Add(this.pnlSensor1Fill);
@@ -357,17 +356,17 @@ namespace YieldFlo.Forms
             this.pnlSensor1.Name = "pnlSensor1";
             this.pnlSensor1.Size = new System.Drawing.Size(234, 20);
             this.pnlSensor1.TabIndex = 2;
-            //
+            // 
             // pnlSensor1Fill
-            //
+            // 
             this.pnlSensor1Fill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(200)))), ((int)(((byte)(50)))));
             this.pnlSensor1Fill.Location = new System.Drawing.Point(0, 0);
             this.pnlSensor1Fill.Name = "pnlSensor1Fill";
             this.pnlSensor1Fill.Size = new System.Drawing.Size(0, 20);
             this.pnlSensor1Fill.TabIndex = 0;
-            //
+            // 
             // lblSensor1Value
-            //
+            // 
             this.lblSensor1Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensor1Value.ForeColor = System.Drawing.Color.White;
             this.lblSensor1Value.Location = new System.Drawing.Point(324, 22);
@@ -375,9 +374,9 @@ namespace YieldFlo.Forms
             this.lblSensor1Value.Size = new System.Drawing.Size(70, 20);
             this.lblSensor1Value.TabIndex = 3;
             this.lblSensor1Value.Text = "0%";
-            //
+            // 
             // lblSensor2Title
-            //
+            // 
             this.lblSensor2Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensor2Title.ForeColor = System.Drawing.Color.Silver;
             this.lblSensor2Title.Location = new System.Drawing.Point(4, 46);
@@ -385,9 +384,9 @@ namespace YieldFlo.Forms
             this.lblSensor2Title.Size = new System.Drawing.Size(78, 20);
             this.lblSensor2Title.TabIndex = 4;
             this.lblSensor2Title.Text = "Moisture";
-            //
+            // 
             // pnlSensor2
-            //
+            // 
             this.pnlSensor2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.pnlSensor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlSensor2.Controls.Add(this.pnlSensor2Fill);
@@ -395,17 +394,17 @@ namespace YieldFlo.Forms
             this.pnlSensor2.Name = "pnlSensor2";
             this.pnlSensor2.Size = new System.Drawing.Size(234, 20);
             this.pnlSensor2.TabIndex = 5;
-            //
+            // 
             // pnlSensor2Fill
-            //
+            // 
             this.pnlSensor2Fill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(200)))), ((int)(((byte)(50)))));
             this.pnlSensor2Fill.Location = new System.Drawing.Point(0, 0);
             this.pnlSensor2Fill.Name = "pnlSensor2Fill";
             this.pnlSensor2Fill.Size = new System.Drawing.Size(0, 20);
             this.pnlSensor2Fill.TabIndex = 0;
-            //
+            // 
             // lblSensor2Value
-            //
+            // 
             this.lblSensor2Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensor2Value.ForeColor = System.Drawing.Color.White;
             this.lblSensor2Value.Location = new System.Drawing.Point(324, 46);
@@ -413,13 +412,12 @@ namespace YieldFlo.Forms
             this.lblSensor2Value.Size = new System.Drawing.Size(70, 20);
             this.lblSensor2Value.TabIndex = 6;
             this.lblSensor2Value.Text = "0%";
-            //
+            // 
             // pnlStatus
-            //
+            // 
             this.pnlStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
             this.pnlStatus.Controls.Add(this.lblStatusGPS);
             this.pnlStatus.Controls.Add(this.lblStatusModule);
-            this.pnlStatus.Controls.Add(this.lblStatusComm);
             this.pnlStatus.Controls.Add(this.lblStatusJob);
             this.pnlStatus.Controls.Add(this.lblVersion);
             this.pnlStatus.Controls.Add(this.lblStatusMsg);
@@ -428,9 +426,9 @@ namespace YieldFlo.Forms
             this.pnlStatus.Name = "pnlStatus";
             this.pnlStatus.Size = new System.Drawing.Size(398, 32);
             this.pnlStatus.TabIndex = 4;
-            //
+            // 
             // lblStatusGPS
-            //
+            // 
             this.lblStatusGPS.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusGPS.ForeColor = System.Drawing.Color.Silver;
             this.lblStatusGPS.Location = new System.Drawing.Point(4, 4);
@@ -438,9 +436,10 @@ namespace YieldFlo.Forms
             this.lblStatusGPS.Size = new System.Drawing.Size(48, 24);
             this.lblStatusGPS.TabIndex = 0;
             this.lblStatusGPS.Text = "GPS";
-            //
+            this.lblStatusGPS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblStatusModule
-            //
+            // 
             this.lblStatusModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusModule.ForeColor = System.Drawing.Color.Silver;
             this.lblStatusModule.Location = new System.Drawing.Point(55, 4);
@@ -448,40 +447,32 @@ namespace YieldFlo.Forms
             this.lblStatusModule.Size = new System.Drawing.Size(74, 24);
             this.lblStatusModule.TabIndex = 1;
             this.lblStatusModule.Text = "Module";
-            //
-            // lblStatusComm
-            //
-            this.lblStatusComm.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusComm.ForeColor = System.Drawing.Color.Silver;
-            this.lblStatusComm.Location = new System.Drawing.Point(132, 4);
-            this.lblStatusComm.Name = "lblStatusComm";
-            this.lblStatusComm.Size = new System.Drawing.Size(48, 24);
-            this.lblStatusComm.TabIndex = 2;
-            this.lblStatusComm.Text = "UDP";
-            //
+            this.lblStatusModule.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblStatusJob
-            //
+            // 
             this.lblStatusJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusJob.ForeColor = System.Drawing.Color.Silver;
-            this.lblStatusJob.Location = new System.Drawing.Point(183, 4);
+            this.lblStatusJob.Location = new System.Drawing.Point(132, 4);
             this.lblStatusJob.Name = "lblStatusJob";
-            this.lblStatusJob.Size = new System.Drawing.Size(148, 24);
+            this.lblStatusJob.Size = new System.Drawing.Size(188, 24);
             this.lblStatusJob.TabIndex = 3;
             this.lblStatusJob.Text = "No Active Job";
-            //
+            this.lblStatusJob.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblVersion
-            //
+            // 
             this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.lblVersion.Location = new System.Drawing.Point(334, 4);
+            this.lblVersion.Location = new System.Drawing.Point(327, 4);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(60, 24);
+            this.lblVersion.Size = new System.Drawing.Size(67, 24);
             this.lblVersion.TabIndex = 5;
             this.lblVersion.Text = "v8.10.10";
-            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            //
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblStatusMsg
-            //
+            // 
             this.lblStatusMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusMsg.ForeColor = System.Drawing.Color.Silver;
             this.lblStatusMsg.Location = new System.Drawing.Point(0, 0);
@@ -490,9 +481,9 @@ namespace YieldFlo.Forms
             this.lblStatusMsg.TabIndex = 4;
             this.lblStatusMsg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblStatusMsg.Visible = false;
-            //
+            // 
             // frmMain
-            //
+            // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(402, 366);
             this.Controls.Add(this.pnlSensors);
@@ -562,7 +553,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Panel pnlStatus;
         private System.Windows.Forms.Label lblStatusGPS;
         private System.Windows.Forms.Label lblStatusModule;
-        private System.Windows.Forms.Label lblStatusComm;
         private System.Windows.Forms.Label lblStatusJob;
         private System.Windows.Forms.Label lblStatusMsg;
         private System.Windows.Forms.Label lblVersion;

@@ -192,7 +192,7 @@ namespace YieldFlo.Forms
             if (Core.IsShuttingDown) return;
 
             double yield = Props.DisplayRate(Core.Yield?.SmoothedYield ?? 0);
-            double moisture = Core.LastMoisture > 0 ? Core.LastMoisture + Core.ActiveMoistureOffset : 0;
+            double moisture = Core.LastMoistureOk ? Core.LastMoisture + Core.ActiveMoistureOffset : 0;
 
             lblYield.Text = yield.ToString("F1");
             lblYieldUnit.Text = Props.RateUnit;
@@ -219,17 +219,17 @@ namespace YieldFlo.Forms
             double workRate = Props.DisplayMass(Core.Yield?.SmoothedWorkRate ?? 0);   // t/hr metric, bu/hr imperial
 
             lblTotArea.Text = $"{area:F1} {Props.AreaUnit}";
-            lblTotTotal.Text = $"{total:F0} {Props.MassUnit}";
+            lblTotTotal.Text = Props.IsMetric ? $"{total:F1} {Props.MassUnit}" : $"{total:F0} {Props.MassUnit}";
             lblTotRate.Text = $"{avg:F1} {Props.RateUnit}";
-            lblWorkRate.Text = $"{workRate:F1} {Props.MassUnit}/hr";
+            lblWorkRate.Text = Props.IsMetric ? $"{workRate:F1} {Props.MassUnit}/hr" : $"{workRate:F0} {Props.MassUnit}/hr";
         }
 
         // Okabe-Ito colorblind-safe palette: bluish-green / vermillion instead of
         // plain LimeGreen / Red, which are hard to tell apart under red-green color
         // vision deficiency (the most common type). Separated by hue AND luminance
         // so the difference survives protanopia/deuteranopia/tritanopia.
-        private static readonly Color StatusOk  = Color.FromArgb(0, 158, 115);
-        private static readonly Color StatusBad = Color.FromArgb(213, 94, 0);
+        private static readonly Color StatusOk  = OkabeIto.BluishGreen;
+        private static readonly Color StatusBad = OkabeIto.Vermillion;
 
         private void UpdateStatusBar()
         {
@@ -243,16 +243,20 @@ namespace YieldFlo.Forms
             lblStatusModule.Text = Lang.lgModule;
             lblStatusModule.ForeColor = modOk ? StatusOk : StatusBad;
 
-            string commType = Properties.Settings.Default.ModuleCommType;
-            lblStatusComm.Text = commType;
-            lblStatusComm.ForeColor = Color.Silver;
-
             if (Core.Collector.ActiveJobId > 0)
             {
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
-                lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
-                lblStatusJob.ForeColor = recording ? StatusOk : Color.Orange;
+                if (recording && !Core.LastDataWriteOk)
+                {
+                    lblStatusJob.Text = jobName + Lang.lgDataWriteError;
+                    lblStatusJob.ForeColor = StatusBad;
+                }
+                else
+                {
+                    lblStatusJob.Text = recording ? jobName + Lang.lgJobStatusOn : jobName + Lang.lgJobStatusOff;
+                    lblStatusJob.ForeColor = recording ? StatusOk : OkabeIto.Orange;
+                }
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", recording ? 9F : 7F, System.Drawing.FontStyle.Bold);
             }
             else
@@ -327,9 +331,11 @@ namespace YieldFlo.Forms
         }
 
         // Full-strength colours for each job button when it is available.
-        private static readonly Color StartActive = Color.FromArgb(0, 150, 0);    // green
-        private static readonly Color PauseActive = Color.FromArgb(200, 150, 0);  // amber
-        private static readonly Color StopActive  = Color.FromArgb(170, 0, 0);    // red
+        // Okabe-Ito: same hues used for the status-bar dots, so "good/active",
+        // "warning/paused" and "bad/stopped" mean the same color everywhere.
+        private static readonly Color StartActive = OkabeIto.BluishGreen;
+        private static readonly Color PauseActive = OkabeIto.Orange;
+        private static readonly Color StopActive  = OkabeIto.Vermillion;
         // Shared "unavailable" look — clearly off, not just a dimmed word.
         private static readonly Color BtnOffBack   = Color.FromArgb(40, 40, 40);
         private static readonly Color BtnOffFore   = Color.FromArgb(95, 95, 95);

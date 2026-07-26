@@ -1,7 +1,7 @@
 
 void DoSetup()
 {
-	uint8_t ErrorCount;
+	uint8_t ErrorCount = 0;
 	Serial.begin(38400);
 	delay(5000);
 	Serial.println();

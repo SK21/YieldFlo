@@ -58,8 +58,6 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor   = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor   = Color.FromArgb(180, 200, 220);
-            btnTitleClose.BackColor = Color.FromArgb(80, 30, 30);
-            btnTitleClose.ForeColor = Color.White;
             lbCrops.BackColor    = ctrl;
             lbCrops.ForeColor    = fore;
             pnlEdit.BackColor    = back;
@@ -119,6 +117,7 @@ namespace YieldFlo.Forms
             if (string.IsNullOrEmpty(name)) { Props.ShowMessage(Lang.lgEnterCropName, "", 2000, true); return; }
             string cat = cboCropCategory.SelectedItem?.ToString() ?? "Cereal";
             double tw  = Props.TestWeightToLbBu((double)numTestWeight.Value);   // store internally as lb/bu
+            if (tw <= 0) { Props.ShowMessage(Lang.lgTestWeightRequired, "", 2000, true); return; }
             double mm  = (double)numMarketMoisture.Value;
 
             int savedId;
@@ -144,13 +143,13 @@ namespace YieldFlo.Forms
             using var dlg = new frmMsgBox(Lang.lgDeleteCropPrompt);
             dlg.ShowDialog(this);
             if (!dlg.Result) return;
-            Core.Database.Crops.Delete(_editingId);
+            try { Core.Database.Crops.Delete(_editingId); }
+            catch (Database.ItemInUseException) { Props.ShowMessage(Lang.lgItemInUseByJob, "", 3000, true); return; }
             Core.RaiseCropListChanged();
             LoadList();
             ClearEdit();
         }
 
-        private void btnTitleClose_Click(object sender, EventArgs e)  => this.Close();
         private void btnCropsClose_Click(object sender, EventArgs e)  => this.Close();
     }
 }
