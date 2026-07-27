@@ -68,11 +68,34 @@ bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
 
 // Glitch filter: an edge is committed only after the state it starts survives
-// GlitchMinUs. EMI pulses are ~0.1 ms wide; the shortest real paddle segment
-// is >10 ms on any elevator, so 2 ms separates them with wide margin on both
-// sides. A pending edge cancelled by a return edge inside the window is a
+// GlitchMinUs. A pending edge cancelled by a return edge inside the window is a
 // glitch pair — both edges are discarded and counted in NoiseCount (which
 // therefore works in Main-only mode too, where there is no Comp cross-check).
+//
+// Sizing this needs the BLOCKED segment, not the paddle period:
+//     blocked_ms = duty × 1000 / paddle_hz
+// Duty is geometric (paddle width ÷ pitch on the chain), so it barely moves with
+// elevator speed while the blocked time shrinks as speed rises. A blocked
+// segment shorter than the window does not merely degrade the reading — the
+// pending transition is dropped and the whole paddle vanishes, so paddle_hz
+// reads low and the ratio collapses. Measured machine: 18 Hz at 6% empty duty
+// = 3.33 ms, i.e. 1.7× this window. The cliff is at 2 ms, which that machine
+// would reach at 30 Hz, or if a worn paddle ran ~40% under nominal width.
+//
+// An earlier note here claimed "the shortest real paddle segment is >10 ms on
+// any elevator" — false. At 18 Hz that needs 18% duty; real baselines measured
+// on this machine are 5–10%.
+//
+// 2 ms is kept deliberately rather than lowered for margin: it was bench-verified
+// as the fix for a real EMI complaint, and even at 2 ms it is not fully airtight
+// (0.24 rejects/s survived a 20 glitch/s injection). EMI pulses are ~0.1 ms, so
+// the window sits 20× above the noise and 1.7× below the signal — the tight side
+// is the signal, and the Paddles readout is the check: it must equal the true
+// paddle rate.
+//
+// Note this filter cannot separate a bridging grain kernel from a paddle at this
+// geometry: a kernel is a few ms, WIDER than a 3.33 ms paddle. Only the period
+// gate below, which tests arrival time rather than width, distinguishes them.
 const uint32_t GlitchMinUs = 2000;
 volatile bool     PendingValid = false;		// an uncommitted transition is held
 volatile bool     PendingBlocked = false;	// the state that transition switches to
