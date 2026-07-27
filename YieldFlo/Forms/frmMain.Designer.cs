@@ -345,7 +345,7 @@ namespace YieldFlo.Forms
             this.lblSensor1Title.Name = "lblSensor1Title";
             this.lblSensor1Title.Size = new System.Drawing.Size(78, 20);
             this.lblSensor1Title.TabIndex = 1;
-            this.lblSensor1Title.Text = "Elev Flow";
+            this.lblSensor1Title.Text = "Elevator";
             // 
             // pnlSensor1
             // 
@@ -354,7 +354,7 @@ namespace YieldFlo.Forms
             this.pnlSensor1.Controls.Add(this.pnlSensor1Fill);
             this.pnlSensor1.Location = new System.Drawing.Point(86, 22);
             this.pnlSensor1.Name = "pnlSensor1";
-            this.pnlSensor1.Size = new System.Drawing.Size(234, 20);
+            this.pnlSensor1.Size = new System.Drawing.Size(245, 20);
             this.pnlSensor1.TabIndex = 2;
             // 
             // pnlSensor1Fill
@@ -369,9 +369,9 @@ namespace YieldFlo.Forms
             // 
             this.lblSensor1Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensor1Value.ForeColor = System.Drawing.Color.White;
-            this.lblSensor1Value.Location = new System.Drawing.Point(324, 22);
+            this.lblSensor1Value.Location = new System.Drawing.Point(334, 22);
             this.lblSensor1Value.Name = "lblSensor1Value";
-            this.lblSensor1Value.Size = new System.Drawing.Size(70, 20);
+            this.lblSensor1Value.Size = new System.Drawing.Size(60, 20);
             this.lblSensor1Value.TabIndex = 3;
             this.lblSensor1Value.Text = "0%";
             // 
@@ -392,7 +392,7 @@ namespace YieldFlo.Forms
             this.pnlSensor2.Controls.Add(this.pnlSensor2Fill);
             this.pnlSensor2.Location = new System.Drawing.Point(86, 46);
             this.pnlSensor2.Name = "pnlSensor2";
-            this.pnlSensor2.Size = new System.Drawing.Size(234, 20);
+            this.pnlSensor2.Size = new System.Drawing.Size(245, 20);
             this.pnlSensor2.TabIndex = 5;
             // 
             // pnlSensor2Fill
@@ -407,9 +407,9 @@ namespace YieldFlo.Forms
             // 
             this.lblSensor2Value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblSensor2Value.ForeColor = System.Drawing.Color.White;
-            this.lblSensor2Value.Location = new System.Drawing.Point(324, 46);
+            this.lblSensor2Value.Location = new System.Drawing.Point(337, 46);
             this.lblSensor2Value.Name = "lblSensor2Value";
-            this.lblSensor2Value.Size = new System.Drawing.Size(70, 20);
+            this.lblSensor2Value.Size = new System.Drawing.Size(57, 20);
             this.lblSensor2Value.TabIndex = 6;
             this.lblSensor2Value.Text = "0%";
             // 

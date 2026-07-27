@@ -79,6 +79,8 @@ Left to right, as they appear on screen:
 | **Pause** | Manually pause recording |
 | **Stop** | Stop and close the current job (requires confirmation) |
 
+The menu screen has a **?** button in its title bar that opens this manual.
+
 ### Data panels
 
 | Panel | Description |
@@ -186,6 +188,8 @@ Crops store the grain-specific parameters used in yield calculations and reporti
 
 Select a crop from the list to edit it. At least one crop must exist at all times.
 
+Select a crop and press **Delete** to remove it — you will be asked to confirm. A crop used by a saved job cannot be deleted.
+
 ---
 
 ## 5. Headers
@@ -211,6 +215,8 @@ Headers define the cutting width of the front attachment. Width is used to calcu
 4. Press **Save**
 
 At least one header must exist at all times. Changes to a header take effect when a job is started or loaded.
+
+Select a header and press **Delete** to remove it — you will be asked to confirm. A header used by a saved job cannot be deleted.
 
 > **Note — coverage painted slightly before AOG's:** AOG turns its section bits on *early* by its turn-on look-ahead (anticipating valve opening time) but paints its own coverage only where product actually applies. YieldFlo records from the section bits, so each pass start on the yield map can begin a metre or two before AOG's painted coverage. Pass *ends* match exactly. This is normal and harmless for harvest — there is no valve delay on a header — and can be removed in testing by setting AOG's section look-ahead to zero.
 
@@ -243,6 +249,8 @@ Profiles store combine-specific and calibration settings. Use a separate profile
 
 At least one profile must exist at all times.
 
+Select a profile and press **Delete** to remove it — you will be asked to confirm. A profile used by a saved job cannot be deleted.
+
 ---
 
 ## 7. Fields
@@ -257,6 +265,8 @@ Fields are optional location labels that can be assigned to jobs for organisatio
 2. Press **Save**
 
 Fields are not required. A job can be created without a field selected.
+
+Select a field and press **Delete** to remove it — you will be asked to confirm. A field used by a saved job cannot be deleted.
 
 ### Importing fields from AgOpenGPS
 
@@ -344,13 +354,24 @@ scale = known_value / raw_count
 
 For example: if the raw count is 420 and a certified meter reads 18.5%, set scale to 18.5 ÷ 420 ≈ 0.044. The offset field can then be used for fine trimming against a second reference point if needed.
 
-### Moisture calibration procedure
+### Quick calibration — Apply Cal
 
-1. Take a grain sample and measure moisture with a certified grain moisture meter
+1. Take a grain sample and measure it with a certified grain moisture meter
 2. Open **Menu → Moisture Cal**
-3. With the module connected and grain flowing, observe the live raw count
-4. Set offset to 0 and adjust **%/count** scale until the displayed reading matches the meter
-5. Press **Save**
+3. With the module connected and grain flowing, note the **App reads:** value
+4. Enter the meter's reading in **Meter:**
+5. Press **Apply Cal** — the **Offset** field is filled in for you
+6. Press **Save**
+
+Temperature works the same way: enter a thermometer reading in the Temperature section's **Meter:** field and press its **Apply Cal**.
+
+### Full calibration — scale
+
+Apply Cal shifts every reading by the same amount. If the reading is correct at one moisture but wrong at another, set the scale instead:
+
+1. Set **Offset** to 0
+2. With grain flowing, adjust **%/count** until the displayed reading matches the meter
+3. Press **Save**
 
 ### Moisture calibration fields
 
@@ -407,17 +428,17 @@ The mini map position is remembered between sessions.
 
 ### Full-screen mode
 
-Click the map or press **×** to expand to full screen. The toolbar at the top provides:
+Click the map to expand to full screen. The toolbar at the top provides:
 
 | Control | Action |
 |---------|--------|
 | Job selector (drop-down) | Choose which job to display |
 | **─** / **+** | Zoom out / in |
-| **Recalculate** | Re-derives every point's yield for the selected job from its stored raw sensor reading using the crop's *current* calibration, then repaints the map — see below |
+| **Recalculate** | Re-derives every point's yield for the selected job from its stored raw sensor reading using the crop's *current* calibration, then repaints the map and updates the job total — see below |
 | **Print** | Export the map as a PNG image — see below |
-| **Close** | Return to mini mode |
+| **Close** | Close the map |
 
-The map can be dragged in both mini and full-screen modes.
+Click the map again to return to mini mode. The map can be dragged in both mini and full-screen modes.
 
 ### Live update during harvest
 
@@ -425,7 +446,7 @@ When the yield map is open and a job is actively recording, the map updates auto
 
 ### Recalculating yield
 
-If you change a crop's calibration (Sensor Baseline or Yield Factor) *after* a job was recorded, the job's existing points still reflect the old calibration. Press **Recalculate** in the full-screen toolbar, then confirm the prompt, to re-derive every point's yield from its stored raw sensor reading using the crop's current calibration and repaint the map with the corrected values. This only affects the selected job and does not change the raw sensor data.
+If you change a crop's calibration (Sensor Baseline or Yield Factor) *after* a job was recorded, the job's existing points still reflect the old calibration. Press **Recalculate** in the full-screen toolbar, then confirm the prompt, to re-derive every point's yield from its stored raw sensor reading using the crop's current calibration and repaint the map with the corrected values. The job's total in the Job Report is updated to match. This only affects the selected job and does not change the raw sensor data.
 
 ### Exporting the map as a PNG
 
@@ -508,6 +529,7 @@ Changing units takes effect immediately. Historical data is stored in metric uni
 | **CAN** | Module communicates over CAN bus via a USB CAN interface. |
 | **CAN Driver** | Select the CAN interface driver (SLCAN, InnoMaker, or PCAN). |
 | **COM Port** | Serial/USB port for the CAN interface (SLCAN driver only). |
+| Rescan button | Beside **COM Port** (CAN mode only) — refreshes the list of connected serial ports. |
 
 When **CAN** mode is selected, an **Adapter: Connected** / **Not Connected** indicator appears below the port settings, showing whether the CAN adapter that is actually running (from previously saved settings) is open and seeing bus traffic. It updates live and does not reflect the driver/port currently selected in the drop-downs until they are saved and applied.
 
