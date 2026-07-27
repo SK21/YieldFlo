@@ -735,7 +735,12 @@ namespace YieldFlo.Forms
             var cal = Core.Database.Calibrations.GetLatest(profileId, cropId);
             Core.Database.YieldData.RecalculateJob(
                 jobId, cal.baseline, cal.yieldFactor, headerWidthM, testWeightLbsBu,
-                cal.refPaddleHz);
+                cal.refPaddleHz, out double newTotalVolume);
+
+            // The job's total was rescaled with the points. If this job is the one
+            // currently recording, the live accumulator still holds the old figure
+            // and would write it back over this on the next save.
+            Core.Collector?.SyncTotalBushels(jobId, newTotalVolume);
 
             RebuildSwaths(Core.Database.YieldData.GetByJob(jobId), jobId, center: false);
         }

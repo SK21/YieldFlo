@@ -173,6 +173,17 @@ namespace YieldFlo.Classes
         }
 
         /// <summary>
+        /// Adopts a job total that was rewritten underneath us — a map recalculation
+        /// rescales the stored total, and if that job is the one currently recording,
+        /// this accumulator would put the pre-recalculation figure straight back on
+        /// the next save. Ignored for any other job, which owns its own stored total.
+        /// </summary>
+        public void SyncTotalBushels(int jobId, double bushels)
+        {
+            if (jobId > 0 && jobId == ActiveJobId) TotalBushels = bushels;
+        }
+
+        /// <summary>
         /// Called every GPS update (~10 Hz). Writes to DB once per second.
         /// </summary>
         public void OnGpsUpdate(double rawMoisture)

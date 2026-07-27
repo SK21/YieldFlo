@@ -222,15 +222,27 @@ VALUES
         // the map afterwards — this only touches the database.
         public int RecalculateJob(int jobId, double baseline, double yieldFactor,
                                    double headerWidthM, double testWeightLbsBu,
-                                   double refPaddleHz = 0)
+                                   double refPaddleHz, out double newTotalVolume)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var tx = conn.BeginTransaction();
 
+            // The job's stored total is rescaled rather than recomputed from these
+            // rows. It cannot be recomputed exactly: the live total accumulates
+            // every drained pipeline point, while a row is only written once a
+            // second carrying the mean yield over that second, so a row-by-row sum
+            // loses the covariance between yield and distance within each second.
+            // Taking the ratio of the new to the old area-weighted sum cancels that
+            // approximation — recalculating with an unchanged calibration leaves the
+            // total exactly as it was, instead of nudging it by the reconstruction
+            // error. Ordered by id so the area deltas are taken in write order.
+            double oldWeighted = 0, newWeighted = 0, prevAcres = 0;
+
             var updates = new List<(int id, double rate)>();
             using (var selCmd = new SQLiteCommand(
-                "SELECT id, speed, sensor1_raw, flow_rate, paddles_per_s FROM yield_data WHERE job_id=@jid", conn, tx))
+                "SELECT id, speed, sensor1_raw, flow_rate, paddles_per_s, yield_rate, acres_accumulated " +
+                "FROM yield_data WHERE job_id=@jid ORDER BY id", conn, tx))
             {
                 selCmd.Parameters.AddWithValue("@jid", jobId);
                 using var reader = selCmd.ExecuteReader();
@@ -241,10 +253,21 @@ VALUES
                     double sensor1Raw = reader.GetDouble(2);
                     double flowRate = reader.GetDouble(3);
                     double paddlesPerS = reader.GetDouble(4);
+                    double oldRate = reader.GetDouble(5);
+                    double acresAccum = reader.GetDouble(6);
                     double rate = clsYieldCalculator.ComputeYieldRate(
                         sensor1Raw, flowRate, paddlesPerS, speed, baseline, refPaddleHz,
                         yieldFactor, headerWidthM, testWeightLbsBu);
                     updates.Add((id, rate));
+
+                    // acres_accumulated is a running total, so the area this row
+                    // covers is its step from the previous one. Clamped at zero in
+                    // case a row was written out of order.
+                    double acresInc = acresAccum - prevAcres;
+                    if (acresInc < 0) acresInc = 0;
+                    prevAcres = acresAccum;
+                    oldWeighted += oldRate * acresInc;
+                    newWeighted += rate * acresInc;
                 }
             }
 
@@ -258,6 +281,29 @@ VALUES
                     pId.Value = id;
                     updCmd.ExecuteNonQuery();
                 }
+            }
+
+            // Read the stored total inside the transaction so the scaling is applied
+            // to whatever is actually on disk, not to a value the caller cached.
+            newTotalVolume = 0;
+            using (var volCmd = new SQLiteCommand("SELECT total_volume FROM jobs WHERE id=@id", conn, tx))
+            {
+                volCmd.Parameters.AddWithValue("@id", jobId);
+                object v = volCmd.ExecuteScalar();
+                if (v != null && v != DBNull.Value) newTotalVolume = Convert.ToDouble(v);
+            }
+
+            // No weighted history to scale against — an empty job, or one that
+            // recorded nothing but zero yield. Leaving the total alone is the only
+            // honest option; there is nothing to derive a ratio from.
+            if (oldWeighted > 0)
+            {
+                newTotalVolume *= newWeighted / oldWeighted;
+                using var jobCmd = new SQLiteCommand(
+                    "UPDATE jobs SET total_volume=@v WHERE id=@id", conn, tx);
+                jobCmd.Parameters.AddWithValue("@v", newTotalVolume);
+                jobCmd.Parameters.AddWithValue("@id", jobId);
+                jobCmd.ExecuteNonQuery();
             }
 
             tx.Commit();
