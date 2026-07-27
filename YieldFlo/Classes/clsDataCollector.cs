@@ -69,6 +69,17 @@ namespace YieldFlo.Classes
         private double _moistureSum = 0;
         private int _moistureCount = 0;
 
+        /// <summary>
+        /// Adopts a recalculated total for the job currently recording. Without this,
+        /// RecalculateJob's new total_volume survives only until the next lifecycle
+        /// write (StartJob/SuspendJob/StopJob/Save all call UpdateTotals), which would
+        /// put the stale in-memory figure straight back. No-op for any other job.
+        /// </summary>
+        public void SyncTotalBushels(int jobId, double totalBushels)
+        {
+            if (jobId > 0 && jobId == ActiveJobId) TotalBushels = totalBushels;
+        }
+
         public void StartJob(int jobId, string jobName = "")
         {
             // Close any currently active job before starting a new one

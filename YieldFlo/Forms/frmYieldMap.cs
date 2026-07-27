@@ -337,8 +337,12 @@ namespace YieldFlo.Forms
             int jobId = _jobIds[idx];
 
             List<YieldDataPoint> points;
+            // Keep the current drawing on a transient read failure, but log it.
+            // A bare silent catch here hid a hard schema mismatch for as long as it
+            // existed: every job read threw, every map drew blank, and nothing was
+            // written anywhere to say so.
             try   { points = Core.Database.YieldData.GetByJob(jobId); }
-            catch { return; }   // transient read failure — keep current drawing
+            catch (Exception ex) { Props.WriteErrorLog("frmYieldMap/LoadYieldData: " + ex.Message); return; }
 
             if (points.Count == 0)
             {
@@ -733,8 +737,12 @@ namespace YieldFlo.Forms
                 if (h.id == headerId) { headerWidthM = h.widthM; break; }
 
             var cal = Core.Database.Calibrations.GetLatest(profileId, cropId);
-            Core.Database.YieldData.RecalculateJob(
+            var (rows, newTotal) = Core.Database.YieldData.RecalculateJob(
                 jobId, cal.baseline, cal.yieldFactor, headerWidthM, testWeightLbsBu);
+
+            // If this is the job currently recording, the collector's running total
+            // must adopt the new figure or its next lifecycle write undoes the rescale.
+            if (rows > 0) Core.Collector?.SyncTotalBushels(jobId, newTotal);
 
             RebuildSwaths(Core.Database.YieldData.GetByJob(jobId), jobId, center: false);
         }

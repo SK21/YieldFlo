@@ -179,8 +179,17 @@ VALUES
             var result = new List<YieldDataPoint>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
+            // Name every column: the reader below is positional, and SELECT * makes
+            // those positions depend on the schema the database happens to carry.
+            // Method2 adds flow_rate/paddles_per_s/flow_flags, which land at 16-18
+            // and push gate_rejects to 19 — so SELECT * on a database that has ever
+            // run a Method2 build fed a REAL into GetInt32(16) and threw
+            // InvalidCastException on the first row of every job.
             using var cmd = new SQLiteCommand(
-                "SELECT * FROM yield_data WHERE job_id=@jid ORDER BY timestamp", conn);
+                "SELECT id, job_id, timestamp, latitude, longitude, elevation, speed, heading, " +
+                "yield_rate, moisture, acres_accumulated, sensor1_raw, sensor2_raw, " +
+                "rpm, paddle_hz, min_cycle_ms, gate_rejects " +
+                "FROM yield_data WHERE job_id=@jid ORDER BY timestamp", conn);
             cmd.Parameters.AddWithValue("@jid", jobId);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -210,19 +219,42 @@ VALUES
         }
 
         // Re-derives YieldRate for every point in a job from its stored raw sensor
-        // reading and speed, using the given (typically just-updated) calibration.
-        // Returns the number of rows rewritten. Caller is responsible for repainting
-        // the map afterwards — this only touches the database.
-        public int RecalculateJob(int jobId, double baseline, double yieldFactor,
+        // reading and speed, using the given (typically just-updated) calibration,
+        // and brings jobs.total_volume along with it. Returns the rows rewritten and
+        // the job's new total. Caller repaints the map and, if this is the recording
+        // job, syncs the collector's in-memory total (see clsDataCollector).
+        //
+        // The total is RESCALED by the ratio of area-weighted sums, not recomputed
+        // from the rows. The live total accumulates InstantYield * AcresInc at GPS
+        // rate, whereas a row is a 1 Hz mean — so a row-by-row integration loses the
+        // within-second covariance between yield and distance and would land on a
+        // different number even when nothing changed. Taking a ratio cancels that
+        // bias: an unchanged calibration leaves the total bit-identical, and a pure
+        // YieldFactor change scales it exactly.
+        public (int rows, double totalVolume) RecalculateJob(int jobId, double baseline, double yieldFactor,
                                    double headerWidthM, double testWeightLbsBu)
         {
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
             using var tx = conn.BeginTransaction();
 
+            double oldTotal = 0;
+            using (var totCmd = new SQLiteCommand("SELECT total_volume FROM jobs WHERE id=@jid", conn, tx))
+            {
+                totCmd.Parameters.AddWithValue("@jid", jobId);
+                object o = totCmd.ExecuteScalar();
+                if (o != null && o != DBNull.Value) oldTotal = Convert.ToDouble(o);
+            }
+
             var updates = new List<(int id, double rate)>();
+            double oldSum = 0, newSum = 0, prevAcres = 0;
+
+            // ORDER BY timestamp is load-bearing here, not cosmetic: acres_accumulated
+            // is cumulative, so the per-row area weight is a difference against the
+            // previous row and is meaningless in arbitrary order.
             using (var selCmd = new SQLiteCommand(
-                "SELECT id, speed, sensor1_raw FROM yield_data WHERE job_id=@jid", conn, tx))
+                "SELECT id, speed, sensor1_raw, yield_rate, acres_accumulated " +
+                "FROM yield_data WHERE job_id=@jid ORDER BY timestamp", conn, tx))
             {
                 selCmd.Parameters.AddWithValue("@jid", jobId);
                 using var reader = selCmd.ExecuteReader();
@@ -231,9 +263,22 @@ VALUES
                     int id = reader.GetInt32(0);
                     double speed = reader.GetFloat(1);
                     double sensor1Raw = reader.GetDouble(2);
+                    double oldRate = reader.GetDouble(3);
+                    double acres = reader.GetDouble(4);
+
                     double rate = clsYieldCalculator.ComputeYieldRate(
                         sensor1Raw, speed, baseline, yieldFactor, headerWidthM, testWeightLbsBu);
                     updates.Add((id, rate));
+
+                    // Guard the delta: a resumed job restarts its accumulator, which
+                    // would otherwise contribute a large negative area.
+                    double dAcres = acres - prevAcres;
+                    if (dAcres > 0)
+                    {
+                        oldSum += oldRate * dAcres;
+                        newSum += rate * dAcres;
+                    }
+                    prevAcres = acres;
                 }
             }
 
@@ -249,8 +294,26 @@ VALUES
                 }
             }
 
+            double newTotal = oldTotal;
+            if (updates.Count > 0)
+            {
+                // Ratio when there is a usable baseline to scale; otherwise fall back
+                // to the direct integration. The fallback covers a job whose total was
+                // never written (0 with rows present) — an approximate total beats
+                // leaving Recalculate visibly doing nothing. Where the job genuinely
+                // harvested nothing, newSum is ~0 anyway, so the fallback is safe.
+                newTotal = (oldSum > 0 && oldTotal > 0) ? oldTotal * (newSum / oldSum) : newSum;
+
+                using var jobCmd = new SQLiteCommand("UPDATE jobs SET total_volume=@v WHERE id=@jid", conn, tx);
+                jobCmd.Parameters.AddWithValue("@v", newTotal);
+                jobCmd.Parameters.AddWithValue("@jid", jobId);
+                jobCmd.ExecuteNonQuery();
+            }
+            // else: no rows — leave the stored total untouched rather than zeroing a
+            // job whose points are missing for some other reason.
+
             tx.Commit();
-            return updates.Count;
+            return (updates.Count, newTotal);
         }
     }
 
