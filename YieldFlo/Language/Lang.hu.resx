@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Tipp: futtassa 10 mp-ig üresen az elevátor szalagot az alapérték meghatározásához.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibrálás elmentve és alkalmazva.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>A megerősítéshez nyomja meg a „Mentés &amp;&amp; Alkalmaz" gombot.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>A referenciafrekvencia megváltozott</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>A referenciafrekvencia megváltozott: {0} Hz erről {1} Hz-re. A hozamértékek kb. {2}%-kal eltolódnak. Mentés után végezzen kalibrációs menetet. Mégis menti?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Adja meg a tényleges mért tömeget.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Nincs mért adat — először végezzen kalibrálási futást.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Új tényező: {0:F3}</value></data>

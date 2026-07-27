@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Patarimas: paleiskite tuščią elevatorių 10 s bazinei vertei nustatyti.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibravimas išsaugotas ir pritaikytas.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>Paspauskite „Išsaugoti &amp;&amp; Taikyti", kad patvirtintumėte.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>Atskaitos dažnis pakeistas</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Atskaitos dažnis pakeistas: {0} Hz į {1} Hz. Derliaus rodmenys pasislinks apie {2} %. Po išsaugojimo atlikite kalibravimo važiavimą. Vis tiek išsaugoti?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Įveskite faktinį pasverto svorio kiekį.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Nėra matavimo duomenų — pirmiausia atlikite kalibravimo ciklą.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Naujas koeficientas: {0:F3}</value></data>

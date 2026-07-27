@@ -166,6 +166,8 @@
   <data name="lgCalibrationTip" xml:space="preserve"><value>Tip: run empty elevator for 10s to find baseline sensor reading.</value></data>
   <data name="lgCalSaved" xml:space="preserve"><value>Calibration saved and applied.</value></data>
   <data name="lgPendingSave" xml:space="preserve"><value>Press Save &amp;&amp; Apply to confirm.</value></data>
+  <data name="lgRefRateChanged" xml:space="preserve"><value>Reference Rate Changed</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Reference rate changed: {0} Hz to {1} Hz. Yield readings will shift by about {2}%. Run a calibration pass after saving. Save anyway?</value></data>
   <data name="lgEnterWeighedAmt" xml:space="preserve"><value>Enter the actual weighed amount.</value></data>
   <data name="lgNoMeasuredData" xml:space="preserve"><value>No measured data — run a calibration pass first.</value></data>
   <data name="lgNewFactorResult" xml:space="preserve"><value>New factor: {0:F3}</value></data>

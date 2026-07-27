@@ -28,6 +28,19 @@ namespace YieldFlo.Forms
         private readonly List<double> _refHzSamples = new List<double>();
         private double _stagedRefPaddleHz;
 
+        // Committing a changed reference rate rescales every yield reading by
+        // the ratio of old to new, while the Yield Factor still belongs to the
+        // old one. Nothing downstream can detect that — a uniform bias has no
+        // signature — so the threshold is deliberately low. It is a permanent
+        // shift, unlike the transient live-vs-reference drift below.
+        private const double RefRateWarnFraction = 0.05;
+
+        // Live drift from the reference is normal engine load variation and the
+        // paddle channel corrects for it, so the readout is only coloured when
+        // the duty channel is the one feeding the yield figure. Matches the
+        // ±25% band clsYieldCalculator tolerates before flagging disagreement.
+        private const double RefRateDriftFraction = 0.25;
+
         // Noise readout: rolling average of sampled packet counts. A steady
         // glitch rate quantizes to 4-or-5 per 200 ms packet, so the raw value
         // flutters (20/25); averaging ~5 s of samples steadies it.
@@ -148,6 +161,27 @@ namespace YieldFlo.Forms
 
         private void btnSaveCal_Click(object sender, EventArgs e)
         {
+            // Set Baseline captures a new reference paddle rate along with the
+            // baseline, and the paddle channel is normalised against it — so
+            // saving a changed reference shifts every reading in proportion,
+            // with the Yield Factor left calibrated against the old rate. The
+            // save is still the right thing to do; the operator just has to
+            // know a calibration pass has to follow it.
+            double savedRef = Core.Yield.RefPaddleHz;
+            if (savedRef > 0 && _stagedRefPaddleHz > 0
+                && Math.Abs(_stagedRefPaddleHz - savedRef) > savedRef * RefRateWarnFraction)
+            {
+                int shiftPct = (int)Math.Round(Math.Abs(savedRef / _stagedRefPaddleHz - 1.0) * 100.0);
+                var answer = MessageBox.Show(
+                    string.Format(Lang.lgRefRateChangedPrompt,
+                                  savedRef.ToString("0.0"),
+                                  _stagedRefPaddleHz.ToString("0.0"),
+                                  shiftPct),
+                    Lang.lgRefRateChanged,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (answer != DialogResult.Yes) return;
+            }
+
             Core.Yield.ProcessingDelaySec = (int)numDelay.Value;
             Core.Yield.SensorBaseline     = (double)numBaseline.Value;
             Core.Yield.YieldFactor        = (double)numFactor.Value;
@@ -255,6 +289,7 @@ namespace YieldFlo.Forms
                 lblNoise.ForeColor = Color.Silver;
                 _hzSamples.Clear();
                 lblPaddleHz.Text = Lang.lgPaddles + " --";
+                lblPaddleHz.ForeColor = Properties.Settings.Default.MainForeColour;
                 return;
             }
 
@@ -282,10 +317,12 @@ namespace YieldFlo.Forms
             // fallback for firmware that sends no paddle frame, and needs the
             // rolling average to recover the fraction it rounded away.
             string live = null;
+            double liveHz = 0;
             if (Core.PaddleChannelLive && Core.LastPaddlesPerS > 0)
             {
                 _hzSamples.Clear();
-                live = Core.LastPaddlesPerS.ToString("0.0");
+                liveHz = Core.LastPaddlesPerS;
+                live = liveHz.ToString("0.0");
             }
             else if (Core.LastPaddleHz >= 0)
             {
@@ -294,7 +331,8 @@ namespace YieldFlo.Forms
 
                 double hzSum = 0;
                 foreach (int s in _hzSamples) hzSum += s;
-                live = (hzSum / _hzSamples.Count).ToString("0.0");
+                liveHz = hzSum / _hzSamples.Count;
+                live = liveHz.ToString("0.0");
             }
             else
             {
@@ -311,6 +349,18 @@ namespace YieldFlo.Forms
             lblPaddleHz.Text = live == null
                 ? Lang.lgPaddles + " --"
                 : Lang.lgPaddles + " " + live + " Hz > " + reference;
+
+            // Only a warning while the duty channel is driving the yield figure.
+            // On the paddle channel the same gap is expected and already
+            // corrected for, so colouring it there would flag a fault that is
+            // not one — and would be orange most of the time, which trains the
+            // operator to ignore it.
+            bool driftMatters = liveHz > 0 && _stagedRefPaddleHz > 0
+                && !(Core.Yield?.UsingPaddleChannel ?? false)
+                && Math.Abs(liveHz - _stagedRefPaddleHz) > _stagedRefPaddleHz * RefRateDriftFraction;
+            lblPaddleHz.ForeColor = driftMatters
+                ? OkabeIto.Orange
+                : Properties.Settings.Default.MainForeColour;
         }
 
         private void UpdateCalMeasuredLabel()

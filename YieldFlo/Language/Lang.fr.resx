@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Conseil : faire tourner l'élévateur vide 10 s pour trouver la référence.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Calibration enregistrée et appliquée.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>Appuyez sur « Enregistrer &amp;&amp; Appliquer » pour confirmer.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>Fréquence de référence modifiée</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Fréquence de référence modifiée : {0} Hz à {1} Hz. Les relevés de rendement se décaleront d'environ {2} %. Effectuez un passage d'étalonnage après l'enregistrement. Enregistrer quand même ?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Entrer le poids réel pesé.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Aucune donnée — effectuer d'abord une passe de calibration.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Nouveau facteur : {0:F3}</value></data>

@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Tip: laat de lege elevator 10 s lopen om de basiswaarde te bepalen.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibratie opgeslagen en toegepast.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>Druk op „Opslaan &amp;&amp; Toepassen" om te bevestigen.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>Referentiefrequentie gewijzigd</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Referentiefrequentie gewijzigd: {0} Hz naar {1} Hz. Opbrengstwaarden verschuiven ongeveer {2}%. Voer na het opslaan een kalibratierit uit. Toch opslaan?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Voer het werkelijk gewogen gewicht in.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Geen meetgegevens — voer eerst een calibratierun uit.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Nieuwe factor: {0:F3}</value></data>

@@ -275,7 +275,7 @@ Yield calibration corrects the elevator sensor reading to match the actual mass 
 
 ### Setting the baseline
 
-1. Start the clean-grain elevator with no grain
+1. Start the clean-grain elevator with no grain, at the engine speed you normally harvest at
 2. Open **Menu → Yield Cal**
 3. Press **Set Baseline** — it samples for 5 seconds and enters the result in the **Sensor Baseline** field
 4. Press **Save & Apply**
@@ -283,6 +283,8 @@ Yield calibration corrects the elevator sensor reading to match the actual mass 
 Nothing takes effect, and nothing is saved, until **Save & Apply** is pressed — this applies to both Set Baseline and Apply Cal.
 
 > **Tip:** Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.
+
+> **Important:** If you set the baseline again later, run a calibration pass afterwards — the Yield Factor is tied to the baseline and will not match until you do. YieldFlo reminds you when you save.
 
 ### Noise readout
 
@@ -296,7 +298,7 @@ On module firmware that reports the paddle flow channel, a second figure appears
 
 Below the **Set Baseline** button, the **Paddles** readout shows the paddle rate the sensor is seeing, and — separated by `>` — the reference rate captured the last time **Set Baseline** was run (e.g. "7.4 Hz > 7.4"). The reference reads **--** until a baseline has been set. It shows **--** entirely when no module is connected or the module firmware predates the feature.
 
-Use it to verify the sensor is catching every paddle: the live rate should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). A live rate that has drifted from the reference means the elevator is running off the speed it was calibrated at — expected with normal engine load changes, but worth investigating if it persists. On combines with another optical yield monitor sharing the sensor, the live rate can be compared directly against that monitor's sensor calibration result (for FarmTrx, the "X% @ Y Hz" line on its Sensor Calibration page).
+Use it to verify the sensor is catching every paddle: the live rate should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). A live rate that has drifted from the reference means the elevator is running off the speed it was calibrated at — expected with normal engine load changes, but worth investigating if it persists. The figure turns orange if the drift is large enough to affect the yield reading. On combines with another optical yield monitor sharing the sensor, the live rate can be compared directly against that monitor's own sensor calibration result — these are usually reported on the monitor's sensor calibration screen as an obstruction percentage at a given frequency in Hz.
 
 ### Flow channel selection
 
@@ -325,6 +327,8 @@ A calibration pass measures the actual mass of grain harvested during a known ru
 YieldFlo calculates a new Yield Factor and enters it in the **Yield Factor** field. Press **Save & Apply** to save it to the active profile.
 
 Below the **Save & Apply** button, a **Last saved** line shows the date and time the calibration for the active profile and crop was last saved with **Save & Apply**. It is blank until a calibration has been saved.
+
+> **Note:** A calibration pass can be run at any time and does not require setting the baseline first. Run one when you change crop, at the start of a season, or whenever mapped yields drift from your weigh tickets.
 
 ### Manual factor adjustment
 
@@ -587,7 +591,7 @@ The YieldFlo module has a built-in settings page served from its own WiFi hotspo
 | **Communication — Mode** | WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the Module communication setting in the PC app — the app treats WiFi and Ethernet identically. |
 | **Communication — Ethernet subnet** | First three octets of the wired network (default `192.168.1`). The module takes IP `subnet.(50 + module ID)`; give the PC's wired adapter a static IP on the same subnet (e.g. `192.168.1.10`). In Ethernet mode the portal shows whether the W5500 board and cable link are detected. |
 | **Optical Sensor — Signals** | **Main + Comp** (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. **Main only**: only the main signal wire is connected — for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode. |
-| **Optical Sensor — Polarity** | **PNP** (default — FarmTrx-style, output HIGH with beam clear) or **NPN** (inverted logic). Select NPN if flow reads high with no grain and low with grain. |
+| **Optical Sensor — Polarity** | **PNP** (default — output HIGH with beam clear, the common choice for this kind of sensor) or **NPN** (inverted logic). Select NPN if flow reads high with no grain and low with grain. |
 | **WiFi Network** | Name and password of an external WiFi network. Tick **Use this Network** to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only. |
 | **Hotspot — Password** | Password for the module's own hotspot. Use 8–10 characters, or leave empty for an open hotspot. |
 

@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Tipp: leeren Elevator 10 Sek. laufen lassen um den Grundwert zu ermitteln.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibrierung gespeichert und angewendet.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>Zum Bestätigen „Speichern &amp;&amp; Anwenden" drücken.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>Referenzrate geändert</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Referenzrate geändert: {0} Hz auf {1} Hz. Ertragswerte verschieben sich um etwa {2} %. Nach dem Speichern eine Kalibrierfahrt durchführen. Trotzdem speichern?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Tatsächliches gewogenes Gewicht eingeben.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Keine Messdaten — zuerst einen Kalibrierungslauf durchführen.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Neuer Faktor: {0:F3}</value></data>

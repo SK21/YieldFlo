@@ -348,7 +348,7 @@ li { margin: 2px 0; }
 <h3>Setting the baseline</h3>
 
 <ol>
-<li>Start the clean-grain elevator with no grain</li>
+<li>Start the clean-grain elevator with no grain, at the engine speed you normally harvest at</li>
 <li>Open <strong>Menu &rarr; Yield Cal</strong></li>
 <li>Press <strong>Set Baseline</strong> &mdash; it samples for 5 seconds and enters the result in the <strong>Sensor Baseline</strong> field</li>
 <li>Press <strong>Save &amp; Apply</strong></li>
@@ -357,6 +357,8 @@ li { margin: 2px 0; }
 <p>Nothing takes effect, and nothing is saved, until <strong>Save &amp; Apply</strong> is pressed &mdash; this applies to both Set Baseline and Apply Cal.</p>
 
 <blockquote><strong>Tip:</strong> Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.</blockquote>
+
+<blockquote><strong>Important:</strong> If you set the baseline again later, run a calibration pass afterwards &mdash; the Yield Factor is tied to the baseline and will not match until you do. YieldFlo reminds you when you save.</blockquote>
 
 <h3>Noise readout</h3>
 
@@ -370,7 +372,7 @@ li { margin: 2px 0; }
 
 <p>Below the <strong>Set Baseline</strong> button, the <strong>Paddles</strong> readout shows the paddle rate the sensor is seeing, and &mdash; separated by <code>&gt;</code> &mdash; the reference rate captured the last time <strong>Set Baseline</strong> was run (e.g. &ldquo;7.4 Hz &gt; 7.4&rdquo;). The reference reads <strong>--</strong> until a baseline has been set. It shows <strong>--</strong> entirely when no module is connected or the module firmware predates the feature.</p>
 
-<p>Use it to verify the sensor is catching every paddle: the live rate should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). A live rate that has drifted from the reference means the elevator is running off the speed it was calibrated at &mdash; expected with normal engine load changes, but worth investigating if it persists. On combines with another optical yield monitor sharing the sensor, the live rate can be compared directly against that monitor's sensor calibration result (for FarmTrx, the &ldquo;X% @ Y Hz&rdquo; line on its Sensor Calibration page).</p>
+<p>Use it to verify the sensor is catching every paddle: the live rate should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). A live rate that has drifted from the reference means the elevator is running off the speed it was calibrated at &mdash; expected with normal engine load changes, but worth investigating if it persists. The figure turns orange if the drift is large enough to affect the yield reading. On combines with another optical yield monitor sharing the sensor, the live rate can be compared directly against that monitor's own sensor calibration result &mdash; these are usually reported on the monitor's sensor calibration screen as an obstruction percentage at a given frequency in Hz.</p>
 
 <h3>Flow channel selection</h3>
 
@@ -401,6 +403,8 @@ li { margin: 2px 0; }
 <p>YieldFlo calculates a new Yield Factor and enters it in the <strong>Yield Factor</strong> field. Press <strong>Save &amp; Apply</strong> to save it to the active profile.</p>
 
 <p>Below the <strong>Save &amp; Apply</strong> button, a <strong>Last saved</strong> line shows the date and time the calibration for the active profile and crop was last saved with <strong>Save &amp; Apply</strong>. It is blank until a calibration has been saved.</p>
+
+<blockquote><strong>Note:</strong> A calibration pass can be run at any time and does not require setting the baseline first. Run one when you change crop, at the start of a season, or whenever mapped yields drift from your weigh tickets.</blockquote>
 
 <h3>Manual factor adjustment</h3>
 
@@ -686,7 +690,7 @@ li { margin: 2px 0; }
 <tr><td><strong>Communication &mdash; Mode</strong></td><td>WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the Module communication setting in the PC app &mdash; the app treats WiFi and Ethernet identically.</td></tr>
 <tr><td><strong>Communication &mdash; Ethernet subnet</strong></td><td>First three octets of the wired network (default <code>192.168.1</code>). The module takes IP <code>subnet.(50 + module ID)</code>; give the PC's wired adapter a static IP on the same subnet (e.g. <code>192.168.1.10</code>). In Ethernet mode the portal shows whether the W5500 board and cable link are detected.</td></tr>
 <tr><td><strong>Optical Sensor &mdash; Signals</strong></td><td><strong>Main + Comp</strong> (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. <strong>Main only</strong>: only the main signal wire is connected &mdash; for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode.</td></tr>
-<tr><td><strong>Optical Sensor &mdash; Polarity</strong></td><td><strong>PNP</strong> (default &mdash; FarmTrx-style, output HIGH with beam clear) or <strong>NPN</strong> (inverted logic). Select NPN if flow reads high with no grain and low with grain.</td></tr>
+<tr><td><strong>Optical Sensor &mdash; Polarity</strong></td><td><strong>PNP</strong> (default &mdash; output HIGH with beam clear, the common choice for this kind of sensor) or <strong>NPN</strong> (inverted logic). Select NPN if flow reads high with no grain and low with grain.</td></tr>
 <tr><td><strong>WiFi Network</strong></td><td>Name and password of an external WiFi network. Tick <strong>Use this Network</strong> to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only.</td></tr>
 <tr><td><strong>Hotspot &mdash; Password</strong></td><td>Password for the module's own hotspot. Use 8&ndash;10 characters, or leave empty for an open hotspot.</td></tr>
 </table>

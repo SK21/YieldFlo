@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Совет: запустите пустой элеватор на 10 с для определения базового значения.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Калибровка сохранена и применена.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>Нажмите «Сохранить &amp;&amp; Применить», чтобы подтвердить.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>Опорная частота изменена</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Опорная частота изменена: {0} Гц на {1} Гц. Показания урожайности сместятся примерно на {2} %. После сохранения выполните калибровочный проезд. Всё равно сохранить?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Введите фактическую взвешенную массу.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Нет данных — сначала выполните калибровочный прогон.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Новый коэффициент: {0:F3}</value></data>

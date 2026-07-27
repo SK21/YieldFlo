@@ -130,6 +130,8 @@ namespace YieldFlo.Language
         internal static string lgCalibrationTip     => Get("lgCalibrationTip");
         internal static string lgCalSaved           => Get("lgCalSaved");
         internal static string lgPendingSave        => Get("lgPendingSave");
+        internal static string lgRefRateChanged     => Get("lgRefRateChanged");
+        internal static string lgRefRateChangedPrompt => Get("lgRefRateChangedPrompt");
         internal static string lgEnterWeighedAmt    => Get("lgEnterWeighedAmt");
         internal static string lgNoMeasuredData     => Get("lgNoMeasuredData");
         internal static string lgNewFactorResult    => Get("lgNewFactorResult");

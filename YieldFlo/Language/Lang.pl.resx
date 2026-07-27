@@ -112,6 +112,8 @@
   <data name="lgCalibrationTip"     xml:space="preserve"><value>Wskazówka: uruchom pusty elewator na 10 s, aby wyznaczyć poziom bazowy.</value></data>
   <data name="lgCalSaved"           xml:space="preserve"><value>Kalibracja zapisana i zastosowana.</value></data>
   <data name="lgPendingSave"        xml:space="preserve"><value>Naciśnij „Zapisz &amp;&amp; Zastosuj", aby potwierdzić.</value></data>
+  <data name="lgRefRateChanged"     xml:space="preserve"><value>Zmieniono częstotliwość odniesienia</value></data>
+  <data name="lgRefRateChangedPrompt" xml:space="preserve"><value>Zmieniono częstotliwość odniesienia: {0} Hz na {1} Hz. Odczyty plonu przesuną się o około {2}%. Po zapisaniu wykonaj przejazd kalibracyjny. Zapisać mimo to?</value></data>
   <data name="lgEnterWeighedAmt"    xml:space="preserve"><value>Wprowadź rzeczywistą zważoną masę.</value></data>
   <data name="lgNoMeasuredData"     xml:space="preserve"><value>Brak danych — najpierw wykonaj przebieg kalibracji.</value></data>
   <data name="lgNewFactorResult"    xml:space="preserve"><value>Nowy współczynnik: {0:F3}</value></data>
