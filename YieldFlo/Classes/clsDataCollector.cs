@@ -360,7 +360,8 @@ namespace YieldFlo.Classes
                 Sensor2Raw = Core.LastNoiseCount,
                 ModuleRpm = Core.LastModuleRpm,
                 PaddleHz = Core.LastPaddleHz,
-                MinCycleMs = Core.LastMinCycleMs
+                MinCycleMs = Core.LastMinCycleMs,
+                GateRejects = Core.LastGateRejects
             };
 
             Core.LastDataWriteOk = Core.Database?.YieldData.Insert(point) ?? true;

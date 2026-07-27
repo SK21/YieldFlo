@@ -143,11 +143,11 @@ namespace YieldFlo.Database
 INSERT INTO yield_data
     (job_id, timestamp, latitude, longitude, elevation, speed, heading,
      yield_rate, moisture, acres_accumulated, sensor1_raw, sensor2_raw,
-     rpm, paddle_hz, min_cycle_ms)
+     rpm, paddle_hz, min_cycle_ms, gate_rejects)
 VALUES
     (@jid, @ts, @lat, @lon, @elev, @spd, @hdg,
      @yr, @mst, @ac, @s1, @s2,
-     @rpm, @phz, @mcm)", conn);
+     @rpm, @phz, @mcm, @gr)", conn);
                 cmd.Parameters.AddWithValue("@jid", pt.JobId);
                 cmd.Parameters.AddWithValue("@ts", pt.Timestamp.ToString("o"));
                 cmd.Parameters.AddWithValue("@lat", pt.Latitude);
@@ -163,6 +163,7 @@ VALUES
                 cmd.Parameters.AddWithValue("@rpm", pt.ModuleRpm);
                 cmd.Parameters.AddWithValue("@phz", pt.PaddleHz);
                 cmd.Parameters.AddWithValue("@mcm", pt.MinCycleMs);
+                cmd.Parameters.AddWithValue("@gr", pt.GateRejects);
                 cmd.ExecuteNonQuery();
                 return true;
             }
@@ -201,7 +202,8 @@ VALUES
                     Sensor2Raw = reader.GetDouble(12),
                     ModuleRpm = reader.GetInt32(13),
                     PaddleHz = reader.GetInt32(14),
-                    MinCycleMs = reader.GetInt32(15)
+                    MinCycleMs = reader.GetInt32(15),
+                    GateRejects = reader.GetInt32(16)
                 });
             }
             return result;

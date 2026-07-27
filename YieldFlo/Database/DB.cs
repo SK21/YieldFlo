@@ -135,7 +135,8 @@ CREATE TABLE IF NOT EXISTS yield_data (
     sensor2_raw        REAL    NOT NULL DEFAULT 0,
     rpm                INTEGER NOT NULL DEFAULT 0,
     paddle_hz          INTEGER NOT NULL DEFAULT -1,
-    min_cycle_ms       INTEGER NOT NULL DEFAULT -1
+    min_cycle_ms       INTEGER NOT NULL DEFAULT -1,
+    gate_rejects       INTEGER NOT NULL DEFAULT -1
 );
 
 CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
@@ -207,6 +208,13 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
             {
                 using var cmd = new SQLiteCommand(
                     "ALTER TABLE yield_data ADD COLUMN min_cycle_ms INTEGER NOT NULL DEFAULT -1;", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
+            try
+            {
+                using var cmd = new SQLiteCommand(
+                    "ALTER TABLE yield_data ADD COLUMN gate_rejects INTEGER NOT NULL DEFAULT -1;", conn);
                 cmd.ExecuteNonQuery();
             }
             catch { }

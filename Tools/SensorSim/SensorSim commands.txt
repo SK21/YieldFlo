@@ -19,6 +19,18 @@ Wiring
 
 Serial commands (115200 baud, newline-terminated)
 -------------------------------------------------
+  Several commands can be sent on ONE line, separated by ';' or ',':
+
+      f 7; d 40; j 0; x 0; k 0
+
+  All parts are applied in order and the settings line is printed once at the
+  end — check it to confirm what actually took effect. An unrecognised part
+  names itself and the rest of the line still applies.
+
+  (Before 2026-07-26 this silently kept only the FIRST command on a line and
+  truncated anything past 15 characters, so a multi-command paste looked like
+  it worked while only one setting changed.)
+
   d 25    Duty — % of each period the beam is blocked (0-100).
           Use the empty-elevator baseline value from the app's Yield Cal
           screen to mimic a real machine running empty.
@@ -40,8 +52,28 @@ Serial commands (115200 baud, newline-terminated)
           module has no complementary-signal check, so every glitch reaches
           the measurement.
 
-  p       Toggle polarity: PNP (default, HIGH = beam clear, FarmTrx style)
-          or NPN (inverted).
+  k 5     Bridging kernels per second (0-100, 0 = off). Blocks the beam for
+          w milliseconds at a random point in the gap between paddles.
+          Emulates a grain kernel or clump crossing the beam mid-gap.
+
+          Different from x in the way that matters: x pulses are ~100 us and
+          the module's 2 ms glitch filter discards them before they reach the
+          cycle accounting. A kernel is wide enough to survive that filter, so
+          the module commits it as a real edge and treats it as a cycle
+          boundary — one paddle pitch scored as two short cycles. This is the
+          fault the period gate exists to reject, and the only way to produce
+          it on the bench.
+
+          Position within the gap is randomized deliberately: how much damage
+          a bridge does, and whether the gate catches it, both depend on where
+          it lands. Randomizing sweeps that range so the module's reject rate
+          becomes a measurement rather than a single case.
+
+  w 5     Kernel width in ms (1-15). Must be above 2 to clear the glitch
+          filter — set w 1 or w 2 and the module will reject the kernels as
+          electrical noise instead, which is a useful control test.
+
+  p       Toggle polarity: PNP (default, HIGH = beam clear) or NPN (inverted).
 
   s       Stop — freeze outputs at the current level (no more edges). Tests
           the module's no-pulse handling: SensorOK must drop within 500 ms.
@@ -51,7 +83,7 @@ Serial commands (115200 baud, newline-terminated)
   ?       Print current settings.
 
   Defaults on power-up: 100 Hz, 30 % blocked, PNP, no jitter, no glitches,
-  running.
+  no kernels (width 5 ms), running.
 
 Bench test recipes
 ------------------
@@ -76,6 +108,70 @@ Bench test recipes
    Yield Cal page "Paddles" readout should settle on the f value (7.0 Hz)
    within ~5 s. Glitches (x 20) must NOT change it — rejected pairs are
    never counted as cycles.
+
+5. Period gate check (firmware 26076+)
+
+   FIRST, the setting that makes or breaks this test:  k must be <= f/3.
+
+   The gate's threshold comes from a MEDIAN of recent edge intervals, so it
+   survives bridges only while un-bridged pitches remain the majority. Each
+   bridged pitch contributes two short intervals instead of one long one, so
+   short intervals take over once more than a third of pitches are bridged.
+   Past that the median falls into the short population, the threshold drops
+   below the kernels, and the gate stops catching anything — by design, it
+   fails safe rather than destructive. So at f 7 the ceiling is k 2.
+   k 5 at f 7 bridges 71% of pitches and will show G near zero: that is the
+   documented breakdown, not a fault.
+
+     a) f 7; d 40; j 0; x 0; k 0
+        Yield Cal page: Noise 0/s and G:0/s.
+        If G is absent ENTIRELY, the module or app predates the field —
+        reflash (InoID 26076+) and rebuild before going further. G:0/s and
+        no G at all mean completely different things.
+        Note the flow reading — this is truth, everything below compares to it.
+
+     b) k 1, w 5
+        One bridging kernel a second, 5 ms each.
+        EXPECT: G ticks between 0 and 1/s (roughly 60% of kernels land early
+        enough in the gap to be caught). Flow stays close to (a).
+        Noise stays 0 — kernels are not electrical noise.
+
+     c) f 20, d 40, k 5, w 5   — same algorithm, four times the sample rate.
+        Not a realistic elevator speed, but k 5 is now well inside k <= f/3,
+        so G reads a steady ~4/s instead of flickering. Use this when you need
+        an unambiguous count rather than a realistic geometry.
+
+     d) Back to f 7, then sweep k 2, k 5, k 10.
+        EXPECT G to RISE then COLLAPSE as k passes f/3, with flow degrading as
+        it does. This demonstrates the breakdown above — it is the expected
+        shape, not a regression.
+
+     e) w 3, then w 10, then w 15 at a fixed k within the limit.
+        Wider kernels block more beam, so a small genuine rise in flow is
+        correct — that obstruction is real. What must NOT happen is the
+        reading jumping to 2-4x, which is the unrepaired failure.
+
+   Control tests that prove the two filters are separate:
+     w 1 (below the glitch filter)  -> Noise rises, G stays 0. Handled as EMI.
+     x 20 with k 0                  -> Noise rises, G stays 0. Gate untouched.
+
+   Gate disabled comparison (to see what it is buying):
+     The gate needs 12 samples before it engages, so a fresh start shows the
+     unprotected behaviour for the first ~2 s. Send s then g to restart the
+     signal with k already running and watch the first couple of seconds:
+     flow should overshoot, then settle as the gate engages.
+
+   Also worth checking: min_cycle_ms in the logged data should sit near the
+   paddle period (~143 ms at f 7), NOT collapse to single digits. That is the
+   direct evidence no split cycle is being committed, and it is the stronger
+   of the two signals — G says the gate fired, min_cycle_ms says nothing bad
+   got through.
+
+   Note on what G counts: a kernel landing LATE in the gap is not rejected —
+   it becomes a cycle boundary, and the next genuine paddle then arrives too
+   soon after it and is rejected instead. So G includes some real paddles
+   caught as collateral. Duty survives (both paddles' blocked time lands in
+   one double-length cycle) but paddle_hz reads low while it happens.
 
 Display note
 ------------

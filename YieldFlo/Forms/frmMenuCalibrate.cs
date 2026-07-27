@@ -252,7 +252,13 @@ namespace YieldFlo.Forms
             foreach (int s in _noiseSamples) sum += s;
             int perSec = (int)Math.Round(sum * 5.0 / _noiseSamples.Count);
 
-            lblNoise.Text = Lang.lgNoise + " " + perSec + "/s";
+            // Second figure "G:n/s" is the module's period-gate reject rate — leading
+            // edges too early to be a paddle, i.e. grain bridging the inter-paddle gap
+            // caught before it could split a cycle. Unlike Noise this is not an
+            // electrical fault: a low steady rate rising with flow is the gate doing
+            // its job. Hidden entirely when the module firmware predates the field.
+            lblNoise.Text = Lang.lgNoise + " " + perSec + "/s"
+                + (Core.LastGateRejects >= 0 ? "  G:" + Core.LastGateRejects + "/s" : "");
             lblNoise.ForeColor = perSec > 0 ? Color.Orange : Color.Silver;
 
             if (Core.LastPaddleHz < 0)

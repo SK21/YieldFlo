@@ -55,6 +55,37 @@ void CommitEdge(bool blocked, uint32_t at)
 {
 	if (blocked)
 	{
+		// Feed the period estimator first, with the raw interval since the last
+		// leading edge — before the gate has any say. This is what keeps the
+		// estimator independent of the gate's own decisions.
+		if (LastLeadingUs != 0)
+		{
+			uint32_t sinceLead = at - LastLeadingUs;
+			if (sinceLead < 2000000)		// same absurd-interval guard as the cycle sums
+			{
+				GateRing[GateRingIndex] = sinceLead;
+				GateRingIndex = (GateRingIndex + 1) % GateRingSize;
+				if (GateRingCount < GateRingSize) GateRingCount++;
+			}
+		}
+		LastLeadingUs = at;
+
+		// Too early to be a paddle — a kernel bridged the inter-paddle gap.
+		// Leave the cycle open: SegStartUs below starts a blocked segment that
+		// the next blocked→clear edge folds into this cycle's blocked total,
+		// so the obstruction is counted where it belongs instead of becoming a
+		// false boundary. CycStartUs deliberately does not move, which is what
+		// preserves the phase reference for the paddle that is actually due.
+		if (GateMinCycUs != 0 && CycStartUs != 0 && (at - CycStartUs) < GateMinCycUs)
+		{
+			if (GateRejects < 0xFFFF) GateRejects++;
+			BeamBlocked = blocked;
+			SegStartUs = at;
+			LastEdgeUs = at;
+			if (DebugLED) digitalWriteFast(LedPinName, LOW);
+			return;
+		}
+
 		// clear→blocked edge: the cycle that started at the previous
 		// clear→blocked edge is complete — fold it into the window sums.
 		if (CycStartUs != 0)
@@ -132,6 +163,44 @@ uint8_t TakeMinCycleMs()
 	return (ms > 255) ? 255 : (uint8_t)ms;
 }
 
+// Gate rejections for the 1 Hz packet. A steady low count at high flow is the
+// gate doing its job; zero means either a clean signal or a threshold set too
+// loose to catch anything, which min_cycle_ms distinguishes.
+uint8_t TakeGateRejects()
+{
+	noInterrupts();
+	uint16_t r = GateRejects;  GateRejects = 0;
+	interrupts();
+	return (r > 255) ? 255 : (uint8_t)r;
+}
+
+// Median of the raw leading-edge intervals. Called from ReadFlow at 5 Hz, well
+// outside interrupt context — sorting 32 entries is far too slow for the ISR,
+// which only ever appends to the ring and reads the cached threshold.
+// Copying slots 0..n-1 is correct whether or not the ring has wrapped: a median
+// needs the multiset, not the order.
+static uint32_t GateMedianUs()
+{
+	uint32_t buf[GateRingSize];
+	uint8_t n;
+
+	noInterrupts();
+	n = GateRingCount;
+	for (uint8_t i = 0; i < n; i++) buf[i] = GateRing[i];
+	interrupts();
+
+	if (n < GateMinSamples) return 0;
+
+	for (uint8_t i = 1; i < n; i++)
+	{
+		uint32_t v = buf[i];
+		int8_t j = (int8_t)i - 1;
+		while (j >= 0 && buf[j] > v) { buf[j + 1] = buf[j]; j--; }
+		buf[j + 1] = v;
+	}
+	return buf[n / 2];
+}
+
 void ReadFlow()
 {
 	// Snapshot the completed-cycle sums.
@@ -149,9 +218,34 @@ void ReadFlow()
 	SensorOK = ((micros() - lastEdge) < 500000);
 
 	if (!SensorOK)
+	{
 		SensorRatio = 0;
-	else if (wt > 0)
-		SensorRatio = (uint16_t)(((uint64_t)wb * 1000) / wt);
-	// else: no cycle completed this window (slow pulse rate) — hold the last
-	// value; SensorOK zeroes it if the signal actually stops.
+
+		// Discard the period history with it. Whatever the elevator does next —
+		// restart, different speed — must be measured fresh rather than gated
+		// against a period that no longer applies. Clearing LastLeadingUs also
+		// stops the stall itself entering the ring as one enormous interval.
+		noInterrupts();
+		GateRingCount = 0;
+		GateRingIndex = 0;
+		GateMinCycUs = 0;
+		LastLeadingUs = 0;
+		interrupts();
+	}
+	else
+	{
+		// Refresh the gate threshold from the current period distribution.
+		// Returns 0 until the ring holds GateMinSamples, which leaves the gate
+		// open through startup — the same behaviour as before it existed.
+		uint32_t med = GateMedianUs();
+		uint32_t thresh = (med > 0) ? (uint32_t)(((uint64_t)med * GatePercent) / 100) : 0;
+		noInterrupts();
+		GateMinCycUs = thresh;
+		interrupts();
+
+		if (wt > 0)
+			SensorRatio = (uint16_t)(((uint64_t)wb * 1000) / wt);
+		// else: no cycle completed this window (slow pulse rate) — hold the last
+		// value; SensorOK zeroes it if the signal actually stops.
+	}
 }

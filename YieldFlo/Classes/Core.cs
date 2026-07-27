@@ -34,6 +34,13 @@ namespace YieldFlo.Classes
         public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static int    LastModuleRpm    { get; set; }         // elevator RPM from the 5 Hz packet; fixed reference 200 when no RPM sensor fitted
         public static int    LastMinCycleMs   { get; set; } = -1;   // shortest completed paddle cycle in the 1 Hz packet's window, ms; -1 = not reported (old firmware)
+        // Leading edges the module's period gate rejected in the 1 Hz packet's window —
+        // grain bridging the inter-paddle gap, caught before it could split a cycle.
+        // Carried on both transports (CAN frame byte 5, UDP PGN 40002 byte 7).
+        public static int    LastGateRejects  { get; set; } = -1;   // -1 = not reported (firmware predates the field)
+        /// <summary>Per-session diagnostic CSV, one row per module packet. Always running.</summary>
+        public static clsDiagLogger DiagLog { get; private set; }
+
         public static bool   ModuleConnected  { get; set; }
         public static DateTime LastModuleReceive { get; set; }
         public static bool   LastDataWriteOk  { get; set; } = true;
@@ -118,6 +125,11 @@ namespace YieldFlo.Classes
                 MainTimer.AutoReset = true;
                 MainTimer.Enabled = true;
 
+                // One diagnostic CSV per session, started before any packet can
+                // arrive so a fault in the first seconds is still captured.
+                DiagLog = new clsDiagLogger();
+                DiagLog.Start();
+
                 Props.WriteActivityLog("Started", true);
                 cStartTime = DateTime.Now;
             }
@@ -147,6 +159,7 @@ namespace YieldFlo.Classes
                 else
                     SafeTry(() => Collector?.StopJob());
                 SafeTry(() => Database?.Close());
+                SafeTry(() => DiagLog?.Stop());
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => LogRunTime());
             }

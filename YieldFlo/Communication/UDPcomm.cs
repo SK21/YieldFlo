@@ -198,17 +198,26 @@ namespace YieldFlo.Communication
             Core.LastModuleReceive = DateTime.UtcNow;
 
             Core.Yield?.PushSensorReading(Core.LastSensor1);
+
+            // One diagnostic row per module packet — 5 Hz, independent of whether a
+            // job is recording, so a fault between jobs still leaves evidence.
+            Core.DiagLog?.Log();
         }
 
         private void ParseTempPacket(byte[] data)
         {
-            // Temperature packet (8 bytes; 7 before min_cycle_ms added, 6 before paddle_hz):
+            // Temperature packet (9 bytes; 8 before gate_rejects added, 7 before
+            // min_cycle_ms, 6 before paddle_hz — each field is gated on both its flag
+            // bit and the packet length, so any firmware vintage parses correctly):
             // [0-1]  PGN 40002 little-endian
-            // [2]    flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent
+            // [2]    flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent,
+            //               bit3=GateRejectsPresent
             // [3-4]  temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
             // [5]    paddle_hz uint8  (paddles/s — only when bit1 set)
             // [6]    min_cycle_ms uint8  (shortest paddle cycle this window, ms — only when bit2 set)
-            // [last] CRC8
+            // [7]    gate_rejects uint8  (period-gate rejections this window — only when bit3 set)
+            // [last] CRC8 — always the final byte, over everything before it, so the
+            //        packet can grow without either side changing how it is checked
             if (data.Length < 6) return;
             if (!Core.Tls.GoodCRC(data)) return;
 
@@ -223,7 +232,33 @@ namespace YieldFlo.Communication
 
             bool minCycleOk = (data[2] & 0x04) != 0 && data.Length >= 8;
             Core.LastMinCycleMs = minCycleOk ? data[6] : -1;
+
+            // -1 rather than a stale value when the module predates the field, so the
+            // readout shows "not available" instead of a count frozen at whatever
+            // arrived last.
+            bool gateOk = (data[2] & 0x08) != 0 && data.Length >= 9;
+            Core.LastGateRejects = gateOk ? data[7] : -1;
+
+            // Diagnostic: one line whenever the SHAPE of this packet changes, so a
+            // missing readout can be settled from the log rather than inferred. It
+            // separates the two candidates directly — len=8 flags=0x07 means the
+            // module never sends the field (firmware not updated), len=9 flags=0x0F
+            // means it does and the fault is on this side. Logs once per change, not
+            // per packet, so it costs nothing at 1 Hz.
+            int shape = (data.Length << 8) | data[2];
+            if (shape != _lastTempShape)
+            {
+                _lastTempShape = shape;
+                Props.WriteErrorLog(
+                    $"PGN40002 shape: len={data.Length} flags=0x{data[2]:X2} " +
+                    $"paddleHz={Core.LastPaddleHz} minCycleMs={Core.LastMinCycleMs} " +
+                    $"gateRejects={Core.LastGateRejects}");
+            }
         }
+
+        // Last seen (length, flags) of PGN 40002, so the diagnostic above logs on
+        // change rather than every packet. -1 = nothing seen yet.
+        private int _lastTempShape = -1;
 
         // ── Socket callbacks ──────────────────────────────────────────────────
         private void HandleSend(IAsyncResult asyncResult)

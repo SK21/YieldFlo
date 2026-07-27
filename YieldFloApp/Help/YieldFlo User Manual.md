@@ -290,11 +290,13 @@ Next to the **Set Baseline** button, the **Noise** readout shows how many electr
 
 A rising noise value — especially one that climbs with elevator speed — indicates electrical interference on the sensor wire (static discharge from the elevator, a chafed or loose wire shaken by vibration, or pickup from nearby wiring). The module filters these glitches out of the yield reading automatically, but persistent noise is worth fixing at the source: check the sensor wire's routing and shielding, connector condition, and the ground path from the sensor bracket and elevator housing to the chassis. The readout works in both sensor signal modes, including Main only.
 
+On module firmware that supports it, a second figure appears next to Noise: **G:n/s**, the rate at which the module is discarding false paddle signals caused by grain crossing the beam between paddles. Unlike Noise this is not an electrical fault — a low rate that rises with flow is normal and needs no action. It shows on both WiFi and CAN connections, and is hidden when the module firmware predates the feature.
+
 ### Paddle rate readout
 
 Below the **Set Baseline** button, the **Paddles** readout shows how many elevator paddles per second the sensor is seeing, averaged over the last 5 seconds. It shows **--** when no module is connected or the module firmware predates the feature.
 
-Use it to verify the sensor is catching every paddle: the value should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). On combines with another optical yield monitor sharing the sensor, the value can be compared directly against that monitor's sensor calibration result (for FarmTrx, the "X% @ Y Hz" line on its Sensor Calibration page).
+Use it to verify the sensor is catching every paddle: the value should match the paddle rate calculated from elevator speed and paddle spacing, and should scale directly with elevator rpm. A reading at half the expected rate means the sensor is missing paddles (alignment or sensing-range problem). On combines with another optical yield monitor sharing the sensor, the value can be compared directly against that monitor's own sensor calibration result — these are usually reported on the monitor's sensor calibration screen as an obstruction percentage at a given frequency in Hz.
 
 ### Processing delay
 
@@ -579,7 +581,7 @@ The YieldFlo module has a built-in settings page served from its own WiFi hotspo
 | **Communication — Mode** | WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the Module communication setting in the PC app — the app treats WiFi and Ethernet identically. |
 | **Communication — Ethernet subnet** | First three octets of the wired network (default `192.168.1`). The module takes IP `subnet.(50 + module ID)`; give the PC's wired adapter a static IP on the same subnet (e.g. `192.168.1.10`). In Ethernet mode the portal shows whether the W5500 board and cable link are detected. |
 | **Optical Sensor — Signals** | **Main + Comp** (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. **Main only**: only the main signal wire is connected — for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode. |
-| **Optical Sensor — Polarity** | **PNP** (default — FarmTrx-style, output HIGH with beam clear) or **NPN** (inverted logic). Select NPN if flow reads high with no grain and low with grain. |
+| **Optical Sensor — Polarity** | **PNP** (default — output HIGH with beam clear, the common choice for this kind of sensor) or **NPN** (inverted logic). Select NPN if flow reads high with no grain and low with grain. |
 | **WiFi Network** | Name and password of an external WiFi network. Tick **Use this Network** to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only. |
 | **Hotspot — Password** | Password for the module's own hotspot. Use 8–10 characters, or leave empty for an open hotspot. |
 

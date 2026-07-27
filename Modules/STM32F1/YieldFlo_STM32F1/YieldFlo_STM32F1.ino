@@ -14,7 +14,7 @@
 // Build with USB support set to "None"; debug output is on USART1 (PA9/PA10).
 
 #define InoDescription "YieldFlo_STM32F1"
-#define InoID 24076          // firmware version — update with every build (DDMMY format)
+#define InoID 26076          // firmware version — update with every build (DDMMY format)
 
 // ── User settings (compile-time) ─────────────────────────────────────────
 const uint8_t ModuleID       = 0;     // module ID (informational)
@@ -81,6 +81,44 @@ const uint32_t GlitchMinUs = 2000;
 volatile bool     PendingValid = false;		// an uncommitted transition is held
 volatile bool     PendingBlocked = false;	// the state that transition switches to
 volatile uint32_t PendingTimeUs = 0;		// micros() of the pending edge
+
+// ── Period gate ──────────────────────────────────────────────────────────
+// A grain kernel crossing the beam between paddles blocks it for several ms —
+// long enough to outlive the glitch filter above, so it arrives here as a real
+// edge. CommitEdge would treat it as a cycle boundary, splitting one paddle
+// pitch into two short cycles and corrupting the ratio. The gate rejects a
+// leading edge arriving too early to be a paddle: the cycle simply stays open,
+// and the kernel's obstruction counts as blocked time within it, which is what
+// it physically is. Nothing is discarded and no repair is needed afterwards.
+//
+// The threshold is a fraction of the median of recent raw leading-edge
+// intervals, recorded BEFORE the gate sees them. A median over raw intervals,
+// rather than a mean over accepted ones, for two reasons. A split can only ever
+// make an interval shorter, never longer, so the true period sits above the
+// corrupted tail and a median walks straight past it — it holds until short
+// cycles become the majority, which needs about a third of all pitches to be
+// splitting. And recording every interval regardless of the verdict means
+// rejections cannot starve the estimator, so the gate has no way to latch
+// itself shut the way a feedback-driven threshold would.
+const uint8_t  GateRingSize   = 32;		// ~4 s of history at 7.4 paddles/s
+const uint8_t  GateMinSamples = 12;		// ring fill required before gating starts
+// Reject a leading edge arriving below this percentage of the median period.
+// Higher catches a kernel landing further into the inter-paddle gap; lower is
+// safer against a genuine fast cycle. A sustained speed change moves the median
+// with it, so only an implausibly abrupt one could be clipped. This is the value
+// to tune from field min_cycle_ms data — everything else here is
+// self-determining. Integer percent rather than a float: it keeps both
+// platforms' Flow.ino identical, and on the STM32F1 (Cortex-M3, no FPU) a single
+// float multiply links in ~1 KB of soft-float — measured — for arithmetic that
+// runs five times a second outside the ISR.
+const uint32_t GatePercent = 75;
+
+volatile uint32_t GateRing[GateRingSize];	// raw leading-edge intervals, µs
+volatile uint8_t  GateRingCount = 0;
+volatile uint8_t  GateRingIndex = 0;
+volatile uint32_t LastLeadingUs = 0;	// micros() of the last leading edge, gated or not
+volatile uint32_t GateMinCycUs = 0;		// live threshold; 0 = too little history, gate open
+volatile uint16_t GateRejects = 0;		// leading edges rejected since last TakeGateRejects()
 
 // RPM ISR state
 volatile uint32_t RPMpulseCount = 0;
