@@ -252,10 +252,20 @@ namespace YieldFlo.Classes
 
                 if (Database.Crops.GetAll().Count == 0)
                 {
-                    Database.Crops.Create("Wheat",  "Cereal",  60.0, 14.0, 14.0);
-                    Database.Crops.Create("Canola", "OilSeed", 50.0, 10.0, 10.0);
-                    Database.Crops.Create("Corn",   "Corn",    56.0, 15.5, 15.5);
-                    Database.Crops.Create("Barley", "Cereal",  48.0, 14.0, 14.0);
+                    // Test weight is the statutory bushel weight in lb/bu — a fixed
+                    // conversion constant per crop, not a measured density. Moisture
+                    // values are the CGC straight-grade "dry" thresholds (Sorghum is
+                    // not CGC-graded; 14.0 is the US No.2 limit).
+                    Database.Crops.Create("Barley",   "Cereal",  48.0, 14.8, 14.8);
+                    Database.Crops.Create("Canola",   "OilSeed", 50.0, 10.0, 10.0);
+                    Database.Crops.Create("Corn",     "Corn",    56.0, 15.5, 15.5);
+                    Database.Crops.Create("Flax",     "OilSeed", 56.0, 10.0, 10.0);
+                    Database.Crops.Create("Lentils",  "Pulse",   60.0, 14.0, 14.0);
+                    Database.Crops.Create("Oats",     "Cereal",  34.0, 14.0, 14.0);
+                    Database.Crops.Create("Peas",     "Pulse",   60.0, 16.0, 16.0);
+                    Database.Crops.Create("Sorghum",  "Cereal",  56.0, 14.0, 14.0);
+                    Database.Crops.Create("Soybeans", "OilSeed", 60.0, 14.0, 14.0);
+                    Database.Crops.Create("Wheat",    "Cereal",  60.0, 14.5, 14.5);
                 }
 
                 if (Database.Headers.GetAll().Count == 0)

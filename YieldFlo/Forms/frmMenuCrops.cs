@@ -23,6 +23,12 @@ namespace YieldFlo.Forms
         private void frmMenuCrops_Load(object sender, EventArgs e)
         {
             ApplyTheme();
+            // Metric keeps "Test Wt … kg/hL", which is what the field genuinely is
+            // to a metric user and what their receipt quotes. Imperial says
+            // "Bushel Wt … lb/bu" instead, because there the value is the statutory
+            // per-crop constant (wheat 60) — labelling it "Test Wt" invited users to
+            // enter their measured ticket figure, which skews every bushel total.
+            lblTestWeight.Text     = Props.IsMetric ? Lang.lgTestWeight : Lang.lgBushelWeight;
             lblTestWeightUnit.Text = Props.TestWeightUnit;   // "kg/hL" in metric, "lb/bu" imperial
             FormPositions.Restore(this);
             this.FormClosed += (s2, ev2) => FormPositions.Save(this);
@@ -45,8 +51,9 @@ namespace YieldFlo.Forms
         private void frmMenuCrops_Shown(object sender, EventArgs e)
         {
             KeyboardHelper.Wire(this, txtCropName, "Crop Name");
-            NumpadHelper.Wire(this, numTestWeight,     0,   200, 0, "Test Weight (" + Props.TestWeightUnit + ")");
-            NumpadHelper.Wire(this, numMarketMoisture, 0,    40, 0, "Market Moisture (%)");
+            NumpadHelper.Wire(this, numTestWeight,     0,   200, 0,
+                (Props.IsMetric ? "Test Weight (" : "Bushel Weight (") + Props.TestWeightUnit + ")");
+            NumpadHelper.Wire(this, numMarketMoisture, 0,    40, 1, "Market Moisture (%)");
             btnSave.Focus();
         }
 

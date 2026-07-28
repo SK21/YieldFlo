@@ -219,6 +219,13 @@ Make sure the elevator is running with no grain.</value></data>
   <data name="lgMustHaveOneCrop" xml:space="preserve"><value>Must have at least one crop.</value></data>
   <data name="lgDeleteCropPrompt" xml:space="preserve"><value>Delete this crop?</value></data>
   <data name="lgTestWeightRequired" xml:space="preserve"><value>Enter a test weight greater than zero.</value></data>
+  <!-- Shown in bu/ac mode only, in place of lgTestWeight. The field holds the
+       statutory bushel weight (a fixed per-crop constant, wheat 60 lb/bu), not
+       a measured test weight — the old label invited users to type their
+       elevator ticket figure, which skews every bushel total. Deliberately
+       left untranslated: bu/ac mode is North America, and missing keys fall
+       back to English (see Lang.Designer.cs). -->
+  <data name="lgBushelWeight" xml:space="preserve"><value>Bushel Wt:</value></data>
 
   <!-- ── Headers form ───────────────────────────────────────────────────── -->
   <data name="lgType" xml:space="preserve"><value>Type:</value></data>

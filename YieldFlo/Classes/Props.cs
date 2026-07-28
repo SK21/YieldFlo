@@ -61,6 +61,28 @@ namespace YieldFlo.Classes
         // Grain test weight (specific / hectolitre weight) is stored internally
         // as lb/bu (US Winchester bushel = 35.239 L). Metric users work in kg/hL,
         // the standard European/Canadian grain unit: 1 lb/bu = 1.287184 kg/hL.
+        //
+        // KNOWN LIMITATION. In bu/ac mode this field is the *statutory* bushel
+        // weight — a fixed per-crop constant (wheat 60, barley 48, oats 34) that
+        // makes bu/ac match what the elevator pays on, since grain sells by mass
+        // and converts back at 60. In t/ha mode the same stored value is entered
+        // as a *measured density* off a receipt. Those are different quantities
+        // sharing a column.
+        //
+        // It is harmless as long as the user stays in one mode: in t/ha the value
+        // cancels out entirely (Calculate() divides by it, DisplayRate multiplies
+        // it back), so nothing a metric user sees depends on it. A user who enters
+        // kg/hL and then switches to bu/ac gets kg/hL ÷ 1.287184 as the divisor
+        // instead of the statutory figure — roughly ±5% for wheat, corn, canola
+        // and barley, but up to ~25% for oats, whose statutory 34 lb/bu sits well
+        // below any real oat density. Accepted: that user is rare (Canada is the
+        // only market where kg/hL receipts and bushel usage overlap) and the
+        // "Bushel Wt" label makes a wrong stored value visible on the way out.
+        //
+        // Note this conversion also cannot reproduce the CGC chart's own lb/bu
+        // columns: their kg/hL is a compaction-adjusted regression while their
+        // lb/Winchester bu is pure arithmetic, so applying an arithmetic constant
+        // to their kg/hL lands between the two and matches neither.
         private const double KgHlPerLbBu = 1.287184;
         public static double DisplayTestWeight(double lbBu) => IsMetric ? lbBu * KgHlPerLbBu : lbBu;
         public static double TestWeightToLbBu(double displayTw) => IsMetric ? displayTw / KgHlPerLbBu : displayTw;

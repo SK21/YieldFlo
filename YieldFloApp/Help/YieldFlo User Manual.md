@@ -177,7 +177,8 @@ Crops store the grain-specific parameters used in yield calculations and reporti
 |-------|-------------|
 | **Name** | Crop name (e.g. Wheat, Corn, Canola) |
 | **Category** | Grain type category |
-| **Test Weight** | Standard bushel weight (lbs/bu) — used to convert mass to bushels |
+| **Bushel Wt** | Shown when units are **bu/ac**. The fixed bushel weight for the crop in lb/bu — wheat 60, barley 48, oats 34. Converts harvested mass to bushels. |
+| **Test Wt** | Shown when units are **t/ha**. The same setting in kg/hL, as quoted on a grain receipt. |
 | **Market Moisture** | Standard moisture for yield reporting (e.g. 14.5% for wheat) |
 
 ### Adding a crop
