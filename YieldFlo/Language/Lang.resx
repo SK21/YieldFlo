@@ -132,8 +132,15 @@
 
   <!-- ── Settings form ──────────────────────────────────────────────────── -->
   <data name="lgUnits" xml:space="preserve"><value>Units</value></data>
-  <data name="lgImperial" xml:space="preserve"><value>Imperial</value></data>
-  <data name="lgMetric" xml:space="preserve"><value>Metric</value></data>
+  <!-- Unit-mode toggle. Labelled with the units themselves rather than
+       "Imperial"/"Metric": the non-metric mode uses the US (Winchester)
+       bushel, not the Imperial one, and the bushel is the only unit in the
+       app where the two systems differ — so "Imperial" named the wrong
+       system on the one unit it mattered for. These two values are left
+       untranslated in every language file; bu/ac and t/ha read the same
+       everywhere. The stored setting string is still "Imperial". -->
+  <data name="lgImperial" xml:space="preserve"><value>bu/ac</value></data>
+  <data name="lgMetric" xml:space="preserve"><value>t/ha</value></data>
   <data name="lgTheme" xml:space="preserve"><value>Theme</value></data>
   <data name="lgDark" xml:space="preserve"><value>Dark</value></data>
   <data name="lgLight" xml:space="preserve"><value>Light</value></data>

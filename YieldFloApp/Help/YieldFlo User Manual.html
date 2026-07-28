@@ -96,7 +96,7 @@ li { margin: 2px 0; }
 <p>On first launch YieldFlo creates a default crop, header, and profile. Before starting your first job:</p>
 
 <ol>
-<li>Open <strong>Menu &rarr; Settings</strong> and select your preferred units (Imperial or Metric)</li>
+<li>Open <strong>Menu &rarr; Settings</strong> and select your preferred units (bu/ac or t/ha)</li>
 <li>Open <strong>Menu &rarr; Profiles</strong> and enter your combine ID</li>
 <li>Open <strong>Menu &rarr; Crops</strong> and add or edit crops for your operation</li>
 <li>Open <strong>Menu &rarr; Headers</strong> and enter the correct cutting width</li>
@@ -263,7 +263,7 @@ li { margin: 2px 0; }
 <tr><th>Field</th><th>Description</th></tr>
 <tr><td><strong>Name</strong></td><td>Header name (e.g. 30ft Draper, 8-row Corn Head)</td></tr>
 <tr><td><strong>Type</strong></td><td>Header type category</td></tr>
-<tr><td><strong>Width</strong></td><td>Cutting width in feet (Imperial) or metres (Metric)</td></tr>
+<tr><td><strong>Width</strong></td><td>Cutting width in feet or metres, following your <strong>Units</strong> setting</td></tr>
 <tr><td><strong>Ahead of Pivot</strong></td><td>Distance the header sits ahead of the position AOG broadcasts. Enter AOG's <strong>pivot-to-header</strong> distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them.</td></tr>
 </table>
 
@@ -607,11 +607,16 @@ li { margin: 2px 0; }
 <h3>Units</h3>
 
 <table>
-<tr><th>Setting</th><th>Options</th></tr>
-<tr><td><strong>Units</strong></td><td>Imperial (bu/ac, mph, acres, lbs) or Metric (t/ha, km/h, ha, tonnes)</td></tr>
+<tr><th>Units setting</th><th>bu/ac</th><th>t/ha</th></tr>
+<tr><td><strong>Yield rate</strong></td><td>bu/ac</td><td>t/ha</td></tr>
+<tr><td><strong>Area</strong></td><td>acres</td><td>hectares</td></tr>
+<tr><td><strong>Speed</strong></td><td>mph</td><td>km/h</td></tr>
+<tr><td><strong>Mass</strong></td><td>bushels</td><td>tonnes</td></tr>
+<tr><td><strong>Header width</strong></td><td>feet</td><td>metres</td></tr>
+<tr><td><strong>Test weight</strong></td><td>lb/bu</td><td>kg/hL</td></tr>
 </table>
 
-<p>Changing units takes effect immediately. Historical data is stored in metric units internally and converted for display.</p>
+<p>Changing units takes effect immediately. Historical data is stored internally in acres and bushels and converted for display.</p>
 
 <h3>Module communication</h3>
 

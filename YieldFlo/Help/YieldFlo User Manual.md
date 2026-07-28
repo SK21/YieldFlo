@@ -54,7 +54,7 @@ YieldFlo receives GPS and section control data from AOG over a local network (UD
 
 On first launch YieldFlo creates a default crop, header, and profile. Before starting your first job:
 
-1. Open **Menu → Settings** and select your preferred units (Imperial or Metric)
+1. Open **Menu → Settings** and select your preferred units (bu/ac or t/ha)
 2. Open **Menu → Profiles** and enter your combine ID
 3. Open **Menu → Crops** and add or edit crops for your operation
 4. Open **Menu → Headers** and enter the correct cutting width
@@ -204,7 +204,7 @@ Headers define the cutting width of the front attachment. Width is used to calcu
 |-------|-------------|
 | **Name** | Header name (e.g. 30ft Draper, 8-row Corn Head) |
 | **Type** | Header type category |
-| **Width** | Cutting width in feet (Imperial) or metres (Metric) |
+| **Width** | Cutting width in feet or metres, following your **Units** setting |
 | **Ahead of Pivot** | Distance the header sits ahead of the position AOG broadcasts. Enter AOG's **pivot-to-header** distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them. |
 
 ### Adding a header
@@ -515,11 +515,16 @@ The export folder is remembered for subsequent exports. The CSV format is compat
 
 ### Units
 
-| Setting | Options |
-|---------|---------|
-| **Units** | Imperial (bu/ac, mph, acres, lbs) or Metric (t/ha, km/h, ha, tonnes) |
+| Units setting | bu/ac | t/ha |
+|---------------|-------|------|
+| **Yield rate** | bu/ac | t/ha |
+| **Area** | acres | hectares |
+| **Speed** | mph | km/h |
+| **Mass** | bushels | tonnes |
+| **Header width** | feet | metres |
+| **Test weight** | lb/bu | kg/hL |
 
-Changing units takes effect immediately. Historical data is stored in metric units internally and converted for display.
+Changing units takes effect immediately. Historical data is stored internally in acres and bushels and converted for display.
 
 ### Module communication
 
