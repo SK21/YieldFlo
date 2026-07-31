@@ -20,7 +20,7 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 26076         // firmware version — update with every build (DDMMY format)
+#define InoID 31076         // firmware version — update with every build (DDMMY format)
 #define StructVersion 4     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 // Comm modes
@@ -138,6 +138,16 @@ volatile uint8_t  GateRingIndex = 0;
 volatile uint32_t LastLeadingUs = 0;	// micros() of the last leading edge, gated or not
 volatile uint32_t GateMinCycUs = 0;		// live threshold; 0 = too little history, gate open
 volatile uint16_t GateRejects = 0;		// leading edges rejected since last TakeGateRejects()
+
+// The median the threshold above was derived from, cached for the 1 Hz packet.
+// Not ISR state and not volatile: ReadFlow writes it and Comm reads it, both
+// from loop(). Reporting the median rather than the threshold costs the same
+// byte but says more — the threshold is just 75% of it, whereas 0 additionally
+// means the estimator is unarmed, and comparing it against 1000/paddle_hz
+// measures how contaminated the raw interval stream is (paddle_hz counts gated
+// cycles, this median is over raw intervals, so they diverge in proportion to
+// the spurious edges arriving).
+uint32_t GateMedianUsCache = 0;
 
 // RPM ISR state
 volatile uint32_t RPMpulseCount = 0;

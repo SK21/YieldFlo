@@ -22,9 +22,9 @@ namespace YieldFlo.Classes
     /// files are pruned so it cannot grow without bound.
     ///
     /// Example:
-    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,SpeedKmh,YieldRate,JobId
-    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,5.4,48.2,17
-    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,5.4,63.1,17
+    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId
+    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17
+    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17
     ///
     ///   PCTime      - PC clock when the packet was parsed (HH:mm:ss.fff)
     ///   Sensor1     - duty-channel obstruction ratio, raw, NOT baseline-corrected
@@ -36,9 +36,24 @@ namespace YieldFlo.Classes
     ///                 Collapsing toward single digits is the signature of a spurious edge
     ///                 being committed as if it were a full paddle cycle.
     ///   GateRejects - edges the period gate rejected; -1 = not reported
+    ///   MedianCycleMs - the gate's period estimate, ms; its threshold is 75% of this.
+    ///                 0 = estimator unarmed, gate passing everything. -1 = not reported.
     ///   SpeedKmh    - ground speed at that moment
     ///   YieldRate   - instantaneous yield the app computed from this packet
     ///   JobId       - active job, or -1 when none is recording
+    ///
+    /// Reading the file: rows arrive at 5 Hz but PaddleHz, MinCycleMs, GateRejects and
+    /// MedianCycleMs come from the 1 Hz packet, so each of their values is repeated on
+    /// about five consecutive rows. Any per-second aggregate of those four columns has
+    /// to de-duplicate first — summing GateRejects across rows overcounts five-fold.
+    /// Sensor1, Noise, Rpm and Moisture are genuinely per-row.
+    ///
+    /// The four gate columns together say why every cycle was accepted or rejected:
+    /// GateRejects counts what the gate caught, MinCycleMs what got through,
+    /// MedianCycleMs the threshold both were judged against, and PaddleHz whether real
+    /// paddles were being lost. Rejects rising while MinCycleMs holds near the paddle
+    /// period is the gate working; PaddleHz halving with MinCycleMs at roughly double
+    /// the period is the gate rejecting real paddles, which merges two into one cycle.
     /// </summary>
     public class clsDiagLogger
     {
@@ -71,7 +86,8 @@ namespace YieldFlo.Classes
                         "Diag_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
                     cWriter = new StreamWriter(cFilePath, false) { AutoFlush = true };
                     cWriter.WriteLine("PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz," +
-                                      "MinCycleMs,GateRejects,SpeedKmh,YieldRate,JobId");
+                                      "MinCycleMs,GateRejects,MedianCycleMs," +
+                                      "SpeedKmh,YieldRate,JobId");
                     cRunning = true;
                 }
                 catch (Exception ex)
@@ -103,6 +119,7 @@ namespace YieldFlo.Classes
                         Core.LastPaddleHz.ToString(ci),
                         Core.LastMinCycleMs.ToString(ci),
                         Core.LastGateRejects.ToString(ci),
+                        Core.LastMedianCycleMs.ToString(ci),
                         (Core.GPS?.Speed ?? 0).ToString("0.##", ci),
                         (Core.Yield?.InstantYield ?? 0).ToString("0.##", ci),
                         (Core.Collector?.ActiveJobId ?? -1).ToString(ci)));

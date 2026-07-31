@@ -38,6 +38,12 @@ namespace YieldFlo.Classes
         // grain bridging the inter-paddle gap, caught before it could split a cycle.
         // Carried on both transports (CAN frame byte 5, UDP PGN 40002 byte 7).
         public static int    LastGateRejects  { get; set; } = -1;   // -1 = not reported (firmware predates the field)
+        // The gate's own period estimate, ms — the median of recent raw leading-edge
+        // intervals that its threshold is 75% of. Carried on both transports (CAN
+        // frame byte 6, UDP PGN 40002 byte 8). 0 means the estimator is unarmed and
+        // the gate is passing everything, which no other field reveals; comparing it
+        // against 1000/LastPaddleHz measures how many spurious edges are arriving.
+        public static int    LastMedianCycleMs { get; set; } = -1;  // -1 = not reported (firmware predates the field)
         /// <summary>Per-session diagnostic CSV, one row per module packet. Always running.</summary>
         public static clsDiagLogger DiagLog { get; private set; }
 

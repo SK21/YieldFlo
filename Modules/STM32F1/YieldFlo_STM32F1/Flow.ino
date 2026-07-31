@@ -174,6 +174,17 @@ uint8_t TakeGateRejects()
 	return (r > 255) ? 255 : (uint8_t)r;
 }
 
+// Gate period estimate for the 1 Hz packet, in ms. A level, not an accumulator,
+// so this reads without clearing. 0 = the estimator is unarmed (ring below
+// GateMinSamples, or cleared by a sensor dropout) and the gate is passing
+// everything — the one state min_cycle_ms and gate_rejects together cannot
+// distinguish from a clean signal. 255 = clipped, same ceiling as min_cycle_ms.
+uint8_t GetMedianCycleMs()
+{
+	uint32_t ms = GateMedianUsCache / 1000;
+	return (ms > 255) ? 255 : (uint8_t)ms;
+}
+
 // Median of the raw leading-edge intervals. Called from ReadFlow at 5 Hz, well
 // outside interrupt context — sorting 32 entries is far too slow for the ISR,
 // which only ever appends to the ring and reads the cached threshold.
@@ -231,6 +242,7 @@ void ReadFlow()
 		GateMinCycUs = 0;
 		LastLeadingUs = 0;
 		interrupts();
+		GateMedianUsCache = 0;
 	}
 	else
 	{
@@ -242,6 +254,7 @@ void ReadFlow()
 		noInterrupts();
 		GateMinCycUs = thresh;
 		interrupts();
+		GateMedianUsCache = med;
 
 		if (wt > 0)
 			SensorRatio = (uint16_t)(((uint64_t)wb * 1000) / wt);

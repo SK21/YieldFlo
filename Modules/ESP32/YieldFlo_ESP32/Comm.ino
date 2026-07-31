@@ -180,6 +180,7 @@ void SendCANPK2()
 		flags |= 0x02;		// bit 1 — paddle_hz field present
 		flags |= 0x04;		// bit 2 — min_cycle_ms field present
 		flags |= 0x08;		// bit 3 — gate_rejects field present
+		flags |= 0x10;		// bit 4 — median_cycle_ms field present
 		int16_t temp = TemperatureReading;
 
 		twai_message_t msg;
@@ -193,6 +194,7 @@ void SendCANPK2()
 		msg.data[3] = TakePaddleHz();
 		msg.data[4] = TakeMinCycleMs();
 		msg.data[5] = TakeGateRejects();
+		msg.data[6] = GetMedianCycleMs();
 
 		twai_transmit(&msg, pdMS_TO_TICKS(10));
 	}
@@ -249,19 +251,21 @@ void SendUdpPK1()
 }
 
 // ── Second packet: temperature + paddle rate (1 Hz) ─────────────────────
-// UDP  — 9 bytes, PGN 40002  (was 8 before gate_rejects; 7 before min_cycle_ms,
-//        6 before paddle_hz — the app reads by flag bit and length, so a module
-//        on older firmware still parses correctly)
+// UDP  — 10 bytes, PGN 40002  (was 9 before median_cycle_ms; 8 before
+//        gate_rejects, 7 before min_cycle_ms, 6 before paddle_hz — the app
+//        reads by flag bit and length, so a module on older firmware still
+//        parses correctly)
 //   [0-1] PGN 40002 LE  (0x42 0x9C)
 //   [2]   flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent,
-//                bit3=GateRejectsPresent
+//                bit3=GateRejectsPresent, bit4=MedianCycleMsPresent
 //   [3-4] temp_raw int16 LE  (raw ADS1115 AIN2 reading)
 //   [5]   paddle_hz uint8  (completed paddle cycles per second)
 //   [6]   min_cycle_ms uint8  (shortest completed paddle cycle this window, ms; 255=none/clipped)
 //   [7]   gate_rejects uint8  (leading edges the period gate rejected this window)
-//   [8]   CRC8
+//   [8]   median_cycle_ms uint8  (gate's period estimate, ms; 0=gate unarmed, 255=clipped)
+//   [9]   CRC8
 // CAN  — ID 0x18FF01F8, DLC=8, [0]=flags, [1-2]=temp_raw, [3]=paddle_hz,
-//        [4]=min_cycle_ms, [5]=gate_rejects, [6-7]=0
+//        [4]=min_cycle_ms, [5]=gate_rejects, [6]=median_cycle_ms, [7]=0
 //
 // The CRC is always the last byte and is computed over everything before it, so
 // growing the packet needs no change on either side beyond the length.
@@ -275,9 +279,10 @@ void SendUdpPK2()
 		flags |= 0x02;		// bit 1 — paddle_hz field present
 		flags |= 0x04;		// bit 2 — min_cycle_ms field present
 		flags |= 0x08;		// bit 3 — gate_rejects field present
+		flags |= 0x10;		// bit 4 — median_cycle_ms field present
 		int16_t temp = TemperatureReading;
 
-		byte pkt[9];
+		byte pkt[10];
 		pkt[0] = 0x42;
 		pkt[1] = 0x9C;
 		pkt[2] = flags;
@@ -286,9 +291,10 @@ void SendUdpPK2()
 		pkt[5] = TakePaddleHz();
 		pkt[6] = TakeMinCycleMs();
 		pkt[7] = TakeGateRejects();
-		pkt[8] = CRC(pkt, 8, 0);
+		pkt[8] = GetMedianCycleMs();
+		pkt[9] = CRC(pkt, 9, 0);
 
-		UdpSend(pkt, 9);
+		UdpSend(pkt, 10);
 	}
 }
 

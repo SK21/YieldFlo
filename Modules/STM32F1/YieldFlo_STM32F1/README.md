@@ -88,10 +88,18 @@ changing a pin only means editing the constant at the top of the sketch.
 
 | Bytes | Field |
 |---|---|
-| 0 | flags: bit0=TempOK, bit1=PaddleHzPresent |
+| 0 | flags: bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent, bit3=GateRejectsPresent, bit4=MedianCycleMsPresent |
 | 1-2 | temp_raw int16 LE (raw ADS1115 AIN2) |
 | 3 | paddle_hz uint8 (completed paddle cycles per second) |
-| 4-7 | 0 |
+| 4 | min_cycle_ms uint8 (shortest completed cycle this window; 255=none/clipped) |
+| 5 | gate_rejects uint8 (leading edges the period gate rejected this window) |
+| 6 | median_cycle_ms uint8 (gate's period estimate; 0=unarmed, 255=clipped) |
+| 7 | 0 |
+
+The last three are the period gate's diagnostics: `gate_rejects` counts what it
+caught, `min_cycle_ms` what got through, and `median_cycle_ms` the period
+estimate its threshold is `GatePercent` of. Each was added with its own flag
+bit so the app parses any firmware vintage by checking flag and length together.
 
 ## Differences from the ESP32 module
 
