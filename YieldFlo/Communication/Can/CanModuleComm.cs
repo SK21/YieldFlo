@@ -128,6 +128,10 @@ namespace YieldFlo.Communication.Can
             Core.LastModuleReceive = DateTime.UtcNow;
 
             Core.Yield?.PushSensorReading(Core.LastSensor1);
+
+            // Same cadence and same columns as the UDP path — the logger reads
+            // live Core state, so both transports produce identical files.
+            Core.DiagLog?.Log();
         }
 
         private void ParseTempData(byte[] d)
