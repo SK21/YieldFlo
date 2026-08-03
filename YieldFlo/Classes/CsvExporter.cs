@@ -18,6 +18,12 @@ namespace YieldFlo.Classes
                 var points = Core.Database.YieldData.GetByJob(jobId);
                 if (points == null || points.Count == 0) return null;
 
+                // Same treatment the map gives them, so the exported file and the
+                // picture on screen agree. Without this the CSV would still carry the
+                // raw pass ends and every downstream map built from it would show the
+                // blue headland the operator was just told had been dealt with.
+                PassTransients.Apply(points);
+
                 // Resolve crop test weight and header width from the job record.
                 double testWeightKgPerBu = Props.TestWeightKgPerBu;
                 double headerWidthM      = 9.144;

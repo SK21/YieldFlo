@@ -66,6 +66,37 @@ namespace YieldFlo.Classes
         public bool PaddleReadingValid { get; private set; }    // module sent a usable paddle frame
         public bool UsingPaddleChannel { get; private set; }    // paddle channel fed the last Calculate()
 
+        // Below this the elevator is considered empty. Shared with the collector's
+        // tail drain so "still flowing" means the same thing in both places.
+        public const double FlowStopRatio = 0.01;
+
+        /// <summary>
+        /// The channel Calculate() would use right now, resolved independently of it.
+        /// The tail drain runs while the machine is emptying on a headland, where
+        /// Calculate() has bailed out on the speed gate and CurrentFlowIndex is stale —
+        /// so it cannot be read from there.
+        /// </summary>
+        public double ActiveFlowRatio =>
+            (PreferPaddleChannel && PaddleReadingValid && Core.PaddleChannelLive)
+                ? CurrentPaddleRatio : CurrentRatio;
+
+        /// <summary>
+        /// Grain mass rate in bushels/second from the sensor reading alone.
+        ///
+        /// Deliberately independent of ground speed: this is what the elevator is
+        /// delivering, not what the ground is yielding. Calculate() cannot be used
+        /// for this — it returns 0 below 0.5 km/h, which is exactly the situation
+        /// it is needed in, a combine crawling round a headland while the machine
+        /// finishes emptying. With no new ground being cut there is no bu/ac to
+        /// compute, only mass.
+        /// </summary>
+        public double CurrentBushelsPerSec()
+        {
+            if (TestWeightLbsBu <= 0) return 0;
+            // ActiveFlowRatio * YieldFactor is the calibrated flow in lbs/s
+            return ActiveFlowRatio * YieldFactor / TestWeightLbsBu;
+        }
+
         /// <summary>
         /// Signed difference paddle − duty, in flow-index units. Zero while the
         /// elevator runs at the rate the baseline was captured at, and grows in
@@ -226,7 +257,7 @@ namespace YieldFlo.Classes
 
             double ratio = CurrentFlowIndex;
 
-            IsFlowing = ratio > 0.01;
+            IsFlowing = ratio > FlowStopRatio;
 
             if (!IsFlowing)
             {

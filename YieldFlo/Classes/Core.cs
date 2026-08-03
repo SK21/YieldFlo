@@ -17,6 +17,7 @@ namespace YieldFlo.Classes
         public static clsYieldCalculator Yield;
         public static clsDataCollector Collector;
         public static DB Database;
+        public static clsDiagLogger DiagLog { get; private set; }
 
         // UI
         public static frmMain MainForm;
@@ -103,6 +104,11 @@ namespace YieldFlo.Classes
                 Yield.ProcessingDelaySec = Properties.Settings.Default.ProcessingDelaySec;
                 Collector = new clsDataCollector();
 
+                // Always on. A field fault is exactly the thing nobody remembers to
+                // arm a recorder for beforehand.
+                DiagLog = new clsDiagLogger();
+                DiagLog.Start();
+
                 SeedDefaultData();
                 TryResumeLastJob();
 
@@ -163,6 +169,7 @@ namespace YieldFlo.Classes
                 else
                     SafeTry(() => Collector?.StopJob());
                 SafeTry(() => Database?.Close());
+                SafeTry(() => DiagLog?.Stop());
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => LogRunTime());
             }

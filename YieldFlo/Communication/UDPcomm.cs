@@ -203,6 +203,8 @@ namespace YieldFlo.Communication
             Core.LastModuleReceive = DateTime.UtcNow;
 
             Core.Yield?.PushSensorReading(Core.LastSensor1);
+
+            Core.DiagLog?.Log();
         }
 
         private void ParseTempPacket(byte[] data)
