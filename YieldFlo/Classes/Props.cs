@@ -10,8 +10,8 @@ namespace YieldFlo.Classes
     public static class Props
     {
         public static readonly string AppName = "YieldFlo";
-        public static readonly string AppVersion = "1.0.1";
-        public static readonly string AppDate = "26-Jul-2026";
+        public static readonly string AppVersion = "1.0.2-2";
+        public static readonly string AppDate = "03-Aug-2026";
 
         private static string cApplicationFolder;
         private static string cDataFolder;
