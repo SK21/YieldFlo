@@ -22,9 +22,9 @@ namespace YieldFlo.Classes
     /// files are pruned so it cannot grow without bound.
     ///
     /// Example:
-    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId
-    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17
-    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17
+    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail
+    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17,1,53,0
+    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17,1,54,0
     ///
     ///   PCTime      - PC clock when the packet was parsed (HH:mm:ss.fff)
     ///   Sensor1     - duty-channel obstruction ratio, raw, NOT baseline-corrected
@@ -41,12 +41,37 @@ namespace YieldFlo.Classes
     ///   SpeedKmh    - ground speed at that moment
     ///   YieldRate   - instantaneous yield the app computed from this packet
     ///   JobId       - active job, or -1 when none is recording
+    ///   Sections    - AOG section state: 1 = crop entering the machine, 0 = header out.
+    ///                 Its falling edge is the anchor every clean-out measurement is
+    ///                 timed from.
+    ///   PipelineCount - positions buffered waiting for their grain to reach the sensor.
+    ///                 Returns to 0 one ProcessingDelaySec after Sections drops.
+    ///   Tail        - 1 while the collector is still counting grain leaving the machine
+    ///                 after a pass ended. Starts as PipelineCount reaches 0 and ends
+    ///                 when Sensor1 settles to baseline; ending while Sensor1 is still
+    ///                 high means a terminator other than empty fired — the next pass's
+    ///                 grain arriving, or the fault timeout.
+    ///
+    /// Measuring transport delay and clean-out: find a falling edge on Sections and
+    /// read Sensor1 forward from it. Sensor1 holds up while the grain already in the
+    /// machine keeps arriving, then decays; where it settles back to its no-flow
+    /// baseline is the clean-out time. Compare that against ProcessingDelaySec.
+    /// PipelineCount reaching 0 while Sensor1 is still above baseline is the failure
+    /// case directly on screen: the machine was still delivering grain after the app
+    /// had stopped attributing any of it to ground, so those cells map low and that
+    /// grain is missing from the job total. The rising edge shows the same thing from
+    /// the other side — the fill ramp, which is not the same length as the clean-out.
     ///
     /// Reading the file: rows arrive at 5 Hz but PaddleHz, MinCycleMs, GateRejects and
     /// MedianCycleMs come from the 1 Hz packet, so each of their values is repeated on
     /// about five consecutive rows. Any per-second aggregate of those four columns has
     /// to de-duplicate first — summing GateRejects across rows overcounts five-fold.
-    /// Sensor1, Noise, Rpm and Moisture are genuinely per-row.
+    /// Sensor1, Noise, Rpm, Moisture, Sections, PipelineCount and Tail are genuinely
+    /// per-row.
+    ///
+    /// Sections, PipelineCount and Tail are appended after JobId rather than grouped
+    /// with the columns they relate to, so every existing column keeps its index and
+    /// scripts written against the older files still parse these.
     ///
     /// The four gate columns together say why every cycle was accepted or rejected:
     /// GateRejects counts what the gate caught, MinCycleMs what got through,
@@ -87,7 +112,7 @@ namespace YieldFlo.Classes
                     cWriter = new StreamWriter(cFilePath, false) { AutoFlush = true };
                     cWriter.WriteLine("PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz," +
                                       "MinCycleMs,GateRejects,MedianCycleMs," +
-                                      "SpeedKmh,YieldRate,JobId");
+                                      "SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail");
                     cRunning = true;
                 }
                 catch (Exception ex)
@@ -122,7 +147,12 @@ namespace YieldFlo.Classes
                         Core.LastMedianCycleMs.ToString(ci),
                         (Core.GPS?.Speed ?? 0).ToString("0.##", ci),
                         (Core.Yield?.InstantYield ?? 0).ToString("0.##", ci),
-                        (Core.Collector?.ActiveJobId ?? -1).ToString(ci)));
+                        (Core.Collector?.ActiveJobId ?? -1).ToString(ci),
+                        // 1/0 rather than True/False — these two are meant to be
+                        // plotted against Sensor1 in a spreadsheet.
+                        ((Core.GPS?.SectionsActive ?? false) ? 1 : 0).ToString(ci),
+                        (Core.Collector?.PipelineCount ?? -1).ToString(ci),
+                        ((Core.Collector?.IsDrainingTail ?? false) ? 1 : 0).ToString(ci)));
                 }
                 catch (Exception ex)
                 {

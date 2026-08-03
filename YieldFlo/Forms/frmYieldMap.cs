@@ -317,6 +317,11 @@ namespace YieldFlo.Forms
         // read, combo mid-reload) keep the existing drawing instead of wiping it.
         private int _drawnJobId = -1;
 
+        // Completed passes in the data as drawn. A pass ending rewrites the cells at
+        // its tail (see PassTransients), and those are cells already on screen — so
+        // appending the new ones is not enough, the overlay has to be rebuilt.
+        private int _drawnPassCount = -1;
+
         private void ClearSwathOverlay()
         {
             gmap.Overlays.Clear();
@@ -352,11 +357,18 @@ namespace YieldFlo.Forms
                 return;
             }
 
+            // The ends of a pass are not measurements of the ground under them —
+            // the machine is still filling on the way in and still emptying on the
+            // way out. Repaint them from the crop beside them before anything reads
+            // a yield off this list, so the colour scale is set from honest values too.
+            int completedPasses = PassTransients.Apply(points);
+
             // Live update of the same job: if only new points arrived and they all
             // fall within the frozen colour scale, append their swaths to the
             // existing overlay instead of rebuilding. This is what stops the coverage
             // flashing away and the legend being redrawn on every 5 s tick.
-            bool sameJob = jobId == _drawnJobId && _yieldOverlay != null && _scaleSet;
+            bool sameJob = jobId == _drawnJobId && _yieldOverlay != null && _scaleSet
+                           && completedPasses == _drawnPassCount;
             if (sameJob && points.Count >= _drawnRawCount)
             {
                 // The scale is percentile-based, so the odd point beyond it is
@@ -393,6 +405,11 @@ namespace YieldFlo.Forms
 
         private void RebuildSwaths(List<YieldDataPoint> points, int jobId, bool center)
         {
+            // Also applied here, not only in LoadYieldData: btnRecalc_Click passes a
+            // freshly read list straight in. Idempotent, so the double call on the
+            // LoadYieldData path costs one pass over the list and nothing else.
+            _drawnPassCount = PassTransients.Apply(points);
+
             // Header width can change between jobs; resolve it on a full rebuild only.
             _headerWidthM = 9.144;
             foreach (var j in Core.Database.Jobs.GetAll())

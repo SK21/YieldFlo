@@ -29,6 +29,10 @@ namespace YieldFlo.Classes
         public bool IsFlowing { get; private set; }
         public double CurrentRatio { get; private set; }        // latest baseline-corrected reading
 
+        // Below this the elevator is considered empty. Shared with the collector's
+        // tail drain so "still flowing" means the same thing in both places.
+        public const double FlowStopRatio = 0.01;
+
         private const double M2_PER_ACRE = 4046.856;
         private const double KG_PER_BUSHEL_WHEAT = 27.215;     // approx — overridden by TestWeight
         private const double LBS_PER_KG = 2.20462;
@@ -93,6 +97,23 @@ namespace YieldFlo.Classes
         }
 
         /// <summary>
+        /// Grain mass rate in bushels/second from the sensor reading alone.
+        ///
+        /// Deliberately independent of ground speed: this is what the elevator is
+        /// delivering, not what the ground is yielding. Calculate() cannot be used
+        /// for this — it returns 0 below 0.5 km/h, which is exactly the situation
+        /// it is needed in, a combine crawling round a headland while the machine
+        /// finishes emptying. With no new ground being cut there is no bu/ac to
+        /// compute, only mass.
+        /// </summary>
+        public double CurrentBushelsPerSec()
+        {
+            if (TestWeightLbsBu <= 0) return 0;
+            // CurrentRatio * YieldFactor is the calibrated flow in lbs/s
+            return CurrentRatio * YieldFactor / TestWeightLbsBu;
+        }
+
+        /// <summary>
         /// Pairs the current sensor flow with a buffered position point.
         /// speedKmh is the ground speed recorded at that position.
         /// Returns the yield value for that position.
@@ -110,7 +131,7 @@ namespace YieldFlo.Classes
 
             double ratio = CurrentRatio;
 
-            IsFlowing = ratio > 0.01;
+            IsFlowing = ratio > FlowStopRatio;
 
             if (!IsFlowing)
             {

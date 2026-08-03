@@ -56,6 +56,12 @@ namespace YieldFlo.Classes
         public double AverageYield => TotalAcres > 0.01 ? TotalBushels / TotalAcres : 0;
         public double AverageMoisture { get; private set; }
 
+        // Positions still waiting for their grain to reach the sensor. Exposed for
+        // the diagnostic log: it hits 0 exactly when the app stops attributing
+        // grain to a finished pass, so comparing it against the sensor trace shows
+        // whether the machine was still delivering after recording stopped.
+        public int PipelineCount => _pipeline.Count;
+
         private DateTime _lastWriteTime = DateTime.MinValue;
         private double _lastLat = 0, _lastLon = 0;
         private DateTime _lastFixTime = DateTime.MinValue;
@@ -68,6 +74,56 @@ namespace YieldFlo.Classes
 
         private double _moistureSum = 0;
         private int _moistureCount = 0;
+
+        // --- Tail drain -----------------------------------------------------
+        // A pass stops being integrated when its last position drains, one
+        // ProcessingDelaySec after sections go off. The machine is not empty at
+        // that moment: grain already inside keeps arriving as the shoe and
+        // returns clear, and that mass used to be dropped entirely, so every
+        // pass under-read by its own tail. Here it keeps being counted until the
+        // elevator actually runs empty.
+        //
+        // Mass only — no new ground is being cut, so there is no area to divide
+        // by and no bu/ac to compute. The grain lands in the job total and the
+        // cal run; the map cells are untouched until the back-spread lands.
+        private bool _tailActive;
+        private DateTime _tailStart;
+        private DateTime _tailLastTick;
+        private DateTime _tailEndsAt;      // set when the next pass's grain is due to arrive
+        private DateTime _tailEmptySince;  // first sub-threshold reading of the current run
+        private double _tailBushels;
+
+        public bool IsDrainingTail => _tailActive;
+        public double LastTailBushels { get; private set; }
+        public string LastTailEndReason { get; private set; } = "";
+
+        // Fault backstop only. It bounds the case where the baseline has drifted
+        // above the true no-flow reading (dust on the sensor, a paddle sitting in
+        // the beam, a dead module holding its last value), where CurrentRatio
+        // never returns to zero and a parked combine would otherwise accumulate
+        // phantom grain into the job total indefinitely.
+        //
+        // Flat seconds, deliberately NOT a multiple of ProcessingDelaySec. Measured
+        // in the field 2026-08-03: header up with the separator at full speed, the
+        // elevator took ~100 s to fall from 30% back to its 9% baseline, against a
+        // delay of 10. Transit and clean-out are not the same process — the delay is
+        // how long grain takes to travel, the tail is the returns loop and sieve
+        // residue recirculating — so no factor of one expresses the other. 180 clears
+        // the measured 100 with room for a tougher, wetter crop.
+        //
+        // Note this is rarely the terminator that fires. Clean-out outlasts a
+        // headland turn, so in continuous harvesting the machine never actually
+        // empties and "next pass" ends almost every drain; "empty" only wins when
+        // the combine stops, at the end of a field or a run.
+        private const double TailTimeoutSec = 180.0;
+
+        // Flow has to stay down this long to end a drain, so a single dropped or
+        // glitched reading mid-tail cannot truncate it early.
+        private const double TailEmptyConfirmSec = 0.5;
+
+        // Bounds one tick's integration so a stalled UI thread or a suspend/resume
+        // cannot turn one long gap into a large bogus mass.
+        private const double MaxTailTickSec = 1.0;
 
         /// <summary>
         /// Adopts a recalculated total for the job currently recording. Without this,
@@ -122,7 +178,7 @@ namespace YieldFlo.Classes
 
         // Manual pause discards in-transit positions; their flow can't be
         // matched after an arbitrary pause.
-        public void PauseJob() { IsRecording = false; IsAutoPaused = false; _pipeline.Clear(); }
+        public void PauseJob() { IsRecording = false; IsAutoPaused = false; _pipeline.Clear(); _tailActive = false; }
 
         // Abandon everything in transit: buffered positions, the yield average
         // in progress, and any unwritten drained point that belonged to them.
@@ -132,6 +188,7 @@ namespace YieldFlo.Classes
             _yieldSum = 0;
             _yieldSamples = 0;
             _lastDrainedUnwritten = false;
+            _tailActive = false;   // grain still emptying out is abandoned too
         }
 
         private void AutoPause() { IsRecording = false; IsAutoPaused = true; }
@@ -214,6 +271,16 @@ namespace YieldFlo.Classes
 
             if (harvestActive)
             {
+                // A new pass has started while the previous one is still draining.
+                // Its grain cannot reach the sensor for another ProcessingDelaySec,
+                // so everything arriving before then still belongs to the old pass —
+                // the tail runs on until exactly the moment the new crop is due,
+                // which is also when the new pass's own positions start draining.
+                // Ending it at sections-on instead would throw away most of the tail
+                // on precisely the quick headland turns that lose the most today.
+                if (_tailActive && _tailEndsAt == DateTime.MaxValue)
+                    _tailEndsAt = DateTime.UtcNow.AddSeconds(yield.ProcessingDelaySec);
+
                 // Crop is entering the machine — buffer this position. Its grain
                 // reaches the sensor ProcessingDelaySec from now.
                 bool passStart = _lastLat == 0 && _lastLon == 0;
@@ -298,8 +365,16 @@ namespace YieldFlo.Classes
                     _yieldSamples = 0;
                     _lastDrainedUnwritten = false;
                     _lastWriteTime = DateTime.UtcNow;
+
+                    // Everything positional for this pass is now written, but the
+                    // machine is still delivering its grain. Keep counting.
+                    BeginTailDrain();
                     continue;
                 }
+
+                // Real crop is arriving again — the previous pass's tail is over
+                // whether or not the timer said so.
+                if (_tailActive) EndTailDrain("next pass");
 
                 yield.Calculate(pt.Speed);
 
@@ -334,12 +409,16 @@ namespace YieldFlo.Classes
                 }
             }
 
+            if (_tailActive)
+                AccumulateTail(yield);
+
             // Keep the live display honest while idle
             if (!harvestActive && _pipeline.Count == 0)
                 yield.Calculate(gps.Speed);
 
-            // Recording while crop is entering the machine or grain is still in transit
-            bool shouldRecord = harvestActive || _pipeline.Count > 0;
+            // Recording while crop is entering the machine, grain is still in
+            // transit, or the machine is still emptying out the last pass
+            bool shouldRecord = harvestActive || _pipeline.Count > 0 || _tailActive;
 
             if (shouldRecord && IsAutoPaused)
             {
@@ -351,6 +430,83 @@ namespace YieldFlo.Classes
                 AutoPause();
                 Core.RaiseJobStateChanged();
             }
+        }
+
+        private void BeginTailDrain()
+        {
+            _tailActive     = true;
+            _tailStart      = DateTime.UtcNow;
+            _tailLastTick   = _tailStart;
+            _tailEndsAt     = DateTime.MaxValue;
+            _tailEmptySince = DateTime.MaxValue;
+            _tailBushels    = 0;
+        }
+
+        /// <summary>
+        /// Integrates the grain still leaving the machine after a pass has ended
+        /// into the job total. Runs until the elevator is empty, until the next
+        /// pass's grain is due, or until the fault timeout — whichever comes first.
+        /// </summary>
+        private void AccumulateTail(clsYieldCalculator yield)
+        {
+            DateTime now = DateTime.UtcNow;
+
+            double dt = Math.Min((now - _tailLastTick).TotalSeconds, MaxTailTickSec);
+            _tailLastTick = now;
+
+            if (dt > 0)
+            {
+                // Mass only — CurrentBushelsPerSec is read straight off the sensor
+                // and stays valid at a standstill, unlike Calculate().
+                double bushelsInc = yield.CurrentBushelsPerSec() * dt;
+                _tailBushels += bushelsInc;
+                TotalBushels += bushelsInc;
+                // Real grain into the tank, so a cal run has to see it too — a run
+                // that missed one tail per pass would weigh short against the ticket
+                // and bias the computed YieldFactor.
+                yield.AccumulateCalRun(bushelsInc);
+            }
+
+            if (yield.CurrentRatio <= clsYieldCalculator.FlowStopRatio)
+            {
+                if (_tailEmptySince == DateTime.MaxValue) _tailEmptySince = now;
+                if ((now - _tailEmptySince).TotalSeconds >= TailEmptyConfirmSec)
+                {
+                    EndTailDrain("empty");
+                    return;
+                }
+            }
+            else
+            {
+                _tailEmptySince = DateTime.MaxValue;   // flow came back — not empty yet
+            }
+
+            if (now >= _tailEndsAt)
+            {
+                EndTailDrain("next pass");
+                return;
+            }
+
+            if ((now - _tailStart).TotalSeconds >= TailTimeoutSec)
+                EndTailDrain("timeout");
+        }
+
+        private void EndTailDrain(string reason)
+        {
+            _tailActive       = false;
+            _tailEndsAt       = DateTime.MaxValue;
+            _tailEmptySince   = DateTime.MaxValue;
+            LastTailBushels   = _tailBushels;
+            LastTailEndReason = reason;
+
+            // A timeout is never normal: it means flow never came back to baseline,
+            // which is the sensor baseline drifting rather than the machine being
+            // slow. Worth a line in the log — the symptom otherwise is a job total
+            // that quietly disagrees with the weigh ticket.
+            if (reason == "timeout")
+                Props.WriteErrorLog("DataCollector/TailDrain still above baseline after "
+                                    + TailTimeoutSec.ToString("0") + " s — check SensorBaseline (drained "
+                                    + _tailBushels.ToString("0.0") + " bu)");
         }
 
         private void WritePoint(PendingPoint pt, double yieldRate, double moisture)
