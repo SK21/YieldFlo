@@ -116,7 +116,8 @@ proven configuration, not a fallback hack.
 
 The YF1's PC817 input stage (U6/U7) is built for this PNP sensor: R8/R9 = 560Ω on the
 cathode-to-GND side, with a 10kΩ pull-down on each signal net, per the sensor-interface
-section of `module_design_notes.md` in the repo. No firmware changes are needed for a
+section of `module_design_notes.md` (design docs live in Sync\YieldFlo\Code design). No
+firmware changes are needed for a
 straight T18-2 install — this is the same PC817 input stage the receiver's Black/White
 outputs already drive on the current board revision.
 
