@@ -303,6 +303,8 @@ Nothing takes effect, and nothing is saved, until **Save & Apply** is pressed â€
 
 > **Tip:** Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.
 
+A baseline above 0.25 turns the **Sensor Baseline** field orange, and **Save & Apply** asks for confirmation. An empty elevator should read well below this â€” check for grain or dirt in the elevator and run **Set Baseline** again. You can save the high value if you know it is correct.
+
 ### Noise readout
 
 Next to the **Set Baseline** button, the **Noise** readout shows how many electrical glitches per second the module is rejecting on the optical sensor signal, averaged over the last 5 seconds. On a healthy installation it reads **0**; the value turns orange when glitches are being rejected, and shows **--** when no module is connected.
