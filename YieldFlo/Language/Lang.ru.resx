@@ -65,6 +65,9 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Вкл</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Выкл</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - ОШИБКА ЗАПИСИ</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value> - НЕТ ДАТЧИКА</value></data>
+  <data name="lgSensorFault"    xml:space="preserve"><value>Ошибка датчика - запись приостановлена. Проверьте датчик.</value></data>
+  <data name="lgSensorRestored" xml:space="preserve"><value>Датчик в норме - запись возобновлена.</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Остановить и закрыть это задание?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Остановить задание</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Меню</value></data>

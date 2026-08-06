@@ -22,9 +22,9 @@ namespace YieldFlo.Classes
     /// files are pruned so it cannot grow without bound.
     ///
     /// Example:
-    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail
-    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17,1,53,0
-    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17,1,54,0
+    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail,S1Valid,SensorFault
+    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17,1,53,0,1,0
+    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17,1,54,0,1,0
     ///
     ///   PCTime      - PC clock when the packet was parsed (HH:mm:ss.fff)
     ///   Sensor1     - duty-channel obstruction ratio, raw, NOT baseline-corrected
@@ -51,6 +51,14 @@ namespace YieldFlo.Classes
     ///                 when Sensor1 settles to baseline; ending while Sensor1 is still
     ///                 high means a terminator other than empty fired — the next pass's
     ///                 grain arriving, or the fault timeout.
+    ///   S1Valid     - the module's SensorOK flag for this packet. 0 means Sensor1's 0 was
+    ///                 substituted by the parser, not measured. Logged because the database
+    ///                 does not store it, which is why a field snapshot full of zeros could
+    ///                 not be told apart from a genuinely empty elevator.
+    ///   SensorFault - 1 while the collector is holding recording off because the reading
+    ///                 cannot be trusted (S1Valid 0, module silent, or Sensor1 pinned at
+    ///                 hard zero with sections on). Its rising edge is where the map ribbon
+    ///                 breaks and the pass is abandoned.
     ///
     /// Measuring transport delay and clean-out: find a falling edge on Sections and
     /// read Sensor1 forward from it. Sensor1 holds up while the grain already in the
@@ -69,9 +77,9 @@ namespace YieldFlo.Classes
     /// Sensor1, Noise, Rpm, Moisture, Sections, PipelineCount and Tail are genuinely
     /// per-row.
     ///
-    /// Sections, PipelineCount and Tail are appended after JobId rather than grouped
-    /// with the columns they relate to, so every existing column keeps its index and
-    /// scripts written against the older files still parse these.
+    /// Sections, PipelineCount, Tail, S1Valid and SensorFault are appended after JobId
+    /// rather than grouped with the columns they relate to, so every existing column
+    /// keeps its index and scripts written against the older files still parse these.
     ///
     /// The four gate columns together say why every cycle was accepted or rejected:
     /// GateRejects counts what the gate caught, MinCycleMs what got through,
@@ -112,7 +120,8 @@ namespace YieldFlo.Classes
                     cWriter = new StreamWriter(cFilePath, false) { AutoFlush = true };
                     cWriter.WriteLine("PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz," +
                                       "MinCycleMs,GateRejects,MedianCycleMs," +
-                                      "SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail");
+                                      "SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail," +
+                                      "S1Valid,SensorFault");
                     cRunning = true;
                 }
                 catch (Exception ex)
@@ -152,7 +161,9 @@ namespace YieldFlo.Classes
                         // plotted against Sensor1 in a spreadsheet.
                         ((Core.GPS?.SectionsActive ?? false) ? 1 : 0).ToString(ci),
                         (Core.Collector?.PipelineCount ?? -1).ToString(ci),
-                        ((Core.Collector?.IsDrainingTail ?? false) ? 1 : 0).ToString(ci)));
+                        ((Core.Collector?.IsDrainingTail ?? false) ? 1 : 0).ToString(ci),
+                        (Core.LastSensor1Valid ? 1 : 0).ToString(ci),
+                        ((Core.Collector?.SensorFault ?? false) ? 1 : 0).ToString(ci)));
                 }
                 catch (Exception ex)
                 {

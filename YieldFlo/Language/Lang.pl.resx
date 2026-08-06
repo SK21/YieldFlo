@@ -65,6 +65,9 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Wł.</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Wył.</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - BŁĄD ZAPISU</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value> - BRAK CZUJNIKA</value></data>
+  <data name="lgSensorFault"    xml:space="preserve"><value>Błąd czujnika - zapis wstrzymany. Sprawdź czujnik.</value></data>
+  <data name="lgSensorRestored" xml:space="preserve"><value>Czujnik OK - zapis wznowiony.</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Zatrzymać i zamknąć to zadanie?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Zatrzymaj zadanie</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>

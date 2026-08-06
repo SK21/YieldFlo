@@ -83,6 +83,9 @@ namespace YieldFlo.Language
         internal static string lgJobStatusOn   => Get("lgJobStatusOn");
         internal static string lgJobStatusOff  => Get("lgJobStatusOff");
         internal static string lgDataWriteError => Get("lgDataWriteError");
+        internal static string lgNoSensor       => Get("lgNoSensor");
+        internal static string lgSensorFault    => Get("lgSensorFault");
+        internal static string lgSensorRestored => Get("lgSensorRestored");
         internal static string lgStopJobPrompt => Get("lgStopJobPrompt");
         internal static string lgStopJob       => Get("lgStopJob");
         internal static string lgMenu          => Get("lgMenu");

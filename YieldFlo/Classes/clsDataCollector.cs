@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using YieldFlo.Database;
+using YieldFlo.Language;
 
 namespace YieldFlo.Classes
 {
@@ -125,6 +126,27 @@ namespace YieldFlo.Classes
         // cannot turn one long gap into a large bogus mass.
         private const double MaxTailTickSec = 1.0;
 
+        // --- Sensor validity ------------------------------------------------
+        // A reading the sensor did not actually make is worse than no reading:
+        // it maps, it accumulates, and nothing about it looks wrong afterwards.
+        // Recording stops while the sensor is blind, the same way it stops for a
+        // GPS dropout, and the pass is closed off rather than bridged across the
+        // gap.
+        private bool _sensorFault;
+        private DateTime _hardZeroSince = DateTime.MaxValue;
+
+        /// <summary>True while recording is held off because the sensor cannot be trusted.</summary>
+        public bool SensorFault => _sensorFault;
+
+        // The second failure mode, and the one the module's own flag misses: a
+        // reading of hard zero. A running elevator never produces it — even an
+        // empty one reads its baseline, because the paddles themselves occlude
+        // the beam — so the beam seeing nothing at all while crop is entering the
+        // machine is a fault, not a measurement. Held this long it is not a
+        // dropout either.
+        private const double HardZeroRatio = 0.001;
+        private const double HardZeroFaultSec = 30.0;
+
         /// <summary>
         /// Adopts a recalculated total for the job currently recording. Without this,
         /// RecalculateJob's new total_volume survives only until the next lifecycle
@@ -156,6 +178,8 @@ namespace YieldFlo.Classes
             _lastLon = 0;
             _lastFixTime = DateTime.MinValue;
             _lastWriteTime = DateTime.MinValue;
+            _sensorFault = false;
+            _hardZeroSince = DateTime.MaxValue;
             ResetPipeline();
             IsRecording  = false;
             IsAutoPaused = true;   // starts recording when sections come on
@@ -235,6 +259,8 @@ namespace YieldFlo.Classes
             _lastLon = 0;
             _lastFixTime = DateTime.MinValue;
             _lastWriteTime = DateTime.MinValue;
+            _sensorFault = false;
+            _hardZeroSince = DateTime.MaxValue;
             ResetPipeline();
             IsRecording  = false;
             IsAutoPaused = true;   // auto-resumes once AOG connects and harvesting starts
@@ -257,6 +283,52 @@ namespace YieldFlo.Classes
 
             // Sections turn off over already-harvested ground even when moving.
             bool harvestActive = gps.SectionsActive;
+
+            double moisture = rawMoisture > 0 ? rawMoisture + Core.ActiveMoistureOffset : 0;
+
+            // Nothing below this point can produce real data while the sensor is
+            // blind — the flow reading every calculation depends on would be
+            // fabricated. Checked before the position is buffered so no point
+            // enters the pipeline whose grain arrives during the blind window.
+            if (!SensorUsable(harvestActive))
+            {
+                // The readout has to fall to zero rather than freeze at the last
+                // good value: a frozen number reads as a live one.
+                yield.Calculate(0);
+
+                if (!_sensorFault)
+                {
+                    _sensorFault = true;
+                    bool wasRecording = IsRecording;
+
+                    Props.WriteErrorLog("DataCollector/Sensor invalid — recording paused"
+                        + " (moduleConnected=" + Core.ModuleConnected
+                        + ", sensorOk=" + Core.LastSensor1Valid
+                        + ", sensor1=" + Core.LastSensor1.ToString("0.###") + ")");
+
+                    // Alarm only when this actually interrupted harvesting. A module
+                    // dropping out between passes stops nothing, and an alert the
+                    // operator learns to dismiss is worse than no alert.
+                    if (wasRecording)
+                        Props.ShowMessage(Lang.lgSensorFault, "", 4000, true);
+
+                    EndPassOnFault(gps, moisture);
+                    if (!IsAutoPaused) AutoPause();
+                    Core.RaiseJobStateChanged();
+                }
+                return;
+            }
+
+            if (_sensorFault)
+            {
+                _sensorFault = false;
+                Props.WriteActivityLog("Sensor valid again");
+                // Only claim recording resumed when it does — auto-resume still
+                // waits for sections, so with the header up nothing restarts yet.
+                if (harvestActive)
+                    Props.ShowMessage(Lang.lgSensorRestored, "", 3000);
+                Core.RaiseJobStateChanged();
+            }
 
             // The GPS fix is the antenna; the crop is cut at the header, which sits
             // HeaderFwdOffsetM ahead of it. Record the HEADER position so pass
@@ -344,7 +416,6 @@ namespace YieldFlo.Classes
 
             // Drain positions older than the transport delay — their grain is at
             // the sensor now, so pair them with the current flow reading.
-            double moisture = rawMoisture > 0 ? rawMoisture + Core.ActiveMoistureOffset : 0;
             DateTime cutoff = DateTime.UtcNow.AddSeconds(-yield.ProcessingDelaySec);
 
             while (_pipeline.Count > 0 && _pipeline.Peek().Time <= cutoff)
@@ -430,6 +501,71 @@ namespace YieldFlo.Classes
                 AutoPause();
                 Core.RaiseJobStateChanged();
             }
+        }
+
+        /// <summary>
+        /// Whether the current flow reading can be trusted. Covers both ways it
+        /// fails: the module reporting SensorOK = false, and a hard zero held far
+        /// longer than any running elevator could produce one.
+        /// </summary>
+        private bool SensorUsable(bool harvestActive)
+        {
+            if (!Core.ModuleConnected || !Core.LastSensor1Valid)
+            {
+                _hardZeroSince = DateTime.MaxValue;
+                return false;
+            }
+
+            // Only meaningful while crop is entering the machine. With the header
+            // up a stopped elevator legitimately reads nothing.
+            if (harvestActive && Core.LastSensor1 < HardZeroRatio)
+            {
+                if (_hardZeroSince == DateTime.MaxValue) _hardZeroSince = DateTime.UtcNow;
+                // Deliberately not cleared once it fires — the timer stays armed
+                // so the fault holds until a real reading arrives, rather than
+                // flickering in and out on the packet that happens to be read.
+                return (DateTime.UtcNow - _hardZeroSince).TotalSeconds < HardZeroFaultSec;
+            }
+
+            _hardZeroSince = DateTime.MaxValue;
+            return true;
+        }
+
+        /// <summary>
+        /// Closes the pass at the last good position when the sensor goes blind.
+        /// Buffered positions are abandoned rather than written: their grain
+        /// reaches the sensor during the blind window, so pairing them with any
+        /// later reading would invent data for ground that was never measured.
+        /// The zero-yield marker breaks the map ribbon here for the same reason a
+        /// section-off does — without it the map paints straight across the gap.
+        /// </summary>
+        private void EndPassOnFault(clsGPS gps, double moisture)
+        {
+            if (_lastDrainedUnwritten && _yieldSamples > 0)
+                WritePoint(_lastDrained, _yieldSum / _yieldSamples, moisture);
+
+            if (_lastLat != 0 || _lastLon != 0)
+                WritePoint(new PendingPoint
+                {
+                    Time     = DateTime.UtcNow,
+                    Lat      = _lastLat,
+                    Lon      = _lastLon,
+                    Altitude = gps.Altitude,
+                    Speed    = gps.Speed,
+                    Heading  = gps.Heading,
+                    AcresInc = 0
+                }, 0, moisture);
+
+            if (_tailActive) EndTailDrain("sensor fault");
+            ResetPipeline();
+
+            // Recovery starts a fresh pass. Without this the first good tick
+            // measures its distance from the pre-fault position and charges the
+            // whole blind window's travel to the job as harvested acres.
+            _lastLat = 0;
+            _lastLon = 0;
+            _lastFixTime   = DateTime.MinValue;
+            _lastWriteTime = DateTime.MinValue;
         }
 
         private void BeginTailDrain()

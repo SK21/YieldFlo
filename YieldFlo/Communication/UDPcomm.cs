@@ -189,6 +189,7 @@ namespace YieldFlo.Communication
             bool s1Ok = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
 
+            Core.LastSensor1Valid = s1Ok;
             Core.LastSensor1 = s1Ok ? ratio / 1000.0 : 0;
             Core.LastMoisture = moistureRaw * Core.ActiveMoistScale;
             Core.LastMoistureOk = moistureOk;

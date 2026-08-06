@@ -65,6 +65,9 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Aan</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Uit</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - OPSLAGFOUT</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value> - GEEN SENSOR</value></data>
+  <data name="lgSensorFault"    xml:space="preserve"><value>Sensorfout - opname gepauzeerd. Controleer de sensor.</value></data>
+  <data name="lgSensorRestored" xml:space="preserve"><value>Sensor OK - opname hervat.</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Taak stoppen en sluiten?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Taak stoppen</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>

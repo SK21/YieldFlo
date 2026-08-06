@@ -101,7 +101,7 @@ Two horizontal bar gauges below the data panels:
 | Indicator | Green | Orange | Red / Silver |
 |-----------|-------|--------|---------------|
 | **GPS** | AOG connected and sending position | — | No AOG data |
-| **Module** | Module data received within 5 s | — | No module data |
+| **Module** | Module data received within 5 s | Module connected but the sensor is not reading — shows `MODULE - NO SENSOR` | No module data |
 | **Job name** | Job recording (active) | Job paused | No active job (silver) |
 
 When YieldFlo displays a notification (e.g. export complete, error), a full-width message overlays the status bar for 10 seconds then clears automatically. Yellow text = informational; red text = error.
@@ -150,6 +150,14 @@ The job automatically pauses when harvesting stops:
 - AOG turns all header sections off (e.g. turning on headland, travelling over harvested ground)
 
 When auto-paused the job name turns orange in the status bar. Recording resumes automatically when harvesting conditions return.
+
+### Sensor fault pause
+
+Recording also stops if the yield sensor stops reading — the module reports a sensor error, module data stops arriving, or the sensor reads nothing at all for 30 seconds while harvesting. The Module indicator turns orange and shows `NO SENSOR`, and a red message appears if this interrupts a pass.
+
+Clean the sensor lens and check its wiring. Recording resumes automatically once the sensor reads again.
+
+The pass in progress is ended at the last good position, so the map shows a gap over the ground crossed while the sensor was down rather than filling it in with a yield that was never measured. That ground is not counted in the job's acres or bushels.
 
 ### Manual pause and resume
 

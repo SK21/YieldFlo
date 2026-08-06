@@ -149,7 +149,7 @@ li { margin: 2px 0; }
 <table>
 <tr><th>Indicator</th><th>Green</th><th>Orange</th><th>Red / Silver</th></tr>
 <tr><td><strong>GPS</strong></td><td>AOG connected and sending position</td><td>—</td><td>No AOG data</td></tr>
-<tr><td><strong>Module</strong></td><td>Module data received within 5 s</td><td>—</td><td>No module data</td></tr>
+<tr><td><strong>Module</strong></td><td>Module data received within 5 s</td><td>Module connected but the sensor is not reading — shows <code>MODULE - NO SENSOR</code></td><td>No module data</td></tr>
 <tr><td><strong>Job name</strong></td><td>Job recording (active)</td><td>Job paused</td><td>No active job (silver)</td></tr>
 </table>
 
@@ -204,6 +204,14 @@ li { margin: 2px 0; }
 </ul>
 
 <p>When auto-paused the job name turns orange in the status bar. Recording resumes automatically when harvesting conditions return.</p>
+
+<h3>Sensor fault pause</h3>
+
+<p>Recording also stops if the yield sensor stops reading — the module reports a sensor error, module data stops arriving, or the sensor reads nothing at all for 30 seconds while harvesting. The Module indicator turns orange and shows <code>NO SENSOR</code>, and a red message appears if this interrupts a pass.</p>
+
+<p>Clean the sensor lens and check its wiring. Recording resumes automatically once the sensor reads again.</p>
+
+<p>The pass in progress is ended at the last good position, so the map shows a gap over the ground crossed while the sensor was down rather than filling it in with a yield that was never measured. That ground is not counted in the job's acres or bushels.</p>
 
 <h3>Manual pause and resume</h3>
 

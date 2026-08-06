@@ -237,11 +237,21 @@ namespace YieldFlo.Forms
             bool modOk = Core.ModuleConnected
                 && (DateTime.UtcNow - Core.LastModuleReceive).TotalSeconds < 5;
 
+            // Three states, not two: a module can be talking normally while its
+            // sensor sees nothing, and that case used to read exactly like a
+            // healthy one — green bar, packets arriving, zeros being recorded as
+            // real no-flow readings.
+            bool sensorOk = modOk && Core.LastSensor1Valid
+                && !(Core.Collector != null && Core.Collector.SensorFault);
+
             lblStatusGPS.Text = Lang.lgGPS;
             lblStatusGPS.ForeColor = gpsOk ? StatusOk : StatusBad;
 
-            lblStatusModule.Text = Lang.lgModule;
-            lblStatusModule.ForeColor = modOk ? StatusOk : StatusBad;
+            lblStatusModule.Text = modOk && !sensorOk
+                ? Lang.lgModule + Lang.lgNoSensor
+                : Lang.lgModule;
+            lblStatusModule.ForeColor = !modOk ? StatusBad
+                                      : sensorOk ? StatusOk : OkabeIto.Orange;
 
             if (Core.Collector.ActiveJobId > 0)
             {

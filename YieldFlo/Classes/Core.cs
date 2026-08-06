@@ -30,6 +30,12 @@ namespace YieldFlo.Classes
         public static bool   LastMoistureOk   { get; set; }
         public static bool   LastTemperatureOk { get; set; }
         public static double LastSensor1      { get; set; }
+        // The module's own SensorOK flag, carried alongside the reading it belongs to.
+        // When it is false LastSensor1 is set to 0 — a value indistinguishable from a
+        // genuine empty elevator, which is how a blind sensor used to be recorded as
+        // 13,000 real no-flow points with acres and a full map behind them. Anything
+        // that stores or integrates LastSensor1 must check this first.
+        public static bool   LastSensor1Valid { get; set; } = true;
         public static int    LastNoiseCount   { get; set; }
         public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static int    LastModuleRpm    { get; set; }         // elevator RPM from the 5 Hz packet; fixed reference 200 when no RPM sensor fitted
