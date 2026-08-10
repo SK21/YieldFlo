@@ -26,6 +26,7 @@ namespace YieldFlo.Classes
             public double Lat, Lon;
             public float Altitude, Speed, Heading;
             public double AcresInc;
+            public double NewFraction;  // 0..1 of this step's swath that was not already cut — 1 when nothing overlapped
             public bool PassStart;  // first point after sections came on — force-written so the pass begins exactly here
             public bool PassEnd;    // break marker queued when sections went off — becomes a zero-yield row at the off position
         }
@@ -72,6 +73,33 @@ namespace YieldFlo.Classes
         // (e.g. a momentary (0,0) glitch) producing a bogus multi-km jump.
         private const double MaxPlausibleSpeedMps = 15.0; // ~34 mph, generous ceiling
         private const double MinFixIntervalSec = 0.05;
+
+        // --- Overlap ---------------------------------------------------------
+        // Ground already cut is not new acres, and a header only partly in crop is
+        // not cutting its full width. Both come from the same grid: see
+        // clsCoverageGrid for why it returns a ratio rather than an area.
+        private readonly clsCoverageGrid _coverage = new clsCoverageGrid();
+
+        /// <summary>Fraction of the last swath that was new ground. Diagnostic log only.</summary>
+        public double LastNewFraction { get; private set; } = 1.0;
+
+        // Below this the machine is essentially re-running ground it already cut.
+        // Dividing a part-header's flow by a vanishing width sends yield to
+        // infinity, so under this the tick is treated the way the tail drain treats
+        // a draining machine: real mass, no area, no bu/ac, no map row. 0.15 is
+        // roughly the point where an overlapped pass stops being a measurement of
+        // anything — a 30 ft header with under 4.5 ft in standing crop.
+        private const double MinNewFraction = 0.15;
+
+        // Time of the last drained point, for integrating mass across ticks that
+        // produce no area of their own.
+        private DateTime _lastDrainTime = DateTime.MinValue;
+
+        // Replay guards when rebuilding coverage for a resumed job. Same numbers as
+        // the map's ribbon breaks (frmYieldMap MaxBridgeMeters/Seconds), so the
+        // ground the grid believes was cut is the ground the map painted.
+        private const double MaxRebuildStepM = 5.0;
+        private const double MaxRebuildGapSec = 3.0;
 
         private double _moistureSum = 0;
         private int _moistureCount = 0;
@@ -180,6 +208,7 @@ namespace YieldFlo.Classes
             _lastWriteTime = DateTime.MinValue;
             _sensorFault = false;
             _hardZeroSince = DateTime.MaxValue;
+            _coverage.Reset();
             ResetPipeline();
             IsRecording  = false;
             IsAutoPaused = true;   // starts recording when sections come on
@@ -212,6 +241,7 @@ namespace YieldFlo.Classes
             _yieldSum = 0;
             _yieldSamples = 0;
             _lastDrainedUnwritten = false;
+            _lastDrainTime = DateTime.MinValue;
             _tailActive = false;   // grain still emptying out is abandoned too
         }
 
@@ -262,8 +292,62 @@ namespace YieldFlo.Classes
             _sensorFault = false;
             _hardZeroSince = DateTime.MaxValue;
             ResetPipeline();
+            RebuildCoverage(jobId);
             IsRecording  = false;
             IsAutoPaused = true;   // auto-resumes once AOG connects and harvesting starts
+        }
+
+        /// <summary>
+        /// Replays a job's stored positions through the coverage grid so a resumed
+        /// job knows what it already cut.
+        ///
+        /// Without this the grid starts empty on resume and the first lap back over
+        /// yesterday's ground is charged as new acres — the exact error the grid
+        /// exists to prevent, reintroduced by restarting the app. Every point needed
+        /// is already in yield_data, so this is a replay, not an estimate.
+        ///
+        /// The break guards match the map's swath drawer: a pair of points is only a
+        /// swath if both ends were flowing and they are close enough in time and
+        /// distance to be consecutive. Anything else is a gap the machine did not cut
+        /// through — a headland transit, a paused job, the join between two sessions.
+        /// </summary>
+        private void RebuildCoverage(int jobId)
+        {
+            _coverage.Reset();
+            if (jobId <= 0 || Core.Database == null) return;
+
+            try
+            {
+                var points = Core.Database.YieldData.GetByJob(jobId);
+                double widthM = Core.Yield != null ? Core.Yield.HeaderWidthM : 0;
+                if (widthM <= 0 || points.Count < 2) return;
+
+                int swaths = 0;
+                for (int i = 1; i < points.Count; i++)
+                {
+                    var a = points[i - 1];
+                    var b = points[i];
+
+                    if (a.YieldRate <= 0 || b.YieldRate <= 0) continue;
+                    if ((b.Timestamp - a.Timestamp).TotalSeconds > MaxRebuildGapSec) continue;
+
+                    double distM = HaversineMetres(a.Latitude, a.Longitude, b.Latitude, b.Longitude);
+                    if (distM > MaxRebuildStepM) continue;
+
+                    _coverage.MarkSwath(a.Latitude, a.Longitude, b.Latitude, b.Longitude, widthM);
+                    swaths++;
+                }
+
+                _coverage.Flush();
+                Props.WriteActivityLog("Coverage rebuilt for job " + jobId + ": "
+                    + swaths + " swaths, " + _coverage.TileCount + " tiles");
+            }
+            catch (Exception ex)
+            {
+                // A job that cannot be replayed still records — it just cannot
+                // credit itself for ground cut before the restart.
+                Props.WriteErrorLog("DataCollector/RebuildCoverage: " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -357,13 +441,22 @@ namespace YieldFlo.Classes
                 // reaches the sensor ProcessingDelaySec from now.
                 bool passStart = _lastLat == 0 && _lastLon == 0;
                 double acresInc = 0;
+                double newFraction = 1.0;
                 DateTime now = DateTime.UtcNow;
                 if (!passStart)
                 {
                     double distM = HaversineMetres(_lastLat, _lastLon, lat, lon);
                     double dtSec = Math.Max((now - _lastFixTime).TotalSeconds, MinFixIntervalSec);
                     if (distM <= MaxPlausibleSpeedMps * dtSec)
-                        acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM);
+                    {
+                        // Ground already cut is not new ground. Marking happens here,
+                        // at the position, not at drain time — the grid is about where
+                        // the header has been, which has nothing to do with when that
+                        // strip's grain reaches the sensor.
+                        newFraction = _coverage.MarkSwath(_lastLat, _lastLon, lat, lon, yield.HeaderWidthM);
+                        LastNewFraction = newFraction;
+                        acresInc = clsYieldCalculator.MetresToAcres(distM, yield.HeaderWidthM) * newFraction;
+                    }
                     // else: implausible GPS jump (e.g. a momentary 0,0 glitch fix) —
                     // skip this tick's acreage/yield contribution instead of adding a
                     // bogus multi-km increment to the job total. The point is still
@@ -384,6 +477,7 @@ namespace YieldFlo.Classes
                     Speed = gps.Speed,
                     Heading = gps.Heading,
                     AcresInc = acresInc,
+                    NewFraction = newFraction,
                     PassStart = passStart
                 });
             }
@@ -408,6 +502,11 @@ namespace YieldFlo.Classes
                         AcresInc = 0,
                         PassEnd = true
                     });
+
+                    // The pass is over positionally, so its last few metres can come
+                    // out of the coverage grid's lag and become cut ground. The next
+                    // pass may cross them within seconds of the turn.
+                    _coverage.Flush();
                 }
                 _lastLat = 0;
                 _lastLon = 0;
@@ -436,6 +535,7 @@ namespace YieldFlo.Classes
                     _yieldSamples = 0;
                     _lastDrainedUnwritten = false;
                     _lastWriteTime = DateTime.UtcNow;
+                    _lastDrainTime = pt.Time;
 
                     // Everything positional for this pass is now written, but the
                     // machine is still delivering its grain. Keep counting.
@@ -447,9 +547,33 @@ namespace YieldFlo.Classes
                 // whether or not the timer said so.
                 if (_tailActive) EndTailDrain("next pass");
 
-                yield.Calculate(pt.Speed);
+                // Only the part of the header in standing crop produced this flow,
+                // so only that width may divide it. Floored for the calculation so a
+                // near-total overlap cannot divide by nearly nothing; the tick is
+                // then excluded from the record below rather than trusted.
+                double newFrac = pt.NewFraction;
+                yield.Calculate(pt.Speed, yield.HeaderWidthM * Math.Max(newFrac, MinNewFraction));
+
+                double drainDt = _lastDrainTime == DateTime.MinValue
+                    ? 0
+                    : Math.Min((pt.Time - _lastDrainTime).TotalSeconds, MaxTailTickSec);
+                _lastDrainTime = pt.Time;
+
+                if (newFrac < MinNewFraction)
+                {
+                    // Re-running ground already cut. There is no new area, so there
+                    // is no bu/ac to compute and nothing to map — but the machine is
+                    // still delivering grain and that mass is real, so it is counted
+                    // the way the tail drain counts it: by flow and time, not by area.
+                    double reworkBushels = yield.CurrentBushelsPerSec() * drainDt;
+                    TotalBushels += reworkBushels;
+                    yield.AccumulateCalRun(reworkBushels);
+                    continue;
+                }
 
                 TotalAcres += pt.AcresInc;
+                // Effective width cancels here — it divides the yield and multiplies
+                // the acres — so bushels stay exactly flow x time, as before.
                 double bushelsInc = yield.InstantYield * pt.AcresInc;
                 TotalBushels += bushelsInc;
                 yield.AccumulateCalRun(bushelsInc);
@@ -557,6 +681,7 @@ namespace YieldFlo.Classes
                 }, 0, moisture);
 
             if (_tailActive) EndTailDrain("sensor fault");
+            _coverage.Flush();   // ground cut before the fault is still cut
             ResetPipeline();
 
             // Recovery starts a fresh pass. Without this the first good tick

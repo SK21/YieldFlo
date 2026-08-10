@@ -93,6 +93,17 @@ namespace ModuleSimulator
 
         private void SendTimer_Tick(object sender, EventArgs e)
         {
+            // A module that has lost power or its wiring sends nothing at all. The
+            // PC app has no packet to read a fault out of — it times out after 5 s
+            // of silence, which is the only path to a red Module label.
+            if (chkModuleOffline.Checked)
+            {
+                lblSensor1.Text     = "S1: --";
+                lblStatus.Text      = "Module offline — sending nothing";
+                lblStatus.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
             _simAngle += 0.05;
             _pk2Ticks++;
 
@@ -114,13 +125,23 @@ namespace ModuleSimulator
                 ratio = SimBaseline + flow * (1.0 - SimBaseline);
             }
 
+            // A blocked or unpowered sensor still reports — it reports nothing seen.
+            // The module cannot tell that from a genuinely empty elevator, so its
+            // SensorOK flag stays set and the PC app has to catch it by holding: a
+            // hard zero for 30 s while harvesting is not a measurement any running
+            // elevator can produce.
+            if (chkHardZero.Checked) ratio = 0;
+
             // sensor_ratio: uint16, 0–1000 (ratio × 1000)
             ushort sensorRatio = (ushort)Math.Max(0, Math.Min(1000, ratio * 1000));
 
             // moisture_raw: raw ADS1115 count — back-calculated from % using default scale
             ushort moistRaw = (ushort)Math.Max(0, Math.Min(65535, moistureSlider / DefaultMoistScale));
 
-            byte flags = 0x05;  // bit0=SensorOK, bit2=MoistureOK (no RPM sensor in sim)
+            // bit0=SensorOK, bit2=MoistureOK (no RPM sensor in sim). Clearing bit0 is
+            // the module diagnosing its own sensor — an unplugged or shorted head,
+            // which the PC app acts on immediately rather than waiting out a timer.
+            byte flags = chkSensorFlag.Checked ? (byte)0x04 : (byte)0x05;
             ushort rpm = 200;   // fixed RPM-absent sentinel
 
             SendPK1(sensorRatio, moistRaw, rpm, flags);
@@ -137,6 +158,22 @@ namespace ModuleSimulator
             lblSensor1.Text   = $"S1: {ratio:F3}";
             lblMoistureVal.Text = $"Mst: {moistureSlider:F1}%";
             lblTempVal.Text   = $"Tmp: {tempSlider:F1}°C";
+
+            if (chkSensorFlag.Checked)
+            {
+                lblStatus.Text      = "Sending SensorOK = 0 — app should show NO SENSOR now";
+                lblStatus.ForeColor = System.Drawing.Color.DarkOrange;
+            }
+            else if (chkHardZero.Checked)
+            {
+                lblStatus.Text      = "Sending hard zero — app shows NO SENSOR after 30 s harvesting";
+                lblStatus.ForeColor = System.Drawing.Color.DarkOrange;
+            }
+            else
+            {
+                lblStatus.Text      = "Sending to 127.0.0.1:" + PC_RECV_PORT;
+                lblStatus.ForeColor = System.Drawing.Color.DarkGreen;
+            }
         }
 
         private void SendPK1(ushort sensorRatio, ushort moistureRaw, ushort rpm, byte flags)

@@ -22,9 +22,9 @@ namespace YieldFlo.Classes
     /// files are pruned so it cannot grow without bound.
     ///
     /// Example:
-    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail,S1Valid,SensorFault
-    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17,1,53,0,1,0
-    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17,1,54,0,1,0
+    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail,S1Valid,SensorFault,NewFrac
+    ///   14:32:07.812,0.412,0,412,14.2,7,142,0,141,5.4,48.2,17,1,53,0,1,0,1
+    ///   14:32:08.013,0.538,0,411,14.2,7,9,2,140,5.4,63.1,17,1,54,0,1,0,0.62
     ///
     ///   PCTime      - PC clock when the packet was parsed (HH:mm:ss.fff)
     ///   Sensor1     - duty-channel obstruction ratio, raw, NOT baseline-corrected
@@ -55,6 +55,22 @@ namespace YieldFlo.Classes
     ///                 substituted by the parser, not measured. Logged because the database
     ///                 does not store it, which is why a field snapshot full of zeros could
     ///                 not be told apart from a genuinely empty elevator.
+    ///   NewFrac     - fraction of the last swath that was ground not already cut this
+    ///                 job. 1 = virgin ground, 0.5 = half the header running over what
+    ///                 the previous pass took. Below 0.15 the tick contributes mass but
+    ///                 no area and no map row. A pass sitting well under 1 is where the
+    ///                 old acres figure was inflating and the map was painting a cold
+    ///                 streak that the ground never had.
+    ///                 NOT comparable row-wise against YieldRate: NewFrac is the position
+    ///                 being marked NOW, while YieldRate is grain cut one ProcessingDelaySec
+    ///                 earlier, so on any single row the two describe ground ~10 s apart.
+    ///                 Driving onto cut ground shows as NewFrac falling to 0 with YieldRate
+    ///                 unchanged, and the yield only responds a delay later. Shift NewFrac
+    ///                 forward by ProcessingDelaySec before correlating them.
+    ///                 Quantised to 1/n, where n is the number of samples across the
+    ///                 header (72 for a 30 ft header) — so values come in steps of ~0.014
+    ///                 and a run of identical values means a steady overlap, not a stuck
+    ///                 reading.
     ///   SensorFault - 1 while the collector is holding recording off because the reading
     ///                 cannot be trusted (S1Valid 0, module silent, or Sensor1 pinned at
     ///                 hard zero with sections on). Its rising edge is where the map ribbon
@@ -77,9 +93,10 @@ namespace YieldFlo.Classes
     /// Sensor1, Noise, Rpm, Moisture, Sections, PipelineCount and Tail are genuinely
     /// per-row.
     ///
-    /// Sections, PipelineCount, Tail, S1Valid and SensorFault are appended after JobId
-    /// rather than grouped with the columns they relate to, so every existing column
-    /// keeps its index and scripts written against the older files still parse these.
+    /// Sections, PipelineCount, Tail, S1Valid, SensorFault and NewFrac are appended
+    /// after JobId rather than grouped with the columns they relate to, so every
+    /// existing column keeps its index and scripts written against the older files
+    /// still parse these.
     ///
     /// The four gate columns together say why every cycle was accepted or rejected:
     /// GateRejects counts what the gate caught, MinCycleMs what got through,
@@ -121,7 +138,7 @@ namespace YieldFlo.Classes
                     cWriter.WriteLine("PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz," +
                                       "MinCycleMs,GateRejects,MedianCycleMs," +
                                       "SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail," +
-                                      "S1Valid,SensorFault");
+                                      "S1Valid,SensorFault,NewFrac");
                     cRunning = true;
                 }
                 catch (Exception ex)
@@ -163,7 +180,8 @@ namespace YieldFlo.Classes
                         (Core.Collector?.PipelineCount ?? -1).ToString(ci),
                         ((Core.Collector?.IsDrainingTail ?? false) ? 1 : 0).ToString(ci),
                         (Core.LastSensor1Valid ? 1 : 0).ToString(ci),
-                        ((Core.Collector?.SensorFault ?? false) ? 1 : 0).ToString(ci)));
+                        ((Core.Collector?.SensorFault ?? false) ? 1 : 0).ToString(ci),
+                        (Core.Collector?.LastNewFraction ?? 1.0).ToString("0.###", ci)));
                 }
                 catch (Exception ex)
                 {

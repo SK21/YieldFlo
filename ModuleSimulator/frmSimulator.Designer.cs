@@ -23,6 +23,10 @@ namespace ModuleSimulator
             this.chkSineWave       = new System.Windows.Forms.CheckBox();
             this.lblVariationSlider = new System.Windows.Forms.Label();
             this.trkVariation      = new System.Windows.Forms.TrackBar();
+            this.lblFaults         = new System.Windows.Forms.Label();
+            this.chkModuleOffline  = new System.Windows.Forms.CheckBox();
+            this.chkSensorFlag     = new System.Windows.Forms.CheckBox();
+            this.chkHardZero       = new System.Windows.Forms.CheckBox();
             this.lblSensor1        = new System.Windows.Forms.Label();
             this.lblMoistureVal    = new System.Windows.Forms.Label();
             this.lblTempVal        = new System.Windows.Forms.Label();
@@ -101,30 +105,49 @@ namespace ModuleSimulator
             this.trkVariation.Value         = 5;
             this.trkVariation.TickFrequency = 5;
 
+            // Faults — one per way the PC app can lose the sensor, so each branch of
+            // its status bar can be reached without unplugging hardware.
+            this.lblFaults.Text     = "Faults";
+            this.lblFaults.Font     = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.lblFaults.Location = new System.Drawing.Point(10, 380);
+            this.lblFaults.AutoSize = true;
+
+            this.chkModuleOffline.Text     = "Module offline — send nothing";
+            this.chkModuleOffline.Location = new System.Drawing.Point(10, 404);
+            this.chkModuleOffline.AutoSize = true;
+
+            this.chkSensorFlag.Text     = "Sensor fault flag — SensorOK = 0";
+            this.chkSensorFlag.Location  = new System.Drawing.Point(10, 428);
+            this.chkSensorFlag.AutoSize  = true;
+
+            this.chkHardZero.Text     = "Sensor dead — hard zero, flag still OK";
+            this.chkHardZero.Location = new System.Drawing.Point(10, 452);
+            this.chkHardZero.AutoSize = true;
+
             // Readout labels
             this.lblSensor1.Text     = "S1: 0.000";
             this.lblSensor1.Font     = new System.Drawing.Font("Courier New", 11F);
-            this.lblSensor1.Location = new System.Drawing.Point(10, 383);
+            this.lblSensor1.Location = new System.Drawing.Point(10, 486);
             this.lblSensor1.AutoSize = true;
 
             this.lblMoistureVal.Text     = "Mst: 0.0%";
             this.lblMoistureVal.Font     = new System.Drawing.Font("Courier New", 11F);
-            this.lblMoistureVal.Location = new System.Drawing.Point(140, 383);
+            this.lblMoistureVal.Location = new System.Drawing.Point(140, 486);
             this.lblMoistureVal.AutoSize = true;
 
             this.lblTempVal.Text     = "Tmp: 0.0°C";
             this.lblTempVal.Font     = new System.Drawing.Font("Courier New", 11F);
-            this.lblTempVal.Location = new System.Drawing.Point(270, 383);
+            this.lblTempVal.Location = new System.Drawing.Point(270, 486);
             this.lblTempVal.AutoSize = true;
 
             // Status
             this.lblStatus.Text      = "Initializing...";
-            this.lblStatus.Location  = new System.Drawing.Point(10, 418);
+            this.lblStatus.Location  = new System.Drawing.Point(10, 518);
             this.lblStatus.AutoSize  = true;
             this.lblStatus.ForeColor = System.Drawing.Color.DarkGreen;
 
             // Form
-            this.ClientSize      = new System.Drawing.Size(400, 448);
+            this.ClientSize      = new System.Drawing.Size(400, 548);
             this.Controls.AddRange(new System.Windows.Forms.Control[] {
                 lblTitle,
                 lblYieldSlider, trkYield,
@@ -132,6 +155,7 @@ namespace ModuleSimulator
                 lblTempSlider, trkTemperature,
                 chkSections,
                 chkSineWave, lblVariationSlider, trkVariation,
+                lblFaults, chkModuleOffline, chkSensorFlag, chkHardZero,
                 lblSensor1, lblMoistureVal, lblTempVal,
                 lblStatus });
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -160,6 +184,10 @@ namespace ModuleSimulator
         private System.Windows.Forms.CheckBox chkSineWave;
         private System.Windows.Forms.Label    lblVariationSlider;
         private System.Windows.Forms.TrackBar trkVariation;
+        private System.Windows.Forms.Label    lblFaults;
+        private System.Windows.Forms.CheckBox chkModuleOffline;
+        private System.Windows.Forms.CheckBox chkSensorFlag;
+        private System.Windows.Forms.CheckBox chkHardZero;
         private System.Windows.Forms.Label    lblSensor1;
         private System.Windows.Forms.Label    lblMoistureVal;
         private System.Windows.Forms.Label    lblTempVal;
