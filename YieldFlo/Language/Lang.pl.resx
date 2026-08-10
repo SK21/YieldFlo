@@ -65,7 +65,7 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Wł.</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Wył.</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - BŁĄD ZAPISU</value></data>
-  <data name="lgNoSensor"       xml:space="preserve"><value> - BRAK CZUJNIKA</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value>BRAK CZUJNIKA</value></data>
   <data name="lgBaselineHigh"       xml:space="preserve"><value>Wartość bazowa wydaje się wysoka</value></data>
   <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Wartość bazowa {0:0.###} jest wysoka dla pustego elewatora. Zapisać mimo to?</value></data>
   <data name="lgSensorFault"    xml:space="preserve"><value>Błąd czujnika - zapis wstrzymany. Sprawdź czujnik.</value></data>

@@ -50,7 +50,6 @@ namespace YieldFlo.Forms
             this.lblStatusGPS = new System.Windows.Forms.Label();
             this.lblStatusModule = new System.Windows.Forms.Label();
             this.lblStatusJob = new System.Windows.Forms.Label();
-            this.lblVersion = new System.Windows.Forms.Label();
             this.lblStatusMsg = new System.Windows.Forms.Label();
             this.pnlToolbar.SuspendLayout();
             this.pnlGauges.SuspendLayout();
@@ -419,7 +418,6 @@ namespace YieldFlo.Forms
             this.pnlStatus.Controls.Add(this.lblStatusGPS);
             this.pnlStatus.Controls.Add(this.lblStatusModule);
             this.pnlStatus.Controls.Add(this.lblStatusJob);
-            this.pnlStatus.Controls.Add(this.lblVersion);
             this.pnlStatus.Controls.Add(this.lblStatusMsg);
             this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlStatus.Location = new System.Drawing.Point(2, 332);
@@ -455,22 +453,11 @@ namespace YieldFlo.Forms
             this.lblStatusJob.ForeColor = System.Drawing.Color.Silver;
             this.lblStatusJob.Location = new System.Drawing.Point(132, 4);
             this.lblStatusJob.Name = "lblStatusJob";
-            this.lblStatusJob.Size = new System.Drawing.Size(188, 24);
+            this.lblStatusJob.Size = new System.Drawing.Size(262, 24);
             this.lblStatusJob.TabIndex = 3;
             this.lblStatusJob.Text = "No Active Job";
             this.lblStatusJob.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblVersion
-            // 
-            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.lblVersion.Location = new System.Drawing.Point(327, 4);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(67, 24);
-            this.lblVersion.TabIndex = 5;
-            this.lblVersion.Text = "v8.10.10";
-            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
             // lblStatusMsg
             // 
             this.lblStatusMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -555,6 +542,5 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label lblStatusModule;
         private System.Windows.Forms.Label lblStatusJob;
         private System.Windows.Forms.Label lblStatusMsg;
-        private System.Windows.Forms.Label lblVersion;
     }
 }

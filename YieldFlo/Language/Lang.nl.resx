@@ -65,7 +65,7 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Aan</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Uit</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - OPSLAGFOUT</value></data>
-  <data name="lgNoSensor"       xml:space="preserve"><value> - GEEN SENSOR</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value>GEEN SENSOR</value></data>
   <data name="lgBaselineHigh"       xml:space="preserve"><value>Nulwaarde lijkt hoog</value></data>
   <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Nulwaarde {0:0.###} is hoog voor een lege elevator. Toch opslaan?</value></data>
   <data name="lgSensorFault"    xml:space="preserve"><value>Sensorfout - opname gepauzeerd. Controleer de sensor.</value></data>

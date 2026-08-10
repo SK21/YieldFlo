@@ -119,7 +119,7 @@
   <data name="lgJobStatusOn" xml:space="preserve"><value> - On</value></data>
   <data name="lgJobStatusOff" xml:space="preserve"><value> - Off</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - SAVE ERROR</value></data>
-  <data name="lgNoSensor" xml:space="preserve"><value> - NO SENSOR</value></data>
+  <data name="lgNoSensor" xml:space="preserve"><value>NO SENSOR</value></data>
   <data name="lgBaselineHigh" xml:space="preserve"><value>Baseline Looks High</value></data>
   <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Baseline {0:0.###} is high for an empty elevator. Save anyway?</value></data>
   <data name="lgSensorFault" xml:space="preserve"><value>Sensor fault - recording paused. Check the sensor.</value></data>

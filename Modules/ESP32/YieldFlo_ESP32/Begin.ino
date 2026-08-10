@@ -1,7 +1,28 @@
 
+// esp_reset_reason() → the shared code set (see ResetReasonCode in the main
+// sketch). Brownout is the one worth catching: a module that dips and reboots
+// mid-job otherwise leaves no trace at all.
+static uint8_t MapResetReason()
+{
+	switch (esp_reset_reason())
+	{
+	case ESP_RST_POWERON:  return 1;
+	case ESP_RST_EXT:      return 2;
+	case ESP_RST_SW:       return 3;
+	case ESP_RST_INT_WDT:
+	case ESP_RST_TASK_WDT:
+	case ESP_RST_WDT:      return 4;
+	case ESP_RST_BROWNOUT: return 5;
+	case ESP_RST_PANIC:    return 6;
+	case ESP_RST_UNKNOWN:  return 0;
+	default:               return 7;
+	}
+}
+
 void DoSetup()
 {
 	uint8_t ErrorCount = 0;
+	ResetReasonCode = MapResetReason();
 	Serial.begin(38400);
 	delay(5000);
 	Serial.println();

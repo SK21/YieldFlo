@@ -16,6 +16,7 @@ namespace YieldFlo.Forms
         {
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.lblTitleVersion = new System.Windows.Forms.Label();
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlContent = new System.Windows.Forms.Panel();
@@ -38,6 +39,9 @@ namespace YieldFlo.Forms
             //
             this.pnlTitle.Controls.Add(this.btnHelp);
             this.pnlTitle.Controls.Add(this.btnTitleClose);
+            // Added before lblTitle so it sits in front of that Dock=Fill label,
+            // whose opaque background would otherwise paint over it.
+            this.pnlTitle.Controls.Add(this.lblTitleVersion);
             this.pnlTitle.Controls.Add(this.lblTitle);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(2, 2);
@@ -56,6 +60,18 @@ namespace YieldFlo.Forms
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "YieldFlo Menu";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
+            // lblTitleVersion
+            //
+            this.lblTitleVersion.BackColor = System.Drawing.Color.Transparent;
+            this.lblTitleVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular);
+            this.lblTitleVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(140)))), ((int)(((byte)(140)))));
+            this.lblTitleVersion.Location = new System.Drawing.Point(8, 14);
+            this.lblTitleVersion.Name = "lblTitleVersion";
+            this.lblTitleVersion.Size = new System.Drawing.Size(100, 20);
+            this.lblTitleVersion.TabIndex = 3;
+            this.lblTitleVersion.Text = "v8.10.10";
+            this.lblTitleVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             //
             // btnHelp
             //
@@ -244,6 +260,7 @@ namespace YieldFlo.Forms
 
         private System.Windows.Forms.Panel  pnlTitle;
         private System.Windows.Forms.Label  lblTitle;
+        private System.Windows.Forms.Label  lblTitleVersion;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button btnTitleClose;
         private System.Windows.Forms.Panel  pnlContent;

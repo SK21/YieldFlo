@@ -65,7 +65,7 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Вкл</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Выкл</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - ОШИБКА ЗАПИСИ</value></data>
-  <data name="lgNoSensor"       xml:space="preserve"><value> - НЕТ ДАТЧИКА</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value>НЕТ ДАТЧИКА</value></data>
   <data name="lgBaselineHigh"       xml:space="preserve"><value>Базовое значение завышено</value></data>
   <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Базовое значение {0:0.###} велико для пустого элеватора. Всё равно сохранить?</value></data>
   <data name="lgSensorFault"    xml:space="preserve"><value>Ошибка датчика - запись приостановлена. Проверьте датчик.</value></data>

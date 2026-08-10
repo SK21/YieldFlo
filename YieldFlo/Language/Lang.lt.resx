@@ -65,7 +65,7 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Įjungta</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Išjungta</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - ĮRAŠYMO KLAIDA</value></data>
-  <data name="lgNoSensor"       xml:space="preserve"><value> - NĖRA JUTIKLIO</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value>NĖRA JUTIKLIO</value></data>
   <data name="lgBaselineHigh"       xml:space="preserve"><value>Bazinė vertė atrodo didelė</value></data>
   <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Bazinė vertė {0:0.###} didelė tuščiam elevatoriui. Vis tiek išsaugoti?</value></data>
   <data name="lgSensorFault"    xml:space="preserve"><value>Jutiklio klaida - įrašymas pristabdytas. Patikrinkite jutiklį.</value></data>

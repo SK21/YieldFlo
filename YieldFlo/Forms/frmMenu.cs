@@ -19,10 +19,11 @@ namespace YieldFlo.Forms
         private void frmMenu_Load(object sender, EventArgs e)
         {
             lblTitle.Text = Lang.lgTitleMenu;
+            lblTitleVersion.Text = "v" + Props.AppVersion;
             ApplyTheme();
             FormPositions.Restore(this);
             this.FormClosed += (s2, ev2) => FormPositions.Save(this);
-            foreach (Control c in new Control[] { pnlTitle, lblTitle })
+            foreach (Control c in new Control[] { pnlTitle, lblTitle, lblTitleVersion })
             {
                 c.MouseDown += (s, ev) => { if (ev.Button == MouseButtons.Left) { _dragging = true; _dragStart = ev.Location; } };
                 c.MouseMove += (s, ev) => { if (_dragging) { Left += ev.X - _dragStart.X; Top += ev.Y - _dragStart.Y; } };

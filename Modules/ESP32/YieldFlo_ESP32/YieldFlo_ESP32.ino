@@ -237,6 +237,18 @@ const uint16_t SendTimePK1 = 200;  // ms = 5 Hz  (main data packet)
 uint32_t       SendLastPK1 = SendTimePK1;
 const uint16_t SendTimePK2 = 1000; // ms = 1 Hz  (temperature packet)
 uint32_t       SendLastPK2 = SendTimePK2;
+// Identity/health packet. Nothing in it changes fast except uptime, so it is
+// sent slowly — it exists so a field log can answer "which firmware, what
+// configuration, did it restart", not to be plotted.
+const uint16_t SendTimePK3 = 5000; // ms = 0.2 Hz (identity/health packet)
+uint32_t       SendLastPK3 = SendTimePK3;
+
+// Why the module last restarted, normalised to the same codes on both
+// platforms so the app does not need to know which one it is talking to:
+//   0 unknown  1 power-on  2 reset pin  3 software  4 watchdog
+//   5 brownout  6 panic/fault  7 other
+// Captured once at boot because the hardware flags are cleared after reading.
+uint8_t ResetReasonCode = 0;
 
 void setup()
 {
