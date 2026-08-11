@@ -228,6 +228,26 @@ namespace YieldFlo.Classes
         /// </summary>
         public double Calculate(double speedKmh)
         {
+            return Calculate(speedKmh, HeaderWidthM);
+        }
+
+        /// <summary>
+        /// As Calculate(speed), but divides by the width actually cutting new crop
+        /// rather than the full header.
+        ///
+        /// On a half-overlapped pass only half the header meets standing crop, so
+        /// the flow arriving is half — dividing that by the full width returns half
+        /// the true yield and paints a cold streak on ground that yielded normally.
+        /// Dividing by the width that did the cutting returns the field's actual
+        /// yield. Mass is unaffected either way: the caller's acres carry the same
+        /// factor, so effective width cancels out of bushels entirely.
+        ///
+        /// Channel-agnostic: the width only reaches areaRateM2s below, which sits
+        /// under the duty/paddle selection — whichever channel supplied the ratio,
+        /// it is divided by the same area.
+        /// </summary>
+        public double Calculate(double speedKmh, double effectiveWidthM)
+        {
             // Channel selection and the cross-check run even when the machine is
             // stopped — a disagreement that only shows up while harvesting is
             // one the operator finds out about too late.
@@ -246,7 +266,7 @@ namespace YieldFlo.Classes
                 ChannelsDisagree = false;
             }
 
-            if (speedKmh < 0.5 || HeaderWidthM <= 0 || TestWeightLbsBu <= 0)
+            if (speedKmh < 0.5 || effectiveWidthM <= 0 || TestWeightLbsBu <= 0)
             {
                 InstantYield = 0;
                 InstantWorkRate = 0;
@@ -269,7 +289,7 @@ namespace YieldFlo.Classes
 
             // Area rate: m²/s
             double speedMs = speedKmh / 3.6;
-            double areaRateM2s = speedMs * HeaderWidthM;
+            double areaRateM2s = speedMs * effectiveWidthM;
 
             // Grain flow index (arbitrary volume/s) — calibrated via YieldFactor
             double grainFlowIndex = ratio * YieldFactor;
