@@ -46,10 +46,14 @@ namespace YieldFlo.Forms
         {
             KeyboardHelper.Wire(this, txtHeaderName, "Header Name");
             string unit = Props.IsMetric ? "m" : "ft";
+            // Decimal places come from the controls ApplyUnits() already configured,
+            // not a literal: the numpad ROUNDS to what it is told, so a hard-coded 1
+            // silently dropped the second metric decimal — 9.72 m was stored as 9.70,
+            // which is 100 mm of header and lands straight in acres and swath width.
             NumpadHelper.Wire(this, numWidth, (double)numWidth.Minimum, (double)numWidth.Maximum,
-                              1, $"Header Width ({unit})");
+                              numWidth.DecimalPlaces, $"Header Width ({unit})");
             NumpadHelper.Wire(this, numOffset, (double)numOffset.Minimum, (double)numOffset.Maximum,
-                              1, $"Ahead of Pivot ({unit})");
+                              numOffset.DecimalPlaces, $"Ahead of Pivot ({unit})");
             btnSave.Focus();
         }
 
@@ -171,14 +175,29 @@ namespace YieldFlo.Forms
             double width  = DisplayToMetres(numWidth.Value);
             double offset = DisplayToMetres(numOffset.Value);
 
+            int savedId;
             if (_editingId < 0)
-                Core.Database.Headers.Create(name, type, width, offset);
+            {
+                savedId = Core.Database.Headers.Create(name, type, width, offset);
+            }
             else
+            {
                 Core.Database.Headers.Update(_editingId, name, type, width, offset);
+                savedId = _editingId;
+            }
 
             Core.RaiseHeaderListChanged();
             LoadList();
-            ClearEdit();
+
+            // Keep the saved header selected. Clearing here dropped the selection on
+            // every save and reset the boxes to the new-header defaults, so an edit
+            // looked like it had been discarded. Re-selecting also repopulates the
+            // fields from what actually reached the database, which confirms the
+            // width stored as typed. Found by id, never by the old index — GetAll
+            // orders by name, so renaming moves the row.
+            int idx = _headers.FindIndex(h => h.id == savedId);
+            if (idx >= 0) lbHeaders.SelectedIndex = idx;
+            else ClearEdit();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

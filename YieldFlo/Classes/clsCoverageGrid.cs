@@ -55,9 +55,22 @@ namespace YieldFlo.Classes
         // cell area costs 4x the memory, which is 1.3 MB on a 160 acre field, and
         // brings it near 1%.
         //
-        // It cannot usefully go far below GPS repeatability: two adjacent passes
-        // that never touched can then land in the same cells, which under-counts
-        // area — the opposite error to the one being fixed.
+        // Going far below GPS repeatability buys nothing, but not for the reason it
+        // is tempting to give. Quantisation contributes about 0.32 x cell to the
+        // error in where the cut/standing boundary sits — 0.08 m here, 0.16 m at
+        // 0.5 m — and that adds in quadrature with the receiver's PASS-TO-PASS
+        // repeatability. Absolute accuracy is irrelevant: the grid works in a local
+        // frame, so any offset the two passes share cancels. At RTK's 2 cm the cell
+        // is essentially the whole error and 0.25 m earns its memory; past about
+        // 0.3 m repeatability the two cell sizes land within 9% of each other and
+        // the extra 4x memory buys an improvement the input noise will not let you
+        // see.
+        //
+        // Position noise also biases acres DOWN, at any cell size: measured overlap
+        // is max(true + error, 0), so noise on nominally abutting passes manufactures
+        // roughly 0.4 sigma of overlap that was never there. That is a property of
+        // the GPS, not of the grid — a smaller cell reduces it slightly rather than
+        // causing it, so it is an argument for better positioning, not bigger cells.
         public const double CellSizeM = 0.25;
 
         private const int TileCells = 256;                        // 64 m square

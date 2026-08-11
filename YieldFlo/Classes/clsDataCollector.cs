@@ -101,6 +101,25 @@ namespace YieldFlo.Classes
         private const double MaxRebuildStepM = 5.0;
         private const double MaxRebuildGapSec = 3.0;
 
+        // --- Crash safety ----------------------------------------------------
+        // The totals live in memory and used to reach the job row only on a
+        // lifecycle event — StartJob, SuspendJob, StopJob, LoadJob. A power cut or
+        // a killed process therefore rolled the job back to the last clean exit,
+        // which could be hours: the yield_data rows all survive, so the map keeps
+        // every pass, but the job's headline acres and bushels do not.
+        //
+        // Saving once a minute bounds that to a minute's harvesting and costs one
+        // UPDATE of two REALs — negligible beside the 1 Hz yield_data INSERT
+        // already running next to it. Skipped when the totals have not moved, so a
+        // machine parked with a job open never touches the disk.
+        //
+        // Acres alone could be recovered exactly after a crash, since every row
+        // carries acres_accumulated; bushels have no such column, which is why the
+        // fix is a periodic write rather than a replay.
+        private const double TotalsSaveIntervalSec = 60.0;
+        private DateTime _lastTotalsSave = DateTime.MinValue;
+        private double _savedAcres = -1, _savedBushels = -1;
+
         private double _moistureSum = 0;
         private int _moistureCount = 0;
 
@@ -186,6 +205,33 @@ namespace YieldFlo.Classes
             if (jobId > 0 && jobId == ActiveJobId) TotalBushels = totalBushels;
         }
 
+        /// <summary>
+        /// Writes the running totals to the job row once a minute, so a power cut
+        /// costs a minute's work rather than everything since the last clean exit.
+        /// Cheap enough to call every tick: it does two compares and returns.
+        /// </summary>
+        private void SaveTotalsPeriodically()
+        {
+            if (ActiveJobId <= 0 || Core.Database == null) return;
+            if ((DateTime.UtcNow - _lastTotalsSave).TotalSeconds < TotalsSaveIntervalSec) return;
+            if (TotalAcres == _savedAcres && TotalBushels == _savedBushels) return;
+
+            MarkTotalsSaved();
+            Core.Database.Jobs.UpdateTotals(ActiveJobId, TotalAcres, TotalBushels);
+        }
+
+        /// <summary>
+        /// Notes that the job row and the in-memory totals agree as of now, and
+        /// restarts the interval. Called wherever a lifecycle event has just
+        /// written them, so a freshly opened job does not save on its first tick.
+        /// </summary>
+        private void MarkTotalsSaved()
+        {
+            _lastTotalsSave = DateTime.UtcNow;
+            _savedAcres = TotalAcres;
+            _savedBushels = TotalBushels;
+        }
+
         public void StartJob(int jobId, string jobName = "")
         {
             // Close any currently active job before starting a new one
@@ -210,6 +256,7 @@ namespace YieldFlo.Classes
             _hardZeroSince = DateTime.MaxValue;
             _coverage.Reset();
             ResetPipeline();
+            MarkTotalsSaved();
             IsRecording  = false;
             IsAutoPaused = true;   // starts recording when sections come on
         }
@@ -293,6 +340,7 @@ namespace YieldFlo.Classes
             _hardZeroSince = DateTime.MaxValue;
             ResetPipeline();
             RebuildCoverage(jobId);
+            MarkTotalsSaved();
             IsRecording  = false;
             IsAutoPaused = true;   // auto-resumes once AOG connects and harvesting starts
         }
@@ -606,6 +654,9 @@ namespace YieldFlo.Classes
 
             if (_tailActive)
                 AccumulateTail(yield);
+
+            // Bound what a power cut can undo to one minute of harvesting.
+            SaveTotalsPeriodically();
 
             // Keep the live display honest while idle
             if (!harvestActive && _pipeline.Count == 0)
