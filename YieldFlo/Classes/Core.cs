@@ -41,6 +41,19 @@ namespace YieldFlo.Classes
         public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static int    LastModuleRpm    { get; set; }         // elevator RPM from the 5 Hz packet; fixed reference 200 when no RPM sensor fitted
         public static int    LastMinCycleMs   { get; set; } = -1;   // shortest completed paddle cycle in the 1 Hz packet's window, ms; -1 = not reported (old firmware)
+        // Leading edges the module's period gate rejected in the 1 Hz packet's window —
+        // grain bridging the inter-paddle gap, caught before it could split a cycle.
+        // Carried on both transports (CAN frame byte 5, UDP PGN 40002 byte 7).
+        // NOTE: Method2 firmware does not implement the period gate, so on the modules
+        // this branch ships to these two fields stay at -1. Parsed anyway so a module
+        // flashed with gate firmware reports correctly without an app change.
+        public static int    LastGateRejects  { get; set; } = -1;   // -1 = not reported (firmware predates the field)
+        // The gate's own period estimate, ms — the median of recent raw leading-edge
+        // intervals that its threshold is 75% of. Carried on both transports (CAN
+        // frame byte 6, UDP PGN 40002 byte 8). 0 means the estimator is unarmed and
+        // the gate is passing everything, which no other field reveals; comparing it
+        // against 1000/LastPaddleHz measures how many spurious edges are arriving.
+        public static int    LastMedianCycleMs { get; set; } = -1;  // -1 = not reported (firmware predates the field)
 
         // Paddle-event flow channel (module frame 0x18FF02F8, 5 Hz). Absent on
         // ESP32 modules and on firmware older than 2026.07.26 — everything here

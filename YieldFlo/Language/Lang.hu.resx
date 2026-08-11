@@ -83,8 +83,9 @@
 
   <!-- Settings -->
   <data name="lgUnits"         xml:space="preserve"><value>Mértékegységek</value></data>
-  <data name="lgImperial"      xml:space="preserve"><value>Angolszász</value></data>
-  <data name="lgMetric"        xml:space="preserve"><value>Metrikus</value></data>
+  <!-- Untranslated by design — see Lang.resx -->
+  <data name="lgImperial"      xml:space="preserve"><value>bu/ac</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>t/ha</value></data>
   <data name="lgTheme"         xml:space="preserve"><value>Téma</value></data>
   <data name="lgDark"          xml:space="preserve"><value>Sötét</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Világos</value></data>

@@ -82,7 +82,7 @@ namespace YieldFlo.Forms
             pnlEdit.Controls.Add(this.lblTestWeight); pnlEdit.Controls.Add(this.numTestWeight); pnlEdit.Controls.Add(this.lblTestWeightUnit);
             // Market Moisture
             this.lblMktMoisture.Text = Lang.lgMktMoisture; this.lblMktMoisture.Font = lf; this.lblMktMoisture.Location = new System.Drawing.Point(8, 124); this.lblMktMoisture.AutoSize = false; this.lblMktMoisture.Size = new System.Drawing.Size(220, 32);
-            this.numMarketMoisture.Font = vf; this.numMarketMoisture.Location = new System.Drawing.Point(236, 124); this.numMarketMoisture.Width = 100; this.numMarketMoisture.Height = 32; this.numMarketMoisture.Minimum = 0; this.numMarketMoisture.Maximum = 40; this.numMarketMoisture.Increment = 1; this.numMarketMoisture.Value = 14; this.numMarketMoisture.DecimalPlaces = 0;
+            this.numMarketMoisture.Font = vf; this.numMarketMoisture.Location = new System.Drawing.Point(236, 124); this.numMarketMoisture.Width = 100; this.numMarketMoisture.Height = 32; this.numMarketMoisture.Minimum = 0; this.numMarketMoisture.Maximum = 40; this.numMarketMoisture.Increment = 0.1M; this.numMarketMoisture.Value = 14; this.numMarketMoisture.DecimalPlaces = 1;
             this.lblMktMoistureUnit.Text = "%"; this.lblMktMoistureUnit.Font = vf; this.lblMktMoistureUnit.Location = new System.Drawing.Point(344, 128); this.lblMktMoistureUnit.AutoSize = true;
             pnlEdit.Controls.Add(this.lblMktMoisture); pnlEdit.Controls.Add(this.numMarketMoisture); pnlEdit.Controls.Add(this.lblMktMoistureUnit);
 

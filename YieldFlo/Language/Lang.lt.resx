@@ -83,8 +83,9 @@
 
   <!-- Settings -->
   <data name="lgUnits"         xml:space="preserve"><value>Vienetai</value></data>
-  <data name="lgImperial"      xml:space="preserve"><value>Imperiniai</value></data>
-  <data name="lgMetric"        xml:space="preserve"><value>Metriniai</value></data>
+  <!-- Untranslated by design — see Lang.resx -->
+  <data name="lgImperial"      xml:space="preserve"><value>bu/ac</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>t/ha</value></data>
   <data name="lgTheme"         xml:space="preserve"><value>Tema</value></data>
   <data name="lgDark"          xml:space="preserve"><value>Tamsi</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Šviesi</value></data>

@@ -138,11 +138,15 @@ namespace YieldFlo.Communication.Can
         private void ParseTempData(byte[] d)
         {
             // Temperature frame (0x18FF01F8), DLC=8:
-            // [0]   flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent
+            // [0]   flags  bit0=TempOK, bit1=PaddleHzPresent, bit2=MinCycleMsPresent,
+            //              bit3=GateRejectsPresent, bit4=MedianCycleMsPresent
             // [1-2] temp_raw  int16 LE  (raw ADS1115 AIN2 reading)
             // [3]   paddle_hz uint8  (paddles/s — only when bit1 set)
             // [4]   min_cycle_ms uint8  (shortest paddle cycle this window, ms — only when bit2 set)
-            // [5-7] reserved / zero
+            // [5]   gate_rejects uint8  (edges the period gate rejected — only when bit3 set)
+            // [6]   median_cycle_ms uint8  (gate's period estimate, ms — only when bit4 set)
+            // [7]   reserved / zero
+            // This branch's firmware sets neither bit3 nor bit4, so the last two stay -1.
             bool tempOk = (d[0] & 0x01) != 0;
             short tempRaw = (short)(d[1] | (d[2] << 8));
 
@@ -154,6 +158,18 @@ namespace YieldFlo.Communication.Can
 
             bool minCycleOk = (d[0] & 0x04) != 0 && d.Length >= 5;
             Core.LastMinCycleMs = minCycleOk ? d[4] : -1;
+
+            // Paired with min_cycle_ms for diagnosis: rejects counts what the gate
+            // caught, min_cycle_ms shows what still got through. Rejects rising while
+            // min_cycle_ms stays near the paddle period is the gate working.
+            bool gateOk = (d[0] & 0x08) != 0 && d.Length >= 6;
+            Core.LastGateRejects = gateOk ? d[5] : -1;
+
+            // The third of the set: rejects counts what the gate caught, min_cycle_ms
+            // what got through, and this the threshold both were judged against. 0 is
+            // a value, not an absence — it means the gate was open.
+            bool medianOk = (d[0] & 0x10) != 0 && d.Length >= 7;
+            Core.LastMedianCycleMs = medianOk ? d[6] : -1;
         }
 
         private void ParseFlowData(byte[] d)

@@ -348,8 +348,14 @@ namespace YieldFlo.Forms
             // fault: a low steady rate at high flow is normal. A high rate at
             // low flow points at the sensor mounting or a damaged paddle.
             int repairsPerSec = Core.PaddleChannelLive ? Core.LastFlowRejects * 5 : 0;
+            // "G:n/s" is the module's period-gate reject rate — leading edges too early
+            // to be a paddle, i.e. grain bridging the inter-paddle gap caught before it
+            // could split a cycle. Hidden entirely when the firmware has no gate, which
+            // is every module this branch ships to, so in practice only R: shows. The
+            // two are mutually exclusive anyway: gate firmware sends no paddle frame.
             lblNoise.Text = Lang.lgNoise + " " + perSec + "/s"
-                + (Core.PaddleChannelLive ? "  R:" + repairsPerSec + "/s" : "");
+                + (Core.PaddleChannelLive ? "  R:" + repairsPerSec + "/s" : "")
+                + (Core.LastGateRejects >= 0 ? "  G:" + Core.LastGateRejects + "/s" : "");
             lblNoise.ForeColor = perSec > 0 ? Color.Orange : Color.Silver;
 
             // Live paddle rate. The paddle-event frame carries it at full

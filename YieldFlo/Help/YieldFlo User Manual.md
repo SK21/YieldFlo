@@ -54,7 +54,7 @@ YieldFlo receives GPS and section control data from AOG over a local network (UD
 
 On first launch YieldFlo creates a default crop, header, and profile. Before starting your first job:
 
-1. Open **Menu → Settings** and select your preferred units (Imperial or Metric)
+1. Open **Menu → Settings** and select your preferred units (bu/ac or t/ha)
 2. Open **Menu → Profiles** and enter your combine ID
 3. Open **Menu → Crops** and add or edit crops for your operation
 4. Open **Menu → Headers** and enter the correct cutting width
@@ -79,6 +79,8 @@ Left to right, as they appear on screen:
 | **Pause** | Manually pause recording |
 | **Stop** | Stop and close the current job (requires confirmation) |
 
+The menu screen has a **?** button in its title bar that opens this manual.
+
 ### Data panels
 
 | Panel | Description |
@@ -99,7 +101,7 @@ Two horizontal bar gauges below the data panels:
 | Indicator | Green | Orange | Red / Silver |
 |-----------|-------|--------|---------------|
 | **GPS** | AOG connected and sending position | — | No AOG data |
-| **Module** | Module data received within 5 s | — | No module data |
+| **Module** | Module data received within 5 s | Module connected but the sensor is not reading — shows `MODULE - NO SENSOR` | No module data |
 | **Job name** | Job recording (active) | Job paused | No active job (silver) |
 
 When YieldFlo displays a notification (e.g. export complete, error), a full-width message overlays the status bar for 10 seconds then clears automatically. Yellow text = informational; red text = error.
@@ -149,6 +151,14 @@ The job automatically pauses when harvesting stops:
 
 When auto-paused the job name turns orange in the status bar. Recording resumes automatically when harvesting conditions return.
 
+### Sensor fault pause
+
+Recording also stops if the yield sensor stops reading — the module reports a sensor error, module data stops arriving, or the sensor reads nothing at all for 30 seconds while harvesting. The Module indicator turns orange and shows `NO SENSOR`, and a red message appears if this interrupts a pass.
+
+Clean the sensor lens and check its wiring. Recording resumes automatically once the sensor reads again.
+
+The pass in progress is ended at the last good position, so the map shows a gap over the ground crossed while the sensor was down rather than filling it in with a yield that was never measured. That ground is not counted in the job's acres or bushels.
+
 ### Manual pause and resume
 
 Press **Pause** on the main screen to manually pause recording. Press **Start** to resume.
@@ -175,7 +185,8 @@ Crops store the grain-specific parameters used in yield calculations and reporti
 |-------|-------------|
 | **Name** | Crop name (e.g. Wheat, Corn, Canola) |
 | **Category** | Grain type category |
-| **Test Weight** | Standard bushel weight (lbs/bu) — used to convert mass to bushels |
+| **Bushel Wt** | Shown when units are **bu/ac**. The fixed bushel weight for the crop in lb/bu — wheat 60, barley 48, oats 34. Converts harvested mass to bushels. |
+| **Test Wt** | Shown when units are **t/ha**. The same setting in kg/hL, as quoted on a grain receipt. |
 | **Market Moisture** | Standard moisture for yield reporting (e.g. 14.5% for wheat) |
 
 ### Adding a crop
@@ -185,6 +196,8 @@ Crops store the grain-specific parameters used in yield calculations and reporti
 3. Press **Save**
 
 Select a crop from the list to edit it. At least one crop must exist at all times.
+
+Select a crop and press **Delete** to remove it — you will be asked to confirm. A crop used by a saved job cannot be deleted.
 
 ---
 
@@ -200,7 +213,7 @@ Headers define the cutting width of the front attachment. Width is used to calcu
 |-------|-------------|
 | **Name** | Header name (e.g. 30ft Draper, 8-row Corn Head) |
 | **Type** | Header type category |
-| **Width** | Cutting width in feet (Imperial) or metres (Metric) |
+| **Width** | Cutting width in feet or metres, following your **Units** setting |
 | **Ahead of Pivot** | Distance the header sits ahead of the position AOG broadcasts. Enter AOG's **pivot-to-header** distance (from the AOG implement setup). This shifts the recorded coverage to the header, so pass boundaries on the yield map land where the header actually crossed them. |
 
 ### Adding a header
@@ -211,6 +224,8 @@ Headers define the cutting width of the front attachment. Width is used to calcu
 4. Press **Save**
 
 At least one header must exist at all times. Changes to a header take effect when a job is started or loaded.
+
+Select a header and press **Delete** to remove it — you will be asked to confirm. A header used by a saved job cannot be deleted.
 
 > **Note — coverage painted slightly before AOG's:** AOG turns its section bits on *early* by its turn-on look-ahead (anticipating valve opening time) but paints its own coverage only where product actually applies. YieldFlo records from the section bits, so each pass start on the yield map can begin a metre or two before AOG's painted coverage. Pass *ends* match exactly. This is normal and harmless for harvest — there is no valve delay on a header — and can be removed in testing by setting AOG's section look-ahead to zero.
 
@@ -243,6 +258,8 @@ Profiles store combine-specific and calibration settings. Use a separate profile
 
 At least one profile must exist at all times.
 
+Select a profile and press **Delete** to remove it — you will be asked to confirm. A profile used by a saved job cannot be deleted.
+
 ---
 
 ## 7. Fields
@@ -257,6 +274,8 @@ Fields are optional location labels that can be assigned to jobs for organisatio
 2. Press **Save**
 
 Fields are not required. A job can be created without a field selected.
+
+Select a field and press **Delete** to remove it — you will be asked to confirm. A field used by a saved job cannot be deleted.
 
 ### Importing fields from AgOpenGPS
 
@@ -285,6 +304,8 @@ Nothing takes effect, and nothing is saved, until **Save & Apply** is pressed �
 > **Tip:** Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.
 
 > **Important:** If you set the baseline again later, run a calibration pass afterwards — the Yield Factor is tied to the baseline and will not match until you do. YieldFlo reminds you when you save.
+
+A baseline above 0.25 turns the **Sensor Baseline** field orange, and **Save & Apply** asks for confirmation. An empty elevator should read well below this — check for grain or dirt in the elevator and run **Set Baseline** again. You can save the high value if you know it is correct.
 
 ### Noise readout
 
@@ -354,13 +375,24 @@ scale = known_value / raw_count
 
 For example: if the raw count is 420 and a certified meter reads 18.5%, set scale to 18.5 ÷ 420 ≈ 0.044. The offset field can then be used for fine trimming against a second reference point if needed.
 
-### Moisture calibration procedure
+### Quick calibration — Apply Cal
 
-1. Take a grain sample and measure moisture with a certified grain moisture meter
+1. Take a grain sample and measure it with a certified grain moisture meter
 2. Open **Menu → Moisture Cal**
-3. With the module connected and grain flowing, observe the live raw count
-4. Set offset to 0 and adjust **%/count** scale until the displayed reading matches the meter
-5. Press **Save**
+3. With the module connected and grain flowing, note the **App reads:** value
+4. Enter the meter's reading in **Meter:**
+5. Press **Apply Cal** — the **Offset** field is filled in for you
+6. Press **Save**
+
+Temperature works the same way: enter a thermometer reading in the Temperature section's **Meter:** field and press its **Apply Cal**.
+
+### Full calibration — scale
+
+Apply Cal shifts every reading by the same amount. If the reading is correct at one moisture but wrong at another, set the scale instead:
+
+1. Set **Offset** to 0
+2. With grain flowing, adjust **%/count** until the displayed reading matches the meter
+3. Press **Save**
 
 ### Moisture calibration fields
 
@@ -417,17 +449,17 @@ The mini map position is remembered between sessions.
 
 ### Full-screen mode
 
-Click the map or press **×** to expand to full screen. The toolbar at the top provides:
+Click the map to expand to full screen. The toolbar at the top provides:
 
 | Control | Action |
 |---------|--------|
 | Job selector (drop-down) | Choose which job to display |
 | **─** / **+** | Zoom out / in |
-| **Recalculate** | Re-derives every point's yield for the selected job from its stored raw sensor reading using the crop's *current* calibration, then repaints the map — see below |
+| **Recalculate** | Re-derives every point's yield for the selected job from its stored raw sensor reading using the crop's *current* calibration, then repaints the map and updates the job total — see below |
 | **Print** | Export the map as a PNG image — see below |
-| **Close** | Return to mini mode |
+| **Close** | Close the map |
 
-The map can be dragged in both mini and full-screen modes.
+Click the map again to return to mini mode. The map can be dragged in both mini and full-screen modes.
 
 ### Live update during harvest
 
@@ -435,7 +467,7 @@ When the yield map is open and a job is actively recording, the map updates auto
 
 ### Recalculating yield
 
-If you change a crop's calibration (Sensor Baseline or Yield Factor) *after* a job was recorded, the job's existing points still reflect the old calibration. Press **Recalculate** in the full-screen toolbar, then confirm the prompt, to re-derive every point's yield from its stored raw sensor reading using the crop's current calibration and repaint the map with the corrected values. This only affects the selected job and does not change the raw sensor data.
+If you change a crop's calibration (Sensor Baseline or Yield Factor) *after* a job was recorded, the job's existing points still reflect the old calibration. Press **Recalculate** in the full-screen toolbar, then confirm the prompt, to re-derive every point's yield from its stored raw sensor reading using the crop's current calibration and repaint the map with the corrected values. The job's total in the Job Report is updated to match. This only affects the selected job and does not change the raw sensor data.
 
 ### Exporting the map as a PNG
 
@@ -504,11 +536,16 @@ The export folder is remembered for subsequent exports. The CSV format is compat
 
 ### Units
 
-| Setting | Options |
-|---------|---------|
-| **Units** | Imperial (bu/ac, mph, acres, lbs) or Metric (t/ha, km/h, ha, tonnes) |
+| Units setting | bu/ac | t/ha |
+|---------------|-------|------|
+| **Yield rate** | bu/ac | t/ha |
+| **Area** | acres | hectares |
+| **Speed** | mph | km/h |
+| **Mass** | bushels | tonnes |
+| **Header width** | feet | metres |
+| **Test weight** | lb/bu | kg/hL |
 
-Changing units takes effect immediately. Historical data is stored in metric units internally and converted for display.
+Changing units takes effect immediately. Historical data is stored internally in acres and bushels and converted for display.
 
 ### Module communication
 
@@ -518,6 +555,7 @@ Changing units takes effect immediately. Historical data is stored in metric uni
 | **CAN** | Module communicates over CAN bus via a USB CAN interface. |
 | **CAN Driver** | Select the CAN interface driver (SLCAN, InnoMaker, or PCAN). |
 | **COM Port** | Serial/USB port for the CAN interface (SLCAN driver only). |
+| Rescan button | Beside **COM Port** (CAN mode only) — refreshes the list of connected serial ports. |
 
 When **CAN** mode is selected, an **Adapter: Connected** / **Not Connected** indicator appears below the port settings, showing whether the CAN adapter that is actually running (from previously saved settings) is open and seeing bus traffic. It updates live and does not reflect the driver/port currently selected in the drop-downs until they are saved and applied.
 

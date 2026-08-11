@@ -22,9 +22,9 @@ namespace YieldFlo.Classes
     /// files are pruned so it cannot grow without bound.
     ///
     /// Example:
-    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,FlowRate,PaddlesPerS,FlowRejects,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail,S1Valid,SensorFault,NewFrac
-    ///   14:32:07.812,0.412,0,412,14.2,7,142,0.398,6.98,0,5.4,48.2,17,1,53,0,1,0,1
-    ///   14:32:08.013,0.538,0,411,14.2,7,141,0.402,7.01,0,5.4,63.1,17,1,54,0,1,0,0.62
+    ///   PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,FlowRate,PaddlesPerS,FlowRejects,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail,S1Valid,SensorFault,NewFrac
+    ///   14:32:07.812,0.412,0,412,14.2,7,142,0.398,6.98,0,-1,-1,5.4,48.2,17,1,53,0,1,0,1
+    ///   14:32:08.013,0.538,0,411,14.2,7,141,0.402,7.01,0,-1,-1,5.4,63.1,17,1,54,0,1,0,0.62
     ///
     ///   PCTime      - PC clock when the packet was parsed (HH:mm:ss.fff)
     ///   Sensor1     - duty-channel obstruction ratio, raw, NOT baseline-corrected
@@ -36,6 +36,12 @@ namespace YieldFlo.Classes
     ///   FlowRate    - paddle channel: per-paddle obstruction per second, uncorrected
     ///   PaddlesPerS - paddle rate over the same window
     ///   FlowRejects - cycles the module merged/scaled/reseeded this window
+    ///   GateRejects - edges the module's period gate rejected; -1 = not reported.
+    ///                 THIS BRANCH'S FIRMWARE HAS NO PERIOD GATE, so it reads -1 on
+    ///                 every row unless a module is flashed with gate firmware.
+    ///   MedianCycleMs - the gate's period estimate, ms; its threshold is 75% of this.
+    ///                 0 = estimator unarmed, gate passing everything. -1 = not
+    ///                 reported, which is the normal case on this branch.
     ///   SpeedKmh    - ground speed at that moment
     ///   YieldRate   - instantaneous yield the app computed from this packet
     ///   JobId       - active job, or -1 when none is recording
@@ -130,6 +136,7 @@ namespace YieldFlo.Classes
                     cWriter = new StreamWriter(cFilePath, false) { AutoFlush = true };
                     cWriter.WriteLine("PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz," +
                                       "MinCycleMs,FlowRate,PaddlesPerS,FlowRejects," +
+                                      "GateRejects,MedianCycleMs," +
                                       "SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail," +
                                       "S1Valid,SensorFault,NewFrac");
                     cRunning = true;
@@ -165,6 +172,8 @@ namespace YieldFlo.Classes
                         Core.LastFlowRate.ToString("0.####", ci),
                         Core.LastPaddlesPerS.ToString("0.##", ci),
                         Core.LastFlowRejects.ToString(ci),
+                        Core.LastGateRejects.ToString(ci),
+                        Core.LastMedianCycleMs.ToString(ci),
                         (Core.GPS?.Speed ?? 0).ToString("0.##", ci),
                         (Core.Yield?.InstantYield ?? 0).ToString("0.##", ci),
                         (Core.Collector?.ActiveJobId ?? -1).ToString(ci),

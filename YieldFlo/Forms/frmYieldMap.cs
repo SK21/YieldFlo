@@ -342,8 +342,12 @@ namespace YieldFlo.Forms
             int jobId = _jobIds[idx];
 
             List<YieldDataPoint> points;
+            // Keep the current drawing on a transient read failure, but log it.
+            // A bare silent catch here hid a hard schema mismatch for as long as it
+            // existed: every job read threw, every map drew blank, and nothing was
+            // written anywhere to say so.
             try   { points = Core.Database.YieldData.GetByJob(jobId); }
-            catch { return; }   // transient read failure — keep current drawing
+            catch (Exception ex) { Props.WriteErrorLog("frmYieldMap/LoadYieldData: " + ex.Message); return; }
 
             if (points.Count == 0)
             {

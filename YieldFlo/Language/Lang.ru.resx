@@ -83,8 +83,9 @@
 
   <!-- Settings -->
   <data name="lgUnits"         xml:space="preserve"><value>Единицы</value></data>
-  <data name="lgImperial"      xml:space="preserve"><value>Имперские</value></data>
-  <data name="lgMetric"        xml:space="preserve"><value>Метрические</value></data>
+  <!-- Untranslated by design — see Lang.resx -->
+  <data name="lgImperial"      xml:space="preserve"><value>bu/ac</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>t/ha</value></data>
   <data name="lgTheme"         xml:space="preserve"><value>Тема</value></data>
   <data name="lgDark"          xml:space="preserve"><value>Тёмная</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Светлая</value></data>

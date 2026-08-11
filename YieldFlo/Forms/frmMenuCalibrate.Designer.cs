@@ -392,7 +392,10 @@ namespace YieldFlo.Forms
             this.lblNoise.ForeColor = System.Drawing.Color.Silver;
             this.lblNoise.Location = new System.Drawing.Point(354, 106);
             this.lblNoise.Name = "lblNoise";
-            this.lblNoise.Size = new System.Drawing.Size(140, 26);
+            // 220 to match lblPaddleHz below it: "Noise 0/s" alone fitted in 140,
+            // but the appended "  R:n/s" / "  G:n/s" overflowed and was silently
+            // clipped. AutoSize is false on this label, so nothing widens it at runtime.
+            this.lblNoise.Size = new System.Drawing.Size(220, 26);
             this.lblNoise.TabIndex = 22;
             this.lblNoise.Text = "Noise";
             this.lblNoise.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

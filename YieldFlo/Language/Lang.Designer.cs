@@ -176,6 +176,7 @@ namespace YieldFlo.Language
 
         // ── Crops form ───────────────────────────────────────────────────────
         internal static string lgCategoryLabel    => Get("lgCategoryLabel");
+        internal static string lgBushelWeight     => Get("lgBushelWeight");
         internal static string lgTestWeight       => Get("lgTestWeight");
         internal static string lgMktMoisture      => Get("lgMktMoisture");
         internal static string lgEnterCropName    => Get("lgEnterCropName");

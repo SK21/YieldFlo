@@ -83,8 +83,9 @@
 
   <!-- Settings -->
   <data name="lgUnits"         xml:space="preserve"><value>Eenheden</value></data>
-  <data name="lgImperial"      xml:space="preserve"><value>Imperiaal</value></data>
-  <data name="lgMetric"        xml:space="preserve"><value>Metrisch</value></data>
+  <!-- Untranslated by design — see Lang.resx -->
+  <data name="lgImperial"      xml:space="preserve"><value>bu/ac</value></data>
+  <data name="lgMetric"        xml:space="preserve"><value>t/ha</value></data>
   <data name="lgTheme"         xml:space="preserve"><value>Thema</value></data>
   <data name="lgDark"          xml:space="preserve"><value>Donker</value></data>
   <data name="lgLight"         xml:space="preserve"><value>Licht</value></data>

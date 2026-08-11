@@ -43,8 +43,6 @@ namespace YieldFlo.Forms
 
             UpdateStatusBar();
             SetJobButtons(Core.Collector?.IsRecording ?? false);
-
-            lblVersion.Text = "v" + Props.AppVersion;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
