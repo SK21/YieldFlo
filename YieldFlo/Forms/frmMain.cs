@@ -251,13 +251,31 @@ namespace YieldFlo.Forms
             bool modOk = Core.ModuleConnected
                 && (DateTime.UtcNow - Core.LastModuleReceive).TotalSeconds < 5;
 
+            // A module can be talking normally while its sensor sees nothing, and
+            // that case used to read exactly like a healthy one — green bar,
+            // packets arriving, zeros being recorded as real no-flow readings.
+            // The module field reports the link only; the sensor gets its own say
+            // in the job field below, because a blind sensor pauses recording and
+            // that is where the operator already looks to see recording state.
+            bool sensorOk = modOk && Core.LastSensor1Valid
+                && !(Core.Collector != null && Core.Collector.SensorFault);
+
             lblStatusGPS.Text = Lang.lgGPS;
             lblStatusGPS.ForeColor = gpsOk ? StatusOk : StatusBad;
 
             lblStatusModule.Text = Lang.lgModule;
             lblStatusModule.ForeColor = modOk ? StatusOk : StatusBad;
 
-            if (Core.Collector.ActiveJobId > 0)
+            // Only alternate while the sensor is actually faulted — a label that
+            // blinks all day is one the operator learns to stop reading. Nothing
+            // to say when the module itself is down: that is already red, and the
+            // sensor's state is unknowable without packets.
+            if (modOk && !sensorOk && SensorAlertPhase())
+            {
+                lblStatusJob.Text = Lang.lgNoSensor;
+                lblStatusJob.ForeColor = OkabeIto.Orange;
+            }
+            else if (Core.Collector.ActiveJobId > 0)
             {
                 bool recording = Core.Collector.IsRecording;
                 string jobName = Core.Collector.ActiveJobName.Length > 0 ? Core.Collector.ActiveJobName : "Active Job";
@@ -279,6 +297,16 @@ namespace YieldFlo.Forms
                 lblStatusJob.ForeColor = Color.Silver;
                 //lblStatusJob.Font      = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold);
             }
+        }
+
+        /// <summary>
+        /// Which half of the 2-second alternation the sensor alert is in. Taken
+        /// from the wall clock rather than a tick counter so the swap stays even
+        /// no matter how often UpdateStatusBar() happens to be called.
+        /// </summary>
+        private static bool SensorAlertPhase()
+        {
+            return (DateTime.UtcNow.Ticks / (TimeSpan.TicksPerSecond * 2)) % 2 == 1;
         }
 
         private void CheckModuleTimeout()

@@ -181,8 +181,19 @@ VALUES
             var result = new List<YieldDataPoint>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
+            // Name every column: the reader below is positional, and SELECT * makes
+            // those positions depend on the schema the database happens to carry.
+            // The dev database is permanently multi-branch — Method3 has no
+            // flow_rate/paddles_per_s/flow_flags and puts gate_rejects at 16 — so
+            // SELECT * on a database that has ever run the other branch fed the wrong
+            // type into GetDouble(16) and threw on the first row of every job (blank
+            // yield map, Recalculate appearing to lock). Naming the columns makes the
+            // read independent of which branch last touched the file.
             using var cmd = new SQLiteCommand(
-                "SELECT * FROM yield_data WHERE job_id=@jid ORDER BY timestamp", conn);
+                "SELECT id, job_id, timestamp, latitude, longitude, elevation, speed, heading, " +
+                "yield_rate, moisture, acres_accumulated, sensor1_raw, sensor2_raw, " +
+                "rpm, paddle_hz, min_cycle_ms, flow_rate, paddles_per_s, flow_flags " +
+                "FROM yield_data WHERE job_id=@jid ORDER BY timestamp", conn);
             cmd.Parameters.AddWithValue("@jid", jobId);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())

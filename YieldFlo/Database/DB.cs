@@ -215,10 +215,9 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
                 cmd.ExecuteNonQuery();
             }
             catch { }
-            // Paddle-event channel. Added in this order so the column positions
-            // match the CREATE TABLE above — YieldDataRepo.GetByJob reads
-            // SELECT * by ordinal, so a fresh database and a migrated one must
-            // end up with the same layout.
+            // Paddle-event channel. Kept in CREATE TABLE order for readability only —
+            // readers name their columns, so a migrated database no longer has to
+            // match a fresh one positionally.
             try
             {
                 using var cmd = new SQLiteCommand(

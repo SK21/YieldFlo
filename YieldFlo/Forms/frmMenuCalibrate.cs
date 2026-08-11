@@ -41,6 +41,18 @@ namespace YieldFlo.Forms
         // ±25% band clsYieldCalculator tolerates before flagging disagreement.
         private const double RefRateDriftFraction = 0.25;
 
+        // The baseline is what an EMPTY elevator reads — the paddles alone
+        // occluding the beam. A quarter of the beam blocked with no grain in the
+        // machine is not a baseline, it is a dirty sensor or grain left in the
+        // elevator, and it silently rescales every reading taken against it.
+        // Field case: three captures five minutes apart read 0.92, 0.344 and
+        // 0.086, and nothing questioned the first two.
+        //
+        // A warning, not a limit. There is no ratio that is provably wrong — a
+        // genuinely fouled elevator does read high, and the operator may know
+        // it — so this asks rather than blocks.
+        private const double BaselineWarnRatio = 0.25;
+
         // Noise readout: rolling average of sampled packet counts. A steady
         // glitch rate quantizes to 4-or-5 per 200 ms packet, so the raw value
         // flutters (20/25); averaging ~5 s of samples steadies it.
@@ -72,6 +84,11 @@ namespace YieldFlo.Forms
             LoadCurrentValues();
             UpdateSavedLabel();
             this.Shown += frmMenuCalibrate_Shown;
+
+            // The numpad writes straight to Value, so a hand-typed baseline gets
+            // the same cue as a sampled one — otherwise typing 0.5 looks normal
+            // right up until Save & Apply.
+            numBaseline.ValueChanged += (s2, ev2) => UpdateBaselineWarning();
 
             _calTimer = new System.Windows.Forms.Timer { Interval = 1000 };
             _calTimer.Tick += CalTimer_Tick;
@@ -144,6 +161,16 @@ namespace YieldFlo.Forms
                                 System.Math.Max((double)numFactor.Minimum, y.YieldFactor));
             _stagedRefPaddleHz = y.RefPaddleHz;
             chkPreferPaddle.Checked = y.PreferPaddleChannel;
+            UpdateBaselineWarning();
+        }
+
+        // Marks an implausible baseline where the operator is already looking,
+        // so the prompt at Save & Apply is a confirmation rather than a surprise.
+        private void UpdateBaselineWarning()
+        {
+            numBaseline.ForeColor = (double)numBaseline.Value > BaselineWarnRatio
+                ? Color.Orange
+                : Properties.Settings.Default.MainForeColour;
         }
 
         // FarmTrx-style "last calibration" stamp — when the current profile/crop's
@@ -161,6 +188,19 @@ namespace YieldFlo.Forms
 
         private void btnSaveCal_Click(object sender, EventArgs e)
         {
+            // Checked here rather than at capture because this is the only point
+            // both paths pass through: nothing reaches Core.Yield or the database
+            // until Save & Apply, and a value typed by hand never goes near the
+            // sampling timer.
+            if ((double)numBaseline.Value > BaselineWarnRatio)
+            {
+                var baselineAnswer = MessageBox.Show(
+                    string.Format(Lang.lgBaselineHighPrompt, (double)numBaseline.Value),
+                    Lang.lgBaselineHigh,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (baselineAnswer != DialogResult.Yes) return;
+            }
+
             // Set Baseline captures a new reference paddle rate along with the
             // baseline, and the paddle channel is normalised against it — so
             // saving a changed reference shifts every reading in proportion,
@@ -463,6 +503,7 @@ namespace YieldFlo.Forms
             decimal clamped = (decimal)Math.Min((double)numBaseline.Maximum,
                                Math.Max((double)numBaseline.Minimum, median));
             numBaseline.Value = clamped;
+            UpdateBaselineWarning();
 
             // Nominal paddle rate from the same run — median for the same reason
             // the baseline uses one. Only replaced if the paddle channel was

@@ -65,6 +65,11 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Actif</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Inactif</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - ERREUR D'ENREGISTREMENT</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value>PAS DE CAPTEUR</value></data>
+  <data name="lgBaselineHigh"       xml:space="preserve"><value>Référence élevée</value></data>
+  <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Référence {0:0.###} élevée pour un élévateur vide. Enregistrer quand même ?</value></data>
+  <data name="lgSensorFault"    xml:space="preserve"><value>Défaut capteur - enregistrement en pause. Vérifiez le capteur.</value></data>
+  <data name="lgSensorRestored" xml:space="preserve"><value>Capteur OK - enregistrement repris.</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Arrêter et fermer ce travail ?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Arrêter le travail</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menu</value></data>

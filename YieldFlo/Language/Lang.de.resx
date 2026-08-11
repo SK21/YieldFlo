@@ -65,6 +65,11 @@
   <data name="lgJobStatusOn"   xml:space="preserve"><value> - Ein</value></data>
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Aus</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - SPEICHERFEHLER</value></data>
+  <data name="lgNoSensor"       xml:space="preserve"><value>KEIN SENSOR</value></data>
+  <data name="lgBaselineHigh"       xml:space="preserve"><value>Grundwert scheint hoch</value></data>
+  <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Grundwert {0:0.###} ist hoch für einen leeren Elevator. Trotzdem speichern?</value></data>
+  <data name="lgSensorFault"    xml:space="preserve"><value>Sensorfehler - Aufzeichnung pausiert. Sensor prüfen.</value></data>
+  <data name="lgSensorRestored" xml:space="preserve"><value>Sensor OK - Aufzeichnung fortgesetzt.</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Auftrag stoppen und schließen?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Auftrag stoppen</value></data>
   <data name="lgMenu"          xml:space="preserve"><value>Menü</value></data>
