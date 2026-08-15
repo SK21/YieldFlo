@@ -170,6 +170,12 @@ void DoSetup()
 	server.on("/fwlink", []() { server.send(200, "text/plain", "OK"); });
 	server.on("/hotspot-detect.html", HTTP_GET, []() { server.send(200, "text/html", "<html><body>Portal</body></html>"); });
 	server.on("/ncsi.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft NCSI"); });
+	// Windows 10's probe — /ncsi.txt above is the Windows 7/8 one. Without this
+	// the poll falls through to HandleRoot, Windows gets a page of HTML where it
+	// expects this exact string, decides the hotspot is a captive portal and
+	// launches the browser. It also polls for as long as a PC sits on the
+	// hotspot, so answering here saves rebuilding the settings page every time.
+	server.on("/connecttest.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft Connect Test"); });
 
 	// Register custom update page BEFORE ESP2SOTA so it takes priority (first registration wins)
 	server.on("/update", HTTP_GET, []() {

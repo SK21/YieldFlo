@@ -8,9 +8,14 @@ String GetPageStyle()
     st += "body { margin-top:50px; background-color:wheat; }";
     st += "h1 { color:#444; margin:50px auto 12px; text-decoration:underline; }";
     st += "h1.subhead { margin:20px auto 12px; }";
-    st += "table.center { margin-left:auto; margin-right:auto; border-collapse:collapse; table-layout:fixed; }";
-    st += "td.label-col { width:200px; text-align:left; padding:8px 12px; vertical-align:middle; }";
-    st += "td.input-col { width:320px; padding:8px 12px; vertical-align:middle; }";
+    // Proportional columns, not the 200px + 320px they used to be. That came to
+    // 568px with the padding, against a 360-412px phone viewport — a browser you
+    // can pinch-zoom hides it, the captive-portal mini browser cannot, and the
+    // right-hand column was simply clipped. The max-width keeps the old
+    // appearance on anything wide enough to have shown it correctly before.
+    st += "table.center { margin-left:auto; margin-right:auto; border-collapse:collapse; table-layout:fixed; width:100%; max-width:568px; }";
+    st += "td.label-col { width:40%; text-align:left; padding:8px 12px; vertical-align:middle; }";
+    st += "td.input-col { width:60%; padding:8px 12px; vertical-align:middle; }";
     st += ".control-width { width:320px; max-width:90%; margin:0 auto; box-sizing:border-box; }";
     st += ".InputCell { display:block; width:100%; height:36px; box-sizing:border-box; text-align:center; font-size:18px; font-weight:700; padding:4px 6px; }";
     st += ".button-72 { align-items:center; background-color:initial;";
@@ -21,7 +26,9 @@ String GetPageStyle()
     st += "  justify-content:center; letter-spacing:.04em; line-height:16px;";
     st += "  margin:12px auto; padding:12px 18px; text-align:center; text-decoration:none;";
     st += "  user-select:none; touch-action:manipulation; width:320px; max-width:90%; }";
-    st += ".radio-row { display:flex; align-items:center; gap:16px; height:44px; }";
+    // Wraps because the three comm-mode radios come to ~310px, which no longer
+    // fits the input column once it is a proportion of a phone screen.
+    st += ".radio-row { display:flex; flex-wrap:wrap; align-items:center; gap:16px; min-height:44px; }";
     st += ".radio-row label { font-size:18px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; }";
     st += ".checkbox-row { display:flex; align-items:center; height:44px; }";
     st += "input[type=checkbox].styled, input[type=radio].styled {";
