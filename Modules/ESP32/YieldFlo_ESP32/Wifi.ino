@@ -31,6 +31,8 @@
 const uint32_t StaRetryFastMs  = 10000;		// first failures, nobody on the hotspot
 const uint32_t StaRetrySlowMs  = 60000;		// persistent failure, nobody on the hotspot
 const uint32_t StaRetryBusyMs  = 120000;	// a client is associated but not using the portal
+const uint32_t StaRetryScanOnlyMs = 300000;	// client associated AND no channel cached, so every
+											// attempt is necessarily the expensive kind
 const uint8_t  StaFastAttempts = 3;			// attempts at the fast interval before backing off
 const uint8_t  StaScanEveryN   = 5;			// full scan every Nth attempt while the hotspot is idle
 const uint32_t StaScanEarnedMs = 1800000;	// 30 min of failed directed attempts earns one full scan
@@ -57,19 +59,31 @@ uint8_t  StaChannel = 0;				// channel of the last successful join; 0 = none cac
 uint8_t  StaBssid[6] = { 0 };			// BSSID of the last successful join
 bool     StaHaveBssid = false;
 bool     StaChannelDirty = false;		// cached channel changed and needs storing
+bool     StaChannelStored = false;		// the cache has been written once this boot — see PersistStaChannel()
 uint8_t  StaAuthFailCount = 0;			// consecutive credential rejections
 bool     StaAuthSuspect = false;		// the password is being refused — back off, and say so
 bool     StaAttemptPending = false;		// a WiFi.begin() is in flight; times the off-channel window
 uint32_t LastPortalMs = 0;				// millis() of the last real portal page request; 0 = never
 
-// The ESP32 reports a bad WPA2 password as any of these depending on how the
-// router handles the refusal, so it has to be a set rather than one code.
+// The two codes that actually mean the PSK was rejected: the router refused the
+// association outright (202), or the 4-way handshake never completed (15).
+//
+// AUTH_EXPIRE (2) and HANDSHAKE_TIMEOUT (204) are deliberately NOT here, even
+// though a bad password can produce them. Both are also what a weak or fading
+// link reports, and StaAuthFailCount only resets on a DIFFERENT reason — so a
+// combine driving to the far end of the field produces a run of the same code
+// and would latch a "password refused" verdict about a password that is
+// perfectly correct, sending the user to fix the one thing that is not broken.
+// Going out of range is the normal state of this machine, not an edge case.
+//
+// The cost of leaving them out is a router that only ever reports 204 for a bad
+// password: the module then never latches and keeps retrying at the normal
+// cadence. That is the pre-rework behaviour — it spends retry airtime instead
+// of making a confident false accusation, which is the better of the two.
 static bool IsAuthFailureReason(uint8_t reason)
 {
-	return (reason == WIFI_REASON_AUTH_EXPIRE
-		|| reason == WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT
-		|| reason == WIFI_REASON_AUTH_FAIL
-		|| reason == WIFI_REASON_HANDSHAKE_TIMEOUT);
+	return (reason == WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT	// 15
+		|| reason == WIFI_REASON_AUTH_FAIL);				// 202
 }
 
 // ── Startup ──────────────────────────────────────────────────────────────
@@ -155,12 +169,23 @@ void StartWifiStation()
 // MDL.CommMode to WiFi in RAM as a deliberately session-only fallback, and a
 // whole-struct commit would silently make it permanent. Called from loop(), not
 // from the event handler, so the flash write never stalls event dispatch.
+//
+// Once per boot, and no more. EEPROM.commit() erases and rewrites a whole flash
+// sector, and two access points sharing one SSID on different channels — the
+// mesh that ScanResultsHtml() collapses into a single row — would otherwise
+// alternate this byte and cost a sector erase on every reconnection, with
+// nothing bounding it. Freezing after the first write loses nothing, because the
+// stored byte is only ever READ at boot: StartWifiAP() picks the softAP channel
+// from it and it seeds StaChannel there. StaChannel itself keeps following the
+// live channel, so directed retries still track a roam.
 void PersistStaChannel()
 {
 	if (!StaChannelDirty) return;
 	StaChannelDirty = false;
+	if (StaChannelStored) return;						// already written this boot
 	if (MDL.StaChannelCache == StaChannel) return;		// nothing to write
 
+	StaChannelStored = true;
 	MDL.StaChannelCache = StaChannel;
 	EEPROM.put(10 + offsetof(ModuleConfig, StaChannelCache), MDL.StaChannelCache);
 	EEPROM.commit();
@@ -344,11 +369,22 @@ void ServiceWifiStation()
 	// station mode could never recover from a network that changed channel.
 	// A refused password outranks everything else: no interval short enough to
 	// matter is going to make the router change its mind.
+
+	// Whether a cheap attempt is available at all. Decided up here rather than
+	// with the attempt-type logic below, because when the answer is no it has to
+	// change the INTERVAL and not just the attempt: with nothing cached every
+	// attempt is a full scan, and a 2 s scan every StaRetryBusyMs is the airtime
+	// bill this whole file exists to avoid. Frequency is the only lever left.
+	// Not an exotic state either — it is what a mistyped SSID leaves behind, or
+	// ticking the box before the shed router is switched on.
+	bool canDirect = (StaChannel != 0);
+
 	bool clientOnAp = (WiFi.softAPgetStationNum() > 0);
 	uint32_t interval;
-	if (StaAuthSuspect)  interval = StaRetryAuthMs;
-	else if (clientOnAp) interval = StaRetryBusyMs;
-	else                 interval = StaRetryMs;
+	if (StaAuthSuspect)                interval = StaRetryAuthMs;
+	else if (clientOnAp && !canDirect) interval = StaRetryScanOnlyMs;
+	else if (clientOnAp)               interval = StaRetryBusyMs;
+	else                               interval = StaRetryMs;
 
 	if (!forced && (now - StaLastAttemptMs) < interval) return;
 
@@ -357,7 +393,6 @@ void ServiceWifiStation()
 	// The channel alone is enough — it narrows the scan from thirteen channels
 	// to one, which is most of the saving — so a channel restored from EEPROM
 	// works on the first attempt after a reboot, before any BSSID is known.
-	bool canDirect = (StaChannel != 0);
 	bool fullScan;
 	if (forced)          fullScan = true;		// user asked — find it wherever it moved to
 	else if (!canDirect) fullScan = true;		// nothing cached, no cheaper option exists
