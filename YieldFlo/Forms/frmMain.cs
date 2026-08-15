@@ -241,8 +241,25 @@ namespace YieldFlo.Forms
             // The module field reports the link only; the sensor gets its own say
             // in the job field below, because a blind sensor pauses recording and
             // that is where the operator already looks to see recording state.
-            bool sensorOk = modOk && Core.LastSensor1Valid
-                && !(Core.Collector != null && Core.Collector.SensorFault);
+            //
+            // Only while grain should be flowing, though. The module reports
+            // SensorOK from "was there a sensor edge in the last 500 ms", so a
+            // still elevator reads exactly like a dead sensor — the two are not
+            // distinguishable from the packet. Parked, between jobs, or on the
+            // headland with the header up, a quiet sensor is not a fault and
+            // warning about it just teaches the operator to ignore the label.
+            //
+            // Deliberately not gated on IsRecording alone: a sensor fault calls
+            // AutoPause(), which clears IsRecording, so the warning would switch
+            // itself off the instant it fired.
+            bool harvesting = gpsOk
+                && Core.Collector != null
+                && Core.Collector.ActiveJobId > 0
+                && (Core.Collector.IsRecording || Core.Collector.IsAutoPaused)
+                && Core.GPS.SectionsActive;
+
+            bool sensorBad = harvesting
+                && (!Core.LastSensor1Valid || Core.Collector.SensorFault);
 
             lblStatusGPS.Text = Lang.lgGPS;
             lblStatusGPS.ForeColor = gpsOk ? StatusOk : StatusBad;
@@ -254,7 +271,7 @@ namespace YieldFlo.Forms
             // blinks all day is one the operator learns to stop reading. Nothing
             // to say when the module itself is down: that is already red, and the
             // sensor's state is unknowable without packets.
-            if (modOk && !sensorOk && SensorAlertPhase())
+            if (modOk && sensorBad && SensorAlertPhase())
             {
                 lblStatusJob.Text = Lang.lgNoSensor;
                 lblStatusJob.ForeColor = OkabeIto.Orange;
