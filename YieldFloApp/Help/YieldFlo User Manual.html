@@ -721,11 +721,37 @@ li { margin: 2px 0; }
 <tr><td><strong>Communication &mdash; Ethernet subnet</strong></td><td>First three octets of the wired network (default <code>192.168.1</code>). The module takes IP <code>subnet.(50 + module ID)</code>; give the PC's wired adapter a static IP on the same subnet (e.g. <code>192.168.1.10</code>). In Ethernet mode the portal shows whether the W5500 board and cable link are detected.</td></tr>
 <tr><td><strong>Optical Sensor &mdash; Signals</strong></td><td><strong>Main + Comp</strong> (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. <strong>Main only</strong>: only the main signal wire is connected &mdash; for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode.</td></tr>
 <tr><td><strong>Optical Sensor &mdash; Polarity</strong></td><td><strong>PNP</strong> (default &mdash; output HIGH with beam clear, the common choice for this kind of sensor) or <strong>NPN</strong> (inverted logic). Select NPN if flow reads high with no grain and low with grain.</td></tr>
-<tr><td><strong>WiFi Network</strong></td><td>Name and password of an external WiFi network. Tick <strong>Use this Network</strong> to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only.</td></tr>
-<tr><td><strong>Hotspot &mdash; Password</strong></td><td>Password for the module's own hotspot. Use 8&ndash;10 characters, or leave empty for an open hotspot.</td></tr>
 </table>
 
 <p>Press <strong>Save / Restart</strong> to store the settings in the module and restart it.</p>
+
+<p>WiFi settings are on their own page &mdash; follow the <strong>WiFi Network</strong> link at the bottom of the portal.</p>
+
+<h3>WiFi network</h3>
+
+<p>The <strong>WiFi Network</strong> page joins the module to an existing network and sets the password for the module's own hotspot. The module keeps its hotspot running whether or not it joins a network, so the portal stays reachable either way.</p>
+
+<p>The top of the page shows the current connection.</p>
+
+<p>To join a network:</p>
+
+<ol>
+<li>Press <strong>Scan for Networks</strong>. The list appears after a few seconds, strongest first, with a padlock on networks that need a password.</li>
+<li>Tap a network name to fill it in.</li>
+<li>Enter the password.</li>
+<li>Tick <strong>Use this Network</strong>.</li>
+<li>Press <strong>Save / Restart</strong>.</li>
+</ol>
+
+<table>
+<tr><th>Setting</th><th>Description</th></tr>
+<tr><td><strong>Network</strong></td><td>Name of the network to join. Tap a scan result to fill this in, or type it in for a hidden network.</td></tr>
+<tr><td><strong>Password</strong></td><td>Password for that network.</td></tr>
+<tr><td><strong>Use this Network</strong></td><td>Joins the network. Stays on until you turn it off.</td></tr>
+<tr><td><strong>Hotspot &mdash; Password</strong></td><td>Password for the module's own hotspot. Use 8&ndash;10 characters, or leave empty for an open hotspot.</td></tr>
+</table>
+
+<p>If the module cannot join, it keeps trying in the background and the page shows the reason. <strong>Password refused</strong> means the password is wrong &mdash; correct it and press <strong>Save / Restart</strong>. Press <strong>Retry Connection Now</strong> to try again straight away after changing something at the router.</p>
 
 <h3>Firmware update</h3>
 
@@ -751,6 +777,14 @@ li { margin: 2px 0; }
 <li>In WiFi mode, confirm the PC is connected to the correct network</li>
 <li>Check the module LED for status indication</li>
 <li>Restart the module and wait 10–15 seconds for it to connect</li>
+</ul>
+
+<h3>Module will not join a WiFi network</h3>
+<ul>
+<li>Open the module portal and follow the <strong>WiFi Network</strong> link &mdash; the page shows the current state</li>
+<li><strong>Password refused</strong> means the password is wrong; correct it and press <strong>Save / Restart</strong></li>
+<li>Press <strong>Scan for Networks</strong> to confirm the network is in range</li>
+<li>Press <strong>Retry Connection Now</strong> after changing anything at the router</li>
 </ul>
 
 <h3>Yield reads zero or very low</h3>

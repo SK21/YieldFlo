@@ -620,10 +620,33 @@ The YieldFlo module has a built-in settings page served from its own WiFi hotspo
 | **Communication — Ethernet subnet** | First three octets of the wired network (default `192.168.1`). The module takes IP `subnet.(50 + module ID)`; give the PC's wired adapter a static IP on the same subnet (e.g. `192.168.1.10`). In Ethernet mode the portal shows whether the W5500 board and cable link are detected. |
 | **Optical Sensor — Signals** | **Main + Comp** (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. **Main only**: only the main signal wire is connected — for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode. |
 | **Optical Sensor — Polarity** | **PNP** (default — output HIGH with beam clear, the common choice for this kind of sensor) or **NPN** (inverted logic). Select NPN if flow reads high with no grain and low with grain. |
-| **WiFi Network** | Name and password of an external WiFi network. Tick **Use this Network** to have the module join it in addition to its own hotspot. If the connection fails repeatedly the module reverts to hotspot-only. |
-| **Hotspot — Password** | Password for the module's own hotspot. Use 8–10 characters, or leave empty for an open hotspot. |
 
 Press **Save / Restart** to store the settings in the module and restart it.
+
+WiFi settings are on their own page — follow the **WiFi Network** link at the bottom of the portal.
+
+### WiFi network
+
+The **WiFi Network** page joins the module to an existing network and sets the password for the module's own hotspot. The module keeps its hotspot running whether or not it joins a network, so the portal stays reachable either way.
+
+The top of the page shows the current connection.
+
+To join a network:
+
+1. Press **Scan for Networks**. The list appears after a few seconds, strongest first, with a padlock on networks that need a password.
+2. Tap a network name to fill it in.
+3. Enter the password.
+4. Tick **Use this Network**.
+5. Press **Save / Restart**.
+
+| Setting | Description |
+|---------|-------------|
+| **Network** | Name of the network to join. Tap a scan result to fill this in, or type it in for a hidden network. |
+| **Password** | Password for that network. |
+| **Use this Network** | Joins the network. Stays on until you turn it off. |
+| **Hotspot — Password** | Password for the module's own hotspot. Use 8–10 characters, or leave empty for an open hotspot. |
+
+If the module cannot join, it keeps trying in the background and the page shows the reason. **Password refused** means the password is wrong — correct it and press **Save / Restart**. Press **Retry Connection Now** to try again straight away after changing something at the router.
 
 ### Firmware update
 
@@ -647,6 +670,13 @@ The **Update Firmware** link at the bottom of the portal opens the over-the-air 
 - In WiFi mode, confirm the PC is connected to the correct network
 - Check the module LED for status indication
 - Restart the module and wait 10–15 seconds for it to connect
+
+### Module will not join a WiFi network
+
+- Open the module portal and follow the **WiFi Network** link — the page shows the current state
+- **Password refused** means the password is wrong; correct it and press **Save / Restart**
+- Press **Scan for Networks** to confirm the network is in range
+- Press **Retry Connection Now** after changing anything at the router
 
 ### Yield reads zero or very low
 

@@ -1,5 +1,13 @@
 void HandleRoot()
 {
+    // Only a genuine page load means the user is standing at the portal, and
+    // only that should suspend the station retry (see Wifi.ino). This is also
+    // the onNotFound handler, so it sees traffic nobody asked for: Windows
+    // polls /connecttest.txt for as long as a PC sits on the hotspot, and
+    // counting that would suspend retries forever. The settings form posts to
+    // '/' as well, so one check covers both the page and the submit.
+    if (server.uri() == "/") NotePortalRequest();
+
     if (server.hasArg("commmode"))
     {
         handleSettings();
@@ -12,11 +20,12 @@ void HandleRoot()
 
 void handleSettings()
 {
-    String oldSSID     = String(MDL.SSID);
-    String oldPassword = String(MDL.Password);
-    bool   oldStation  = MDL.WifiModeUseStation;
+    // WiFi credentials, the station tick and the hotspot password are NOT read
+    // here — they live on /wifi (PgWifi.ino) and are not fields of this form.
+    // Reading them here anyway would be silently destructive: server.hasArg()
+    // returns false for an absent field, so every save from this page would
+    // clear the user's "Use this Network" setting and blank the SSID.
     uint8_t oldCommMode = MDL.CommMode;
-    String oldAPpw     = String(MDL.APpassword);
     bool   oldUseComp  = MDL.UseCompSignal;
     uint8_t oldE0 = MDL.EthIP0, oldE1 = MDL.EthIP1, oldE2 = MDL.EthIP2;
 
@@ -53,37 +62,12 @@ void handleSettings()
     polarity.trim();
     MDL.InvertSensor = (polarity == "npn");
 
-    // WiFi station credentials
-    String newSSID = server.arg("prop1");
-    newSSID.trim();
-    String newPassword = server.arg("prop2");
-    newPassword.trim();
-    newSSID.toCharArray(MDL.SSID, sizeof(MDL.SSID));
-    newPassword.toCharArray(MDL.Password, sizeof(MDL.Password));
-
-    MDL.WifiModeUseStation = server.hasArg("connect");
-
-    // AP / Hotspot password (prop3 — may be empty for open network)
-    String newAPpw = oldAPpw;
-    if (server.hasArg("prop3"))
-    {
-        newAPpw = server.arg("prop3");
-        newAPpw.trim();
-        const size_t kMaxApLen = 10;
-        if (newAPpw.length() > kMaxApLen) newAPpw.remove(kMaxApLen);
-        newAPpw.toCharArray(MDL.APpassword, sizeof(MDL.APpassword));
-    }
-
     server.send(200, "text/html", GetPageMain());
 
     bool changed =
         (MDL.CommMode          != oldCommMode) ||
         (MDL.UseCompSignal     != oldUseComp)  ||
         (MDL.InvertSensor      != oldInvert)   ||
-        (MDL.WifiModeUseStation != oldStation)  ||
-        (String(MDL.SSID)       != oldSSID)     ||
-        (String(MDL.Password)   != oldPassword) ||
-        (String(MDL.APpassword) != oldAPpw)     ||
         (MDL.EthIP0 != oldE0) || (MDL.EthIP1 != oldE1) || (MDL.EthIP2 != oldE2);
 
     if (changed)

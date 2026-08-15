@@ -20,8 +20,8 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 31076         // firmware version — update with every build (DDMMY format)
-#define StructVersion 4     // EEPROM layout version — increment ONLY when ModuleData fields change
+#define InoID 14086         // firmware version — update with every build (DDMMY format)
+#define StructVersion 5     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 // Comm modes
 const uint8_t CommModeWifi = 0;
@@ -175,6 +175,7 @@ struct ModuleConfig
 	uint8_t EthIP0 = 192;			// Ethernet subnet — module IP is EthIP0.EthIP1.EthIP2.(50+ID)
 	uint8_t EthIP1 = 168;
 	uint8_t EthIP2 = 1;
+	uint8_t StaChannelCache = 0;	// channel the station network was last found on; 0 = unknown
 };
 ModuleConfig MDL;
 
@@ -194,40 +195,8 @@ const byte AP_DNS_PORT = 53;
 const uint16_t ListeningPort = 28001;
 const uint16_t ModuleSendPort = 30100;	// PC receive port
 
-uint8_t DisconnectCount = 0;
-void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-	Serial.print("Connected to '");
-	Serial.print(MDL.SSID);
-	Serial.println("'");
-}
-
-void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-	Serial.print("Network IP: ");
-	Serial.println(WiFi.localIP());
-	IPAddress Wifi_LocalIP = WiFi.localIP();
-	Wifi_DestinationIP = IPAddress(Wifi_LocalIP[0], Wifi_LocalIP[1], Wifi_LocalIP[2], 255);
-}
-
-void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-	Serial.println("Disconnected from WiFi access point");
-	Serial.print("WiFi lost connection. Reason: ");
-	Serial.println(info.wifi_sta_disconnected.reason);
-	Serial.print("Trying to Reconnect: ");
-	DisconnectCount++;
-	Serial.println(DisconnectCount);
-	WiFi.begin(MDL.SSID, MDL.Password);
-
-	if (DisconnectCount > 5)
-	{
-		// use AP mode only
-		MDL.WifiModeUseStation = false;
-		SaveData();
-		ESP.restart();
-	}
-}
+// WiFi station connection management lives in Wifi.ino — the event handlers,
+// the paced retry, and the policy behind both.
 
 const uint16_t LoopTime = 50;   // ms = 20 Hz (analog reads)
 uint32_t       LoopLast = LoopTime;
@@ -260,6 +229,7 @@ void loop()
 	dnsServer.processNextRequest();
 	server.handleClient();
 	ReceiveComm();
+	ServiceWifiStation();   // paced station reconnect — see Wifi.ino
 	if (millis() - LoopLast >= LoopTime)
 	{
 		LoopLast = millis();

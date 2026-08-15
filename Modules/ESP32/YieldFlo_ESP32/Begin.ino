@@ -155,53 +155,15 @@ void DoSetup()
 		Serial.println("OK.");
 	}
 
-	// Wifi
-	WiFi.mode(WIFI_MODE_APSTA);
-	WiFi.disconnect(true);
-
-	// Access Point
-	Wifi_DestinationIP = IPAddress(192, 168, MDL.ID + 200, 255);
-	IPAddress AP_LocalIP = IPAddress(192, 168, MDL.ID + 200, 1);
-	IPAddress AP_GateWay = AP_LocalIP;
-	IPAddress AP_Subnet(255, 255, 255, 0);
-
-	uint64_t mac = ESP.getEfuseMac();
-	uint32_t low32 = (uint32_t)(mac & 0xFFFFFFFF);
-
-	char suffix[9]; // 8 hex + null
-	sprintf(suffix, "%08X", low32);
-
-	String AP = MDL.APname;
-	AP += "_";
-	AP += suffix;
-
-	WiFi.softAPConfig(AP_LocalIP, AP_GateWay, AP_Subnet);
-	if (strlen(MDL.APpassword) >= 8)
-	{
-		// WPA2-PSK
-		WiFi.softAP(AP.c_str(), MDL.APpassword, 6, false, 4);
-	}
-	else
-	{
-		// Fallback: invalid WPA passphrase length -> force open
-		WiFi.softAP(AP.c_str(), nullptr, 6, false, 4);
-	}
-
-	dnsServer.start(AP_DNS_PORT, "*", AP_LocalIP);
-
-	UDP_Wifi.begin(ListeningPort);
-
-	Serial.println("");
-	Serial.print("Access Point name: ");
-	Serial.println(AP);
-	Serial.print("Settings Page IP: ");
-	Serial.println(AP_LocalIP);
+	// Wifi access point — see Wifi.ino
+	StartWifiAP();
 
 	// web server
 	Serial.println();
 	Serial.println("Starting Web Server");
 
 	server.on("/", HandleRoot);
+	server.on("/wifi", HandleWifiPage);		// all WiFi settings — see PgWifi.ino
 	server.onNotFound(HandleRoot);
 
 	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});
@@ -211,6 +173,7 @@ void DoSetup()
 
 	// Register custom update page BEFORE ESP2SOTA so it takes priority (first registration wins)
 	server.on("/update", HTTP_GET, []() {
+		NotePortalRequest();		// real page load — hold off station retries
 		server.sendHeader("Connection", "close");
 		server.send(200, "text/html", GetPageUpdate());
 	});
@@ -275,18 +238,8 @@ void DoSetup()
 		Ethernet_DestinationIP = IPAddress(MDL.EthIP0, MDL.EthIP1, MDL.EthIP2, 255);
 	}
 
-	// wifi client mode
-	if (MDL.WifiModeUseStation)
-	{
-		// connect to network
-		delay(1000);
-		WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
-		WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
-		WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
-		WiFi.begin(MDL.SSID, MDL.Password);
-		Serial.println();
-		Serial.println("Connecting to wifi network ...");
-	}
+	// wifi client mode — see Wifi.ino
+	StartWifiStation();
 
 	delay(1500);
 
@@ -356,6 +309,10 @@ bool ValidData()
 
 	if (MDL.CommMode > CommModeEth) return false;
 
+	// 0 = none cached. A corrupt value would put the softAP on a channel the
+	// radio cannot use, so fail validation rather than start a broken hotspot.
+	if (MDL.StaChannelCache > 13) return false;
+
 	return true;
 }
 
@@ -382,4 +339,5 @@ void LoadDefaults()
 	MDL.EthIP0 = 192;
 	MDL.EthIP1 = 168;
 	MDL.EthIP2 = 1;
+	MDL.StaChannelCache = 0;
 }

@@ -1,22 +1,9 @@
-String GetPageMain()
+// Shared by GetPageMain() and GetPageWifi() so the two cannot drift apart.
+// PgUpdate.ino deliberately keeps its own copy — it is laid out differently and
+// carries the upload progress bar.
+String GetPageStyle()
 {
-    // Decode firmware version from InoID (DDMMY format)
-    uint16_t yr   = InoID % 10 + 2020;
-    uint16_t rest = InoID / 10;
-    uint8_t  mn   = rest % 100;
-    uint16_t dy   = rest / 100;
-    String fwVer = "v" + String(yr) + ".";
-    if (mn < 10) fwVer += "0";
-    fwVer += String(mn) + ".";
-    if (dy < 10) fwVer += "0";
-    fwVer += String(dy);
-
-    String st = "<HTML>";
-    st += "<head>";
-    st += "<META content='text/html; charset=utf-8' http-equiv=Content-Type>";
-    st += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-    st += "<title>YieldFlo Module</title>";
-    st += "<style>";
+    String st = "<style>";
     st += "html { font-family: Helvetica, Arial, sans-serif; display:inline-block; margin:0 auto; text-align:center; }";
     st += "body { margin-top:50px; background-color:wheat; }";
     st += "h1 { color:#444; margin:50px auto 12px; text-decoration:underline; }";
@@ -53,7 +40,34 @@ String GetPageMain()
     st += ".hint { font-size:12px; color:#333; margin-top:4px; }";
     st += ".status { margin:2px auto 16px; font-size:16px; }";
     st += "a:link { font-size:150%; }";
+    // Network scan results — rows are links, sized for a gloved finger.
+    st += "table.nets { margin:0 auto; border-collapse:collapse; width:320px; max-width:90%; }";
+    st += "table.nets td { padding:10px 8px; border-bottom:1px solid rgba(57,31,91,0.2); text-align:left; font-size:16px; }";
+    st += "table.nets td.sig { text-align:right; white-space:nowrap; color:#333; font-size:14px; }";
+    st += "table.nets a { font-size:100%; font-weight:700; text-decoration:none; color:#391f5b; }";
     st += "</style>";
+    return st;
+}
+
+String GetPageMain()
+{
+    // Decode firmware version from InoID (DDMMY format)
+    uint16_t yr   = InoID % 10 + 2020;
+    uint16_t rest = InoID / 10;
+    uint8_t  mn   = rest % 100;
+    uint16_t dy   = rest / 100;
+    String fwVer = "v" + String(yr) + ".";
+    if (mn < 10) fwVer += "0";
+    fwVer += String(mn) + ".";
+    if (dy < 10) fwVer += "0";
+    fwVer += String(dy);
+
+    String st = "<HTML>";
+    st += "<head>";
+    st += "<META content='text/html; charset=utf-8' http-equiv=Content-Type>";
+    st += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    st += "<title>YieldFlo Module</title>";
+    st += GetPageStyle();
     st += "</head>";
     st += "<BODY>";
     st += "<h1>YieldFlo Module</h1>";
@@ -114,47 +128,17 @@ String GetPageMain()
     st += "</tr>";
     st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>PNP: output HIGH with beam clear. NPN: inverted — select NPN if flow reads high with no grain.</div></div></td></tr>";
 
-    // Divider
-    st += "<tr><td colspan='2'><hr></td></tr>";
-
-    // WiFi station settings
-    st += "<tr><td colspan='2' style='text-align:center; padding:0;'><h1 class='subhead'>WiFi Network</h1></td></tr>";
-    st += "<tr>";
-    st += "  <td class='label-col'>Network</td>";
-    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='prop1' value='" + String(MDL.SSID) + "'></div></td>";
-    st += "</tr>";
-    st += "<tr>";
-    st += "  <td class='label-col'>Password</td>";
-    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='prop2' value='" + String(MDL.Password) + "'></div></td>";
-    st += "</tr>";
-    st += "<tr>";
-    st += "  <td class='label-col'>Use this Network</td>";
-    st += "  <td class='input-col'><div class='control-width'><div class='checkbox-row'>";
-    st += "    <input class='styled' type='checkbox' name='connect' value='1'" + String(MDL.WifiModeUseStation ? " checked" : "") + ">";
-    st += "  </div></div></td>";
-    st += "</tr>";
-    st += "<tr><td colspan='2' style='text-align:center;'>";
-    if (WiFi.isConnected())
-        st += "<div class='status'>Connected to " + String(MDL.SSID) + " (" + WiFi.localIP().toString() + ")</div>";
-    else
-        st += "<div class='status'>Not connected to network</div>";
-    st += "</td></tr>";
-
-    // Divider
-    st += "<tr><td colspan='2'><hr></td></tr>";
-
-    // AP / Hotspot password
-    st += "<tr><td colspan='2' style='text-align:center; padding:0;'><h1 class='subhead'>Hotspot</h1></td></tr>";
-    st += "<tr>";
-    st += "  <td class='label-col'>Password</td>";
-    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='prop3' value='" + String(MDL.APpassword) + "'></div></td>";
-    st += "</tr>";
-    st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Module access point. Use 8–10 characters. Leave empty for an open hotspot.</div></div></td></tr>";
-
     st += "</table>";
     st += "<p><div class='control-width'><input class='button-72' type='submit' value='Save / Restart'></div></p>";
-    st += "<p><a href='/update'>Update Firmware</a></p>";
     st += "</form>";
+
+    // Everything WiFi lives on its own page — see PgWifi.ino for why.
+    st += "<p><a href='/wifi'>WiFi Network</a></p>";
+    if (WiFi.isConnected())
+        st += "<p class='status'>Connected to " + String(MDL.SSID) + " (" + WiFi.localIP().toString() + ")</p>";
+    else if (MDL.WifiModeUseStation)
+        st += "<p class='status'>Network not connected</p>";
+    st += "<p><a href='/update'>Update Firmware</a></p>";
     st += "</BODY></HTML>";
 
     return st;

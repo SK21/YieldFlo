@@ -25,5 +25,7 @@
 #include "..\GUI.ino"
 #include "..\PgMain.ino"
 #include "..\PgUpdate.ino"
+#include "..\PgWifi.ino"
+#include "..\Wifi.ino"
 #endif
 #endif
