@@ -151,6 +151,51 @@ them as zero.
 `Sensor1`, `Noise`, `Rpm`, `Moisture`, `Sections`, `PipelineCount` and `Tail` are
 genuinely per-row and can be averaged or plotted directly.
 
+### Turning a per-row counter into a rate
+
+`Noise` is a **counter**, not a level: the module accumulates edges and zeroes the
+tally every time it builds a packet, so each row holds a fresh, non-overlapping
+count. That is what makes summing it legitimate where summing `GateRejects` is
+not.
+
+To convert it to a rate, use the module's window, not the clock:
+
+```
+rate per second = mean(Noise over rows where it is non-zero) / 0.2
+```
+
+**Do not divide the total by the elapsed time in `PCTime`.** The log loses
+packets — measured at about 4.6 % on 2026-08-18 — and every lost packet takes its
+edges with it, because the module already zeroed the counter when it built that
+packet. Dividing by wall-clock time credits those edges as never having happened
+and reads low by exactly the loss rate. On that file the two methods gave 18.06
+and 17.26; the first is right.
+
+The 0.2 assumes each surviving row still represents one undisturbed 200 ms
+window. Confirm it before trusting a rate that matters, by bucketing each row's
+value against the time gap since the previous row:
+
+| Gap since previous row | Mean `Noise` |
+|---|---|
+| 100–199 ms | 3.61 |
+| 200–299 ms | 3.61 |
+| 300–399 ms | 3.45 |
+| 400–499 ms | 3.54 |
+| 500–599 ms | 3.54 |
+| 600–699 ms | 3.51 |
+
+Flat across the gaps, as here, means the counter was zeroed on the module's own
+fixed schedule and the missing rows were lost in transit — each surviving row is
+a clean 200 ms window, so divide by 0.2.
+
+If instead the mean **rises with the gap**, the module was skipping sends and its
+counter kept accumulating across them. Then the row covers the whole gap, and the
+honest figure is the total over the elapsed `PCTime`.
+
+The same question applies to any per-row counter added later. The gap-bucket
+table answers it in one pass, and the two methods differ by however much packet
+loss is running that day.
+
 ---
 
 ## Reading order
@@ -176,9 +221,13 @@ Look at **Noise**, **Rpm**, **PaddleHz**.
     The tell is the flatness. Real interference is bursty and varies with what
     the machine is doing; this reads as a metronome locked to the elevator,
     because that is what it is — exactly one rejected edge per paddle. Measured
-    2026-08-18 on the 9070: `Noise` 18.1/s for four hours against a known
-    paddle rate of 18.1 Hz, `Sensor1` 0 on all 84,762 rows. Full write-up in
+    2026-08-18 on the 9070: `Noise` 18.06/s for four hours against a known
+    paddle rate of 18.10 Hz, `Sensor1` 0 on all 84,762 rows. Full write-up in
     `Comp Wire Fault 2026-08-18.md`.
+
+    Comparing those two numbers is the whole test, so derive the rate the way
+    "Turning a per-row counter into a rate" above sets out — the obvious
+    wall-clock method reads several percent low and blunts the comparison.
 - `Rpm` tells you whether the elevator speed was steady. If it moved, expect
   `PaddleHz` and `MedianCycleMs` to move with it.
 - `PaddleHz` should be steady at constant elevator speed. It is the single best
