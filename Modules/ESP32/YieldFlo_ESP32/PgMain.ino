@@ -125,7 +125,7 @@ String GetPageMain()
     st += "    <label><input class='styled' type='radio' name='sensormode' value='main'" + String(MDL.UseCompSignal ? "" : " checked") + "> Main only</label>";
     st += "  </div></div></td>";
     st += "</tr>";
-    st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Main only: complementary wire not connected, noise rejection disabled.</div></div></td></tr>";
+    st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Main only: complementary wire not connected. Choose it unless Comp is definitely wired &mdash; Main + Comp without it discards every paddle and measures nothing.</div></div></td></tr>";
     st += "<tr>";
     st += "  <td class='label-col'>Polarity</td>";
     st += "  <td class='input-col'><div class='control-width'><div class='radio-row'>";

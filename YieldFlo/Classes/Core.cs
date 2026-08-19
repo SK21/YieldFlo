@@ -36,6 +36,15 @@ namespace YieldFlo.Classes
         // 13,000 real no-flow points with acres and a full map behind them. Anything
         // that stores or integrates LastSensor1 must check this first.
         public static bool   LastSensor1Valid { get; set; } = true;
+        // The module reporting that its comp cross-check is discarding every edge:
+        // Main + Comp is selected but Comp is not wired, so one edge of each paddle
+        // fails the cross-check and the other is dropped as a duplicate, and nothing
+        // is ever measured. Distinct from LastSensor1Valid, which cannot tell a dead
+        // sensor from a stopped elevator — this one can only be raised while edges
+        // are actually arriving, so it needs no "is it harvesting" gate and is worth
+        // showing the moment the elevator spins up. Carried on both transports
+        // (status_flags bit 3). False on firmware that predates the flag.
+        public static bool   LastCompFault    { get; set; }
         public static int    LastNoiseCount   { get; set; }
         public static int    LastPaddleHz     { get; set; } = -1;   // paddles/s from the 1 Hz packet; -1 = not reported (old firmware)
         public static int    LastModuleRpm    { get; set; }         // elevator RPM from the 5 Hz packet; fixed reference 200 when no RPM sensor fitted

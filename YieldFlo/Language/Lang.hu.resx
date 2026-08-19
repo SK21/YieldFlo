@@ -66,9 +66,11 @@
   <data name="lgJobStatusOff"  xml:space="preserve"><value> - Ki</value></data>
   <data name="lgDataWriteError" xml:space="preserve"><value> - MENTÉSI HIBA</value></data>
   <data name="lgNoSensor"       xml:space="preserve"><value>NINCS ÉRZÉKELŐ</value></data>
+  <data name="lgNoComp"         xml:space="preserve"><value>NINCS COMP</value></data>
   <data name="lgBaselineHigh"       xml:space="preserve"><value>Az alapérték magasnak tűnik</value></data>
   <data name="lgBaselineHighPrompt" xml:space="preserve"><value>Az alapérték {0:0.###} magas üres elevátorhoz. Mentés mégis?</value></data>
   <data name="lgSensorFault"    xml:space="preserve"><value>Érzékelőhiba - a rögzítés szünetel. Ellenőrizze az érzékelőt.</value></data>
+  <data name="lgCompFault"      xml:space="preserve"><value>Nincs Comp jel - a rögzítés szünetel. Állítsa a modult 'Main only' módba.</value></data>
   <data name="lgSensorRestored" xml:space="preserve"><value>Érzékelő rendben - a rögzítés folytatódik.</value></data>
   <data name="lgStopJobPrompt" xml:space="preserve"><value>Leállítja és bezárja ezt a munkát?</value></data>
   <data name="lgStopJob"       xml:space="preserve"><value>Munka leállítása</value></data>

@@ -16,7 +16,19 @@ are not sure which you have.
 
 ```
 Noise > 0 sustained?
-    Yes  -> Electrical: wiring, shield, or shared supply. Stop here —
+    Read PaddleHz on the same rows before concluding anything — sustained
+    noise has two completely different causes and they need opposite fixes.
+
+    PaddleHz 0, and Noise flat at the elevator's paddle rate?
+         -> NOT electrical. The comp cross-check is enabled with no comp
+            wire: one edge of every paddle fails the check and the other
+            is dropped as a duplicate, so nothing is ever measured. Set
+            the module to Main only. Stop here — a log like this holds no
+            grain data at all. Firmware from 2026-08-19 reports this
+            itself and the app shows "NO COMP".
+
+    PaddleHz normal, Noise erratic?
+         -> Electrical: wiring, shield, or shared supply. Stop here —
             every number below is built on those edges.
 
 Rpm steady?
@@ -150,9 +162,23 @@ found at step 1 makes steps 2–4 meaningless.
 
 Look at **Noise**, **Rpm**, **PaddleHz**.
 
-- `Noise` should be at or near zero. A steady nonzero count is an electrical
-  problem — wiring, shielding, or a supply shared with something noisy. Fix that
-  before touching anything else; every number downstream is built on those edges.
+- `Noise` should be at or near zero. A steady nonzero count has two possible
+  causes and `PaddleHz` on the same rows separates them.
+  - **`PaddleHz` still working, `Noise` erratic** — an electrical problem:
+    wiring, shielding, or a supply shared with something noisy. Fix that before
+    touching anything else; every number downstream is built on those edges.
+  - **`PaddleHz` at 0 and `Noise` flat at the paddle rate** — not electrical.
+    The module is in Main+Comp mode with no comp wire, so one edge of every
+    paddle fails the cross-check and the other is dropped as a duplicate.
+    Nothing commits, `Sensor1` stays 0, and the log contains no grain data.
+    Set the module to Main only.
+
+    The tell is the flatness. Real interference is bursty and varies with what
+    the machine is doing; this reads as a metronome locked to the elevator,
+    because that is what it is — exactly one rejected edge per paddle. Measured
+    2026-08-18 on the 9070: `Noise` 18.1/s for four hours against a known
+    paddle rate of 18.1 Hz, `Sensor1` 0 on all 84,762 rows. Full write-up in
+    `Comp Wire Fault 2026-08-18.md`.
 - `Rpm` tells you whether the elevator speed was steady. If it moved, expect
   `PaddleHz` and `MedianCycleMs` to move with it.
 - `PaddleHz` should be steady at constant elevator speed. It is the single best
@@ -290,7 +316,7 @@ finally goes flat.
 | Figure | Healthy | What a bad value means |
 |---|---|---|
 | Average `PaddleHz` | Near constant | Large swings = elevator speed changed, or paddles being missed |
-| `Noise` per second | 0 | Electrical problem — investigate before changing any setting |
+| `Noise` per second | 0 | Erratic while `PaddleHz` still counts = electrical. Flat at the paddle rate with `PaddleHz` 0 = comp wire, and the log holds no data (step 1) |
 | `GateRejects` per second *(M3)* | 0 to ~5 | 40+ sustained means something is wrong upstream |
 | Minimum `MinCycleMs` *(M3)* | Between 75% of `MedianCycleMs` and `MedianCycleMs` | Below 75% = a false cycle got through. Well above the median = paddles being merged |
 | `MedianCycleMs` vs `1000 / PaddleHz` *(M3)* | Close, and stable | Median drifting low as flow rises = gate widening under heavy grain |

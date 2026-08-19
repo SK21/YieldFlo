@@ -436,13 +436,18 @@ namespace YieldFlo.Classes
                     Props.WriteErrorLog("DataCollector/Sensor invalid — recording paused"
                         + " (moduleConnected=" + Core.ModuleConnected
                         + ", sensorOk=" + Core.LastSensor1Valid
+                        + ", compFault=" + Core.LastCompFault
                         + ", sensor1=" + Core.LastSensor1.ToString("0.###") + ")");
 
                     // Alarm only when this actually interrupted harvesting. A module
                     // dropping out between passes stops nothing, and an alert the
                     // operator learns to dismiss is worse than no alert.
+                    //
+                    // When the module has named the cause, say the cause: the generic
+                    // message sends the operator to look at a sensor that is fine.
                     if (wasRecording)
-                        Props.ShowMessage(Lang.lgSensorFault, "", 4000, true);
+                        Props.ShowMessage(Core.LastCompFault ? Lang.lgCompFault : Lang.lgSensorFault,
+                                          "", 4000, true);
 
                     EndPassOnFault(gps, moisture);
                     if (!IsAutoPaused) AutoPause();

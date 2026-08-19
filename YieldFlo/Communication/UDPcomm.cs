@@ -171,7 +171,8 @@ namespace YieldFlo.Communication
         {
             // Module → PC packet (11 bytes):
             // [0-1]  PGN 40001 little-endian
-            // [2]    status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK
+            // [2]    status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK,
+            //                      bit3=CompFault (0 on firmware predating the bit)
             // [3-4]  sensor_ratio  uint16 LE  (ratio × 1000, 0–1000 = 0.0–100.0%)
             // [5-6]  moisture_raw  uint16 LE  (raw ADS1115 AIN0-AIN1 differential count)
             // [7-8]  module_rpm    uint16 LE
@@ -188,8 +189,10 @@ namespace YieldFlo.Communication
 
             bool s1Ok = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
+            bool compFault = (flags & 0x08) != 0;
 
             Core.LastSensor1Valid = s1Ok;
+            Core.LastCompFault = compFault;
             Core.LastSensor1 = s1Ok ? ratio / 1000.0 : 0;
             Core.LastMoisture = moistureRaw * Core.ActiveMoistScale;
             Core.LastMoistureOk = moistureOk;

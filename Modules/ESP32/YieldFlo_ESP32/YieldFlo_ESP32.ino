@@ -20,7 +20,7 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 15086         // firmware version — update with every build (DDMMY format)
+#define InoID 19086         // firmware version — update with every build (DDMMY format)
 #define StructVersion 5     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 // Comm modes
@@ -66,6 +66,26 @@ volatile uint16_t PaddleCycles = 0;		// completed paddle cycles since last TakeP
 volatile uint32_t MinCycleUs = 0xFFFFFFFF;	// shortest completed paddle cycle since last TakeMinCycleMs()
 bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
+
+// Comp-wire fault detection. Counts the edges the comp cross-check has discarded
+// since the last edge that actually committed; CommitEdge zeroes it, so a single
+// real paddle getting through clears it. That is what makes a high value mean
+// "every edge is being thrown away" rather than "some noise was rejected" — the
+// state is impossible with working wiring, because if edges are arriving often
+// enough to be rejected then some of them are paddles and some must commit.
+//
+// Counts ONLY comp cross-check rejects, not the glitch filter's. That keeps the
+// meaning exact: Comp is enabled and is eating the signal, which is a fault with
+// a specific remedy the app can name. A blocked pulse narrower than GlitchMinUs
+// produces the same "nothing ever commits" outcome through the glitch filter,
+// but the fix there is mechanical, so it does not belong behind the same flag.
+volatile uint16_t CompRejectsSinceCommit = 0;
+bool CompFault = false;			// set by ReadFlow, sent as status_flags bit 3
+
+// Rejects since the last commit before the wiring is called faulty — about 3 s at
+// the 18 Hz paddle rate this was measured on. Any committed edge resets the count,
+// so ordinary rejected noise on a healthy machine never approaches it.
+const uint16_t CompFaultRejects = 50;
 
 // Glitch filter: an edge is committed only after the state it starts survives
 // GlitchMinUs. A pending edge cancelled by a return edge inside the window is a
@@ -165,7 +185,15 @@ struct ModuleConfig
 	uint8_t RPMpin = 35;
 	uint8_t CompPin = 32;	// complementary PNP signal from light sensor
 	uint8_t MainPin = 33;	// main PNP signal from light sensor
-	bool UseCompSignal = true;	// true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
+	// false = Main only, true = Main + Comp noise rejection. Defaults to the SAFE
+	// side deliberately: Main-only on a machine that does have Comp wired loses an
+	// optimization and nothing else (the glitch filter below still rejects noise),
+	// whereas Main+Comp with no Comp wire discards one edge of every paddle and
+	// records nothing at all — silently. A StructVersion bump resets this to its
+	// default, so the default is what a machine gets after any firmware update
+	// that changes the settings layout. It cost a full day of harvest on
+	// 2026-08-18. See "Comp Wire Fault 2026-08-18.md" in the shared notes.
+	bool UseCompSignal = false;
 	bool InvertSensor = false;	// false = PNP (HIGH = beam clear, FarmTrx), true = NPN (inverted logic)
 	uint8_t AlertPin = 16;
 	uint8_t AnalogPin = NC;

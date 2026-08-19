@@ -2,7 +2,8 @@
 // ── Shared 8-byte data body ──────────────────────────────────────────────
 // Both SendComm() and SendCAN() build this body from the same sensor state.
 // Layout:
-//   [0]   status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK
+//   [0]   status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK,
+//                       bit3=CompFault
 //   [1-2] sensor_ratio  uint16 LE  (ratio × 1000, 0–1000 = 0.0–100.0%)
 //   [3-4] moisture_raw  uint16 LE  (value × 10 = tenths %)
 //   [5-6] module_rpm    uint16 LE
@@ -43,6 +44,11 @@ static void BuildDataBody(byte body[8])
 	if (SensorOK)        flags |= 0x01;  // bit 0 — SensorOK
 	if (MDL.RPMpin < NC) flags |= 0x02;  // bit 1 — RPM sensor present
 	if (ADSFresh())      flags |= 0x04;  // bit 2 — MoistureOK
+	// bit 3 — comp cross-check is discarding every edge; Comp is enabled but not
+	// wired. Rides both transports for free: this body is memcpy'd whole into the
+	// CAN frame and copied byte-for-byte into the UDP packet, and an app that
+	// predates the bit simply ignores it.
+	if (CompFault)       flags |= 0x08;
 
 	body[0] = flags;
 	body[1] = SensorRatio & 0xFF;
