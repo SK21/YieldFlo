@@ -82,5 +82,8 @@
     <Setting Name="CalRunStoppedUtc" Type="System.String" Scope="User">
       <Value Profile="(Default)"></Value>
     </Setting>
+    <Setting Name="ImperialMassUnit" Type="System.String" Scope="User">
+      <Value Profile="(Default)">lbs</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

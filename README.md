@@ -32,6 +32,21 @@ Each `Modules/` folder has its own README with build instructions, pinouts, and 
 
 Full instructions are in the in-app user manual (`Help` button, or [`YieldFlo/Help/YieldFlo User Manual.md`](YieldFlo/Help/YieldFlo%20User%20Manual.md)).
 
+### Rebuilding the manual
+
+`YieldFlo/Help/` holds the manual as `.md`, `.html` and `.pdf`. All three ship, so all three have to be kept in step — the `.md` and `.html` are edited by hand, and the `.pdf` is printed from the `.html` by headless Edge:
+
+```
+"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
+  --headless=new --disable-gpu --no-pdf-header-footer ^
+  --print-to-pdf="YieldFlo User Manual.pdf" ^
+  "file:///F:/path/to/YieldFlo/Help/YieldFlo User Manual.html"
+```
+
+`--no-pdf-header-footer` is what keeps the browser's own URL and page numbers off the pages. The HTML carries its own print CSS for page breaks, so nothing else needs setting. Chrome works identically — the PDF is produced by Chromium's Skia backend either way.
+
+The build copies `Help/**` into `YieldFloApp/Help/`; that copy is output, not a second source to edit.
+
 ## Features
 
 - Live main-screen gauges: yield rate, moisture, sensor status, area/total/average, work rate

@@ -263,5 +263,14 @@ namespace YieldFlo.Properties
             get { return ((string)(this["CalRunStoppedUtc"])); }
             set { this["CalRunStoppedUtc"] = value; }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("lbs")]
+        public string ImperialMassUnit
+        {
+            get { return ((string)(this["ImperialMassUnit"])); }
+            set { this["ImperialMassUnit"] = value; }
+        }
     }
 }

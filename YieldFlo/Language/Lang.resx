@@ -204,6 +204,24 @@ Starting a new run discards it. Continue?</value></data>
 
 Apply anyway?</value></data>
 
+  <!-- ── Whole Field Calibration tab ────────────────────────────────────── -->
+  <data name="lgTabCalRun" xml:space="preserve"><value>Calibration Run</value></data>
+  <data name="lgTabFieldCal" xml:space="preserve"><value>Whole Field Calibration</value></data>
+  <data name="lgFieldWeightLabel" xml:space="preserve"><value>Total harvested:</value></data>
+  <data name="lgFieldJob" xml:space="preserve"><value>Job: {0}     Crop: {1}</value></data>
+  <data name="lgFieldCropMismatch" xml:space="preserve"><value>crop changed since this job started</value></data>
+  <data name="lgFieldNoJob" xml:space="preserve"><value>No active job — start a job to calibrate from its total.</value></data>
+  <data name="lgFieldRecordedImperial" xml:space="preserve"><value>Recorded: {0:F1} bu over {1:F1} ac  =  {2:F1} bu/ac</value></data>
+  <data name="lgFieldRecordedMetric" xml:space="preserve"><value>Recorded: {0:F2} t over {1:F1} ha  =  {2:F2} t/ha</value></data>
+  <data name="lgFieldImplied" xml:space="preserve"><value>Entered weight  =  {0:F1} {1}</value></data>
+  <data name="lgFieldNoData" xml:space="preserve"><value>This job has not recorded any grain yet.</value></data>
+  <data name="lgFieldWrongCrop" xml:space="preserve"><value>The active job was started under a different crop or profile.</value></data>
+  <data name="lgFieldRecalcTitle" xml:space="preserve"><value>Recalculate Job</value></data>
+  <data name="lgFieldRecalcPrompt" xml:space="preserve"><value>Yield Factor saved.
+
+Rewrite this job's recorded points and total using the new factor, so the map and the job total match the weight entered?</value></data>
+  <data name="lgFieldRecalcDone" xml:space="preserve"><value>{0} points recalculated.</value></data>
+
   <!-- ── Moisture Cal form ──────────────────────────────────────────────── -->
   <data name="lgMoistureSection" xml:space="preserve"><value>Moisture</value></data>
   <data name="lgPercentSavedToCrop" xml:space="preserve"><value>% (saved to crop)</value></data>

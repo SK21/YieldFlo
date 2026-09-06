@@ -152,6 +152,22 @@ namespace YieldFlo.Language
         internal static string lgCalRunInterruptedTitle  => Get("lgCalRunInterruptedTitle");
         internal static string lgCalRunInterruptedPrompt => Get("lgCalRunInterruptedPrompt");
 
+        // ── Whole Field Calibration tab ──────────────────────────────────────
+        internal static string lgTabCalRun          => Get("lgTabCalRun");
+        internal static string lgTabFieldCal        => Get("lgTabFieldCal");
+        internal static string lgFieldWeightLabel   => Get("lgFieldWeightLabel");
+        internal static string lgFieldJob           => Get("lgFieldJob");
+        internal static string lgFieldCropMismatch  => Get("lgFieldCropMismatch");
+        internal static string lgFieldNoJob         => Get("lgFieldNoJob");
+        internal static string lgFieldRecordedImperial => Get("lgFieldRecordedImperial");
+        internal static string lgFieldRecordedMetric   => Get("lgFieldRecordedMetric");
+        internal static string lgFieldImplied       => Get("lgFieldImplied");
+        internal static string lgFieldNoData        => Get("lgFieldNoData");
+        internal static string lgFieldWrongCrop     => Get("lgFieldWrongCrop");
+        internal static string lgFieldRecalcTitle   => Get("lgFieldRecalcTitle");
+        internal static string lgFieldRecalcPrompt  => Get("lgFieldRecalcPrompt");
+        internal static string lgFieldRecalcDone    => Get("lgFieldRecalcDone");
+
         // ── Moisture Cal form ────────────────────────────────────────────────
         internal static string lgMoistureSection    => Get("lgMoistureSection");
         internal static string lgPercentSavedToCrop => Get("lgPercentSavedToCrop");

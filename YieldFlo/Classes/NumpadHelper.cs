@@ -31,6 +31,22 @@ namespace YieldFlo.Classes
             num.Click += (s, e) => Show(owner, num, min, max, decimals, title);
         }
 
+        /// <summary>
+        /// Click-only, with the bounds resolved at each press rather than captured
+        /// when wired. Needed where the box's unit can change while the form is open:
+        /// a fixed capture would go on offering a pound-sized range, and a pound
+        /// title, after the operator switched the box to bushels.
+        /// </summary>
+        public static void WireClickOnly(Form owner, NumericUpDown num,
+                                         Func<(double min, double max, int decimals, string title)> spec)
+        {
+            num.Click += (s, e) =>
+            {
+                var (min, max, decimals, title) = spec();
+                Show(owner, num, min, max, decimals, title);
+            };
+        }
+
         private static void Show(Form owner, NumericUpDown num, double min, double max,
                                   int decimals, string title)
         {

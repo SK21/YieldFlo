@@ -323,13 +323,28 @@ Use it to verify the sensor is catching every paddle: the value should match the
 
 The processing delay accounts for the travel time of grain from the header to the elevator sensor. Set this value (in seconds) to match your combine. Typical range is 4–12 seconds.
 
+### Two ways to calibrate
+
+The lower half of the Yield Cal screen has two tabs. Both work out a new Yield Factor the same way — comparing what the sensor measured against a real weight — and differ only in where the measured figure comes from.
+
+| Tab | Measured figure | Use when |
+|-----|-----------------|----------|
+| **Calibration Run** | A pass you start and stop by hand | You can weigh one cart or tank on its own |
+| **Whole Field Calibration** | The active job's running total | Grain has crossed a scale and you know the total for the job |
+
+### Weight units
+
+In imperial, the button beside the weight box switches entry between **bu** and **lbs** — press it to change. Enter whichever unit the ticket is in; there is no need to convert by hand.
+
+The choice applies to both tabs and is remembered between sessions. Switching converts whatever is already in the box, so the amount itself does not change. In metric the button reads **kg** and is inactive.
+
 ### Running a calibration pass
 
 A calibration pass measures the actual mass of grain harvested during a known run, then adjusts the Yield Factor to match.
 
 **Preparation:** Position a weigh wagon or grain cart to catch grain from the unloading auger and record start and end weights.
 
-1. Open **Menu → Yield Cal**
+1. Open **Menu → Yield Cal** and select the **Calibration Run** tab
 2. Press **Start Run** — the app begins accumulating sensor data
 3. Harvest a suitable area (at least one full tank is recommended)
 4. Press **Stop Run**
@@ -340,6 +355,41 @@ A calibration pass measures the actual mass of grain harvested during a known ru
 YieldFlo calculates a new Yield Factor and enters it in the **Yield Factor** field. Press **Save & Apply** to save it to the active profile.
 
 Below the **Save & Apply** button, a **Last saved** line shows the date and time the calibration for the active profile and crop was last saved with **Save & Apply**. It is blank until a calibration has been saved.
+
+### Entering the weight later
+
+**Stop Run** freezes the measured total. Harvesting after that does not add to it, so you can carry on combining and enter the weight whenever the grain is next weighed — later the same day, or days later.
+
+The **Measured** line carries the date and time the run was stopped, so a total left standing can be told apart from a fresh one.
+
+While a run is waiting for its weight:
+
+- Pressing **Start Run** again discards it. You are asked first, and the prompt shows the standing total and its date.
+- The run is saved, so it survives closing YieldFlo. If the app was closed while a run was still going, it comes back marked **(interrupted)** in orange — grain harvested after the time shown is missing from its total, so a factor fitted to it reads high. **Apply Cal** warns before using it.
+- Changing crop or profile before the weight is entered blocks **Apply Cal**. The run was measured under one crop, and that is the crop its factor belongs to. Switch back to apply it.
+
+Once the factor has been saved with **Save & Apply** the run is spent, and is cleared — the **Measured** line returns to blank. The Yield Factor stays as saved.
+
+### Whole Field Calibration
+
+Instead of a dedicated pass, this fits the Yield Factor to the total the active job has already recorded. There is no separate procedure to run: the weight comes from scale tickets you have anyway.
+
+It is not only an end-of-field operation. The job total accumulates continuously, so it can be applied whenever grain has been weighed — after the first few loads, part way through, or when the field is finished.
+
+1. Open **Menu → Yield Cal** and select the **Whole Field Calibration** tab
+2. Check the **Job** line — it names the job and the crop it was started under
+3. Enter the running total in **Total harvested**
+4. Press **Apply Cal**, then **Save & Apply**
+
+> **Enter the cumulative total** — everything hauled off this job so far, not just the latest load. A single load fits a factor several times too small, and nothing in the result would reveal it.
+
+After saving, YieldFlo offers to recalculate the job. Accepting rewrites the job's recorded points and total using the new factor, so the map and the job total agree with the weight entered. Declining leaves the job as recorded and changes only the factor used from here on.
+
+Applying more than once is normal. Each recalculation puts the whole job onto the factor being saved, so a later, larger ticket simply supersedes the earlier fit.
+
+**Check the yield figure before saving.** As the weight is typed, the tab shows the yield it implies over the acres the job recorded, alongside what was actually recorded. If the implied figure is not one the field could have grown, suspect the acres: ground the app did not record — an auto-pause, or a sensor fault — still crossed the scale, so the recorded total reads short and the factor comes out high. The figure turns orange when it exceeds the recorded yield by half.
+
+The tab is inactive when no job is recording, and says so if the crop has been changed since the job started.
 
 ### Manual factor adjustment
 

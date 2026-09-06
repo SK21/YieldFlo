@@ -17,6 +17,23 @@ namespace YieldFlo.Forms
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlContent = new System.Windows.Forms.Panel();
+            this.tabCal = new YieldFlo.Forms.DarkTabControl();
+            this.tabCalRun = new System.Windows.Forms.TabPage();
+            this.lblCalMeasured = new System.Windows.Forms.Label();
+            this.btnStopCal = new System.Windows.Forms.Button();
+            this.btnStartCal = new System.Windows.Forms.Button();
+            this.btnApplyFactor = new System.Windows.Forms.Button();
+            this.btnActualUnit = new System.Windows.Forms.Button();
+            this.numActualWeight = new System.Windows.Forms.NumericUpDown();
+            this.lblActualWeight = new System.Windows.Forms.Label();
+            this.tabFieldCal = new System.Windows.Forms.TabPage();
+            this.lblFieldJob = new System.Windows.Forms.Label();
+            this.lblFieldMeasured = new System.Windows.Forms.Label();
+            this.lblFieldImplied = new System.Windows.Forms.Label();
+            this.btnApplyField = new System.Windows.Forms.Button();
+            this.btnFieldUnit = new System.Windows.Forms.Button();
+            this.numFieldWeight = new System.Windows.Forms.NumericUpDown();
+            this.lblFieldWeight = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlSep1 = new System.Windows.Forms.Panel();
@@ -33,23 +50,19 @@ namespace YieldFlo.Forms
             this.btnSaveCal = new System.Windows.Forms.Button();
             this.btnCalClose = new System.Windows.Forms.Button();
             this.lblHint = new System.Windows.Forms.Label();
-            this.lblCalSep = new System.Windows.Forms.Label();
-            this.btnStartCal = new System.Windows.Forms.Button();
-            this.btnStopCal = new System.Windows.Forms.Button();
-            this.lblCalMeasured = new System.Windows.Forms.Label();
-            this.lblActualWeight = new System.Windows.Forms.Label();
-            this.numActualWeight = new System.Windows.Forms.NumericUpDown();
-            this.lblActualUnit = new System.Windows.Forms.Label();
-            this.btnApplyFactor = new System.Windows.Forms.Button();
             this.lblNoise = new System.Windows.Forms.Label();
             this.lblPaddleHz = new System.Windows.Forms.Label();
             this.lblCalSaved = new System.Windows.Forms.Label();
             this.pnlTitle.SuspendLayout();
             this.pnlContent.SuspendLayout();
+            this.tabCal.SuspendLayout();
+            this.tabCalRun.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numActualWeight)).BeginInit();
+            this.tabFieldCal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFieldWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBaseline)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFactor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numActualWeight)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlTitle
@@ -72,9 +85,10 @@ namespace YieldFlo.Forms
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Yield Cal";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // pnlContent
-            //
+            // 
+            this.pnlContent.Controls.Add(this.tabCal);
             this.pnlContent.Controls.Add(this.panel2);
             this.pnlContent.Controls.Add(this.panel1);
             this.pnlContent.Controls.Add(this.pnlSep1);
@@ -91,14 +105,6 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.btnSaveCal);
             this.pnlContent.Controls.Add(this.btnCalClose);
             this.pnlContent.Controls.Add(this.lblHint);
-            this.pnlContent.Controls.Add(this.lblCalSep);
-            this.pnlContent.Controls.Add(this.btnStartCal);
-            this.pnlContent.Controls.Add(this.btnStopCal);
-            this.pnlContent.Controls.Add(this.lblCalMeasured);
-            this.pnlContent.Controls.Add(this.lblActualWeight);
-            this.pnlContent.Controls.Add(this.numActualWeight);
-            this.pnlContent.Controls.Add(this.lblActualUnit);
-            this.pnlContent.Controls.Add(this.btnApplyFactor);
             this.pnlContent.Controls.Add(this.lblNoise);
             this.pnlContent.Controls.Add(this.lblPaddleHz);
             this.pnlContent.Controls.Add(this.lblCalSaved);
@@ -107,6 +113,203 @@ namespace YieldFlo.Forms
             this.pnlContent.Name = "pnlContent";
             this.pnlContent.Size = new System.Drawing.Size(580, 548);
             this.pnlContent.TabIndex = 0;
+            // 
+            // tabCal
+            // 
+            this.tabCal.Controls.Add(this.tabCalRun);
+            this.tabCal.Controls.Add(this.tabFieldCal);
+            this.tabCal.Location = new System.Drawing.Point(4, 297);
+            this.tabCal.Name = "tabCal";
+            this.tabCal.SelectedIndex = 0;
+            this.tabCal.Size = new System.Drawing.Size(574, 157);
+            this.tabCal.TabIndex = 28;
+            // 
+            // tabCalRun
+            // 
+            this.tabCalRun.Controls.Add(this.lblCalMeasured);
+            this.tabCalRun.Controls.Add(this.btnStopCal);
+            this.tabCalRun.Controls.Add(this.btnStartCal);
+            this.tabCalRun.Controls.Add(this.btnApplyFactor);
+            this.tabCalRun.Controls.Add(this.btnActualUnit);
+            this.tabCalRun.Controls.Add(this.numActualWeight);
+            this.tabCalRun.Controls.Add(this.lblActualWeight);
+            this.tabCalRun.Location = new System.Drawing.Point(4, 33);
+            this.tabCalRun.Name = "tabCalRun";
+            this.tabCalRun.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCalRun.Size = new System.Drawing.Size(566, 120);
+            this.tabCalRun.TabIndex = 0;
+            this.tabCalRun.Text = global::YieldFlo.Language.Lang.lgTabCalRun;
+            this.tabCalRun.UseVisualStyleBackColor = true;
+            // 
+            // lblCalMeasured
+            // 
+            this.lblCalMeasured.AutoSize = true;
+            this.lblCalMeasured.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.lblCalMeasured.Location = new System.Drawing.Point(6, 58);
+            this.lblCalMeasured.Name = "lblCalMeasured";
+            this.lblCalMeasured.Size = new System.Drawing.Size(91, 18);
+            this.lblCalMeasured.TabIndex = 16;
+            this.lblCalMeasured.Text = "Measured: —";
+            // 
+            // btnStopCal
+            // 
+            this.btnStopCal.Enabled = false;
+            this.btnStopCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStopCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnStopCal.Location = new System.Drawing.Point(290, 11);
+            this.btnStopCal.Name = "btnStopCal";
+            this.btnStopCal.Size = new System.Drawing.Size(140, 40);
+            this.btnStopCal.TabIndex = 15;
+            this.btnStopCal.Text = global::YieldFlo.Language.Lang.lgStopRun;
+            this.btnStopCal.Click += new System.EventHandler(this.btnStopCal_Click);
+            // 
+            // btnStartCal
+            // 
+            this.btnStartCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStartCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnStartCal.Location = new System.Drawing.Point(140, 11);
+            this.btnStartCal.Name = "btnStartCal";
+            this.btnStartCal.Size = new System.Drawing.Size(140, 40);
+            this.btnStartCal.TabIndex = 14;
+            this.btnStartCal.Text = global::YieldFlo.Language.Lang.lgStartRun;
+            this.btnStartCal.Click += new System.EventHandler(this.btnStartCal_Click);
+            // 
+            // btnApplyFactor
+            // 
+            this.btnApplyFactor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyFactor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnApplyFactor.Location = new System.Drawing.Point(404, 79);
+            this.btnApplyFactor.Name = "btnApplyFactor";
+            this.btnApplyFactor.Size = new System.Drawing.Size(162, 40);
+            this.btnApplyFactor.TabIndex = 20;
+            this.btnApplyFactor.Text = global::YieldFlo.Language.Lang.lgApplyCal;
+            this.btnApplyFactor.Click += new System.EventHandler(this.btnApplyFactor_Click);
+            // 
+            // btnActualUnit
+            // 
+            this.btnActualUnit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnActualUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.btnActualUnit.Location = new System.Drawing.Point(346, 84);
+            this.btnActualUnit.Name = "btnActualUnit";
+            this.btnActualUnit.Size = new System.Drawing.Size(54, 32);
+            this.btnActualUnit.TabIndex = 19;
+            this.btnActualUnit.Text = "lbs";
+            this.btnActualUnit.Click += new System.EventHandler(this.btnUnitToggle_Click);
+            // 
+            // numActualWeight
+            // 
+            this.numActualWeight.DecimalPlaces = 1;
+            this.numActualWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.numActualWeight.Location = new System.Drawing.Point(230, 85);
+            this.numActualWeight.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.numActualWeight.Name = "numActualWeight";
+            this.numActualWeight.Size = new System.Drawing.Size(110, 29);
+            this.numActualWeight.TabIndex = 18;
+            // 
+            // lblActualWeight
+            // 
+            this.lblActualWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblActualWeight.Location = new System.Drawing.Point(2, 83);
+            this.lblActualWeight.Name = "lblActualWeight";
+            this.lblActualWeight.Size = new System.Drawing.Size(220, 32);
+            this.lblActualWeight.TabIndex = 17;
+            this.lblActualWeight.Text = "Actual weight:";
+            // 
+            // tabFieldCal
+            // 
+            this.tabFieldCal.Controls.Add(this.lblFieldJob);
+            this.tabFieldCal.Controls.Add(this.lblFieldMeasured);
+            this.tabFieldCal.Controls.Add(this.lblFieldImplied);
+            this.tabFieldCal.Controls.Add(this.btnApplyField);
+            this.tabFieldCal.Controls.Add(this.btnFieldUnit);
+            this.tabFieldCal.Controls.Add(this.numFieldWeight);
+            this.tabFieldCal.Controls.Add(this.lblFieldWeight);
+            this.tabFieldCal.Location = new System.Drawing.Point(4, 33);
+            this.tabFieldCal.Name = "tabFieldCal";
+            this.tabFieldCal.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFieldCal.Size = new System.Drawing.Size(566, 120);
+            this.tabFieldCal.TabIndex = 1;
+            this.tabFieldCal.Text = global::YieldFlo.Language.Lang.lgTabFieldCal;
+            this.tabFieldCal.UseVisualStyleBackColor = true;
+            // 
+            // lblFieldJob
+            // 
+            this.lblFieldJob.AutoSize = true;
+            this.lblFieldJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.lblFieldJob.Location = new System.Drawing.Point(6, 10);
+            this.lblFieldJob.Name = "lblFieldJob";
+            this.lblFieldJob.Size = new System.Drawing.Size(50, 18);
+            this.lblFieldJob.TabIndex = 26;
+            this.lblFieldJob.Text = "Job: —";
+            // 
+            // lblFieldMeasured
+            // 
+            this.lblFieldMeasured.AutoSize = true;
+            this.lblFieldMeasured.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.lblFieldMeasured.Location = new System.Drawing.Point(6, 34);
+            this.lblFieldMeasured.Name = "lblFieldMeasured";
+            this.lblFieldMeasured.Size = new System.Drawing.Size(91, 18);
+            this.lblFieldMeasured.TabIndex = 21;
+            this.lblFieldMeasured.Text = "Measured: —";
+            // 
+            // lblFieldImplied
+            // 
+            this.lblFieldImplied.AutoSize = true;
+            this.lblFieldImplied.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.lblFieldImplied.ForeColor = System.Drawing.Color.Silver;
+            this.lblFieldImplied.Location = new System.Drawing.Point(6, 58);
+            this.lblFieldImplied.Name = "lblFieldImplied";
+            this.lblFieldImplied.Size = new System.Drawing.Size(0, 18);
+            this.lblFieldImplied.TabIndex = 27;
+            // 
+            // btnApplyField
+            // 
+            this.btnApplyField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnApplyField.Location = new System.Drawing.Point(404, 79);
+            this.btnApplyField.Name = "btnApplyField";
+            this.btnApplyField.Size = new System.Drawing.Size(162, 40);
+            this.btnApplyField.TabIndex = 25;
+            this.btnApplyField.Text = global::YieldFlo.Language.Lang.lgApplyCal;
+            this.btnApplyField.Click += new System.EventHandler(this.btnApplyField_Click);
+            // 
+            // btnFieldUnit
+            // 
+            this.btnFieldUnit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFieldUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
+            this.btnFieldUnit.Location = new System.Drawing.Point(346, 84);
+            this.btnFieldUnit.Name = "btnFieldUnit";
+            this.btnFieldUnit.Size = new System.Drawing.Size(54, 32);
+            this.btnFieldUnit.TabIndex = 24;
+            this.btnFieldUnit.Text = "lbs";
+            this.btnFieldUnit.Click += new System.EventHandler(this.btnUnitToggle_Click);
+            // 
+            // numFieldWeight
+            // 
+            this.numFieldWeight.DecimalPlaces = 1;
+            this.numFieldWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.numFieldWeight.Location = new System.Drawing.Point(230, 85);
+            this.numFieldWeight.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.numFieldWeight.Name = "numFieldWeight";
+            this.numFieldWeight.Size = new System.Drawing.Size(110, 29);
+            this.numFieldWeight.TabIndex = 23;
+            // 
+            // lblFieldWeight
+            // 
+            this.lblFieldWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblFieldWeight.Location = new System.Drawing.Point(2, 83);
+            this.lblFieldWeight.Name = "lblFieldWeight";
+            this.lblFieldWeight.Size = new System.Drawing.Size(220, 32);
+            this.lblFieldWeight.TabIndex = 22;
+            this.lblFieldWeight.Text = global::YieldFlo.Language.Lang.lgFieldWeightLabel;
             // 
             // panel2
             // 
@@ -296,103 +499,12 @@ namespace YieldFlo.Forms
             this.lblHint.Text = "Tip: Run the elevator empty for a few seconds, then press Set Baseline (5 s sampl" +
     "e).\r\n";
             // 
-            // lblCalSep
-            // 
-            this.lblCalSep.AutoSize = true;
-            this.lblCalSep.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.lblCalSep.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(140)))), ((int)(((byte)(160)))));
-            this.lblCalSep.Location = new System.Drawing.Point(190, 300);
-            this.lblCalSep.Name = "lblCalSep";
-            this.lblCalSep.Size = new System.Drawing.Size(183, 18);
-            this.lblCalSep.TabIndex = 13;
-            this.lblCalSep.Text = "─── Calibration Run ───\r\n";
-            // 
-            // btnStartCal
-            // 
-            this.btnStartCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStartCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnStartCal.Location = new System.Drawing.Point(140, 326);
-            this.btnStartCal.Name = "btnStartCal";
-            this.btnStartCal.Size = new System.Drawing.Size(140, 40);
-            this.btnStartCal.TabIndex = 14;
-            this.btnStartCal.Text = global::YieldFlo.Language.Lang.lgStartRun;
-            this.btnStartCal.Click += new System.EventHandler(this.btnStartCal_Click);
-            // 
-            // btnStopCal
-            // 
-            this.btnStopCal.Enabled = false;
-            this.btnStopCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStopCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnStopCal.Location = new System.Drawing.Point(290, 326);
-            this.btnStopCal.Name = "btnStopCal";
-            this.btnStopCal.Size = new System.Drawing.Size(140, 40);
-            this.btnStopCal.TabIndex = 15;
-            this.btnStopCal.Text = global::YieldFlo.Language.Lang.lgStopRun;
-            this.btnStopCal.Click += new System.EventHandler(this.btnStopCal_Click);
-            // 
-            // lblCalMeasured
-            // 
-            this.lblCalMeasured.AutoSize = true;
-            this.lblCalMeasured.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.lblCalMeasured.Location = new System.Drawing.Point(8, 380);
-            this.lblCalMeasured.Name = "lblCalMeasured";
-            this.lblCalMeasured.Size = new System.Drawing.Size(91, 18);
-            this.lblCalMeasured.TabIndex = 16;
-            this.lblCalMeasured.Text = "Measured: —";
-            // 
-            // lblActualWeight
-            // 
-            this.lblActualWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.lblActualWeight.Location = new System.Drawing.Point(8, 412);
-            this.lblActualWeight.Name = "lblActualWeight";
-            this.lblActualWeight.Size = new System.Drawing.Size(220, 32);
-            this.lblActualWeight.TabIndex = 17;
-            this.lblActualWeight.Text = "Actual weight:";
-            // 
-            // numActualWeight
-            // 
-            this.numActualWeight.DecimalPlaces = 1;
-            this.numActualWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.numActualWeight.Location = new System.Drawing.Point(236, 412);
-            this.numActualWeight.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-            this.numActualWeight.Name = "numActualWeight";
-            this.numActualWeight.Size = new System.Drawing.Size(130, 29);
-            this.numActualWeight.TabIndex = 18;
-            // 
-            // lblActualUnit
-            // 
-            this.lblActualUnit.AutoSize = true;
-            this.lblActualUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.lblActualUnit.Location = new System.Drawing.Point(374, 418);
-            this.lblActualUnit.Name = "lblActualUnit";
-            this.lblActualUnit.Size = new System.Drawing.Size(27, 18);
-            this.lblActualUnit.TabIndex = 19;
-            this.lblActualUnit.Text = "lbs";
-            // 
-            // btnApplyFactor
-            // 
-            this.btnApplyFactor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyFactor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnApplyFactor.Location = new System.Drawing.Point(410, 408);
-            this.btnApplyFactor.Name = "btnApplyFactor";
-            this.btnApplyFactor.Size = new System.Drawing.Size(162, 40);
-            this.btnApplyFactor.TabIndex = 20;
-            this.btnApplyFactor.Text = global::YieldFlo.Language.Lang.lgApplyCal;
-            this.btnApplyFactor.Click += new System.EventHandler(this.btnApplyFactor_Click);
-            // 
             // lblNoise
             // 
             this.lblNoise.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
             this.lblNoise.ForeColor = System.Drawing.Color.Silver;
             this.lblNoise.Location = new System.Drawing.Point(354, 106);
             this.lblNoise.Name = "lblNoise";
-            // 220 to match lblPaddleHz below it: "Noise 0/s" alone fitted in 140,
-            // but the appended "  G:n/s" overflowed and was silently clipped.
-            // AutoSize is false on this label, so nothing widens it at runtime.
             this.lblNoise.Size = new System.Drawing.Size(220, 26);
             this.lblNoise.TabIndex = 22;
             this.lblNoise.Text = "Noise";
@@ -438,10 +550,16 @@ namespace YieldFlo.Forms
             this.pnlTitle.ResumeLayout(false);
             this.pnlContent.ResumeLayout(false);
             this.pnlContent.PerformLayout();
+            this.tabCal.ResumeLayout(false);
+            this.tabCalRun.ResumeLayout(false);
+            this.tabCalRun.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numActualWeight)).EndInit();
+            this.tabFieldCal.ResumeLayout(false);
+            this.tabFieldCal.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFieldWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBaseline)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFactor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numActualWeight)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -462,13 +580,12 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button        btnSaveCal;
         private System.Windows.Forms.Button        btnCalClose;
         private System.Windows.Forms.Label         lblHint;
-        private System.Windows.Forms.Label         lblCalSep;
         private System.Windows.Forms.Button        btnStartCal;
         private System.Windows.Forms.Button        btnStopCal;
         private System.Windows.Forms.Label         lblCalMeasured;
         private System.Windows.Forms.Label         lblActualWeight;
         private System.Windows.Forms.NumericUpDown numActualWeight;
-        private System.Windows.Forms.Label         lblActualUnit;
+        private System.Windows.Forms.Button        btnActualUnit;
         private System.Windows.Forms.Button        btnApplyFactor;
         private System.Windows.Forms.Label         lblNoise;
         private System.Windows.Forms.Label         lblPaddleHz;
@@ -476,5 +593,15 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel pnlSep1;
         private System.Windows.Forms.Panel panel2;
+        private YieldFlo.Forms.DarkTabControl tabCal;
+        private System.Windows.Forms.TabPage tabCalRun;
+        private System.Windows.Forms.TabPage tabFieldCal;
+        private System.Windows.Forms.Label lblFieldJob;
+        private System.Windows.Forms.Label lblFieldMeasured;
+        private System.Windows.Forms.Label lblFieldImplied;
+        private System.Windows.Forms.Button btnApplyField;
+        private System.Windows.Forms.Button btnFieldUnit;
+        private System.Windows.Forms.NumericUpDown numFieldWeight;
+        private System.Windows.Forms.Label lblFieldWeight;
     }
 }

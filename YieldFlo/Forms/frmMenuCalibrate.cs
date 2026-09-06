@@ -53,6 +53,12 @@ namespace YieldFlo.Forms
         // operator overtypes the figure by hand.
         private bool _factorFromCalRun;
 
+        // Same idea for the Whole Field tab, kept separate because the two have
+        // different consequences at Save & Apply: a cal run is spent and gets
+        // discarded, a field fit instead offers to rewrite the job's recorded
+        // points so the map and total match the weight that was entered.
+        private bool _factorFromFieldCal;
+
         public frmMenuCalibrate()
         {
             InitializeComponent();
@@ -82,7 +88,16 @@ namespace YieldFlo.Forms
             // Any later edit to the factor — numpad, spinner, keyboard — means the
             // staged value is no longer the one Apply Cal derived, so Save & Apply
             // must not treat the run as spent.
-            numFactor.ValueChanged += (s2, ev2) => _factorFromCalRun = false;
+            numFactor.ValueChanged += (s2, ev2) =>
+            {
+                _factorFromCalRun   = false;
+                _factorFromFieldCal = false;
+            };
+
+            // Live implied yield as the weight is typed — see UpdateFieldImplied.
+            numFieldWeight.ValueChanged += (s2, ev2) => UpdateFieldImplied();
+            tabCal.SelectedIndexChanged += (s2, ev2) => UpdateFieldCalLabels();
+            UpdateFieldCalLabels();
 
             _calTimer = new System.Windows.Forms.Timer { Interval = 1000 };
             _calTimer.Tick += CalTimer_Tick;
@@ -120,27 +135,112 @@ namespace YieldFlo.Forms
             pnlTitle.BackColor   = back;
             pnlContent.BackColor = back;
             lblTitle.ForeColor   = Color.FromArgb(180, 200, 220);
-            foreach (Control c in pnlContent.Controls)
+            // Recursive since the calibration controls moved inside tab pages: a
+            // flat walk of pnlContent.Controls now reaches the TabControl and stops,
+            // leaving everything on both tabs at default system colours on an
+            // otherwise dark form.
+            ThemeChildren(pnlContent, fore, ctrl);
+
+            // A TabPage ignores BackColor while UseVisualStyleBackColor is on, and
+            // the designer sets it on both pages.
+            foreach (TabPage page in tabCal.TabPages)
             {
-                c.ForeColor = fore;
-                if (c is NumericUpDown nd) { nd.BackColor = ctrl; nd.ForeColor = fore; }
-                if (c is Button btn)       { btn.BackColor = ctrl; btn.ForeColor = Color.White; }
+                page.UseVisualStyleBackColor = false;
+                page.BackColor = back;
             }
+
+            // The strip itself is painted by DarkTabControl; give it the same
+            // palette the rest of the form is using rather than its defaults.
+            tabCal.HeaderBack      = back;
+            tabCal.PageBack        = back;
+            tabCal.TabBack         = ctrl;
+            tabCal.TabSelected     = Color.FromArgb(0, 70, 120);
+            tabCal.TabFore         = Color.Silver;
+            tabCal.TabForeSelected = Color.White;
+            // Same grey as the section rules (panel1/panel2/pnlSep1), lifted so it
+            // still reads as an outline rather than disappearing into the panel.
+            tabCal.BorderColour    = Color.FromArgb(150, 150, 150);
+            tabCal.Invalidate();
+
             btnSetBaseline.BackColor = Color.FromArgb(0, 70, 110);
             btnSetBaseline.ForeColor = Color.White;
             btnSaveCal.BackColor    = Color.FromArgb(0, 90, 0);
             btnStartCal.BackColor   = Color.FromArgb(0, 90, 0);
             btnStopCal.BackColor    = Color.FromArgb(100, 0, 0);
             btnApplyFactor.BackColor = Color.FromArgb(0, 70, 120); btnApplyFactor.ForeColor = Color.White;
+            btnApplyField.BackColor  = Color.FromArgb(0, 70, 120); btnApplyField.ForeColor  = Color.White;
+        }
+
+        private static void ThemeChildren(Control parent, Color fore, Color ctrl)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                c.ForeColor = fore;
+                if (c is NumericUpDown nd) { nd.BackColor = ctrl; nd.ForeColor = fore; }
+                if (c is Button btn)       { btn.BackColor = ctrl; btn.ForeColor = Color.White; }
+                if (c.HasChildren) ThemeChildren(c, fore, ctrl);
+            }
         }
 
         private void ApplyUnits()
         {
-            lblActualUnit.Text = Props.IsMetric ? "kg" : "lbs";
-            // Max sensible load: ~500,000 kg or ~1,100,000 lbs
-            numActualWeight.Maximum       = Props.IsMetric ? 500000 : 1100000;
-            numActualWeight.DecimalPlaces = 0;
+            bool bu = Props.EntryInBushels;
+
+            btnActualUnit.Text = Props.EntryMassUnit;
+            btnFieldUnit.Text  = Props.EntryMassUnit;
+
+            // Metric entry is kg and there is nothing to choose, so the toggle is
+            // dead there rather than hidden — a control that vanishes between unit
+            // settings is harder to find again than one that is simply inactive.
+            btnActualUnit.Enabled = !Props.IsMetric;
+            btnFieldUnit.Enabled  = !Props.IsMetric;
+
+            // Max sensible load: ~500,000 kg, ~1,100,000 lbs, or the same in bushels.
+            numActualWeight.Maximum       = Props.IsMetric ? 500000 : (bu ? 20000 : 1100000);
+            // A bushel is ~60 lb, so a bushel figure needs a decimal place to carry
+            // the resolution a whole pound gives.
+            numActualWeight.DecimalPlaces = bu ? 1 : 0;
             numActualWeight.Increment     = 1;
+
+            // A whole field is many loads, not one, so the ceiling is an order of
+            // magnitude above the cal-run box's single cart.
+            numFieldWeight.Maximum       = Props.IsMetric ? 5000000 : (bu ? 200000 : 11000000);
+            numFieldWeight.DecimalPlaces = bu ? 1 : 0;
+            numFieldWeight.Increment     = 1;
+        }
+
+        /// <summary>
+        /// Flips imperial weight entry between bushels and pounds. Both boxes follow
+        /// the one setting and it is persisted, because the choice tracks where the
+        /// weigh tickets come from rather than which screen is open.
+        /// </summary>
+        private void btnUnitToggle_Click(object sender, EventArgs e)
+        {
+            if (Props.IsMetric) return;
+
+            // Held as bushels across the switch so the same physical amount comes
+            // back in the new unit. Reinterpreting the digits instead would turn
+            // 21,500 lbs into 21,500 bu without a word.
+            double actualBu = DisplayMassToInternalBushels((double)numActualWeight.Value);
+            double fieldBu  = DisplayMassToInternalBushels((double)numFieldWeight.Value);
+
+            Properties.Settings.Default.ImperialMassUnit = Props.EntryInBushels ? "lbs" : "bu";
+            Properties.Settings.Default.Save();
+
+            // Before the values go back in: ApplyUnits moves Maximum, and assigning
+            // above the old ceiling would clamp.
+            ApplyUnits();
+
+            numActualWeight.Value = ClampToBox(numActualWeight, InternalBushelsToDisplayMass(actualBu));
+            numFieldWeight.Value  = ClampToBox(numFieldWeight,  InternalBushelsToDisplayMass(fieldBu));
+
+            UpdateFieldImplied();
+        }
+
+        private static decimal ClampToBox(NumericUpDown box, double value)
+        {
+            decimal d = (decimal)value;
+            return System.Math.Min(box.Maximum, System.Math.Max(box.Minimum, d));
         }
 
         private void LoadCurrentValues()
@@ -226,6 +326,18 @@ namespace YieldFlo.Forms
                 UpdateCalRunButtons();
             }
 
+            // A field fit is not spent the way a cal run is — the job keeps
+            // accumulating and can be fitted again later against a larger ticket —
+            // so the entry stays put. What it offers instead is bringing the job's
+            // already-recorded points up to the factor just saved.
+            if (_factorFromFieldCal)
+            {
+                _factorFromFieldCal = false;
+                Props.ShowMessage(Lang.lgCalSaved);
+                OfferJobRecalculate();
+                return;
+            }
+
             Props.ShowMessage(Lang.lgCalSaved);
         }
 
@@ -277,7 +389,7 @@ namespace YieldFlo.Forms
             double twLbsYield     = Core.Yield?.TestWeightLbsBu ?? 0;
 
             string diag = "ApplyCal: "
-                + $"entered={enteredDisplay:F1} {(Props.IsMetric ? "kg" : "lbs")}, "
+                + $"entered={enteredDisplay:F1} {Props.EntryMassUnit}, "
                 + $"actualBushels={actualBushels:F4}, "
                 + $"calRunBushels={calRunBushels:F4}, "
                 + $"oldFactor={oldFactor:F4}, "
@@ -359,6 +471,13 @@ namespace YieldFlo.Forms
 
         private void NoiseTimer_Tick(object sender, EventArgs e)
         {
+            // The job total climbs while the combine works, so the Whole Field tab
+            // has to track it. It rides this timer rather than _calTimer because
+            // _calTimer only runs during a calibration run, and the field figures
+            // must update whether or not one is going. Reads in-memory collector
+            // properties only — no database work at this rate.
+            if (tabCal.SelectedTab == tabFieldCal) UpdateFieldCalLabels();
+
             if (!Core.ModuleConnected)
             {
                 _noiseSamples.Clear();
@@ -470,6 +589,254 @@ namespace YieldFlo.Forms
             lblCalMeasured.Text = text;
         }
 
+        // ── Whole Field calibration ──────────────────────────────────────────
+        //
+        // Same arithmetic as a calibration run, sourced from the active job's
+        // running total instead of a dedicated pass. It is not an end-of-field
+        // operation: the job total accumulates continuously, so this can be fitted
+        // whenever grain has crossed a scale — after the first few loads, part way
+        // through, or when the field is finished. Each application supersedes the
+        // last, because Recalculate rewrites every recorded point to the factor
+        // being saved, leaving the job wholly at that factor rather than part at
+        // one and part at another.
+        //
+        // The weight entered is therefore CUMULATIVE — everything hauled off this
+        // job so far, not the latest load. "Total harvested" on the label is doing
+        // real work; an incremental figure would fit a factor several times too
+        // small and the operator would have no way to tell from the result.
+
+        /// <summary>Live totals for the active job, or nulls when there is no job.</summary>
+        private (int jobId, string name, double acres, double bushels) ActiveJobTotals()
+        {
+            var c = Core.Collector;
+            if (c == null || c.ActiveJobId <= 0) return (-1, "", 0, 0);
+            return (c.ActiveJobId, c.ActiveJobName, c.TotalAcres, c.TotalBushels);
+        }
+
+        // Resolving the crop costs two table reads, and UpdateFieldCalLabels runs
+        // twice a second off the noise timer. Cached against both the job and the
+        // active crop, so the reads happen only when one of them actually changes.
+        private int _cropCacheJobId = -1;
+        private int _cropCacheActiveCropId = -2;
+        private string _cropCacheName = "";
+        private bool _cropCacheMismatch;
+
+        /// <summary>
+        /// The crop the active job was started under — deliberately the job's crop
+        /// and not the active one, because the recorded total belongs to it and it
+        /// is what Save & Apply writes the factor against. Reports a mismatch so a
+        /// mid-job crop change is visible here rather than only as a refusal after
+        /// the operator has already typed a weight in.
+        /// </summary>
+        private (string name, bool mismatch) ActiveJobCrop(int jobId)
+        {
+            if (jobId == _cropCacheJobId && Core.ActiveCropId == _cropCacheActiveCropId)
+                return (_cropCacheName, _cropCacheMismatch);
+
+            _cropCacheJobId        = jobId;
+            _cropCacheActiveCropId = Core.ActiveCropId;
+            _cropCacheName         = "";
+            _cropCacheMismatch     = false;
+
+            try
+            {
+                int jobCropId = -1;
+                foreach (var j in Core.Database.Jobs.GetAll())
+                    if (j.id == jobId) { jobCropId = j.cropId; break; }
+
+                foreach (var c in Core.Database.Crops.GetAll())
+                    if (c.id == jobCropId) { _cropCacheName = c.name; break; }
+
+                _cropCacheMismatch = (jobCropId > 0 && jobCropId != Core.ActiveCropId);
+            }
+            catch { }
+
+            return (_cropCacheName, _cropCacheMismatch);
+        }
+
+        private void UpdateFieldCalLabels()
+        {
+            var job = ActiveJobTotals();
+
+            if (job.jobId <= 0)
+            {
+                lblFieldJob.Text        = Lang.lgFieldNoJob;
+                lblFieldMeasured.Text   = Lang.lgMeasuredBlank;
+                lblFieldImplied.Text    = "";
+                numFieldWeight.Enabled  = false;
+                btnApplyField.Enabled   = false;
+                return;
+            }
+
+            numFieldWeight.Enabled = true;
+            btnApplyField.Enabled  = true;
+
+            var crop = ActiveJobCrop(job.jobId);
+            string cropName = string.IsNullOrEmpty(crop.name) ? "--" : crop.name;
+            lblFieldJob.Text = string.Format(Lang.lgFieldJob, job.name, cropName);
+
+            // Flagged here, not just refused at Apply: the operator can see the
+            // problem before weighing anything.
+            if (crop.mismatch)
+            {
+                lblFieldJob.Text += "  — " + Lang.lgFieldCropMismatch;
+                lblFieldJob.ForeColor = Color.Orange;
+            }
+            else
+            {
+                lblFieldJob.ForeColor = Properties.Settings.Default.MainForeColour;
+            }
+
+            if (job.bushels <= 0)
+            {
+                lblFieldMeasured.Text = Lang.lgFieldNoData;
+                lblFieldImplied.Text  = "";
+                return;
+            }
+
+            double avg = job.acres > 0.001 ? job.bushels / job.acres : 0;
+            lblFieldMeasured.Text = Props.IsMetric
+                ? string.Format(Lang.lgFieldRecordedMetric,
+                      Props.DisplayMass(job.bushels), Props.DisplayArea(job.acres), Props.DisplayRate(avg))
+                : string.Format(Lang.lgFieldRecordedImperial,
+                      job.bushels, Props.DisplayArea(job.acres), Props.DisplayRate(avg));
+
+            UpdateFieldImplied();
+        }
+
+        /// <summary>
+        /// The yield the entered weight implies over the acres the job actually
+        /// recorded. This is the check that matters: the failure that will bite is
+        /// unrecorded ground — an auto-pause or sensor-fault gap means acres crossed
+        /// the scale that the app never counted, so its total reads short and the
+        /// fitted factor comes out high. A percentage change hides that; a yield in
+        /// bu/ac does not, because the operator knows what the field can do.
+        /// </summary>
+        private void UpdateFieldImplied()
+        {
+            var job = ActiveJobTotals();
+            double entered = (double)numFieldWeight.Value;
+
+            if (job.jobId <= 0 || job.acres <= 0.001 || entered <= 0)
+            {
+                lblFieldImplied.Text = "";
+                return;
+            }
+
+            double impliedBuAc = DisplayMassToInternalBushels(entered) / job.acres;
+            lblFieldImplied.Text = string.Format(Lang.lgFieldImplied,
+                Props.DisplayRate(impliedBuAc), Props.RateUnit);
+
+            // Orange once the entered weight implies a yield more than half again
+            // the recorded one — the shape a job with missing acres makes.
+            double recordedBuAc = job.bushels / job.acres;
+            lblFieldImplied.ForeColor = (recordedBuAc > 0 && impliedBuAc > recordedBuAc * 1.5)
+                ? Color.Orange
+                : Color.Silver;
+        }
+
+        private void btnApplyField_Click(object sender, EventArgs e)
+        {
+            var job = ActiveJobTotals();
+            double enteredDisplay = (double)numFieldWeight.Value;
+            double actualBushels  = DisplayMassToInternalBushels(enteredDisplay);
+            double oldFactor      = Core.Yield?.YieldFactor ?? 0;
+
+            string diag = "ApplyFieldCal: "
+                + $"entered={enteredDisplay:F1} {Props.EntryMassUnit}, "
+                + $"actualBushels={actualBushels:F4}, "
+                + $"jobId={job.jobId}, jobAcres={job.acres:F3}, jobBushels={job.bushels:F4}, "
+                + $"oldFactor={oldFactor:F4}, "
+                + $"TWlbsYield={Core.Yield?.TestWeightLbsBu ?? 0:F4}, isMetric={Props.IsMetric}, "
+                + $"profileId={Core.ActiveProfileId}, cropId={Core.ActiveCropId}";
+
+            if (job.jobId <= 0)
+            {
+                Props.WriteErrorLog(diag + " -> ABORT (no active job)");
+                Props.ShowMessage(Lang.lgFieldNoJob, "", 2500, true);
+                return;
+            }
+            if (actualBushels <= 0)
+            {
+                Props.WriteErrorLog(diag + " -> ABORT (entered weight <= 0)");
+                Props.ShowMessage(Lang.lgEnterWeighedAmt, "", 2000, true);
+                return;
+            }
+            if (job.bushels <= 0)
+            {
+                Props.WriteErrorLog(diag + " -> ABORT (job has no recorded total)");
+                Props.ShowMessage(Lang.lgFieldNoData, "", 2500, true);
+                return;
+            }
+
+            // The job carries the crop and profile it was started under. Changing
+            // either mid-job leaves the recorded total fitted against one reference
+            // and the save heading for another — the same mismatch the cal-run path
+            // blocks, reached by a different route.
+            foreach (var j in Core.Database.Jobs.GetAll())
+            {
+                if (j.id != job.jobId) continue;
+                if (j.profileId != Core.ActiveProfileId || j.cropId != Core.ActiveCropId)
+                {
+                    Props.WriteErrorLog(diag + $" -> ABORT (job profile/crop {j.profileId}/{j.cropId} "
+                        + "differs from active)");
+                    Props.ShowMessage(Lang.lgFieldWrongCrop, "", 4000, true);
+                    return;
+                }
+                break;
+            }
+
+            double newFactor = oldFactor * (actualBushels / job.bushels);
+            Props.WriteErrorLog(diag + $" -> newFactor={newFactor:F4} "
+                + $"(ratio={actualBushels / job.bushels:F4})");
+
+            decimal clamped = (decimal)System.Math.Min((double)numFactor.Maximum,
+                               System.Math.Max((double)numFactor.Minimum, newFactor));
+            numFactor.Value = clamped;
+
+            // After the assignment, for the same reason as the cal-run path.
+            _factorFromFieldCal = true;
+
+            Props.ShowMessage(Lang.lgPendingSave);
+        }
+
+        /// <summary>
+        /// Rewrites the job's recorded points to the saved factor so its map and
+        /// total agree with the weight that produced it. Offered rather than done:
+        /// it rewrites every row of the job, and the map screen's own Recalculate
+        /// prompts for the same reason.
+        /// </summary>
+        private void OfferJobRecalculate()
+        {
+            var job = ActiveJobTotals();
+            if (job.jobId <= 0) return;
+
+            using (var dlg = new frmMsgBox(Lang.lgFieldRecalcPrompt, Lang.lgFieldRecalcTitle))
+            {
+                dlg.ShowDialog(this);
+                if (!dlg.Result) return;
+            }
+
+            // The collector writes the job row once a minute, so its stored
+            // total_volume can be up to a minute stale. RecalculateJob scales that
+            // stored figure, so flush the live totals first or the rescale lands
+            // on a number the operator never saw.
+            Core.Database.Jobs.UpdateTotals(job.jobId, job.acres, job.bushels);
+
+            double headerWidthM = Core.Yield.HeaderWidthM;
+            var (rows, newTotal) = Core.Database.YieldData.RecalculateJob(
+                job.jobId, Core.Yield.SensorBaseline, Core.Yield.YieldFactor,
+                headerWidthM, Core.Yield.TestWeightLbsBu);
+
+            if (rows > 0) Core.Collector?.SyncTotalBushels(job.jobId, newTotal);
+
+            Props.WriteErrorLog($"ApplyFieldCal recalc: jobId={job.jobId} rows={rows} "
+                + $"newTotal={newTotal:F4} factor={Core.Yield.YieldFactor:F4}");
+
+            UpdateFieldCalLabels();
+            Props.ShowMessage(string.Format(Lang.lgFieldRecalcDone, rows));
+        }
+
         private void UpdateCalRunButtons()
         {
             bool running = Core.Yield?.IsCalRunActive ?? false;
@@ -488,7 +855,18 @@ namespace YieldFlo.Forms
                 double kgPerBu = twLbs * 0.453592;
                 return kgPerBu > 0 ? value / kgPerBu : 0;
             }
+            // Already the internal unit — no conversion, and none of its rounding.
+            if (Props.EntryInBushels) return value;
             return twLbs > 0 ? value / twLbs : 0;
+        }
+
+        /// <summary>Inverse of the above, for restating a typed amount in a new unit.</summary>
+        private double InternalBushelsToDisplayMass(double bushels)
+        {
+            double twLbs = Core.Yield?.TestWeightLbsBu ?? 60.0;
+            if (Props.IsMetric) return bushels * twLbs * 0.453592;
+            if (Props.EntryInBushels) return bushels;
+            return bushels * twLbs;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -558,7 +936,20 @@ namespace YieldFlo.Forms
             NumpadHelper.Wire(this, numDelay,    0,      60,     0, "Processing Delay (s)");
             NumpadHelper.Wire(this, numBaseline, 0,      0.99,   3, "Sensor Baseline");
             NumpadHelper.Wire(this, numFactor,   0.01,   100,    2, "Yield Factor");
-            NumpadHelper.WireClickOnly(this, numActualWeight, 0, 999999, 1, "Actual Weight");
+            // Both weight boxes resolve their bounds at each press: the unit toggle
+            // changes Maximum and DecimalPlaces while the form is open, so anything
+            // captured here would go stale the first time it is used.
+            NumpadHelper.WireClickOnly(this, numActualWeight, () => (
+                (double)numActualWeight.Minimum, (double)numActualWeight.Maximum,
+                numActualWeight.DecimalPlaces, "Actual Weight (" + Props.EntryMassUnit + ")"));
+
+            // Click-only, like numActualWeight: this box is enabled and disabled as
+            // the active job comes and goes, so focus can land on it programmatically
+            // and Enter-wiring would pop the pad unasked.
+            NumpadHelper.WireClickOnly(this, numFieldWeight, () => (
+                (double)numFieldWeight.Minimum, (double)numFieldWeight.Maximum,
+                numFieldWeight.DecimalPlaces, "Total harvested (" + Props.EntryMassUnit + ")"));
+
             btnSaveCal.Focus();
         }
 

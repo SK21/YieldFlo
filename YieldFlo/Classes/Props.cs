@@ -58,6 +58,19 @@ namespace YieldFlo.Classes
 
         public static string TestWeightUnit => IsMetric ? "kg/hL" : "lb/bu";
 
+        // Which unit an imperial operator TYPES a weighed calibration amount in.
+        // Display is unaffected — the measured readouts already show bushels with
+        // pounds alongside — this is only about what the entry box expects, because
+        // a weigh ticket arrives in whichever unit its scale happened to use and
+        // converting by hand at the keypad is where mistakes get made.
+        //
+        // Metric entry stays kg, so this is meaningless there.
+        public static bool EntryInBushels =>
+            !IsMetric && Properties.Settings.Default.ImperialMassUnit == "bu";
+
+        /// <summary>Unit shown on the calibration entry boxes.</summary>
+        public static string EntryMassUnit => IsMetric ? "kg" : (EntryInBushels ? "bu" : "lbs");
+
         // Grain test weight (specific / hectolitre weight) is stored internally
         // as lb/bu (US Winchester bushel = 35.239 L). Metric users work in kg/hL,
         // the standard European/Canadian grain unit: 1 lb/bu = 1.287184 kg/hL.
