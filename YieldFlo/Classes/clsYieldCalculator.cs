@@ -42,22 +42,117 @@ namespace YieldFlo.Classes
         public bool IsCalRunActive { get; private set; }
         public double CalRunBushels { get; private set; }
 
+        // When the run was started and stopped. A run is routinely left standing for
+        // hours — Stop Run freezes the total and the operator weighs and enters it
+        // whenever the cart next crosses a scale — so the screen has to say WHICH run
+        // the standing number came from. Without it a total surviving overnight is
+        // indistinguishable from one taken ten minutes ago.
+        public DateTime? CalRunStartedUtc { get; private set; }
+        public DateTime? CalRunStoppedUtc { get; private set; }
+
+        // The profile and crop the run was recorded under. ComputeNewFactor scales
+        // the CURRENT YieldFactor and the weight is converted with the CURRENT test
+        // weight, so applying a run after a crop change silently fits the wrong
+        // reference and saves it to the wrong crop. Captured at Start so Apply can
+        // tell.
+        public int CalRunProfileId { get; private set; } = -1;
+        public int CalRunCropId { get; private set; } = -1;
+
+        // Set when a run was still active at shutdown. The grain harvested between
+        // the last autosave and the outage is missing from the total but WILL be on
+        // the operator's ticket, so the fitted factor would read high. Surfaced, not
+        // blocked — same reasoning as the high-baseline warning: the operator may
+        // know the run is still good.
+        public bool CalRunInterrupted { get; private set; }
+
+        /// <summary>
+        /// Raised whenever the persisted shape of the cal run changes — Start, Stop,
+        /// and at most once per AutosaveIntervalSec while accumulating. Core listens
+        /// and writes the run to settings so it survives a restart. Kept as an event
+        /// so this class stays free of any settings dependency.
+        /// </summary>
+        public event EventHandler CalRunStateChanged;
+
+        // Accumulation runs at GPS rate; persisting every tick would write the
+        // settings file several times a second for a number that only has to be
+        // good to the last half minute.
+        private const int AutosaveIntervalSec = 30;
+        private DateTime _calRunLastSaveUtc = DateTime.MinValue;
+
         public void StartCalRun()
         {
-            CalRunBushels = 0;
-            IsCalRunActive = true;
+            CalRunBushels     = 0;
+            IsCalRunActive    = true;
+            CalRunInterrupted = false;
+            CalRunStartedUtc  = DateTime.UtcNow;
+            CalRunStoppedUtc  = null;
+            CalRunProfileId   = Core.ActiveProfileId;
+            CalRunCropId      = Core.ActiveCropId;
+            _calRunLastSaveUtc = DateTime.UtcNow;
+            SafeEvent.Raise(CalRunStateChanged, sender: this);
         }
 
         public void StopCalRun()
         {
-            IsCalRunActive = false;
+            IsCalRunActive   = false;
+            CalRunStoppedUtc = DateTime.UtcNow;
+            SafeEvent.Raise(CalRunStateChanged, sender: this);
+        }
+
+        /// <summary>
+        /// Rehydrates a run persisted by Core at startup. Always restores as STOPPED:
+        /// the combine is not mid-pass across an app restart, and leaving it armed
+        /// would resume accumulating onto a total with an unmeasured hole in it.
+        /// A run that was active at shutdown comes back flagged interrupted instead.
+        /// </summary>
+        public void RestoreCalRun(double bushels, bool wasActive, bool interrupted,
+                                  int profileId, int cropId,
+                                  DateTime? startedUtc, DateTime? stoppedUtc)
+        {
+            CalRunBushels     = bushels;
+            IsCalRunActive    = false;
+            CalRunInterrupted = interrupted || wasActive;
+            CalRunProfileId   = profileId;
+            CalRunCropId      = cropId;
+            CalRunStartedUtc  = startedUtc;
+            // An interrupted run never reached Stop, so the last autosave is the
+            // honest "as at" time for the number being shown.
+            CalRunStoppedUtc  = stoppedUtc;
+            _calRunLastSaveUtc = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Discards the standing run once its weight has been applied and saved.
+        /// A run is spent at that point: ComputeNewFactor does not consume it, and
+        /// now that runs persist across restarts an applied one would otherwise sit
+        /// on screen for days inviting a second application against the factor it
+        /// already corrected.
+        /// </summary>
+        public void ClearCalRun()
+        {
+            CalRunBushels     = 0;
+            IsCalRunActive    = false;
+            CalRunInterrupted = false;
+            CalRunStartedUtc  = null;
+            CalRunStoppedUtc  = null;
+            CalRunProfileId   = -1;
+            CalRunCropId      = -1;
+            SafeEvent.Raise(CalRunStateChanged, sender: this);
         }
 
         /// <summary>Called by DataCollector each GPS tick to accumulate cal-run bushels.</summary>
         public void AccumulateCalRun(double bushelsInc)
         {
-            if (IsCalRunActive)
-                CalRunBushels += bushelsInc;
+            if (!IsCalRunActive) return;
+
+            CalRunBushels += bushelsInc;
+
+            DateTime now = DateTime.UtcNow;
+            if ((now - _calRunLastSaveUtc).TotalSeconds >= AutosaveIntervalSec)
+            {
+                _calRunLastSaveUtc = now;
+                SafeEvent.Raise(CalRunStateChanged, sender: this);
+            }
         }
 
         /// <summary>

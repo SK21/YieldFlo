@@ -186,6 +186,21 @@
 Make sure the elevator is running with no grain.</value></data>
   <data name="lgMeasuredMetric" xml:space="preserve"><value>Measured: {0:F2} t</value></data>
   <data name="lgMeasuredImperial" xml:space="preserve"><value>Measured: {0:F2} bu ({1:F0} lbs)</value></data>
+  <data name="lgCalRunAt" xml:space="preserve"><value>at {0}</value></data>
+  <data name="lgCalRunSince" xml:space="preserve"><value>since {0}</value></data>
+  <data name="lgCalRunInterrupted" xml:space="preserve"><value>(interrupted)</value></data>
+  <data name="lgCalRunDiscard" xml:space="preserve"><value>Discard Run</value></data>
+  <data name="lgCalRunDiscardPrompt" xml:space="preserve"><value>A finished run is waiting for its weight:
+
+{0}
+taken {1}
+
+Starting a new run discards it. Continue?</value></data>
+  <data name="lgCalRunWrongCrop" xml:space="preserve"><value>This run was taken under a different crop or profile. Switch back to apply it.</value></data>
+  <data name="lgCalRunInterruptedTitle" xml:space="preserve"><value>Interrupted Run</value></data>
+  <data name="lgCalRunInterruptedPrompt" xml:space="preserve"><value>This run was still going when YieldFlo closed. Grain harvested after the time shown is missing from its total, so the new factor may read high.
+
+Apply anyway?</value></data>
 
   <!-- ── Moisture Cal form ──────────────────────────────────────────────── -->
   <data name="lgMoistureSection" xml:space="preserve"><value>Moisture</value></data>

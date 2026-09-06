@@ -104,6 +104,8 @@ namespace YieldFlo.Classes
                 // Yield engine
                 Yield = new clsYieldCalculator();
                 Yield.ProcessingDelaySec = Properties.Settings.Default.ProcessingDelaySec;
+                Yield.CalRunStateChanged += (s, ev) => SaveCalRunState();
+                RestoreCalRunState();
                 Collector = new clsDataCollector();
 
                 SeedDefaultData();
@@ -172,10 +174,96 @@ namespace YieldFlo.Classes
                     SafeTry(() => Collector?.StopJob());
                 SafeTry(() => Database?.Close());
                 SafeTry(() => DiagLog?.Stop());
+                // Final flush of the cal run, so a clean exit loses at most nothing
+                // rather than up to one autosave interval.
+                SafeTry(() => SaveCalRunState());
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => LogRunTime());
             }
             return allow;
+        }
+
+        // ── Calibration run persistence ───────────────────────────────────────
+        //
+        // A cal run is stopped and then left standing until the cart crosses a
+        // scale, which can be hours and can span a shutdown. Held only in
+        // clsYieldCalculator it died with the process, silently: the operator came
+        // back with a weigh ticket to a screen that had forgotten the run. These
+        // two mirror it into user settings.
+        //
+        // Settings rather than the database because the run belongs to the
+        // installation, not to a job — it survives job changes and exists before
+        // any job has been started.
+
+        private const string CalRunTimeFormat = "o";   // round-trip, culture-invariant
+
+        private static void SaveCalRunState()
+        {
+            try
+            {
+                if (Yield == null) return;
+                var s = Properties.Settings.Default;
+                s.CalRunBushels     = Yield.CalRunBushels;
+                s.CalRunActive      = Yield.IsCalRunActive;
+                s.CalRunInterrupted = Yield.CalRunInterrupted;
+                s.CalRunProfileId   = Yield.CalRunProfileId;
+                s.CalRunCropId      = Yield.CalRunCropId;
+                s.CalRunStartedUtc  = Yield.CalRunStartedUtc?.ToString(CalRunTimeFormat,
+                                          System.Globalization.CultureInfo.InvariantCulture) ?? "";
+
+                // "Good as at" rather than strictly the stop time: the stop time once
+                // stopped, the autosave time while still running. An interrupted run
+                // then carries an honest timestamp instead of a blank, which is the
+                // whole basis for deciding whether to trust its total.
+                DateTime? asAt = Yield.CalRunStoppedUtc
+                                 ?? (Yield.IsCalRunActive ? DateTime.UtcNow : (DateTime?)null);
+                s.CalRunStoppedUtc = asAt?.ToString(CalRunTimeFormat,
+                                          System.Globalization.CultureInfo.InvariantCulture) ?? "";
+                s.Save();
+            }
+            catch (Exception ex)
+            {
+                // Never let a settings write take down the GPS tick that triggered it.
+                Props.WriteErrorLog("SaveCalRunState " + ex.Message);
+            }
+        }
+
+        private static void RestoreCalRunState()
+        {
+            try
+            {
+                var s = Properties.Settings.Default;
+                if (s.CalRunBushels <= 0) return;
+
+                Yield.RestoreCalRun(
+                    s.CalRunBushels,
+                    s.CalRunActive,
+                    s.CalRunInterrupted,
+                    s.CalRunProfileId,
+                    s.CalRunCropId,
+                    ParseCalRunTime(s.CalRunStartedUtc),
+                    ParseCalRunTime(s.CalRunStoppedUtc));
+
+                if (s.CalRunActive)
+                    Props.WriteErrorLog(
+                        $"CalRun restored INTERRUPTED: bushels={s.CalRunBushels:F4} " +
+                        $"profileId={s.CalRunProfileId} cropId={s.CalRunCropId} " +
+                        $"started={s.CalRunStartedUtc} lastSave={s.CalRunStoppedUtc}");
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("RestoreCalRunState " + ex.Message);
+            }
+        }
+
+        private static DateTime? ParseCalRunTime(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return null;
+            return DateTime.TryParse(value,
+                       System.Globalization.CultureInfo.InvariantCulture,
+                       System.Globalization.DateTimeStyles.RoundtripKind,
+                       out DateTime dt)
+                   ? dt : (DateTime?)null;
         }
 
         public static void RequestUserExit()

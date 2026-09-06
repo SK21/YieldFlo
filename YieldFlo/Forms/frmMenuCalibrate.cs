@@ -43,6 +43,16 @@ namespace YieldFlo.Forms
         // fraction. Compare against the FarmTrx sensor cal result (X% @ Y Hz).
         private readonly Queue<int> _hzSamples = new Queue<int>();
 
+        // True while the staged Yield Factor is the one Apply Cal computed from the
+        // standing run. Save & Apply clears the run only in that case: the same
+        // button also saves a baseline-only change or a hand-typed factor, and
+        // neither of those has consumed the run.
+        //
+        // Set AFTER Apply Cal assigns numFactor.Value, because that assignment
+        // itself raises ValueChanged — which is what clears the flag when the
+        // operator overtypes the figure by hand.
+        private bool _factorFromCalRun;
+
         public frmMenuCalibrate()
         {
             InitializeComponent();
@@ -68,6 +78,11 @@ namespace YieldFlo.Forms
             // the same cue as a sampled one — otherwise typing 0.5 looks normal
             // right up until Save & Apply.
             numBaseline.ValueChanged += (s2, ev2) => UpdateBaselineWarning();
+
+            // Any later edit to the factor — numpad, spinner, keyboard — means the
+            // staged value is no longer the one Apply Cal derived, so Save & Apply
+            // must not treat the run as spent.
+            numFactor.ValueChanged += (s2, ev2) => _factorFromCalRun = false;
 
             _calTimer = new System.Windows.Forms.Timer { Interval = 1000 };
             _calTimer.Tick += CalTimer_Tick;
@@ -196,6 +211,21 @@ namespace YieldFlo.Forms
             }
             UpdateSavedLabel();
 
+            // The run has now been spent: its weight produced this factor and the
+            // factor is saved. Discarding it here stops a standing total — which
+            // survives restarts now — from being applied a second time against the
+            // factor it already corrected. Only when the saved factor is the one
+            // Apply Cal derived; a baseline-only save or a hand-typed factor leaves
+            // the run alone.
+            if (_factorFromCalRun)
+            {
+                Core.Yield.ClearCalRun();
+                _factorFromCalRun = false;
+                numActualWeight.Value = 0;
+                UpdateCalMeasuredLabel();
+                UpdateCalRunButtons();
+            }
+
             Props.ShowMessage(Lang.lgCalSaved);
         }
 
@@ -203,9 +233,24 @@ namespace YieldFlo.Forms
 
         private void btnStartCal_Click(object sender, EventArgs e)
         {
+            // StartCalRun zeroes the accumulator. A finished run whose weight has not
+            // been entered yet is a real measurement the operator may still be driving
+            // to a scale to collect, and it can now be days old — so it is not thrown
+            // away silently. Only asked when there is something to lose.
+            if (!(Core.Yield?.IsCalRunActive ?? false) && (Core.Yield?.CalRunBushels ?? 0) > 0)
+            {
+                using var dlg = new frmMsgBox(
+                    string.Format(Lang.lgCalRunDiscardPrompt, CalRunMeasuredText(), CalRunWhenText()),
+                    Lang.lgCalRunDiscard);
+                dlg.ShowDialog(this);
+                if (!dlg.Result) return;
+            }
+
             Core.Yield.StartCalRun();
             numActualWeight.Value = 0;   // stale weight from a previous run must not be reused
+            _factorFromCalRun     = false;   // any staged factor belongs to the run just replaced
             _calTimer.Start();
+            UpdateCalMeasuredLabel();
             UpdateCalRunButtons();
         }
 
@@ -239,7 +284,9 @@ namespace YieldFlo.Forms
                 + $"TWkgDisplay={twKgDisplay:F4}, TWlbsYield={twLbsYield:F4}, "
                 + $"TWlbsYield*0.453592={twLbsYield * 0.453592:F4}, "
                 + $"isMetric={Props.IsMetric}, running={Core.Yield?.IsCalRunActive}, "
-                + $"profileId={Core.ActiveProfileId}, cropId={Core.ActiveCropId}";
+                + $"profileId={Core.ActiveProfileId}, cropId={Core.ActiveCropId}, "
+                + $"runProfileId={Core.Yield?.CalRunProfileId}, runCropId={Core.Yield?.CalRunCropId}, "
+                + $"interrupted={Core.Yield?.CalRunInterrupted}";
 
             if (actualBushels <= 0)
             {
@@ -254,6 +301,37 @@ namespace YieldFlo.Forms
                 return;
             }
 
+            // A run can now be applied long after it was taken, so the crop and
+            // profile may have moved on in between. ComputeNewFactor scales the
+            // CURRENT YieldFactor and the weight was converted with the CURRENT test
+            // weight, and Save & Apply writes to the CURRENT profile+crop — so on a
+            // mismatch every one of the three is the wrong reference. Blocked rather
+            // than warned: unlike a high baseline there is no reading of this where
+            // the result is correct.
+            int runProfile = Core.Yield.CalRunProfileId;
+            int runCrop    = Core.Yield.CalRunCropId;
+            if (runProfile > 0 && runCrop > 0 &&
+                (runProfile != Core.ActiveProfileId || runCrop != Core.ActiveCropId))
+            {
+                Props.WriteErrorLog(diag + " -> ABORT (profile/crop changed since the run)");
+                Props.ShowMessage(Lang.lgCalRunWrongCrop, "", 4000, true);
+                return;
+            }
+
+            // Interrupted runs are short by whatever was harvested after the last
+            // autosave, which inflates the factor. Warned, not blocked — the operator
+            // may know the outage happened with the header out of the crop.
+            if (Core.Yield.CalRunInterrupted)
+            {
+                using var dlg = new frmMsgBox(Lang.lgCalRunInterruptedPrompt, Lang.lgCalRunInterruptedTitle);
+                dlg.ShowDialog(this);
+                if (!dlg.Result)
+                {
+                    Props.WriteErrorLog(diag + " -> ABORT (operator declined interrupted run)");
+                    return;
+                }
+            }
+
             double newFactor = Core.Yield.ComputeNewFactor(actualBushels);
             Props.WriteErrorLog(diag + $" -> newFactor={newFactor:F4} "
                 + $"(ratio={actualBushels / calRunBushels:F4})");
@@ -263,6 +341,13 @@ namespace YieldFlo.Forms
             decimal clamped = (decimal)System.Math.Min((double)numFactor.Maximum,
                                System.Math.Max((double)numFactor.Minimum, newFactor));
             numFactor.Value = clamped;
+
+            // After the assignment, so the ValueChanged it raises does not undo it.
+            // The run is not discarded here — it is discarded at Save & Apply, once
+            // the factor it produced has actually reached Core.Yield and the
+            // database. Clearing at this point would throw the measurement away for
+            // an operator who looked at the new figure and closed the form.
+            _factorFromCalRun = true;
 
             Props.ShowMessage(Lang.lgPendingSave);
         }
@@ -318,19 +403,71 @@ namespace YieldFlo.Forms
             }
         }
 
-        private void UpdateCalMeasuredLabel()
+        /// <summary>The measured total on its own, in the display unit.</summary>
+        private string CalRunMeasuredText()
         {
             double bushels = Core.Yield?.CalRunBushels ?? 0;
             if (Props.IsMetric)
+                return string.Format(Lang.lgMeasuredMetric, Props.DisplayMass(bushels));
+
+            double lbs = bushels * (Core.Yield?.TestWeightLbsBu ?? 60.0);
+            return string.Format(Lang.lgMeasuredImperial, bushels, lbs);
+        }
+
+        /// <summary>
+        /// Local date and time the standing total belongs to — start time while a run
+        /// is going, otherwise the time it was stopped. Blank when there is no run.
+        /// </summary>
+        private string CalRunWhenText()
+        {
+            var y = Core.Yield;
+            if (y == null) return "";
+
+            DateTime? utc = (y.IsCalRunActive ? y.CalRunStartedUtc : y.CalRunStoppedUtc)
+                            ?? y.CalRunStartedUtc;
+            return utc.HasValue ? utc.Value.ToLocalTime().ToString("g") : "";
+        }
+
+        private void UpdateCalMeasuredLabel()
+        {
+            var y = Core.Yield;
+
+            // No run at all — after a clear, or before the first one. Back to the
+            // placeholder rather than a measured "0.00 bu", which reads like a run
+            // that recorded nothing.
+            if (y == null || (!y.IsCalRunActive && y.CalRunBushels <= 0 && !y.CalRunStartedUtc.HasValue))
             {
-                double tonnes = Props.DisplayMass(bushels);
-                lblCalMeasured.Text = string.Format(Lang.lgMeasuredMetric, tonnes);
+                lblCalMeasured.Text      = Lang.lgMeasuredBlank;
+                lblCalMeasured.ForeColor = Properties.Settings.Default.MainForeColour;
+                return;
+            }
+
+            string text = CalRunMeasuredText();
+            string when = CalRunWhenText();
+
+            // The run survives a restart now, so a total on screen can be from days
+            // ago. Stamping it is what lets the operator tell a run they are still
+            // driving to the scale from one they already forgot about.
+            if (when.Length > 0)
+            {
+                text += "  " + string.Format(
+                    (y?.IsCalRunActive ?? false) ? Lang.lgCalRunSince : Lang.lgCalRunAt, when);
+            }
+
+            if (y?.CalRunInterrupted ?? false)
+            {
+                // Grain harvested between the last autosave and the shutdown is
+                // missing from this total but will be on the ticket, so the factor
+                // it fits would read high.
+                text += "  " + Lang.lgCalRunInterrupted;
+                lblCalMeasured.ForeColor = Color.Orange;
             }
             else
             {
-                double lbs = bushels * (Core.Yield?.TestWeightLbsBu ?? 60.0);
-                lblCalMeasured.Text = string.Format(Lang.lgMeasuredImperial, bushels, lbs);
+                lblCalMeasured.ForeColor = Properties.Settings.Default.MainForeColour;
             }
+
+            lblCalMeasured.Text = text;
         }
 
         private void UpdateCalRunButtons()

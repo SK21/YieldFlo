@@ -141,6 +141,14 @@ namespace YieldFlo.Language
         internal static string lgSetBaselineConfirm => Get("lgSetBaselineConfirm");
         internal static string lgMeasuredMetric     => Get("lgMeasuredMetric");
         internal static string lgMeasuredImperial   => Get("lgMeasuredImperial");
+        internal static string lgCalRunAt           => Get("lgCalRunAt");
+        internal static string lgCalRunSince        => Get("lgCalRunSince");
+        internal static string lgCalRunInterrupted  => Get("lgCalRunInterrupted");
+        internal static string lgCalRunDiscard      => Get("lgCalRunDiscard");
+        internal static string lgCalRunDiscardPrompt     => Get("lgCalRunDiscardPrompt");
+        internal static string lgCalRunWrongCrop    => Get("lgCalRunWrongCrop");
+        internal static string lgCalRunInterruptedTitle  => Get("lgCalRunInterruptedTitle");
+        internal static string lgCalRunInterruptedPrompt => Get("lgCalRunInterruptedPrompt");
 
         // ── Moisture Cal form ────────────────────────────────────────────────
         internal static string lgMoistureSection    => Get("lgMoistureSection");
