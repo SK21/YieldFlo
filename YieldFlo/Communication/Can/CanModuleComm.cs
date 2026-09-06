@@ -98,7 +98,8 @@ namespace YieldFlo.Communication.Can
         private void ParseModuleData(byte[] d)
         {
             // 8-byte data body (identical layout to bytes [3-10] of the UDP packet):
-            // [0]   status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK
+            // [0]   status_flags  bit0=SensorOK, bit1=RPMPresent, bit2=MoistureOK,
+            //                     bit3=CompFault (0 on firmware predating the bit)
             // [1-2] sensor_ratio  uint16 LE  (ratio × 1000, 0–1000 = 0.0–100.0%)
             // [3-4] moisture_raw  uint16 LE  (value × 10 = tenths of percent)
             // [5-6] module_rpm    uint16 LE
@@ -111,8 +112,10 @@ namespace YieldFlo.Communication.Can
 
             bool s1Ok = (flags & 0x01) != 0;
             bool moistureOk = (flags & 0x04) != 0;
+            bool compFault = (flags & 0x08) != 0;
 
             Core.LastSensor1Valid = s1Ok;
+            Core.LastCompFault = compFault;
             Core.LastSensor1  = s1Ok       ? ratio    / 1000.0              : 0;
             Core.LastMoisture = moisture * Core.ActiveMoistScale;
             Core.LastMoistureOk = moistureOk;
@@ -167,7 +170,12 @@ namespace YieldFlo.Communication.Can
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             if (!ModuleReceiving && Core.ModuleConnected)
+            {
                 Core.ModuleConnected = false;
+                // Module-reported state does not outlive the module — see the
+                // matching clear in frmMain.CheckModuleTimeout.
+                Core.LastCompFault = false;
+            }
         }
 
         public void Dispose() => Stop();

@@ -14,11 +14,15 @@
 // Build with USB support set to "None"; debug output is on USART1 (PA9/PA10).
 
 #define InoDescription "YieldFlo_STM32F1"
-#define InoID 26076          // firmware version — update with every build (DDMMY format)
+#define InoID 19086          // firmware version — update with every build (DDMMY format)
 
 // ── User settings (compile-time) ─────────────────────────────────────────
 const uint8_t ModuleID       = 0;     // module ID (informational)
-const bool    UseCompSignal  = true;  // true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
+// Defaults to the SAFE side: Main-only with Comp wired loses an optimization and
+// nothing else (the glitch filter still rejects noise), while Main+Comp with no
+// Comp wire discards one edge of every paddle and records nothing at all,
+// silently. Turn it on only after confirming Comp is actually connected.
+const bool    UseCompSignal  = false; // true = Main + Comp noise rejection, false = Main only (e.g. FarmTrx tap, Comp not wired)
 const bool    InvertSensor   = true;  // true = NPN (inverted logic — default for this port), false = PNP (HIGH = beam clear, FarmTrx)
 const bool    RPMEnabled     = true;  // RPM sensor wired to RPMPin
 const bool    ADS1115Enabled = true;  // Moisture1 daughter board present
@@ -70,6 +74,26 @@ volatile uint16_t PaddleCycles = 0;		// completed paddle cycles since last TakeP
 volatile uint32_t MinCycleUs = 0xFFFFFFFF;	// shortest completed paddle cycle since last TakeMinCycleMs()
 bool SensorOK = false;
 uint16_t SensorRatio = 0;		// ratio × 1000, updated by ReadFlow()
+
+// Comp-wire fault detection. Counts the edges the comp cross-check has discarded
+// since the last edge that actually committed; CommitEdge zeroes it, so a single
+// real paddle getting through clears it. That is what makes a high value mean
+// "every edge is being thrown away" rather than "some noise was rejected" — the
+// state is impossible with working wiring, because if edges are arriving often
+// enough to be rejected then some of them are paddles and some must commit.
+//
+// Counts ONLY comp cross-check rejects, not the glitch filter's. That keeps the
+// meaning exact: Comp is enabled and is eating the signal, which is a fault with
+// a specific remedy the app can name. A blocked pulse narrower than GlitchMinUs
+// produces the same "nothing ever commits" outcome through the glitch filter,
+// but the fix there is mechanical, so it does not belong behind the same flag.
+volatile uint16_t CompRejectsSinceCommit = 0;
+bool CompFault = false;			// set by ReadFlow, sent as status_flags bit 3
+
+// Rejects since the last commit before the wiring is called faulty — about 3 s at
+// the 18 Hz paddle rate this was measured on. Any committed edge resets the count,
+// so ordinary rejected noise on a healthy machine never approaches it.
+const uint16_t CompFaultRejects = 50;
 
 // Glitch filter: an edge is committed only after the state it starts survives
 // GlitchMinUs. A pending edge cancelled by a return edge inside the window is a

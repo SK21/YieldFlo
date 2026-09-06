@@ -16,7 +16,19 @@ are not sure which you have.
 
 ```
 Noise > 0 sustained?
-    Yes  -> Electrical: wiring, shield, or shared supply. Stop here —
+    Read PaddleHz on the same rows before concluding anything — sustained
+    noise has two completely different causes and they need opposite fixes.
+
+    PaddleHz 0, and Noise flat at the elevator's paddle rate?
+         -> NOT electrical. The comp cross-check is enabled with no comp
+            wire: one edge of every paddle fails the check and the other
+            is dropped as a duplicate, so nothing is ever measured. Set
+            the module to Main only. Stop here — a log like this holds no
+            grain data at all. Firmware from 2026-08-19 reports this
+            itself and the app shows "NO COMP".
+
+    PaddleHz normal, Noise erratic?
+         -> Electrical: wiring, shield, or shared supply. Stop here —
             every number below is built on those edges.
 
 Rpm steady?
@@ -139,6 +151,51 @@ them as zero.
 `Sensor1`, `Noise`, `Rpm`, `Moisture`, `Sections`, `PipelineCount` and `Tail` are
 genuinely per-row and can be averaged or plotted directly.
 
+### Turning a per-row counter into a rate
+
+`Noise` is a **counter**, not a level: the module accumulates edges and zeroes the
+tally every time it builds a packet, so each row holds a fresh, non-overlapping
+count. That is what makes summing it legitimate where summing `GateRejects` is
+not.
+
+To convert it to a rate, use the module's window, not the clock:
+
+```
+rate per second = mean(Noise over rows where it is non-zero) / 0.2
+```
+
+**Do not divide the total by the elapsed time in `PCTime`.** The log loses
+packets — measured at about 4.6 % on 2026-08-18 — and every lost packet takes its
+edges with it, because the module already zeroed the counter when it built that
+packet. Dividing by wall-clock time credits those edges as never having happened
+and reads low by exactly the loss rate. On that file the two methods gave 18.06
+and 17.26; the first is right.
+
+The 0.2 assumes each surviving row still represents one undisturbed 200 ms
+window. Confirm it before trusting a rate that matters, by bucketing each row's
+value against the time gap since the previous row:
+
+| Gap since previous row | Mean `Noise` |
+|---|---|
+| 100–199 ms | 3.61 |
+| 200–299 ms | 3.61 |
+| 300–399 ms | 3.45 |
+| 400–499 ms | 3.54 |
+| 500–599 ms | 3.54 |
+| 600–699 ms | 3.51 |
+
+Flat across the gaps, as here, means the counter was zeroed on the module's own
+fixed schedule and the missing rows were lost in transit — each surviving row is
+a clean 200 ms window, so divide by 0.2.
+
+If instead the mean **rises with the gap**, the module was skipping sends and its
+counter kept accumulating across them. Then the row covers the whole gap, and the
+honest figure is the total over the elapsed `PCTime`.
+
+The same question applies to any per-row counter added later. The gap-bucket
+table answers it in one pass, and the two methods differ by however much packet
+loss is running that day.
+
 ---
 
 ## Reading order
@@ -150,9 +207,27 @@ found at step 1 makes steps 2–4 meaningless.
 
 Look at **Noise**, **Rpm**, **PaddleHz**.
 
-- `Noise` should be at or near zero. A steady nonzero count is an electrical
-  problem — wiring, shielding, or a supply shared with something noisy. Fix that
-  before touching anything else; every number downstream is built on those edges.
+- `Noise` should be at or near zero. A steady nonzero count has two possible
+  causes and `PaddleHz` on the same rows separates them.
+  - **`PaddleHz` still working, `Noise` erratic** — an electrical problem:
+    wiring, shielding, or a supply shared with something noisy. Fix that before
+    touching anything else; every number downstream is built on those edges.
+  - **`PaddleHz` at 0 and `Noise` flat at the paddle rate** — not electrical.
+    The module is in Main+Comp mode with no comp wire, so one edge of every
+    paddle fails the cross-check and the other is dropped as a duplicate.
+    Nothing commits, `Sensor1` stays 0, and the log contains no grain data.
+    Set the module to Main only.
+
+    The tell is the flatness. Real interference is bursty and varies with what
+    the machine is doing; this reads as a metronome locked to the elevator,
+    because that is what it is — exactly one rejected edge per paddle. Measured
+    2026-08-18 on the 9070: `Noise` 18.06/s for four hours against a known
+    paddle rate of 18.10 Hz, `Sensor1` 0 on all 84,762 rows. Full write-up in
+    `Comp Wire Fault 2026-08-18.md`.
+
+    Comparing those two numbers is the whole test, so derive the rate the way
+    "Turning a per-row counter into a rate" above sets out — the obvious
+    wall-clock method reads several percent low and blunts the comparison.
 - `Rpm` tells you whether the elevator speed was steady. If it moved, expect
   `PaddleHz` and `MedianCycleMs` to move with it.
 - `PaddleHz` should be steady at constant elevator speed. It is the single best
@@ -290,7 +365,7 @@ finally goes flat.
 | Figure | Healthy | What a bad value means |
 |---|---|---|
 | Average `PaddleHz` | Near constant | Large swings = elevator speed changed, or paddles being missed |
-| `Noise` per second | 0 | Electrical problem — investigate before changing any setting |
+| `Noise` per second | 0 | Erratic while `PaddleHz` still counts = electrical. Flat at the paddle rate with `PaddleHz` 0 = comp wire, and the log holds no data (step 1) |
 | `GateRejects` per second *(M3)* | 0 to ~5 | 40+ sustained means something is wrong upstream |
 | Minimum `MinCycleMs` *(M3)* | Between 75% of `MedianCycleMs` and `MedianCycleMs` | Below 75% = a false cycle got through. Well above the median = paddles being merged |
 | `MedianCycleMs` vs `1000 / PaddleHz` *(M3)* | Close, and stable | Median drifting low as flow rises = gate widening under heavy grain |

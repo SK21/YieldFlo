@@ -261,6 +261,15 @@ namespace YieldFlo.Forms
             bool sensorBad = harvesting
                 && (!Core.LastSensor1Valid || Core.Collector.SensorFault);
 
+            // The comp-wire fault is deliberately NOT behind `harvesting`. The
+            // reason SensorOK needs that gate does not apply here: the module
+            // raises this only while edges are actively arriving and none is
+            // surviving to commit, which a still elevator cannot produce. So it
+            // cannot cry wolf on a parked machine, and showing it the moment the
+            // elevator spins up is the entire point — it is a configuration fault
+            // worth catching in the yard rather than after a day of empty passes.
+            bool compFault = Core.LastCompFault;
+
             lblStatusGPS.Text = Lang.lgGPS;
             lblStatusGPS.ForeColor = gpsOk ? StatusOk : StatusBad;
 
@@ -271,9 +280,11 @@ namespace YieldFlo.Forms
             // blinks all day is one the operator learns to stop reading. Nothing
             // to say when the module itself is down: that is already red, and the
             // sensor's state is unknowable without packets.
-            if (modOk && sensorBad && SensorAlertPhase())
+            // Comp first when both are up: it names a cause, where "no sensor"
+            // only reports the symptom it produces.
+            if (modOk && (compFault || sensorBad) && SensorAlertPhase())
             {
-                lblStatusJob.Text = Lang.lgNoSensor;
+                lblStatusJob.Text = compFault ? Lang.lgNoComp : Lang.lgNoSensor;
                 lblStatusJob.ForeColor = OkabeIto.Orange;
             }
             else if (Core.Collector.ActiveJobId > 0)
@@ -316,6 +327,10 @@ namespace YieldFlo.Forms
                 (DateTime.UtcNow - Core.LastModuleReceive).TotalSeconds > 5)
             {
                 Core.ModuleConnected = false;
+                // Module-reported state does not outlive the module. Left set, a
+                // comp fault latched at the moment of a dropout would go on
+                // blaming the comp wire for every later sensor fault.
+                Core.LastCompFault = false;
             }
         }
 

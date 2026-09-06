@@ -335,7 +335,7 @@ void LoadDefaults()
 	MDL.RPMpin = 35;
 	MDL.CompPin = 32;
 	MDL.MainPin = 33;
-	MDL.UseCompSignal = true;
+	MDL.UseCompSignal = false;	// safe side — see the note on the struct field
 	MDL.InvertSensor = false;
 	MDL.AlertPin = 16;
 	MDL.AnalogPin = NC;

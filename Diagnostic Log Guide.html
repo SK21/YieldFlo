@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnostic Log Guide</title>
+<style>body { font-family: Segoe UI, Arial, sans-serif; font-size: 11pt; max-width: 900px; margin: 40px auto; color: #222; }
+h1 { font-size: 22pt; border-bottom: 2px solid #333; padding-bottom: 6px; }
+h2 { font-size: 15pt; border-bottom: 1px solid #aaa; margin-top: 1.4em; }
+h3 { font-size: 12pt; margin-top: 1.2em; }
+h4 { font-size: 11pt; }
+table { border-collapse: collapse; width: 100%; margin: 0.8em 0; font-size: 10pt; }
+th { background: #dde4ee; text-align: left; padding: 5px 8px; border: 1px solid #aaa; }
+td { padding: 4px 8px; border: 1px solid #ccc; vertical-align: top; }
+tr:nth-child(even) td { background: #f6f8fc; }
+code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 10pt; }
+pre { background: #f0f0f0; padding: 10px; border-radius: 4px; overflow-x: auto; }
+pre code { background: none; padding: 0; font-size: 9.5pt; }
+blockquote { border-left: 4px solid #aaa; margin: 0.5em 0 0.5em 1em; padding: 4px 12px; color: #555; background: #f9f9f9; }
+hr { border: none; border-top: 1px solid #ccc; margin: 1.5em 0; }
+a { color: #1a56cc; text-decoration: underline; cursor: pointer; }
+ul, ol { margin: 0.4em 0 0.4em 1.5em; }
+li { margin: 2px 0; }
+@media print {
+  a { color: #1a56cc; }
+  table { page-break-inside: avoid; }
+  pre { page-break-inside: avoid; }
+}</style>
+</head>
+<body>
+<h1 id="diagnostic-log-guide">Diagnostic Log Guide</h1>
+
+<p>How to read the <code>Diag_*.csv</code> files the app writes, and what each column tells you when a reading looks wrong.</p>
+
+<hr>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+<li><a href="#first-look">First look</a></li>
+<li><a href="#where-the-files-are">Where the files are</a></li>
+<li><a href="#the-columns">The columns</a></li>
+<li><a href="#read-this-before-you-calculate-anything">Read this before you calculate anything</a></li>
+<li><a href="#reading-order">Reading order</a></li>
+<li><a href="#measuring-transport-delay-and-clean-out">Measuring transport delay and clean-out</a></li>
+<li><a href="#figures-worth-pulling-from-every-log">Figures worth pulling from every log</a></li>
+<li><a href="#four-plots-that-show-almost-everything">Four plots that show almost everything</a></li>
+<li><a href="#reporting-a-problem">Reporting a problem</a></li>
+</ol>
+
+<hr>
+
+<h2 id="first-look">First look</h2>
+
+<p>Work down this until something answers. Most problems stop here; the rest of the document explains the steps in full.</p>
+
+<p>Anything mentioning <code>MedianCycleMs</code> or the gate applies to <strong>Method3 logs only</strong> — Method2 has no period gate and no such column. Check the file's header row if you are not sure which you have.</p>
+
+<pre><code>Noise &gt; 0 sustained?
+    Read PaddleHz on the same rows before concluding anything — sustained
+    noise has two completely different causes and they need opposite fixes.
+
+    PaddleHz 0, and Noise flat at the elevator's paddle rate?
+         -&gt; NOT electrical. The comp cross-check is enabled with no comp
+            wire: one edge of every paddle fails the check and the other
+            is dropped as a duplicate, so nothing is ever measured. Set
+            the module to Main only. Stop here — a log like this holds no
+            grain data at all. Firmware from 2026-08-19 reports this
+            itself and the app shows "NO COMP".
+
+    PaddleHz normal, Noise erratic?
+         -&gt; Electrical: wiring, shield, or shared supply. Stop here —
+            every number below is built on those edges.
+
+Rpm steady?
+    No   -&gt; Elevator speed changed. PaddleHz and MedianCycleMs move with it;
+            that is not a fault.
+
+PaddleHz steady and matching the elevator?
+    No   -&gt; Roughly halved, MinCycleMs roughly doubled -&gt; gate over-tight,
+            rejecting real paddles.
+         -&gt; Erratic in any other pattern -&gt; mechanical or sensor.
+
+MedianCycleMs = 0?                              [Method3 logs only]
+    Yes  -&gt; Gate not armed, passing everything. Normal for a few seconds
+            after each restart. Never leaving 0 means the signal is
+            dropping out — back to the top.
+
+MedianCycleMs below 1000 / PaddleHz and falling as flow rises?
+    Yes  -&gt; Gate widening under heavy grain.     [Method3 logs only]
+
+MinCycleMs well below 75% of MedianCycleMs?
+    Yes  -&gt; A false cycle got through; check the threshold setting.
+
+Map reads low at the ends of every pass?
+         -&gt; Not a sensor fault and not calibration. Timing. Go to
+            "Measuring transport delay and clean-out".
+
+All clean and the yield is still wrong?
+         -&gt; Sensor1, SpeedKmh, and calibration. Go to step 4.</code></pre>
+
+<hr>
+
+<h2 id="where-the-files-are">Where the files are</h2>
+
+<pre><code>Documents\YieldFlo\DiagLogs\Diag_yyyyMMdd_HHmmss.csv</code></pre>
+
+<p>One file per app session, named for the time the app started. Logging is always on — it does not wait for a job to be recording, so bench work and faults that happen between jobs are captured too. About 1.5 MB per hour. The newest 20 files are kept and older ones are deleted automatically.</p>
+
+<p>This is separate from <code>yield_data</code> in the database, which stores one row per second and only while a job is running.</p>
+
+<hr>
+
+<h2 id="the-columns">The columns</h2>
+
+<p><strong>Two builds are in the field and their logs are not the same shape. Read the header row of the file before anything else.</strong></p>
+
+<p>Method3 — the period-gate build:</p>
+
+<pre><code>PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,GateRejects,MedianCycleMs,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail</code></pre>
+
+<p>Method2 — the paddle-channel build:</p>
+
+<pre><code>PCTime,Sensor1,Noise,Rpm,Moisture,PaddleHz,MinCycleMs,FlowRate,PaddlesPerS,FlowRejects,SpeedKmh,YieldRate,JobId,Sections,PipelineCount,Tail</code></pre>
+
+<p>Columns 1–7 and the last four are the same on both. Between them they differ, and Method2 has one extra column — so <strong>from column 8 onward, position 8 means a different thing on each build and everything after column 9 is shifted by one.</strong> Never parse these files by index without checking the header.</p>
+
+<p>Common to both builds:</p>
+
+<table>
+<tr><th>Column</th><th>From</th><th>Meaning</th></tr>
+<tr><td><code>PCTime</code></td><td>PC clock</td><td>When the packet was parsed, <code>HH:mm:ss.fff</code></td></tr>
+<tr><td><code>Sensor1</code></td><td>5 Hz packet</td><td>Obstruction ratio, 0–1. <strong>Raw — not baseline-corrected</strong></td></tr>
+<tr><td><code>Noise</code></td><td>5 Hz packet</td><td>Glitch edges the module rejected in that 200 ms window</td></tr>
+<tr><td><code>Rpm</code></td><td>5 Hz packet</td><td>Elevator RPM. A flat <strong>200</strong> means no RPM sensor is fitted</td></tr>
+<tr><td><code>Moisture</code></td><td>5 Hz packet</td><td>Scaled moisture reading</td></tr>
+<tr><td><code>PaddleHz</code></td><td>1 Hz packet</td><td>Completed paddle cycles per second</td></tr>
+<tr><td><code>MinCycleMs</code></td><td>1 Hz packet</td><td>Shortest completed cycle that second. 255 = none completed</td></tr>
+<tr><td><code>SpeedKmh</code></td><td>GPS</td><td>Ground speed at that moment</td></tr>
+<tr><td><code>YieldRate</code></td><td>app</td><td>Instantaneous yield computed from this packet</td></tr>
+<tr><td><code>JobId</code></td><td>app</td><td>Active job, or −1 when nothing is recording</td></tr>
+<tr><td><code>Sections</code></td><td>app</td><td>1 = crop entering the machine, 0 = header out</td></tr>
+<tr><td><code>PipelineCount</code></td><td>app</td><td>Positions buffered waiting for their grain to reach the sensor</td></tr>
+<tr><td><code>Tail</code></td><td>app</td><td>1 while grain leaving the machine after a pass end is still being counted</td></tr>
+</table>
+
+<p>Method3 only:</p>
+
+<table>
+<tr><th>Column</th><th>From</th><th>Meaning</th></tr>
+<tr><td><code>GateRejects</code></td><td>1 Hz packet</td><td>Leading edges the period gate rejected that second</td></tr>
+<tr><td><code>MedianCycleMs</code></td><td>1 Hz packet</td><td>The gate's period estimate. <strong>0 = gate not armed</strong></td></tr>
+</table>
+
+<p>Method2 only:</p>
+
+<table>
+<tr><th>Column</th><th>From</th><th>Meaning</th></tr>
+<tr><td><code>FlowRate</code></td><td>1 Hz packet</td><td>Paddle channel: per-paddle obstruction per second, uncorrected</td></tr>
+<tr><td><code>PaddlesPerS</code></td><td>1 Hz packet</td><td>Paddle rate over the same window</td></tr>
+<tr><td><code>FlowRejects</code></td><td>1 Hz packet</td><td>Cycles the module merged, scaled or reseeded that window</td></tr>
+</table>
+
+<p><strong>−1 in any 1 Hz column</strong> means the module firmware predates that field. Update the module firmware before drawing conclusions from a log full of −1s.</p>
+
+<hr>
+
+<h2 id="read-this-before-you-calculate-anything">Read this before you calculate anything</h2>
+
+<p>Rows arrive at <strong>5 Hz</strong>, but every column marked <em>1 Hz packet</em> in the tables above comes from a slower frame. Each of their values is therefore repeated on about five consecutive rows.</p>
+
+<p>Any per-second figure from those columns has to de-duplicate first. <strong>Summing <code>GateRejects</code> (or <code>FlowRejects</code>) down the rows overcounts five-fold.</strong> Take one value per distinct 1 Hz update instead, and drop the −1 rows rather than treating them as zero.</p>
+
+<p><code>Sensor1</code>, <code>Noise</code>, <code>Rpm</code>, <code>Moisture</code>, <code>Sections</code>, <code>PipelineCount</code> and <code>Tail</code> are genuinely per-row and can be averaged or plotted directly.</p>
+
+<h3 id="turning-a-per-row-counter-into-a-rate">Turning a per-row counter into a rate</h3>
+
+<p><code>Noise</code> is a <strong>counter</strong>, not a level: the module accumulates edges and zeroes the tally every time it builds a packet, so each row holds a fresh, non-overlapping count. That is what makes summing it legitimate where summing <code>GateRejects</code> is not.</p>
+
+<p>To convert it to a rate, use the module's window, not the clock:</p>
+
+<pre><code>rate per second = mean(Noise over rows where it is non-zero) / 0.2</code></pre>
+
+<p><strong>Do not divide the total by the elapsed time in <code>PCTime</code>.</strong> The log loses packets — measured at about 4.6 % on 2026-08-18 — and every lost packet takes its edges with it, because the module already zeroed the counter when it built that packet. Dividing by wall-clock time credits those edges as never having happened and reads low by exactly the loss rate. On that file the two methods gave 18.06 and 17.26; the first is right.</p>
+
+<p>The 0.2 assumes each surviving row still represents one undisturbed 200 ms window. Confirm it before trusting a rate that matters, by bucketing each row's value against the time gap since the previous row:</p>
+
+<table>
+<tr><th>Gap since previous row</th><th>Mean <code>Noise</code></th></tr>
+<tr><td>100–199 ms</td><td>3.61</td></tr>
+<tr><td>200–299 ms</td><td>3.61</td></tr>
+<tr><td>300–399 ms</td><td>3.45</td></tr>
+<tr><td>400–499 ms</td><td>3.54</td></tr>
+<tr><td>500–599 ms</td><td>3.54</td></tr>
+<tr><td>600–699 ms</td><td>3.51</td></tr>
+</table>
+
+<p>Flat across the gaps, as here, means the counter was zeroed on the module's own fixed schedule and the missing rows were lost in transit — each surviving row is a clean 200 ms window, so divide by 0.2.</p>
+
+<p>If instead the mean <strong>rises with the gap</strong>, the module was skipping sends and its counter kept accumulating across them. Then the row covers the whole gap, and the honest figure is the total over the elapsed <code>PCTime</code>.</p>
+
+<p>The same question applies to any per-row counter added later. The gap-bucket table answers it in one pass, and the two methods differ by however much packet loss is running that day.</p>
+
+<hr>
+
+<h2 id="reading-order">Reading order</h2>
+
+<p>Work down this list. Each step rules out a whole class of cause, so a problem found at step 1 makes steps 2–4 meaningless.</p>
+
+<h3 id="1-is-the-sensor-healthy">1. Is the sensor healthy?</h3>
+
+<p>Look at <strong>Noise</strong>, <strong>Rpm</strong>, <strong>PaddleHz</strong>.</p>
+
+<ul>
+<li><code>Noise</code> should be at or near zero. A steady nonzero count has two possible causes and <code>PaddleHz</code> on the same rows separates them.
+  <ul>
+  <li><strong><code>PaddleHz</code> still working, <code>Noise</code> erratic</strong> — an electrical problem: wiring, shielding, or a supply shared with something noisy. Fix that before touching anything else; every number downstream is built on those edges.</li>
+  <li><strong><code>PaddleHz</code> at 0 and <code>Noise</code> flat at the paddle rate</strong> — not electrical. The module is in Main+Comp mode with no comp wire, so one edge of every paddle fails the cross-check and the other is dropped as a duplicate. Nothing commits, <code>Sensor1</code> stays 0, and the log contains no grain data. Set the module to Main only.
+    <p>The tell is the flatness. Real interference is bursty and varies with what the machine is doing; this reads as a metronome locked to the elevator, because that is what it is — exactly one rejected edge per paddle. Measured 2026-08-18 on the 9070: <code>Noise</code> 18.06/s for four hours against a known paddle rate of 18.10 Hz, <code>Sensor1</code> 0 on all 84,762 rows. Full write-up in <code>Comp Wire Fault 2026-08-18.md</code>.</p>
+    <p>Comparing those two numbers is the whole test, so derive the rate the way <a href="#turning-a-per-row-counter-into-a-rate">Turning a per-row counter into a rate</a> above sets out — the obvious wall-clock method reads several percent low and blunts the comparison.</p>
+  </li>
+  </ul>
+</li>
+<li><code>Rpm</code> tells you whether the elevator speed was steady. If it moved, expect <code>PaddleHz</code> and <code>MedianCycleMs</code> to move with it.</li>
+<li><code>PaddleHz</code> should be steady at constant elevator speed. It is the single best indicator that real paddles are being counted.</li>
+</ul>
+
+<h3 id="2-is-the-gate-doing-its-job">2. Is the gate doing its job? — <strong>Method3 only</strong></h3>
+
+<p>Skip this whole step on a Method2 log: there is no period gate on that build and the columns it refers to do not exist in the file.</p>
+
+<p>Look at <strong>PaddleHz</strong>, <strong>MedianCycleMs</strong>, <strong>MinCycleMs</strong>, <strong>GateRejects</strong> together. These four completely describe why each cycle was accepted or rejected.</p>
+
+<p>Work out the nominal period first:</p>
+
+<pre><code>nominal period (ms) = 1000 / PaddleHz</code></pre>
+
+<p><code>MedianCycleMs</code> should sit close to that, and the gate's threshold is 75% of <code>MedianCycleMs</code>.</p>
+
+<table>
+<tr><th>PaddleHz</th><th>MedianCycleMs</th><th>MinCycleMs</th><th>GateRejects</th><th>Reading</th></tr>
+<tr><td>steady 18</td><td>56</td><td>55</td><td>0</td><td>Clean signal, nothing to reject</td></tr>
+<tr><td>steady 18</td><td>56</td><td>54</td><td>2–5</td><td><strong>Normal in heavy grain.</strong> Gate working</td></tr>
+<tr><td>steady 18</td><td>56</td><td>25</td><td>0</td><td>Short cycle got through with the gate armed — should not happen; check the threshold setting</td></tr>
+<tr><td>steady 18</td><td><strong>0</strong></td><td>25</td><td>0</td><td><strong>Gate not armed</strong> — passing everything. See below</td></tr>
+<tr><td><strong>9</strong></td><td>56</td><td><strong>110</strong></td><td>high</td><td><strong>Gate rejecting real paddles.</strong> Two paddles merging into one cycle</td></tr>
+</table>
+
+<p>Three things worth committing to memory:</p>
+
+<ul>
+<li><strong>A high reject count is not a fault.</strong> Rejections are the gate catching grain that would otherwise have split a cycle. Rejects rising while <code>MinCycleMs</code> stays near the nominal period is exactly what success looks like.</li>
+<li><strong>The symptom of an over-tight gate is <code>PaddleHz</code>, not <code>GateRejects</code>.</strong> When a real paddle is rejected, the cycle stays open and merges with the next one — so <code>PaddleHz</code> roughly halves and <code>MinCycleMs</code> roughly doubles. If <code>PaddleHz</code> holds steady and matches the elevator, the gate is not over-tight no matter how high the reject count goes.</li>
+<li><strong><code>MedianCycleMs</code> = 0 means the gate is switched off.</strong> It needs about a dozen paddles of history before it arms, and it clears that history whenever the sensor signal drops out. A stretch of zeros after every stop and restart is normal; a log that never leaves zero means the signal is dropping out repeatedly — go back to step 1.</li>
+</ul>
+
+<p>There is one situation the gate cannot handle, and <code>MedianCycleMs</code> is how you spot it. The estimate is a median over <em>all</em> leading-edge intervals, including spurious ones — each one splits a real interval in two, and where it lands decides whether one half or both come out short. The estimate therefore holds while real paddles keep the majority, roughly until <strong>one leading edge in three</strong> is spurious. Past that the estimate falls, the threshold falls with it, and the gate widens. It does so <strong>gradually</strong> — bench runs well beyond that point still rejected kernels and still tracked the true mean — so do not expect a clean failure point. The signature is <code>MedianCycleMs</code> drifting <strong>below</strong> <code>1000 / PaddleHz</code> as flow increases. Comparing those two numbers across a heavy pass is the check.</p>
+
+<h3 id="3-look-at-sensor1">3. Look at Sensor1</h3>
+
+<p>Only once steps 1 and 2 are clean.</p>
+
+<p>Does it move smoothly, jump, or drift? If <code>Sensor1</code> jumps while <code>PaddleHz</code>, <code>MinCycleMs</code> and <code>MedianCycleMs</code> all stay steady, the sensor is measuring correctly and you are looking at <strong>real grain flow variation</strong>.</p>
+
+<p>Remember <code>Sensor1</code> is logged raw. The zero-flow value in this column is the baseline, which the app subtracts downstream — a <code>Sensor1</code> that never reaches zero with an empty elevator is normal and is what the baseline is for.</p>
+
+<h3 id="4-correlate-with-yieldrate">4. Correlate with YieldRate</h3>
+
+<p><code>YieldRate</code> is computed from <code>Sensor1</code>, <code>SpeedKmh</code>, the header width and the calibration. So compare all three columns, not two:</p>
+
+<ul>
+<li><strong>Both <code>Sensor1</code> and <code>YieldRate</code> jump</strong> → the disturbance started at the sensor. Go back to step 1.</li>
+<li><strong><code>YieldRate</code> jumps, <code>Sensor1</code> flat, <code>SpeedKmh</code> jumps</strong> → a GPS speed glitch, not a grain measurement problem.</li>
+<li><strong><code>YieldRate</code> jumps, <code>Sensor1</code> and <code>SpeedKmh</code> both flat</strong> → the cause is after the sensor: calibration, baseline, or header width.</li>
+</ul>
+
+<p>One case this step will not explain: readings that are low <strong>only at the start and end of each pass</strong>, with everything healthy in between. That is a timing problem, not a calibration one, and changing the calibration to chase it will throw out the middle of the pass as well. Use the next section instead.</p>
+
+<hr>
+
+<h2 id="measuring-transport-delay-and-clean-out">Measuring transport delay and clean-out</h2>
+
+<p>Grain does not reach the sensor where it was cut, and it does not stop arriving when the header comes up. Both delays are measured from <code>Sections</code> — its edges are the only marks in the file that say what the header was doing.</p>
+
+<p>Take one pass with <code>Sections</code> going 1 and back to 0, and plot <code>Sensor1</code>, <code>Sections</code>, <code>PipelineCount</code> and <code>Tail</code> on a shared time axis.</p>
+
+<p><strong>Transport delay — from the RISING edge.</strong> Measure from <code>Sections</code> going 1 to <code>Sensor1</code> beginning to lift. That is the true delay for this machine and crop. Compare it against the delay in the crop calibration.</p>
+
+<p>Do this first. It has never been measured on a real machine — the value in the setting is only a default — and a delay set too short paints the start of every pass low in a way that looks exactly like the machine filling. Fixing a wrong setting costs nothing; everything else here is harder.</p>
+
+<p><strong>Clean-out — from the FALLING edge.</strong> Measure from <code>Sections</code> going 0 to <code>Sensor1</code> settling back to its no-flow baseline. Expect this to be far longer than the transport delay. Measured in the field 2026-08-03: 30 % back to a 9 % baseline in about <strong>100 seconds</strong>, against a delay setting of 10.</p>
+
+<p>Two things to read off the same plot:</p>
+
+<ul>
+<li><strong>Where <code>PipelineCount</code> reaches 0 against where <code>Sensor1</code> is.</strong> If the sensor is still well above baseline at that moment, the machine was still delivering grain after the app had finished placing it on the ground.</li>
+<li><strong>How <code>Tail</code> ends.</strong> Ending as <code>Sensor1</code> reaches baseline is the machine emptying. Ending while it is still high means the next pass's grain became due first — normal, because clean-out outlasts a headland turn, so in continuous harvesting the machine never fully empties. <code>Tail</code> running the full 180 s timeout is a fault: flow never returned to baseline, which points at the sensor baseline having drifted rather than the machine being slow.</li>
+</ul>
+
+<p>Do not size anything from the time to baseline alone. Most of the grain in the tail arrives in the first 20–30 seconds and the rest is a long dribble carrying very little — so the useful figure is where the <strong>mass</strong> is, not where the trace finally goes flat.</p>
+
+<hr>
+
+<h2 id="figures-worth-pulling-from-every-log">Figures worth pulling from every log</h2>
+
+<table>
+<tr><th>Figure</th><th>Healthy</th><th>What a bad value means</th></tr>
+<tr><td>Average <code>PaddleHz</code></td><td>Near constant</td><td>Large swings = elevator speed changed, or paddles being missed</td></tr>
+<tr><td><code>Noise</code> per second</td><td>0</td><td>Erratic while <code>PaddleHz</code> still counts = electrical. Flat at the paddle rate with <code>PaddleHz</code> 0 = comp wire, and the log holds no data (step 1)</td></tr>
+<tr><td><code>GateRejects</code> per second <em>(M3)</em></td><td>0 to ~5</td><td>40+ sustained means something is wrong upstream</td></tr>
+<tr><td>Minimum <code>MinCycleMs</code> <em>(M3)</em></td><td>Between 75% of <code>MedianCycleMs</code> and <code>MedianCycleMs</code></td><td>Below 75% = a false cycle got through. Well above the median = paddles being merged</td></tr>
+<tr><td><code>MedianCycleMs</code> vs <code>1000 / PaddleHz</code> <em>(M3)</em></td><td>Close, and stable</td><td>Median drifting low as flow rises = gate widening under heavy grain</td></tr>
+<tr><td><code>FlowRejects</code> per second <em>(M2)</em></td><td>Low and steady</td><td>Rising = module losing track of paddle phase</td></tr>
+<tr><td>Std deviation of <code>Sensor1</code></td><td>As low as flow allows</td><td>This is how noisy the measurement actually is</td></tr>
+<tr><td><code>Sections</code> rising edge → <code>Sensor1</code> lifting</td><td>Matches the delay setting</td><td>A gap longer than the setting = delay set too short, pass starts read low</td></tr>
+<tr><td><code>Sections</code> falling edge → <code>Sensor1</code> at baseline</td><td>—</td><td>This is clean-out. Expect it far longer than the delay</td></tr>
+</table>
+
+<hr>
+
+<h2 id="four-plots-that-show-almost-everything">Four plots that show almost everything</h2>
+
+<p>Plot these against <code>PCTime</code>, stacked so they share a time axis:</p>
+
+<ol>
+<li><strong><code>PaddleHz</code></strong> — should be nearly flat</li>
+<li><strong><code>MedianCycleMs</code> with <code>MinCycleMs</code></strong> <em>(Method3)</em> — on the same axes. <code>MinCycleMs</code> should stay above 75% of <code>MedianCycleMs</code>; that 25% band is the gate's margin, and the gap between the two traces is how much of it the shortest cycle used. On Method2 plot <strong><code>FlowRate</code> with <code>Sensor1</code></strong> instead — the two channels should track each other</li>
+<li><strong><code>Sensor1</code> with <code>Sections</code>, <code>PipelineCount</code> and <code>Tail</code></strong> — the main output, and the only plot that shows what the header was doing at the time. This is the one to draw first when the map looks wrong at the headlands</li>
+<li><strong><code>GateRejects</code></strong> <em>(Method3)</em> or <strong><code>FlowRejects</code></strong> <em>(Method2)</em> — grain activity</li>
+</ol>
+
+<p>De-duplicate the 1 Hz columns first, or plots 1, 2 and 4 will show stair-steps that are an artifact of the log rate rather than anything real. Plot 3 needs no de-duplication — all four of those columns are genuinely per-row.</p>
+
+<hr>
+
+<h2 id="reporting-a-problem">Reporting a problem</h2>
+
+<p>Send the whole <code>Diag_*.csv</code> file rather than an extract, plus:</p>
+
+<ul>
+<li>what the machine was doing at the time (crop, rough time of day, stopped or moving, heavy or light flow)</li>
+<li>the module firmware version from the Settings screen</li>
+<li>which build the app is — the header row of the CSV tells you, but say it anyway</li>
+<li>what the display was showing that looked wrong</li>
+</ul>
+
+<p>The time of day is what ties the file to the event — everything else can be read out of the file itself.</p>
+
+</body>
+</html>

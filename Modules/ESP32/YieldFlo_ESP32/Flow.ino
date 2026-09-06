@@ -8,7 +8,14 @@ void IRAM_ATTR onSensorEdge()
 	if (MDL.UseCompSignal)
 	{
 		bool compHigh = digitalRead(MDL.CompPin);
-		if (mainHigh == compHigh) { NoiseCount++; return; }
+		if (mainHigh == compHigh)
+		{
+			NoiseCount++;
+			// Saturate rather than wrap: at 18 rejects/s a uint16 would roll over
+			// in an hour and drop back under the fault threshold.
+			if (CompRejectsSinceCommit < 0xFFFF) CompRejectsSinceCommit++;
+			return;
+		}
 	}
 
 	// PNP: HIGH on main = beam clear, LOW = blocked. NPN sensors are inverted.
@@ -45,6 +52,11 @@ void IRAM_ATTR onSensorEdge()
 // original micros() timestamp, so the deferred commit costs no timing accuracy.
 void IRAM_ATTR CommitEdge(bool blocked, uint32_t EdgeUs)
 {
+	// A real edge survived the whole chain, so the comp pair is doing its job.
+	// Cleared here rather than anywhere else because this is the only place that
+	// fact is known.
+	CompRejectsSinceCommit = 0;
+
 	if (blocked)
 	{
 		// Feed the period estimator first, with the raw interval since the last
@@ -206,7 +218,28 @@ void ReadFlow()
 	uint32_t wb = WinBlockedUs;  WinBlockedUs = 0;
 	uint32_t wt = WinTotalUs;    WinTotalUs = 0;
 	uint32_t lastEdge = LastEdgeUs;
+	uint16_t compRej = CompRejectsSinceCommit;
 	interrupts();
+
+	// Comp-wire fault: edges are STILL being discarded by the cross-check, and
+	// none has committed for a long time. Both halves are required. The count
+	// alone latches once the elevator stops — nothing commits and nothing
+	// rejects, so a stale count would go on asserting a fault on a parked
+	// machine. Requiring it to still be moving means this reports only while the
+	// signal is genuinely arriving, which is also why it needs no "is the machine
+	// harvesting" gate the way SensorOK does: a still elevator produces no edges
+	// and so cannot raise it.
+	//
+	// Not airtight in one case: sustained EMI with the elevator stopped and Comp
+	// correctly wired also rejects without committing. It needs the machine
+	// parked with something electrically noisy running, and it costs a warning
+	// label rather than any data, so the trade is worth it against missing a
+	// fault that silently records nothing all day.
+	static uint16_t lastCompRej = 0;
+	CompFault = MDL.UseCompSignal
+	         && (compRej > CompFaultRejects)
+	         && (compRej != lastCompRej);
+	lastCompRej = compRej;
 
 	// Sensor health: no valid edge for 500ms — elevator stopped, beam stuck or
 	// sensor missing. LastEdgeUs must only be written by the ISR: this function
