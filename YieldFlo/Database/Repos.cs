@@ -334,19 +334,52 @@ VALUES
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale)> GetAll()
+        public List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale, double sensorBaseline)> GetAll()
         {
-            var result = new List<(int, string, string, double, double, double)>();
+            var result = new List<(int, string, string, double, double, double, double)>();
             using var conn = new SQLiteConnection(_cs);
             conn.Open();
-            using var cmd = new SQLiteCommand("SELECT id, name, combine_id, temp_offset, temp_scale, moist_scale FROM profiles ORDER BY name", conn);
+            using var cmd = new SQLiteCommand("SELECT id, name, combine_id, temp_offset, temp_scale, moist_scale, sensor_baseline FROM profiles ORDER BY name", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
                 result.Add((reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
                             reader.IsDBNull(3) ? 0.0    : reader.GetDouble(3),
                             reader.IsDBNull(4) ? 0.0125 : reader.GetDouble(4),
-                            reader.IsDBNull(5) ? 0.001  : reader.GetDouble(5)));
+                            reader.IsDBNull(5) ? 0.001  : reader.GetDouble(5),
+                            reader.IsDBNull(6) ? 0.0    : reader.GetDouble(6)));
             return result;
+        }
+
+        // The sensor's zero point belongs to the machine, not the crop — see the
+        // migration note in DB.cs. The date is stamped only when the value actually
+        // moves, so "Baseline last saved" answers "when was this sensor last zeroed"
+        // rather than "when was anything on the Yield Cal form last saved": a
+        // factor-only save writes the same baseline back and must not bump it.
+        // 0.0005 is half a step of numBaseline's 3 decimal places.
+        public void UpdateSensorBaseline(int id, double baseline)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "UPDATE profiles SET sensor_baseline=@b, baseline_set_at=datetime('now') " +
+                "WHERE id=@id AND ABS(sensor_baseline - @b) > 0.0005", conn);
+            cmd.Parameters.AddWithValue("@b",  baseline);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+        }
+
+        // When this profile's baseline was last changed (local time), or null if it
+        // has never been set. Stored UTC by datetime('now'), converted here.
+        public DateTime? GetBaselineSetDate(int id)
+        {
+            using var conn = new SQLiteConnection(_cs);
+            conn.Open();
+            using var cmd = new SQLiteCommand(
+                "SELECT datetime(baseline_set_at, 'localtime') FROM profiles WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@id", id);
+            if (cmd.ExecuteScalar() is string s && DateTime.TryParse(s, out var dt))
+                return dt;
+            return null;
         }
 
         public void UpdateTempOffset(int id, double offset)
@@ -399,7 +432,7 @@ VALUES
             // Deleting a profile takes its calibration history with it — with FK
             // enforcement on, calibrations.profile_id would otherwise block this
             // delete on any profile that has ever been calibrated (the normal
-            // Save & Apply workflow), which is every profile in practice.
+            // Save workflow), which is every profile in practice.
             using (var cmd = new SQLiteCommand("DELETE FROM calibrations WHERE profile_id=@id", conn, tx))
             {
                 cmd.Parameters.AddWithValue("@id", id);

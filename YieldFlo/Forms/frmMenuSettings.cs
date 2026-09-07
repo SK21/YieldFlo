@@ -128,7 +128,7 @@ namespace YieldFlo.Forms
 
         // Reflects the CAN adapter actually running (started from previously
         // saved settings), not whatever driver/port is currently selected in
-        // the combo boxes — those only take effect after Save & Apply + restart.
+        // the combo boxes — those only take effect after Save + restart.
         private void tmrCanStatus_Tick(object sender, EventArgs e)
         {
             if (!lblCanStatus.Visible) return;

@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Zapisz</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Usuń</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Wczytaj</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Zapisz &amp;&amp; Zastosuj</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Tak</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Nie</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Włącz</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Skala:</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>Aplikacja odczytuje:</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Pomiar:</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Zastosuj kal.</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Oblicz</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Język</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Zapisz &amp;&amp; Uruchom ponownie</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>Zmiana wejdzie w życie po ponownym uruchomieniu.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Ustaw poziom bazowy</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Szum</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Łopatki</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Ostatnio zapisano:</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Punkt zerowy zapisano:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Moduł nie jest połączony.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Współczynnik plonu:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>mnożnik kalibracji — zwiększ, aby podnieść odczyty plonu</value></data>

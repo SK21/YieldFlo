@@ -360,7 +360,7 @@ li { margin: 2px 0; }
 <p>Yield calibration corrects the elevator sensor reading to match the actual mass of grain harvested. Two parameters are set here:</p>
 
 <ul>
-<li><strong>Sensor Baseline</strong> — the obstruction reading with paddles running but no grain (set once at installation)</li>
+<li><strong>Sensor Baseline</strong> — the obstruction reading with paddles running but no grain. It belongs to the machine, not the crop: it is stored on the active <strong>profile</strong> and stays put when you change crops.</li>
 <li><strong>Yield Factor</strong> — a multiplier that scales the sensor reading to match a weighed reference</li>
 </ul>
 
@@ -370,14 +370,14 @@ li { margin: 2px 0; }
 <li>Start the clean-grain elevator with no grain</li>
 <li>Open <strong>Menu &rarr; Yield Cal</strong></li>
 <li>Press <strong>Set Baseline</strong> &mdash; it samples for 5 seconds and enters the result in the <strong>Sensor Baseline</strong> field</li>
-<li>Press <strong>Save &amp; Apply</strong></li>
+<li>Press <strong>Save</strong></li>
 </ol>
 
-<p>Nothing takes effect, and nothing is saved, until <strong>Save &amp; Apply</strong> is pressed &mdash; this applies to both Set Baseline and Apply Cal.</p>
+<p>Nothing takes effect, and nothing is saved, until <strong>Save</strong> is pressed &mdash; this applies to both Set Baseline and Calculate.</p>
 
 <blockquote><strong>Tip:</strong> Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.</blockquote>
 
-<p>A baseline above 0.25 turns the <strong>Sensor Baseline</strong> field orange, and <strong>Save &amp; Apply</strong> asks for confirmation. An empty elevator should read well below this &mdash; check for grain or dirt in the elevator and run <strong>Set Baseline</strong> again. You can save the high value if you know it is correct.</p>
+<p>A baseline above 0.25 turns the <strong>Sensor Baseline</strong> field orange, and <strong>Save</strong> asks for confirmation. An empty elevator should read well below this &mdash; check for grain or dirt in the elevator and run <strong>Set Baseline</strong> again. You can save the high value if you know it is correct.</p>
 
 <h3>Noise readout</h3>
 
@@ -426,12 +426,12 @@ li { margin: 2px 0; }
 <li>Press <strong>Stop Run</strong></li>
 <li>Weigh the harvested grain</li>
 <li>Enter the actual weight in the <strong>Actual weight</strong> field</li>
-<li>Press <strong>Apply Cal</strong></li>
+<li>Press <strong>Calculate</strong></li>
 </ol>
 
-<p>YieldFlo calculates a new Yield Factor and enters it in the <strong>Yield Factor</strong> field. Press <strong>Save &amp; Apply</strong> to save it to the active profile.</p>
+<p>YieldFlo calculates a new Yield Factor and enters it in the <strong>Yield Factor</strong> field. Press <strong>Save</strong> to store it against the active profile.</p>
 
-<p>Below the <strong>Save &amp; Apply</strong> button, a <strong>Last saved</strong> line shows the date and time the calibration for the active profile and crop was last saved with <strong>Save &amp; Apply</strong>. It is blank until a calibration has been saved.</p>
+<p>Below the <strong>Save</strong> button, a <strong>Baseline last saved</strong> line shows when this profile's Sensor Baseline was last changed. Saving a Yield Factor on its own does not move it &mdash; the date answers how long ago the sensor was zeroed. It shows <strong>--</strong> until a baseline has been set.</p>
 
 <h3>Entering the weight later</h3>
 
@@ -443,11 +443,11 @@ li { margin: 2px 0; }
 
 <ul>
 <li>Pressing <strong>Start Run</strong> again discards it. You are asked first, and the prompt shows the standing total and its date.</li>
-<li>The run is saved, so it survives closing YieldFlo. If the app was closed while a run was still going, it comes back marked <strong>(interrupted)</strong> in orange — grain harvested after the time shown is missing from its total, so a factor fitted to it reads high. <strong>Apply Cal</strong> warns before using it.</li>
-<li>Changing crop or profile before the weight is entered blocks <strong>Apply Cal</strong>. The run was measured under one crop, and that is the crop its factor belongs to. Switch back to apply it.</li>
+<li>The run is saved, so it survives closing YieldFlo. If the app was closed while a run was still going, it comes back marked <strong>(interrupted)</strong> in orange — grain harvested after the time shown is missing from its total, so a factor fitted to it reads high. <strong>Calculate</strong> warns before using it.</li>
+<li>Changing crop or profile before the weight is entered blocks <strong>Calculate</strong>. The run was measured under one crop, and that is the crop its factor belongs to. Switch back to apply it.</li>
 </ul>
 
-<p>Once the factor has been saved with <strong>Save &amp; Apply</strong> the run is spent, and is cleared — the <strong>Measured</strong> line returns to blank. The Yield Factor stays as saved.</p>
+<p>Once the factor has been saved with <strong>Save</strong> the run is spent, and is cleared — the <strong>Measured</strong> line returns to blank. The Yield Factor stays as saved.</p>
 
 <h3>Whole Field Calibration</h3>
 
@@ -459,7 +459,7 @@ li { margin: 2px 0; }
 <li>Open <strong>Menu &rarr; Yield Cal</strong> and select the <strong>Whole Field Calibration</strong> tab</li>
 <li>Check the <strong>Job</strong> line — it names the job and the crop it was started under</li>
 <li>Enter the running total in <strong>Total harvested</strong></li>
-<li>Press <strong>Apply Cal</strong>, then <strong>Save &amp; Apply</strong></li>
+<li>Press <strong>Calculate</strong>, then <strong>Save</strong></li>
 </ol>
 
 <blockquote>
@@ -495,22 +495,22 @@ li { margin: 2px 0; }
 
 <p>For example: if the raw count is 420 and a certified meter reads 18.5%, set scale to 18.5 &divide; 420 &asymp; 0.044. The offset field can then be used for fine trimming against a second reference point if needed.</p>
 
-<h3>Quick calibration &mdash; Apply Cal</h3>
+<h3>Quick calibration &mdash; Calculate</h3>
 
 <ol>
 <li>Take a grain sample and measure it with a certified grain moisture meter</li>
 <li>Open <strong>Menu &rarr; Moisture Cal</strong></li>
 <li>With the module connected and grain flowing, note the <strong>App reads:</strong> value</li>
 <li>Enter the meter's reading in <strong>Meter:</strong></li>
-<li>Press <strong>Apply Cal</strong> &mdash; the <strong>Offset</strong> field is filled in for you</li>
+<li>Press <strong>Calculate</strong> &mdash; the <strong>Offset</strong> field is filled in for you</li>
 <li>Press <strong>Save</strong></li>
 </ol>
 
-<p>Temperature works the same way: enter a thermometer reading in the Temperature section's <strong>Meter:</strong> field and press its <strong>Apply Cal</strong>.</p>
+<p>Temperature works the same way: enter a thermometer reading in the Temperature section's <strong>Meter:</strong> field and press its <strong>Calculate</strong>.</p>
 
 <h3>Full calibration &mdash; scale</h3>
 
-<p>Apply Cal shifts every reading by the same amount. If the reading is correct at one moisture but wrong at another, set the scale instead:</p>
+<p>Calculate shifts every reading by the same amount. If the reading is correct at one moisture but wrong at another, set the scale instead:</p>
 
 <ol>
 <li>Set <strong>Offset</strong> to 0</li>
@@ -720,7 +720,7 @@ li { margin: 2px 0; }
 
 <h3>Saving settings</h3>
 
-<p>Press <strong>Save &amp; Apply</strong> to save and apply all settings immediately.</p>
+<p>Press <strong>Save</strong> to store all settings and put them into effect immediately.</p>
 
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>

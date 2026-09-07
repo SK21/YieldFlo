@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Mentés</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Törlés</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Betöltés</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Mentés &amp;&amp; Alkalmaz</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Igen</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Nem</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Be</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Skála:</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>App olvas:</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Mérés:</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Kal. alkalmazása</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Kiszámítás</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Nyelv</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Mentés &amp;&amp; Újraindítás</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>A módosítás újraindítás után lép életbe.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Alapérték beállítása</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Zaj</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Lapátok</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Utoljára mentve:</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Alapérték utoljára mentve:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>A modul nincs csatlakoztatva.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Hozamtényező:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibrálási szorzó — növelje a hozamleolvasások emeléséhez</value></data>

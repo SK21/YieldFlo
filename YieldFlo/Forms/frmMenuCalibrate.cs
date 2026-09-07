@@ -43,18 +43,18 @@ namespace YieldFlo.Forms
         // fraction. Compare against the FarmTrx sensor cal result (X% @ Y Hz).
         private readonly Queue<int> _hzSamples = new Queue<int>();
 
-        // True while the staged Yield Factor is the one Apply Cal computed from the
-        // standing run. Save & Apply clears the run only in that case: the same
+        // True while the staged Yield Factor is the one Calculate computed from the
+        // standing run. Save clears the run only in that case: the same
         // button also saves a baseline-only change or a hand-typed factor, and
         // neither of those has consumed the run.
         //
-        // Set AFTER Apply Cal assigns numFactor.Value, because that assignment
+        // Set AFTER Calculate assigns numFactor.Value, because that assignment
         // itself raises ValueChanged — which is what clears the flag when the
         // operator overtypes the figure by hand.
         private bool _factorFromCalRun;
 
         // Same idea for the Whole Field tab, kept separate because the two have
-        // different consequences at Save & Apply: a cal run is spent and gets
+        // different consequences at Save: a cal run is spent and gets
         // discarded, a field fit instead offers to rewrite the job's recorded
         // points so the map and total match the weight that was entered.
         private bool _factorFromFieldCal;
@@ -82,11 +82,11 @@ namespace YieldFlo.Forms
 
             // The numpad writes straight to Value, so a hand-typed baseline gets
             // the same cue as a sampled one — otherwise typing 0.5 looks normal
-            // right up until Save & Apply.
+            // right up until Save.
             numBaseline.ValueChanged += (s2, ev2) => UpdateBaselineWarning();
 
             // Any later edit to the factor — numpad, spinner, keyboard — means the
-            // staged value is no longer the one Apply Cal derived, so Save & Apply
+            // staged value is no longer the one Calculate derived, so Save
             // must not treat the run as spent.
             numFactor.ValueChanged += (s2, ev2) =>
             {
@@ -257,7 +257,7 @@ namespace YieldFlo.Forms
         }
 
         // Marks an implausible baseline where the operator is already looking,
-        // so the prompt at Save & Apply is a confirmation rather than a surprise.
+        // so the prompt at Save is a confirmation rather than a surprise.
         private void UpdateBaselineWarning()
         {
             numBaseline.ForeColor = (double)numBaseline.Value > BaselineWarnRatio
@@ -265,24 +265,27 @@ namespace YieldFlo.Forms
                 : Properties.Settings.Default.MainForeColour;
         }
 
-        // FarmTrx-style "last calibration" stamp — when the current profile/crop's
-        // calibration record was last written (Save && Apply or Apply Cal).
+        // When this machine's sensor was last zeroed. Profile-scoped, not crop-scoped,
+        // and stamped only when the baseline value actually moves — a factor-only save
+        // leaves it alone, so the date answers "how stale is my zero point" rather than
+        // "when did I last press Save". The baseline is the one calibration value that
+        // drifts on its own, as dust and grain build up on the plate.
         private void UpdateSavedLabel()
         {
-            string when = "--";   // no profile/crop active, or nothing saved for them yet
-            if (Core.ActiveProfileId > 0 && Core.ActiveCropId > 0)
+            string when = "--";   // no profile active, or the baseline has never been set
+            if (Core.ActiveProfileId > 0)
             {
-                var dt = Core.Database.Calibrations.GetLatestDate(Core.ActiveProfileId, Core.ActiveCropId);
+                var dt = Core.Database.Profiles.GetBaselineSetDate(Core.ActiveProfileId);
                 if (dt.HasValue) when = dt.Value.ToString("g");
             }
-            lblCalSaved.Text = Lang.lgLastSaved + " " + when;
+            lblCalSaved.Text = Lang.lgBaselineSaved + " " + when;
         }
 
         private void btnSaveCal_Click(object sender, EventArgs e)
         {
             // Checked here rather than at capture because this is the only point
             // both paths pass through: nothing reaches Core.Yield or the database
-            // until Save & Apply, and a value typed by hand never goes near the
+            // until Save, and a value typed by hand never goes near the
             // sampling timer.
             if ((double)numBaseline.Value > BaselineWarnRatio)
             {
@@ -301,6 +304,14 @@ namespace YieldFlo.Forms
             Properties.Settings.Default.ProcessingDelaySec = (int)numDelay.Value;
             Properties.Settings.Default.Save();
 
+            // Baseline is stored on the profile — it belongs to the sensor, not the
+            // crop. It is still written into the calibrations row as well: that row
+            // records which baseline was in force for this calibration, which is what
+            // frmYieldMap's recalculate needs to rescale points already on the map.
+            if (Core.ActiveProfileId > 0)
+                Core.Database.Profiles.UpdateSensorBaseline(
+                    Core.ActiveProfileId, (double)numBaseline.Value);
+
             if (Core.ActiveProfileId > 0 && Core.ActiveCropId > 0)
             {
                 Core.Database.Calibrations.Save(
@@ -315,7 +326,7 @@ namespace YieldFlo.Forms
             // factor is saved. Discarding it here stops a standing total — which
             // survives restarts now — from being applied a second time against the
             // factor it already corrected. Only when the saved factor is the one
-            // Apply Cal derived; a baseline-only save or a hand-typed factor leaves
+            // Calculate derived; a baseline-only save or a hand-typed factor leaves
             // the run alone.
             if (_factorFromCalRun)
             {
@@ -416,7 +427,7 @@ namespace YieldFlo.Forms
             // A run can now be applied long after it was taken, so the crop and
             // profile may have moved on in between. ComputeNewFactor scales the
             // CURRENT YieldFactor and the weight was converted with the CURRENT test
-            // weight, and Save & Apply writes to the CURRENT profile+crop — so on a
+            // weight, and Save writes to the CURRENT profile+crop — so on a
             // mismatch every one of the three is the wrong reference. Blocked rather
             // than warned: unlike a high baseline there is no reading of this where
             // the result is correct.
@@ -449,13 +460,13 @@ namespace YieldFlo.Forms
                 + $"(ratio={actualBushels / calRunBushels:F4})");
 
             // Clamp to valid range and stage in the field — nothing takes
-            // effect (Core.Yield, the database) until Save & Apply is pressed.
+            // effect (Core.Yield, the database) until Save is pressed.
             decimal clamped = (decimal)System.Math.Min((double)numFactor.Maximum,
                                System.Math.Max((double)numFactor.Minimum, newFactor));
             numFactor.Value = clamped;
 
             // After the assignment, so the ValueChanged it raises does not undo it.
-            // The run is not discarded here — it is discarded at Save & Apply, once
+            // The run is not discarded here — it is discarded at Save, once
             // the factor it produced has actually reached Core.Yield and the
             // database. Clearing at this point would throw the measurement away for
             // an operator who looked at the new figure and closed the form.
@@ -624,7 +635,7 @@ namespace YieldFlo.Forms
         /// <summary>
         /// The crop the active job was started under — deliberately the job's crop
         /// and not the active one, because the recorded total belongs to it and it
-        /// is what Save & Apply writes the factor against. Reports a mismatch so a
+        /// is what Save writes the factor against. Reports a mismatch so a
         /// mid-job crop change is visible here rather than only as a refusal after
         /// the operator has already typed a weight in.
         /// </summary>
@@ -926,7 +937,7 @@ namespace YieldFlo.Forms
             UpdateBaselineWarning();
 
             // Staged only — nothing reaches Core.Yield or the database until
-            // Save & Apply is pressed. A Calibration Run started before that
+            // Save is pressed. A Calibration Run started before that
             // still measures against the previous baseline.
             Props.ShowMessage(Lang.lgPendingSave);
         }

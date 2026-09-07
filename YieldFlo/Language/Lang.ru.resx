@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Сохранить</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Удалить</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Загрузить</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Сохранить &amp;&amp; Применить</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Да</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Нет</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Вкл</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Масштаб:</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>Приложение:</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Показания:</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Прим. калиб.</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Рассчитать</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Язык</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Сохранить &amp;&amp; Перезапустить</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>Изменение вступит в силу после перезапуска.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Установить базовое значение</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Шум</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Лопатки</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Последнее сохранение:</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Ноль датчика сохранён:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Модуль не подключен.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Коэффициент урожайности:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>калибровочный множитель — увеличьте для повышения показаний</value></data>

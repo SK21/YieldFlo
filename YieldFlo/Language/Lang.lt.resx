@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Išsaugoti</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Ištrinti</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Įkelti</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Išsaugoti &amp;&amp; Taikyti</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Taip</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Ne</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Įjungti</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Mastelis:</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>Programa skaito:</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Matavimas:</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Taikyti kal.</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Skaičiuoti</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Kalba</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Išsaugoti &amp;&amp; Paleisti iš naujo</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>Pakeitimas įsigalios po paleidimo iš naujo.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Nustatyti bazinę vertę</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Triukšmas</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Mentelės</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Paskutinį kartą išsaugota:</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Nulinė vertė išsaugota:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modulis neprijungtas.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Derliaus koeficientas:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibravimo dauginamasis — padidinkite, kad padidintumėte rodmenis</value></data>

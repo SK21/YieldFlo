@@ -289,7 +289,7 @@ Press **Import** to open a checklist of field names found in AgOpenGPS's and TWO
 
 Yield calibration corrects the elevator sensor reading to match the actual mass of grain harvested. Two parameters are set here:
 
-- **Sensor Baseline** — the obstruction reading with paddles running but no grain (set once at installation)
+- **Sensor Baseline** — the obstruction reading with paddles running but no grain. It belongs to the machine, not the crop: it is stored on the active **profile** and stays put when you change crops.
 - **Yield Factor** — a multiplier that scales the sensor reading to match a weighed reference
 
 ### Setting the baseline
@@ -297,13 +297,13 @@ Yield calibration corrects the elevator sensor reading to match the actual mass 
 1. Start the clean-grain elevator with no grain
 2. Open **Menu → Yield Cal**
 3. Press **Set Baseline** — it samples for 5 seconds and enters the result in the **Sensor Baseline** field
-4. Press **Save & Apply**
+4. Press **Save**
 
-Nothing takes effect, and nothing is saved, until **Save & Apply** is pressed — this applies to both Set Baseline and Apply Cal.
+Nothing takes effect, and nothing is saved, until **Save** is pressed — this applies to both Set Baseline and Calculate.
 
 > **Tip:** Run the empty elevator for at least 10 seconds before setting the baseline so the reading stabilises.
 
-A baseline above 0.25 turns the **Sensor Baseline** field orange, and **Save & Apply** asks for confirmation. An empty elevator should read well below this — check for grain or dirt in the elevator and run **Set Baseline** again. You can save the high value if you know it is correct.
+A baseline above 0.25 turns the **Sensor Baseline** field orange, and **Save** asks for confirmation. An empty elevator should read well below this — check for grain or dirt in the elevator and run **Set Baseline** again. You can save the high value if you know it is correct.
 
 ### Noise readout
 
@@ -350,11 +350,11 @@ A calibration pass measures the actual mass of grain harvested during a known ru
 4. Press **Stop Run**
 5. Weigh the harvested grain
 6. Enter the actual weight in the **Actual weight** field
-7. Press **Apply Cal**
+7. Press **Calculate**
 
-YieldFlo calculates a new Yield Factor and enters it in the **Yield Factor** field. Press **Save & Apply** to save it to the active profile.
+YieldFlo calculates a new Yield Factor and enters it in the **Yield Factor** field. Press **Save** to store it against the active profile.
 
-Below the **Save & Apply** button, a **Last saved** line shows the date and time the calibration for the active profile and crop was last saved with **Save & Apply**. It is blank until a calibration has been saved.
+Below the **Save** button, a **Baseline last saved** line shows when this profile's Sensor Baseline was last changed. Saving a Yield Factor on its own does not move it — the date answers how long ago the sensor was zeroed. It shows **--** until a baseline has been set.
 
 ### Entering the weight later
 
@@ -365,10 +365,10 @@ The **Measured** line carries the date and time the run was stopped, so a total 
 While a run is waiting for its weight:
 
 - Pressing **Start Run** again discards it. You are asked first, and the prompt shows the standing total and its date.
-- The run is saved, so it survives closing YieldFlo. If the app was closed while a run was still going, it comes back marked **(interrupted)** in orange — grain harvested after the time shown is missing from its total, so a factor fitted to it reads high. **Apply Cal** warns before using it.
-- Changing crop or profile before the weight is entered blocks **Apply Cal**. The run was measured under one crop, and that is the crop its factor belongs to. Switch back to apply it.
+- The run is saved, so it survives closing YieldFlo. If the app was closed while a run was still going, it comes back marked **(interrupted)** in orange — grain harvested after the time shown is missing from its total, so a factor fitted to it reads high. **Calculate** warns before using it.
+- Changing crop or profile before the weight is entered blocks **Calculate**. The run was measured under one crop, and that is the crop its factor belongs to. Switch back to apply it.
 
-Once the factor has been saved with **Save & Apply** the run is spent, and is cleared — the **Measured** line returns to blank. The Yield Factor stays as saved.
+Once the factor has been saved with **Save** the run is spent, and is cleared — the **Measured** line returns to blank. The Yield Factor stays as saved.
 
 ### Whole Field Calibration
 
@@ -379,7 +379,7 @@ It is not only an end-of-field operation. The job total accumulates continuously
 1. Open **Menu → Yield Cal** and select the **Whole Field Calibration** tab
 2. Check the **Job** line — it names the job and the crop it was started under
 3. Enter the running total in **Total harvested**
-4. Press **Apply Cal**, then **Save & Apply**
+4. Press **Calculate**, then **Save**
 
 > **Enter the cumulative total** — everything hauled off this job so far, not just the latest load. A single load fits a factor several times too small, and nothing in the result would reveal it.
 
@@ -415,20 +415,20 @@ scale = known_value / raw_count
 
 For example: if the raw count is 420 and a certified meter reads 18.5%, set scale to 18.5 ÷ 420 ≈ 0.044. The offset field can then be used for fine trimming against a second reference point if needed.
 
-### Quick calibration — Apply Cal
+### Quick calibration — Calculate
 
 1. Take a grain sample and measure it with a certified grain moisture meter
 2. Open **Menu → Moisture Cal**
 3. With the module connected and grain flowing, note the **App reads:** value
 4. Enter the meter's reading in **Meter:**
-5. Press **Apply Cal** — the **Offset** field is filled in for you
+5. Press **Calculate** — the **Offset** field is filled in for you
 6. Press **Save**
 
-Temperature works the same way: enter a thermometer reading in the Temperature section's **Meter:** field and press its **Apply Cal**.
+Temperature works the same way: enter a thermometer reading in the Temperature section's **Meter:** field and press its **Calculate**.
 
 ### Full calibration — scale
 
-Apply Cal shifts every reading by the same amount. If the reading is correct at one moisture but wrong at another, set the scale instead:
+Calculate shifts every reading by the same amount. If the reading is correct at one moisture but wrong at another, set the scale instead:
 
 1. Set **Offset** to 0
 2. With grain flowing, adjust **%/count** until the displayed reading matches the meter
@@ -619,7 +619,7 @@ When enabled, YieldFlo automatically reloads the active job when the app starts.
 
 ### Saving settings
 
-Press **Save & Apply** to save and apply all settings immediately.
+Press **Save** to store all settings and put them into effect immediately.
 
 ---
 

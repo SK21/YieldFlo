@@ -69,7 +69,9 @@ CREATE TABLE IF NOT EXISTS profiles (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     name        TEXT    NOT NULL,
     combine_id  TEXT    NOT NULL DEFAULT '',
-    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
+    sensor_baseline REAL    NOT NULL DEFAULT 0,
+    baseline_set_at  TEXT
 );
 
 CREATE TABLE IF NOT EXISTS crops (
@@ -216,6 +218,35 @@ CREATE INDEX IF NOT EXISTS idx_yield_data_job ON yield_data(job_id);
                 using var cmd = new SQLiteCommand(
                     "ALTER TABLE yield_data ADD COLUMN gate_rejects INTEGER NOT NULL DEFAULT -1;", conn);
                 cmd.ExecuteNonQuery();
+            }
+            catch { }
+
+            // Sensor baseline moved from calibrations (per profile+crop) to profiles
+            // (per machine): it is the sensor's zero point and does not depend on the
+            // crop flowing over the plate. The backfill sits inside the same try as
+            // the ALTER, so it runs exactly once — on the release that adds the
+            // column — and never overwrites a baseline set since.
+            //
+            // Each profile is seeded from its most recent calibration row: that row is
+            // where the live baseline was coming from before this change, and its date
+            // is genuinely when that value was last written.
+            try
+            {
+                using (var cmd = new SQLiteCommand(
+                    "ALTER TABLE profiles ADD COLUMN sensor_baseline REAL NOT NULL DEFAULT 0;", conn))
+                    cmd.ExecuteNonQuery();
+                using (var cmd = new SQLiteCommand(
+                    "ALTER TABLE profiles ADD COLUMN baseline_set_at TEXT;", conn))
+                    cmd.ExecuteNonQuery();
+                using (var cmd = new SQLiteCommand(@"
+UPDATE profiles SET
+    sensor_baseline = COALESCE((SELECT c.sensor_baseline FROM calibrations c
+                                WHERE c.profile_id = profiles.id
+                                ORDER BY c.id DESC LIMIT 1), 0),
+    baseline_set_at =           (SELECT c.calibrated_at   FROM calibrations c
+                                WHERE c.profile_id = profiles.id
+                                ORDER BY c.id DESC LIMIT 1);", conn))
+                    cmd.ExecuteNonQuery();
             }
             catch { }
         }

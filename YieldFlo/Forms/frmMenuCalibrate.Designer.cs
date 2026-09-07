@@ -118,7 +118,7 @@ namespace YieldFlo.Forms
             // 
             this.tabCal.Controls.Add(this.tabCalRun);
             this.tabCal.Controls.Add(this.tabFieldCal);
-            this.tabCal.Location = new System.Drawing.Point(4, 297);
+            this.tabCal.Location = new System.Drawing.Point(4, 324);
             this.tabCal.Name = "tabCal";
             this.tabCal.SelectedIndex = 0;
             this.tabCal.Size = new System.Drawing.Size(574, 157);
@@ -182,7 +182,7 @@ namespace YieldFlo.Forms
             this.btnApplyFactor.Name = "btnApplyFactor";
             this.btnApplyFactor.Size = new System.Drawing.Size(162, 40);
             this.btnApplyFactor.TabIndex = 20;
-            this.btnApplyFactor.Text = global::YieldFlo.Language.Lang.lgApplyCal;
+            this.btnApplyFactor.Text = global::YieldFlo.Language.Lang.lgCalculate;
             this.btnApplyFactor.Click += new System.EventHandler(this.btnApplyFactor_Click);
             // 
             // btnActualUnit
@@ -274,7 +274,7 @@ namespace YieldFlo.Forms
             this.btnApplyField.Name = "btnApplyField";
             this.btnApplyField.Size = new System.Drawing.Size(162, 40);
             this.btnApplyField.TabIndex = 25;
-            this.btnApplyField.Text = global::YieldFlo.Language.Lang.lgApplyCal;
+            this.btnApplyField.Text = global::YieldFlo.Language.Lang.lgCalculate;
             this.btnApplyField.Click += new System.EventHandler(this.btnApplyField_Click);
             // 
             // btnFieldUnit
@@ -314,7 +314,7 @@ namespace YieldFlo.Forms
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.panel2.Location = new System.Drawing.Point(4, 456);
+            this.panel2.Location = new System.Drawing.Point(4, 487);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(572, 1);
             this.panel2.TabIndex = 27;
@@ -322,7 +322,7 @@ namespace YieldFlo.Forms
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.panel1.Location = new System.Drawing.Point(4, 217);
+            this.panel1.Location = new System.Drawing.Point(4, 244);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(572, 1);
             this.panel1.TabIndex = 26;
@@ -425,7 +425,7 @@ namespace YieldFlo.Forms
             // lblFactor
             // 
             this.lblFactor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.lblFactor.Location = new System.Drawing.Point(8, 230);
+            this.lblFactor.Location = new System.Drawing.Point(8, 257);
             this.lblFactor.Name = "lblFactor";
             this.lblFactor.Size = new System.Drawing.Size(220, 32);
             this.lblFactor.TabIndex = 7;
@@ -440,7 +440,7 @@ namespace YieldFlo.Forms
             0,
             0,
             131072});
-            this.numFactor.Location = new System.Drawing.Point(236, 232);
+            this.numFactor.Location = new System.Drawing.Point(236, 259);
             this.numFactor.Minimum = new decimal(new int[] {
             1,
             0,
@@ -460,7 +460,7 @@ namespace YieldFlo.Forms
             this.lblFactorNote.AutoSize = true;
             this.lblFactorNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.lblFactorNote.ForeColor = System.Drawing.Color.Silver;
-            this.lblFactorNote.Location = new System.Drawing.Point(8, 268);
+            this.lblFactorNote.Location = new System.Drawing.Point(8, 295);
             this.lblFactorNote.Name = "lblFactorNote";
             this.lblFactorNote.Size = new System.Drawing.Size(356, 18);
             this.lblFactorNote.TabIndex = 9;
@@ -472,18 +472,18 @@ namespace YieldFlo.Forms
             this.btnSaveCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSaveCal.Location = new System.Drawing.Point(8, 496);
             this.btnSaveCal.Name = "btnSaveCal";
-            this.btnSaveCal.Size = new System.Drawing.Size(220, 44);
+            this.btnSaveCal.Size = new System.Drawing.Size(130, 44);
             this.btnSaveCal.TabIndex = 10;
-            this.btnSaveCal.Text = global::YieldFlo.Language.Lang.lgSaveApply;
+            this.btnSaveCal.Text = global::YieldFlo.Language.Lang.lgSave;
             this.btnSaveCal.Click += new System.EventHandler(this.btnSaveCal_Click);
             // 
             // btnCalClose
             // 
             this.btnCalClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnCalClose.Location = new System.Drawing.Point(432, 496);
+            this.btnCalClose.Location = new System.Drawing.Point(442, 496);
             this.btnCalClose.Name = "btnCalClose";
-            this.btnCalClose.Size = new System.Drawing.Size(140, 44);
+            this.btnCalClose.Size = new System.Drawing.Size(130, 44);
             this.btnCalClose.TabIndex = 11;
             this.btnCalClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnCalClose.Click += new System.EventHandler(this.btnCalClose_Click);
@@ -525,7 +525,7 @@ namespace YieldFlo.Forms
             // 
             this.lblCalSaved.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.lblCalSaved.ForeColor = System.Drawing.Color.Silver;
-            this.lblCalSaved.Location = new System.Drawing.Point(9, 466);
+            this.lblCalSaved.Location = new System.Drawing.Point(9, 219);
             this.lblCalSaved.Name = "lblCalSaved";
             this.lblCalSaved.Size = new System.Drawing.Size(560, 20);
             this.lblCalSaved.TabIndex = 24;

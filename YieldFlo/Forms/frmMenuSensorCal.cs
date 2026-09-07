@@ -13,7 +13,7 @@ namespace YieldFlo.Forms
         private Point _dragStart;
 
         private List<(int id, string name, string category, double testWeight, double marketMoisture, double dryMoisture, double moistureOffset)> _crops;
-        private List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale)> _profiles;
+        private List<(int id, string name, string combineId, double tempOffset, double tempScale, double moistScale, double sensorBaseline)> _profiles;
 
         private int _selectedCropId    = -1;
         private int _selectedProfileId = -1;

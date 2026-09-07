@@ -34,7 +34,6 @@ namespace YieldFlo.Language
         internal static string lgSave           => Get("lgSave");
         internal static string lgDelete         => Get("lgDelete");
         internal static string lgLoad           => Get("lgLoad");
-        internal static string lgSaveApply      => Get("lgSaveApply");
         internal static string lgYes            => Get("lgYes");
         internal static string lgNo             => Get("lgNo");
         internal static string lgOn             => Get("lgOn");
@@ -50,7 +49,7 @@ namespace YieldFlo.Language
         internal static string lgScale          => Get("lgScale");
         internal static string lgAppReads       => Get("lgAppReads");
         internal static string lgMeter          => Get("lgMeter");
-        internal static string lgApplyCal       => Get("lgApplyCal");
+        internal static string lgCalculate      => Get("lgCalculate");
         internal static string lgLanguage       => Get("lgLanguage");
         internal static string lgRestart        => Get("lgRestart");
         internal static string lgLangNote       => Get("lgLangNote");
@@ -125,7 +124,7 @@ namespace YieldFlo.Language
         internal static string lgBaselineNoModule   => Get("lgBaselineNoModule");
         internal static string lgNoise              => Get("lgNoise");
         internal static string lgPaddles            => Get("lgPaddles");
-        internal static string lgLastSaved          => Get("lgLastSaved");
+        internal static string lgBaselineSaved          => Get("lgBaselineSaved");
         internal static string lgYieldFactor        => Get("lgYieldFactor");
         internal static string lgFactorNote         => Get("lgFactorNote");
         internal static string lgCalibrationRun     => Get("lgCalibrationRun");

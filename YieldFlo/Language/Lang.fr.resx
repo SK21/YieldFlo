@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Enregistrer</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Supprimer</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Charger</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Enregistrer &amp;&amp; Appliquer</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Oui</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Non</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Activé</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Échelle :</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>App lit :</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Mesure :</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Appliquer cal.</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Calculer</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Langue</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Enregistrer &amp;&amp; Redémarrer</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>La modification prendra effet après le redémarrage.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Définir la référence</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Bruit</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Palettes</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Dernier enregistrement :</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Référence enregistrée le :</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module non connecté.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Facteur de rendement :</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>multiplicateur de calibration — augmenter pour hausser les lectures</value></data>

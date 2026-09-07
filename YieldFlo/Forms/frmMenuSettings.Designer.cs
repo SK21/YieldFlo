@@ -307,9 +307,9 @@ namespace YieldFlo.Forms
             this.btnSaveSettings.ForeColor = System.Drawing.Color.White;
             this.btnSaveSettings.Location = new System.Drawing.Point(8, 364);
             this.btnSaveSettings.Name = "btnSaveSettings";
-            this.btnSaveSettings.Size = new System.Drawing.Size(260, 48);
+            this.btnSaveSettings.Size = new System.Drawing.Size(130, 44);
             this.btnSaveSettings.TabIndex = 18;
-            this.btnSaveSettings.Text = global::YieldFlo.Language.Lang.lgSaveApply;
+            this.btnSaveSettings.Text = global::YieldFlo.Language.Lang.lgSave;
             this.btnSaveSettings.UseVisualStyleBackColor = false;
             this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
             // 
@@ -319,9 +319,9 @@ namespace YieldFlo.Forms
             this.btnSettingsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettingsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSettingsClose.ForeColor = System.Drawing.Color.White;
-            this.btnSettingsClose.Location = new System.Drawing.Point(372, 364);
+            this.btnSettingsClose.Location = new System.Drawing.Point(422, 364);
             this.btnSettingsClose.Name = "btnSettingsClose";
-            this.btnSettingsClose.Size = new System.Drawing.Size(180, 48);
+            this.btnSettingsClose.Size = new System.Drawing.Size(130, 44);
             this.btnSettingsClose.TabIndex = 19;
             this.btnSettingsClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnSettingsClose.UseVisualStyleBackColor = false;

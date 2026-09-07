@@ -159,7 +159,7 @@ namespace YieldFlo.Classes
         /// Computes a corrected YieldFactor from the actual weighed mass.
         /// actualBushels must be in internal bushels (already converted from display unit).
         /// Pure calculation — does not change YieldFactor; the caller decides
-        /// whether/when to apply the result (Save & Apply).
+        /// whether/when to apply the result (Save).
         /// </summary>
         public double ComputeNewFactor(double actualBushels)
         {

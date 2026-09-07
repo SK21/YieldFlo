@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Speichern</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Löschen</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Laden</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Speichern &amp;&amp; Anwenden</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Ja</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Nein</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Ein</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Skalierung:</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>App liest:</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Messung:</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Kal. anwenden</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Berechnen</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Sprache</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Speichern &amp;&amp; Neu starten</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>Änderung tritt nach dem Neustart in Kraft.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Grundwert setzen</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Rauschen</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Paddel</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Zuletzt gespeichert:</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Nullpunkt zuletzt gespeichert:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Modul nicht verbunden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Ertragsfaktor:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>Kalibrierungsmultiplikator — erhöhen um Ertragswerte anzuheben</value></data>

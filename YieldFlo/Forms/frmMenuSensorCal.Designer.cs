@@ -84,9 +84,9 @@ namespace YieldFlo.Forms
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Moisture Cal";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // pnlContent
-            //
+            // 
             this.pnlContent.Controls.Add(this.lblCropLbl);
             this.pnlContent.Controls.Add(this.cboCrop);
             this.pnlContent.Controls.Add(this.lblProfileLbl);
@@ -249,7 +249,7 @@ namespace YieldFlo.Forms
             this.btnApplyMoist.Name = "btnApplyMoist";
             this.btnApplyMoist.Size = new System.Drawing.Size(140, 40);
             this.btnApplyMoist.TabIndex = 11;
-            this.btnApplyMoist.Text = global::YieldFlo.Language.Lang.lgApplyCal;
+            this.btnApplyMoist.Text = global::YieldFlo.Language.Lang.lgCalculate;
             this.btnApplyMoist.Click += new System.EventHandler(this.btnApplyMoist_Click);
             // 
             // lblMoistOffset
@@ -436,7 +436,7 @@ namespace YieldFlo.Forms
             this.btnApplyTemp.Name = "btnApplyTemp";
             this.btnApplyTemp.Size = new System.Drawing.Size(140, 40);
             this.btnApplyTemp.TabIndex = 25;
-            this.btnApplyTemp.Text = global::YieldFlo.Language.Lang.lgApplyCal;
+            this.btnApplyTemp.Text = global::YieldFlo.Language.Lang.lgCalculate;
             this.btnApplyTemp.Click += new System.EventHandler(this.btnApplyTemp_Click);
             // 
             // lblTempOffset
@@ -544,7 +544,7 @@ namespace YieldFlo.Forms
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSave.Location = new System.Drawing.Point(8, 450);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(220, 48);
+            this.btnSave.Size = new System.Drawing.Size(130, 44);
             this.btnSave.TabIndex = 33;
             this.btnSave.Text = global::YieldFlo.Language.Lang.lgSave;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -553,9 +553,9 @@ namespace YieldFlo.Forms
             // 
             this.btnSCClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSCClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnSCClose.Location = new System.Drawing.Point(430, 450);
+            this.btnSCClose.Location = new System.Drawing.Point(440, 450);
             this.btnSCClose.Name = "btnSCClose";
-            this.btnSCClose.Size = new System.Drawing.Size(140, 48);
+            this.btnSCClose.Size = new System.Drawing.Size(130, 44);
             this.btnSCClose.TabIndex = 34;
             this.btnSCClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnSCClose.Click += new System.EventHandler(this.btnSCClose_Click);

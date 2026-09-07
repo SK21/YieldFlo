@@ -338,13 +338,16 @@ namespace YieldFlo.Classes
                 ActiveTempOffset  = p.tempOffset;
                 ActiveTempScale   = p.tempScale  > 0 ? p.tempScale  : 0.0125;
                 ActiveMoistScale  = p.moistScale > 0 ? p.moistScale : 0.001;
+                // Baseline is a property of the sensor, so it loads with the profile
+                // and survives a crop change — the plate's zero point does not care
+                // what is flowing over it.
+                Yield.SensorBaseline = p.sensorBaseline;
                 break;
             }
 
             if (profileId > 0 && cropId > 0)
             {
                 var cal = Database.Calibrations.GetLatest(profileId, cropId);
-                Yield.SensorBaseline     = cal.baseline;
                 Yield.YieldFactor        = cal.yieldFactor;
                 Yield.ProcessingDelaySec = cal.delaySec > 0
                     ? cal.delaySec

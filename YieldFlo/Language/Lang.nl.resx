@@ -16,7 +16,6 @@
   <data name="lgSave"      xml:space="preserve"><value>Opslaan</value></data>
   <data name="lgDelete"    xml:space="preserve"><value>Verwijderen</value></data>
   <data name="lgLoad"      xml:space="preserve"><value>Laden</value></data>
-  <data name="lgSaveApply" xml:space="preserve"><value>Opslaan &amp;&amp; Toepassen</value></data>
   <data name="lgYes"       xml:space="preserve"><value>Ja</value></data>
   <data name="lgNo"        xml:space="preserve"><value>Nee</value></data>
   <data name="lgOn"        xml:space="preserve"><value>Aan</value></data>
@@ -32,7 +31,7 @@
   <data name="lgScale"     xml:space="preserve"><value>Schaal:</value></data>
   <data name="lgAppReads"  xml:space="preserve"><value>App leest:</value></data>
   <data name="lgMeter"     xml:space="preserve"><value>Meting:</value></data>
-  <data name="lgApplyCal"  xml:space="preserve"><value>Kal. toepassen</value></data>
+  <data name="lgCalculate" xml:space="preserve"><value>Berekenen</value></data>
   <data name="lgLanguage"  xml:space="preserve"><value>Taal</value></data>
   <data name="lgRestart"   xml:space="preserve"><value>Opslaan &amp;&amp; Herstarten</value></data>
   <data name="lgLangNote"  xml:space="preserve"><value>Wijziging wordt van kracht na herstart.</value></data>
@@ -107,7 +106,7 @@
   <data name="lgSetBaseline"        xml:space="preserve"><value>Basiswaarde instellen</value></data>
   <data name="lgNoise"              xml:space="preserve"><value>Ruis</value></data>
   <data name="lgPaddles"            xml:space="preserve"><value>Schoepen</value></data>
-  <data name="lgLastSaved"          xml:space="preserve"><value>Laatst opgeslagen:</value></data>
+  <data name="lgBaselineSaved"  xml:space="preserve"><value>Nulpunt laatst opgeslagen:</value></data>
   <data name="lgBaselineNoModule"   xml:space="preserve"><value>Module niet verbonden.</value></data>
   <data name="lgYieldFactor"        xml:space="preserve"><value>Opbrengstfactor:</value></data>
   <data name="lgFactorNote"         xml:space="preserve"><value>kalibratiemultiplicator — vergroot om opbrengstlezingen te verhogen</value></data>
