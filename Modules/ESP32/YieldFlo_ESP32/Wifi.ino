@@ -206,8 +206,22 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
 {
 	Serial.print("Network IP: ");
 	Serial.println(WiFi.localIP());
+
+	// Broadcast address comes from the mask the network actually handed out, not
+	// from assuming the last octet is 255. That assumption is right on every /24
+	// shed router and wrong on an iPhone hotspot: iOS tethering is 172.20.10.0/28,
+	// so the broadcast is 172.20.10.15 and anything aimed at .255 leaves the
+	// subnet and is dropped. The module reported itself connected while the app
+	// never saw a packet — no error anywhere, just an orange indicator.
 	IPAddress Wifi_LocalIP = WiFi.localIP();
-	Wifi_DestinationIP = IPAddress(Wifi_LocalIP[0], Wifi_LocalIP[1], Wifi_LocalIP[2], 255);
+	IPAddress Wifi_Mask = WiFi.subnetMask();
+	Wifi_DestinationIP = IPAddress(
+		Wifi_LocalIP[0] | (uint8_t)~Wifi_Mask[0],
+		Wifi_LocalIP[1] | (uint8_t)~Wifi_Mask[1],
+		Wifi_LocalIP[2] | (uint8_t)~Wifi_Mask[2],
+		Wifi_LocalIP[3] | (uint8_t)~Wifi_Mask[3]);
+	Serial.print("Broadcasting to: ");
+	Serial.println(Wifi_DestinationIP);
 
 	StaConnected = true;
 	StaFailCount = 0;
