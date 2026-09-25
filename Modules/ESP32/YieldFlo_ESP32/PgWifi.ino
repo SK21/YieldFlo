@@ -173,11 +173,14 @@ String GetPageWifi()
 
     st += "<tr>";
     st += "  <td class='label-col'>Network</td>";
-    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='prop1' value='" + HtmlEscape(ssidValue) + "'></div></td>";
+    // maxlength matches the stored field exactly. Without it the browser accepts
+    // more than the module can keep and toCharArray() drops the rest without
+    // saying so, which reads back as the router refusing a correct password.
+    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' maxlength='" + String(sizeof(MDL.SSID) - 1) + "' name='prop1' value='" + HtmlEscape(ssidValue) + "'></div></td>";
     st += "</tr>";
     st += "<tr>";
     st += "  <td class='label-col'>Password</td>";
-    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='prop2' value='" + HtmlEscape(String(MDL.Password)) + "'></div></td>";
+    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' maxlength='" + String(sizeof(MDL.Password) - 1) + "' name='prop2' value='" + HtmlEscape(String(MDL.Password)) + "'></div></td>";
     st += "</tr>";
     st += "<tr>";
     st += "  <td class='label-col'>Use this Network</td>";
@@ -192,7 +195,7 @@ String GetPageWifi()
     st += "<tr><td colspan='2' style='text-align:center; padding:0;'><h1 class='subhead'>Hotspot</h1></td></tr>";
     st += "<tr>";
     st += "  <td class='label-col'>Password</td>";
-    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' name='prop3' value='" + HtmlEscape(String(MDL.APpassword)) + "'></div></td>";
+    st += "  <td class='input-col'><div class='control-width'><input class='InputCell' maxlength='10' name='prop3' value='" + HtmlEscape(String(MDL.APpassword)) + "'></div></td>";
     st += "</tr>";
     st += "<tr><td colspan='2'><div class='control-width'><div class='hint'>Module access point. Use 8-10 characters. Leave empty for an open hotspot.</div></div></td></tr>";
 

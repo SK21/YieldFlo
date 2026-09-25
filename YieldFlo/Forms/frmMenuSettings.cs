@@ -118,6 +118,7 @@ namespace YieldFlo.Forms
         private void UpdateNetworkControls(bool isWifi)
         {
             lblWifiInfo.Visible = isWifi;
+            btnWifiSetup.Visible = isWifi;
             lblCanDriver.Visible = !isWifi;
             cbCanDriver.Visible = !isWifi;
             lblCanPort.Visible = !isWifi;
@@ -137,6 +138,11 @@ namespace YieldFlo.Forms
             lblCanStatus.Text = "Adapter: " + (connected ? "Connected" : "Not Connected");
             lblCanStatus.ForeColor = connected ? OkabeIto.BluishGreen : OkabeIto.Vermillion;
         }
+
+        // Not modal: this form is TopMost, and a modal child of a TopMost form is the
+        // arrangement that has caused z-order trouble here before. FormManager keeps
+        // one instance, which is enough.
+        private void btnWifiSetup_Click(object sender, EventArgs e) => FormManager.ShowForm(new frmWifiSetup());
 
         private void btnRescanPorts_Click(object sender, EventArgs e)
         {

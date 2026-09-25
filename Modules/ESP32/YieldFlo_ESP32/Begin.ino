@@ -326,11 +326,14 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
-	strncpy(MDL.APname, "YieldFlo_ESP32", ModStringLengths);
-	strncpy(MDL.APpassword, "", ModStringLengths);
+	// sizeof rather than a named length: the station fields and the AP fields no
+	// longer share one size, and a constant named here that does not match the
+	// field it fills is how a buffer gets overrun on the next widening.
+	strncpy(MDL.APname, "YieldFlo_ESP32", sizeof(MDL.APname));
+	strncpy(MDL.APpassword, "", sizeof(MDL.APpassword));
 	MDL.WifiModeUseStation = false;
-	strncpy(MDL.SSID, "Tractor", ModStringLengths);
-	strncpy(MDL.Password, "111222333", ModStringLengths);
+	strncpy(MDL.SSID, "Tractor", sizeof(MDL.SSID));
+	strncpy(MDL.Password, "111222333", sizeof(MDL.Password));
 	MDL.ADS1115Enabled = true;
 	MDL.RPMpin = 35;
 	MDL.CompPin = 32;

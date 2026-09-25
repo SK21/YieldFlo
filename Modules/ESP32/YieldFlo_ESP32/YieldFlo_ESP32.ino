@@ -20,8 +20,8 @@
 
 // YieldFlo module, board: DOIT ESP32 DEVKIT V1
 #define InoDescription "YieldFlo_ESP32"
-#define InoID 22096         // firmware version — update with every build (DDMMY format)
-#define StructVersion 5     // EEPROM layout version — increment ONLY when ModuleData fields change
+#define InoID 25096         // firmware version — update with every build (DDMMY format)
+#define StructVersion 6     // EEPROM layout version — increment ONLY when ModuleData fields change
 
 // Comm modes
 const uint8_t CommModeWifi = 0;
@@ -29,8 +29,19 @@ const uint8_t CommModeCan = 1;
 const uint8_t CommModeEth = 2;
 
 const uint8_t NC = 0xFF;		// Pin not connected
-const uint8_t ModStringLengths = 15;
-const uint16_t EEPROM_SIZE = 512;
+const uint8_t ModStringLengths = 15;	// AP name, AP password
+
+// Station credentials are sized to the standard's own limits rather than to a
+// convenient round number. Both were ModStringLengths until 2026-09-25, which
+// capped them at 14 characters — and HandleWifiSettings() stores them with
+// toCharArray(), which truncates in silence. So a correct 18-character passphrase
+// was kept as 14, the router refused it, and the portal reported "Password
+// refused" about a password that was right. Widening these is what forced
+// StructVersion 6, which also resets every other stored setting.
+const uint8_t StaSsidLength = 33;	// 32-byte SSID + terminator
+const uint8_t StaPassLength = 64;	// 63-character WPA passphrase + terminator
+
+const uint16_t EEPROM_SIZE = 512;	// unused — EEPROM.begin(256) in Begin.ino is the real size
 const int16_t ADS1115_Address = 0x48;
 
 // analog
@@ -179,8 +190,8 @@ struct ModuleConfig
 	char APname[ModStringLengths] = "YieldFlo_ESP32";
 	char APpassword[ModStringLengths] = "";
 	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station
-	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-	char Password[ModStringLengths] = "111222333";
+	char SSID[StaSsidLength] = "Tractor";			// name of network ESP32 connects to
+	char Password[StaPassLength] = "111222333";
 	bool ADS1115Enabled = true;
 	uint8_t RPMpin = 35;
 	uint8_t CompPin = 32;	// complementary PNP signal from light sensor

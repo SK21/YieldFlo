@@ -35,6 +35,12 @@
     </Content>
   </ItemGroup>
 
+  <!-- Framework references not implied by the SDK. System.Security carries
+       ProtectedData (DPAPI), used to store the WiFi passphrase encrypted. -->
+  <ItemGroup>
+    <Reference Include="System.Security" />
+  </ItemGroup>
+
   <!-- NuGet packages -->
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119.0" />

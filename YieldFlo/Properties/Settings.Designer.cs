@@ -272,5 +272,33 @@ namespace YieldFlo.Properties
             get { return ((string)(this["ImperialMassUnit"])); }
             set { this["ImperialMassUnit"] = value; }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WifiHomeSsid
+        {
+            get { return ((string)(this["WifiHomeSsid"])); }
+            set { this["WifiHomeSsid"] = value; }
+        }
+
+        // DPAPI ciphertext, base64 — see WifiStore. Never a readable password.
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WifiHomeKey
+        {
+            get { return ((string)(this["WifiHomeKey"])); }
+            set { this["WifiHomeKey"] = value; }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WifiModuleKey
+        {
+            get { return ((string)(this["WifiModuleKey"])); }
+            set { this["WifiModuleKey"] = value; }
+        }
     }
 }

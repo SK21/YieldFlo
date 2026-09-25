@@ -21,6 +21,7 @@ namespace YieldFlo.Forms
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.lblWifiInfo = new System.Windows.Forms.Label();
+            this.btnWifiSetup = new System.Windows.Forms.Button();
             this.lblUnits = new System.Windows.Forms.Label();
             this.btnImperial = new System.Windows.Forms.Button();
             this.btnMetric = new System.Windows.Forms.Button();
@@ -69,6 +70,7 @@ namespace YieldFlo.Forms
             //
             this.pnlContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.pnlContent.Controls.Add(this.lblWifiInfo);
+            this.pnlContent.Controls.Add(this.btnWifiSetup);
             this.pnlContent.Controls.Add(this.lblUnits);
             this.pnlContent.Controls.Add(this.btnImperial);
             this.pnlContent.Controls.Add(this.btnMetric);
@@ -96,14 +98,25 @@ namespace YieldFlo.Forms
             // 
             this.lblWifiInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.lblWifiInfo.ForeColor = System.Drawing.Color.Silver;
-            this.lblWifiInfo.Location = new System.Drawing.Point(8, 190);
+            this.lblWifiInfo.Location = new System.Drawing.Point(8, 186);
             this.lblWifiInfo.Name = "lblWifiInfo";
-            this.lblWifiInfo.Size = new System.Drawing.Size(544, 72);
+            this.lblWifiInfo.Size = new System.Drawing.Size(544, 44);
             this.lblWifiInfo.TabIndex = 9;
-            this.lblWifiInfo.Text = "Connect the PC to the module\'s WiFi access point, a WiFi network, or by wired Eth" +
-    "ernet (W5500). Module setup page: http://192.168.200.1 (via the module\'s access " +
-    "point).";
+            this.lblWifiInfo.Text = "Connect the PC to the module\'s access point, a WiFi network, or wired Ethernet (W5" +
+    "500). The module\'s own page is at http://192.168.200.1 on its access point.";
             this.lblWifiInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // btnWifiSetup
+            //
+            this.btnWifiSetup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnWifiSetup.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnWifiSetup.Location = new System.Drawing.Point(8, 232);
+            this.btnWifiSetup.Name = "btnWifiSetup";
+            this.btnWifiSetup.Size = new System.Drawing.Size(340, 40);
+            this.btnWifiSetup.TabIndex = 10;
+            this.btnWifiSetup.Text = "Set Up Module WiFi";
+            this.btnWifiSetup.UseVisualStyleBackColor = false;
+            this.btnWifiSetup.Click += new System.EventHandler(this.btnWifiSetup_Click);
             // 
             // lblUnits
             // 
@@ -358,6 +371,7 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button   btnEthernet;
         private System.Windows.Forms.Button   btnCAN;
         private System.Windows.Forms.Label    lblWifiInfo;
+        private System.Windows.Forms.Button   btnWifiSetup;
         private System.Windows.Forms.Label    lblCanDriver;
         private System.Windows.Forms.ComboBox cbCanDriver;
         private System.Windows.Forms.Label    lblCanPort;
