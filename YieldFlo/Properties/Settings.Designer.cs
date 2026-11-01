@@ -300,5 +300,15 @@ namespace YieldFlo.Properties
             get { return ((string)(this["WifiModuleKey"])); }
             set { this["WifiModuleKey"] = value; }
         }
+
+        // WiFi mode: run Windows Mobile Hotspot as the module's network — see clsTabletHotspot
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TabletHotspot
+        {
+            get { return ((bool)(this["TabletHotspot"])); }
+            set { this["TabletHotspot"] = value; }
+        }
     }
 }

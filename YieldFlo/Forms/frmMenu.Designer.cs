@@ -31,6 +31,7 @@ namespace YieldFlo.Forms
             this.btnYieldMap = new System.Windows.Forms.Button();
             this.btnSensorCal = new System.Windows.Forms.Button();
             this.btnLanguage = new System.Windows.Forms.Button();
+            this.btnComm = new System.Windows.Forms.Button();
             this.pnlTitle.SuspendLayout();
             this.pnlContent.SuspendLayout();
             this.SuspendLayout();
@@ -110,19 +111,20 @@ namespace YieldFlo.Forms
             this.pnlContent.Controls.Add(this.btnYieldMap);
             this.pnlContent.Controls.Add(this.btnSensorCal);
             this.pnlContent.Controls.Add(this.btnLanguage);
+            this.pnlContent.Controls.Add(this.btnComm);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(2, 50);
             this.pnlContent.Name = "pnlContent";
             this.pnlContent.Size = new System.Drawing.Size(456, 360);
             this.pnlContent.TabIndex = 0;
             //
-            // btnJobs — full-width row
+            // btnJobs
             //
             this.btnJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnJobs.Location = new System.Drawing.Point(8, 8);
             this.btnJobs.Name = "btnJobs";
-            this.btnJobs.Size = new System.Drawing.Size(440, 52);
+            this.btnJobs.Size = new System.Drawing.Size(216, 52);
             this.btnJobs.TabIndex = 0;
             this.btnJobs.Text = global::YieldFlo.Language.Lang.lgTitleJobs;
             this.btnJobs.Click += new System.EventHandler(this.btnJobs_Click);
@@ -142,7 +144,7 @@ namespace YieldFlo.Forms
             //
             this.btnReports.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReports.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnReports.Location = new System.Drawing.Point(232,68);
+            this.btnReports.Location = new System.Drawing.Point(232, 8);
             this.btnReports.Name = "btnReports";
             this.btnReports.Size = new System.Drawing.Size(216, 52);
             this.btnReports.TabIndex = 7;
@@ -164,7 +166,7 @@ namespace YieldFlo.Forms
             //
             this.btnSensorCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSensorCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnSensorCal.Location = new System.Drawing.Point(232,128);
+            this.btnSensorCal.Location = new System.Drawing.Point(232, 68);
             this.btnSensorCal.Name = "btnSensorCal";
             this.btnSensorCal.Size = new System.Drawing.Size(216, 52);
             this.btnSensorCal.TabIndex = 9;
@@ -186,7 +188,7 @@ namespace YieldFlo.Forms
             //
             this.btnHeaders.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHeaders.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnHeaders.Location = new System.Drawing.Point(232,188);
+            this.btnHeaders.Location = new System.Drawing.Point(232, 128);
             this.btnHeaders.Name = "btnHeaders";
             this.btnHeaders.Size = new System.Drawing.Size(216, 52);
             this.btnHeaders.TabIndex = 2;
@@ -208,7 +210,7 @@ namespace YieldFlo.Forms
             //
             this.btnProfiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProfiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnProfiles.Location = new System.Drawing.Point(232,248);
+            this.btnProfiles.Location = new System.Drawing.Point(232, 188);
             this.btnProfiles.Name = "btnProfiles";
             this.btnProfiles.Size = new System.Drawing.Size(216, 52);
             this.btnProfiles.TabIndex = 3;
@@ -230,12 +232,23 @@ namespace YieldFlo.Forms
             //
             this.btnLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnLanguage.Location = new System.Drawing.Point(232,308);
+            this.btnLanguage.Location = new System.Drawing.Point(232, 248);
             this.btnLanguage.Name = "btnLanguage";
-            this.btnLanguage.Size = new System.Drawing.Size(216, 44);
+            this.btnLanguage.Size = new System.Drawing.Size(216, 52);
             this.btnLanguage.TabIndex = 10;
             this.btnLanguage.Text = global::YieldFlo.Language.Lang.lgLanguage;
             this.btnLanguage.Click += new System.EventHandler(this.btnLanguage_Click);
+            //
+            // btnComm
+            //
+            this.btnComm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnComm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnComm.Location = new System.Drawing.Point(232, 308);
+            this.btnComm.Name = "btnComm";
+            this.btnComm.Size = new System.Drawing.Size(216, 44);
+            this.btnComm.TabIndex = 11;
+            this.btnComm.Text = "Comm";
+            this.btnComm.Click += new System.EventHandler(this.btnComm_Click);
             //
             // frmMenu
             //
@@ -275,5 +288,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Button btnYieldMap;
         private System.Windows.Forms.Button btnSensorCal;
         private System.Windows.Forms.Button btnLanguage;
+        private System.Windows.Forms.Button btnComm;
     }
 }

@@ -15,26 +15,12 @@ namespace YieldFlo.Forms
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuSettings));
-            this.components = new System.ComponentModel.Container();
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlContent = new System.Windows.Forms.Panel();
-            this.lblWifiInfo = new System.Windows.Forms.Label();
-            this.btnWifiSetup = new System.Windows.Forms.Button();
             this.lblUnits = new System.Windows.Forms.Label();
             this.btnImperial = new System.Windows.Forms.Button();
             this.btnMetric = new System.Windows.Forms.Button();
-            this.lblNetwork = new System.Windows.Forms.Label();
-            this.btnEthernet = new System.Windows.Forms.Button();
-            this.btnCAN = new System.Windows.Forms.Button();
-            this.lblCanDriver = new System.Windows.Forms.Label();
-            this.cbCanDriver = new System.Windows.Forms.ComboBox();
-            this.lblCanPort = new System.Windows.Forms.Label();
-            this.cbCanPort = new System.Windows.Forms.ComboBox();
-            this.btnRescanPorts = new System.Windows.Forms.Button();
-            this.lblCanStatus = new System.Windows.Forms.Label();
-            this.tmrCanStatus = new System.Windows.Forms.Timer(this.components);
             this.lblResumeJob = new System.Windows.Forms.Label();
             this.btnResumeOn = new System.Windows.Forms.Button();
             this.btnResumeOff = new System.Windows.Forms.Button();
@@ -43,9 +29,9 @@ namespace YieldFlo.Forms
             this.pnlTitle.SuspendLayout();
             this.pnlContent.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // pnlTitle
-            // 
+            //
             this.pnlTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.pnlTitle.Controls.Add(this.lblTitle);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
@@ -53,9 +39,9 @@ namespace YieldFlo.Forms
             this.pnlTitle.Name = "pnlTitle";
             this.pnlTitle.Size = new System.Drawing.Size(560, 48);
             this.pnlTitle.TabIndex = 0;
-            // 
+            //
             // lblTitle
-            // 
+            //
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(200)))), ((int)(((byte)(220)))));
@@ -69,20 +55,9 @@ namespace YieldFlo.Forms
             // pnlContent
             //
             this.pnlContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.pnlContent.Controls.Add(this.lblWifiInfo);
-            this.pnlContent.Controls.Add(this.btnWifiSetup);
             this.pnlContent.Controls.Add(this.lblUnits);
             this.pnlContent.Controls.Add(this.btnImperial);
             this.pnlContent.Controls.Add(this.btnMetric);
-            this.pnlContent.Controls.Add(this.lblNetwork);
-            this.pnlContent.Controls.Add(this.btnEthernet);
-            this.pnlContent.Controls.Add(this.btnCAN);
-            this.pnlContent.Controls.Add(this.lblCanDriver);
-            this.pnlContent.Controls.Add(this.cbCanDriver);
-            this.pnlContent.Controls.Add(this.lblCanPort);
-            this.pnlContent.Controls.Add(this.cbCanPort);
-            this.pnlContent.Controls.Add(this.btnRescanPorts);
-            this.pnlContent.Controls.Add(this.lblCanStatus);
             this.pnlContent.Controls.Add(this.lblResumeJob);
             this.pnlContent.Controls.Add(this.btnResumeOn);
             this.pnlContent.Controls.Add(this.btnResumeOff);
@@ -91,35 +66,11 @@ namespace YieldFlo.Forms
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(2, 50);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(560, 420);
+            this.pnlContent.Size = new System.Drawing.Size(560, 246);
             this.pnlContent.TabIndex = 1;
-            // 
-            // lblWifiInfo
-            // 
-            this.lblWifiInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.lblWifiInfo.ForeColor = System.Drawing.Color.Silver;
-            this.lblWifiInfo.Location = new System.Drawing.Point(8, 186);
-            this.lblWifiInfo.Name = "lblWifiInfo";
-            this.lblWifiInfo.Size = new System.Drawing.Size(544, 44);
-            this.lblWifiInfo.TabIndex = 9;
-            this.lblWifiInfo.Text = "Connect the PC to the module\'s access point, a WiFi network, or wired Ethernet (W5" +
-    "500). The module\'s own page is at http://192.168.200.1 on its access point.";
-            this.lblWifiInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             //
-            // btnWifiSetup
-            //
-            this.btnWifiSetup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnWifiSetup.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnWifiSetup.Location = new System.Drawing.Point(8, 232);
-            this.btnWifiSetup.Name = "btnWifiSetup";
-            this.btnWifiSetup.Size = new System.Drawing.Size(340, 40);
-            this.btnWifiSetup.TabIndex = 10;
-            this.btnWifiSetup.Text = "Set Up Module WiFi";
-            this.btnWifiSetup.UseVisualStyleBackColor = false;
-            this.btnWifiSetup.Click += new System.EventHandler(this.btnWifiSetup_Click);
-            // 
             // lblUnits
-            // 
+            //
             this.lblUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblUnits.ForeColor = System.Drawing.Color.Silver;
             this.lblUnits.Location = new System.Drawing.Point(8, 10);
@@ -127,9 +78,9 @@ namespace YieldFlo.Forms
             this.lblUnits.Size = new System.Drawing.Size(300, 26);
             this.lblUnits.TabIndex = 0;
             this.lblUnits.Text = "Units";
-            // 
+            //
             // btnImperial
-            // 
+            //
             this.btnImperial.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnImperial.FlatAppearance.BorderSize = 0;
             this.btnImperial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -142,9 +93,9 @@ namespace YieldFlo.Forms
             this.btnImperial.Text = global::YieldFlo.Language.Lang.lgImperial;
             this.btnImperial.UseVisualStyleBackColor = false;
             this.btnImperial.Click += new System.EventHandler(this.btnImperial_Click);
-            // 
+            //
             // btnMetric
-            // 
+            //
             this.btnMetric.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnMetric.FlatAppearance.BorderSize = 0;
             this.btnMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -157,193 +108,79 @@ namespace YieldFlo.Forms
             this.btnMetric.Text = global::YieldFlo.Language.Lang.lgMetric;
             this.btnMetric.UseVisualStyleBackColor = false;
             this.btnMetric.Click += new System.EventHandler(this.btnMetric_Click);
-            // 
-            // lblNetwork
-            // 
-            this.lblNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.lblNetwork.ForeColor = System.Drawing.Color.Silver;
-            this.lblNetwork.Location = new System.Drawing.Point(8, 100);
-            this.lblNetwork.Name = "lblNetwork";
-            this.lblNetwork.Size = new System.Drawing.Size(400, 26);
-            this.lblNetwork.TabIndex = 6;
-            this.lblNetwork.Text = "Module Communication";
-            // 
-            // btnEthernet
-            // 
-            this.btnEthernet.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.btnEthernet.FlatAppearance.BorderSize = 0;
-            this.btnEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnEthernet.ForeColor = System.Drawing.Color.White;
-            this.btnEthernet.Location = new System.Drawing.Point(8, 130);
-            this.btnEthernet.Name = "btnEthernet";
-            this.btnEthernet.Size = new System.Drawing.Size(267, 48);
-            this.btnEthernet.TabIndex = 7;
-            this.btnEthernet.Text = global::YieldFlo.Language.Lang.lgWiFi;
-            this.btnEthernet.UseVisualStyleBackColor = false;
-            this.btnEthernet.Click += new System.EventHandler(this.btnEthernet_Click);
-            // 
-            // btnCAN
-            // 
-            this.btnCAN.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.btnCAN.FlatAppearance.BorderSize = 0;
-            this.btnCAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCAN.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnCAN.ForeColor = System.Drawing.Color.White;
-            this.btnCAN.Location = new System.Drawing.Point(285, 130);
-            this.btnCAN.Name = "btnCAN";
-            this.btnCAN.Size = new System.Drawing.Size(267, 48);
-            this.btnCAN.TabIndex = 8;
-            this.btnCAN.Text = "CAN";
-            this.btnCAN.UseVisualStyleBackColor = false;
-            this.btnCAN.Click += new System.EventHandler(this.btnCAN_Click);
-            // 
-            // lblCanDriver
-            // 
-            this.lblCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.lblCanDriver.ForeColor = System.Drawing.Color.Silver;
-            this.lblCanDriver.Location = new System.Drawing.Point(8, 190);
-            this.lblCanDriver.Name = "lblCanDriver";
-            this.lblCanDriver.Size = new System.Drawing.Size(267, 26);
-            this.lblCanDriver.TabIndex = 10;
-            this.lblCanDriver.Text = "CAN Driver";
-            // 
-            // cbCanDriver
-            // 
-            this.cbCanDriver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCanDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.cbCanDriver.Items.AddRange(new object[] {
-            "SLCAN",
-            "InnoMaker",
-            "PCAN"});
-            this.cbCanDriver.Location = new System.Drawing.Point(8, 222);
-            this.cbCanDriver.Name = "cbCanDriver";
-            this.cbCanDriver.Size = new System.Drawing.Size(267, 32);
-            this.cbCanDriver.TabIndex = 11;
-            // 
-            // lblCanPort
-            // 
-            this.lblCanPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-            this.lblCanPort.ForeColor = System.Drawing.Color.Silver;
-            this.lblCanPort.Location = new System.Drawing.Point(285, 190);
-            this.lblCanPort.Name = "lblCanPort";
-            this.lblCanPort.Size = new System.Drawing.Size(267, 26);
-            this.lblCanPort.TabIndex = 12;
-            this.lblCanPort.Text = "COM Port";
-            // 
-            // cbCanPort
-            // 
-            this.cbCanPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCanPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.cbCanPort.Location = new System.Drawing.Point(285, 222);
-            this.cbCanPort.Name = "cbCanPort";
-            this.cbCanPort.Size = new System.Drawing.Size(195, 32);
-            this.cbCanPort.TabIndex = 13;
-            // 
-            // btnRescanPorts
-            // 
-            this.btnRescanPorts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.btnRescanPorts.FlatAppearance.BorderSize = 0;
-            this.btnRescanPorts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRescanPorts.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRescanPorts.ForeColor = System.Drawing.Color.White;
-            this.btnRescanPorts.Image = ((System.Drawing.Image)(resources.GetObject("btnRescanPorts.Image")));
-            this.btnRescanPorts.Location = new System.Drawing.Point(488, 218);
-            this.btnRescanPorts.Name = "btnRescanPorts";
-            this.btnRescanPorts.Size = new System.Drawing.Size(64, 40);
-            this.btnRescanPorts.TabIndex = 14;
-            this.btnRescanPorts.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnRescanPorts.UseVisualStyleBackColor = false;
-            this.btnRescanPorts.Click += new System.EventHandler(this.btnRescanPorts_Click);
-            //
-            // lblCanStatus
-            //
-            this.lblCanStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold);
-            this.lblCanStatus.ForeColor = System.Drawing.Color.Silver;
-            this.lblCanStatus.Location = new System.Drawing.Point(8, 256);
-            this.lblCanStatus.Name = "lblCanStatus";
-            this.lblCanStatus.Size = new System.Drawing.Size(400, 18);
-            this.lblCanStatus.TabIndex = 20;
-            this.lblCanStatus.Text = "Adapter: --";
-            //
-            // tmrCanStatus
-            //
-            this.tmrCanStatus.Enabled = true;
-            this.tmrCanStatus.Interval = 500;
-            this.tmrCanStatus.Tick += new System.EventHandler(this.tmrCanStatus_Tick);
             //
             // lblResumeJob
             //
             this.lblResumeJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblResumeJob.ForeColor = System.Drawing.Color.Silver;
-            this.lblResumeJob.Location = new System.Drawing.Point(8, 274);
+            this.lblResumeJob.Location = new System.Drawing.Point(8, 100);
             this.lblResumeJob.Name = "lblResumeJob";
             this.lblResumeJob.Size = new System.Drawing.Size(400, 26);
-            this.lblResumeJob.TabIndex = 15;
+            this.lblResumeJob.TabIndex = 3;
             this.lblResumeJob.Text = "Resume Job on Start";
-            // 
+            //
             // btnResumeOn
-            // 
+            //
             this.btnResumeOn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnResumeOn.FlatAppearance.BorderSize = 0;
             this.btnResumeOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResumeOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnResumeOn.ForeColor = System.Drawing.Color.White;
-            this.btnResumeOn.Location = new System.Drawing.Point(8, 304);
+            this.btnResumeOn.Location = new System.Drawing.Point(8, 130);
             this.btnResumeOn.Name = "btnResumeOn";
             this.btnResumeOn.Size = new System.Drawing.Size(267, 48);
-            this.btnResumeOn.TabIndex = 16;
+            this.btnResumeOn.TabIndex = 4;
             this.btnResumeOn.Text = global::YieldFlo.Language.Lang.lgOn;
             this.btnResumeOn.UseVisualStyleBackColor = false;
             this.btnResumeOn.Click += new System.EventHandler(this.btnResumeOn_Click);
-            // 
+            //
             // btnResumeOff
-            // 
+            //
             this.btnResumeOff.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnResumeOff.FlatAppearance.BorderSize = 0;
             this.btnResumeOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResumeOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnResumeOff.ForeColor = System.Drawing.Color.White;
-            this.btnResumeOff.Location = new System.Drawing.Point(285, 304);
+            this.btnResumeOff.Location = new System.Drawing.Point(285, 130);
             this.btnResumeOff.Name = "btnResumeOff";
             this.btnResumeOff.Size = new System.Drawing.Size(267, 48);
-            this.btnResumeOff.TabIndex = 17;
+            this.btnResumeOff.TabIndex = 5;
             this.btnResumeOff.Text = global::YieldFlo.Language.Lang.lgOff;
             this.btnResumeOff.UseVisualStyleBackColor = false;
             this.btnResumeOff.Click += new System.EventHandler(this.btnResumeOff_Click);
-            // 
+            //
             // btnSaveSettings
-            // 
+            //
             this.btnSaveSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(110)))), ((int)(((byte)(0)))));
             this.btnSaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSaveSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSaveSettings.Location = new System.Drawing.Point(8, 364);
+            this.btnSaveSettings.Location = new System.Drawing.Point(8, 190);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(130, 44);
-            this.btnSaveSettings.TabIndex = 18;
+            this.btnSaveSettings.TabIndex = 6;
             this.btnSaveSettings.Text = global::YieldFlo.Language.Lang.lgSave;
             this.btnSaveSettings.UseVisualStyleBackColor = false;
             this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
-            // 
+            //
             // btnSettingsClose
-            // 
+            //
             this.btnSettingsClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnSettingsClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettingsClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSettingsClose.ForeColor = System.Drawing.Color.White;
-            this.btnSettingsClose.Location = new System.Drawing.Point(422, 364);
+            this.btnSettingsClose.Location = new System.Drawing.Point(422, 190);
             this.btnSettingsClose.Name = "btnSettingsClose";
             this.btnSettingsClose.Size = new System.Drawing.Size(130, 44);
-            this.btnSettingsClose.TabIndex = 19;
+            this.btnSettingsClose.TabIndex = 7;
             this.btnSettingsClose.Text = global::YieldFlo.Language.Lang.lgClose;
             this.btnSettingsClose.UseVisualStyleBackColor = false;
             this.btnSettingsClose.Click += new System.EventHandler(this.btnSettingsClose_Click);
-            // 
+            //
             // frmMenuSettings
-            // 
+            //
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(564, 472);
+            this.ClientSize = new System.Drawing.Size(564, 298);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlTitle);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
@@ -367,18 +204,6 @@ namespace YieldFlo.Forms
         private System.Windows.Forms.Label    lblUnits;
         private System.Windows.Forms.Button   btnImperial;
         private System.Windows.Forms.Button   btnMetric;
-        private System.Windows.Forms.Label    lblNetwork;
-        private System.Windows.Forms.Button   btnEthernet;
-        private System.Windows.Forms.Button   btnCAN;
-        private System.Windows.Forms.Label    lblWifiInfo;
-        private System.Windows.Forms.Button   btnWifiSetup;
-        private System.Windows.Forms.Label    lblCanDriver;
-        private System.Windows.Forms.ComboBox cbCanDriver;
-        private System.Windows.Forms.Label    lblCanPort;
-        private System.Windows.Forms.ComboBox cbCanPort;
-        private System.Windows.Forms.Button   btnRescanPorts;
-        private System.Windows.Forms.Label    lblCanStatus;
-        private System.Windows.Forms.Timer    tmrCanStatus;
         private System.Windows.Forms.Label    lblResumeJob;
         private System.Windows.Forms.Button   btnResumeOn;
         private System.Windows.Forms.Button   btnResumeOff;

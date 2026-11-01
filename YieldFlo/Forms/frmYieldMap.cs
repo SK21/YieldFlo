@@ -730,9 +730,7 @@ namespace YieldFlo.Forms
             if (idx < 0 || idx >= _jobIds.Count) return;
             int jobId = _jobIds[idx];
 
-            var answer = MessageBox.Show(Lang.lgRecalcMapPrompt, Lang.lgRecalcMap,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (answer != DialogResult.Yes) return;
+            if (!frmMsgBox.Ask(this, Lang.lgRecalcMapPrompt, Lang.lgRecalcMap)) return;
 
             int profileId = -1, cropId = -1, headerId = -1;
             foreach (var j in Core.Database.Jobs.GetAll())

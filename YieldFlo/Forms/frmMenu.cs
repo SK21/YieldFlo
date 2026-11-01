@@ -80,5 +80,6 @@ namespace YieldFlo.Forms
         private void btnYieldMap_Click(object sender, EventArgs e)   => FormManager.ShowForm(new frmYieldMap());
         private void btnSensorCal_Click(object sender, EventArgs e) => FormManager.ShowForm(new frmMenuSensorCal());
         private void btnLanguage_Click(object sender, EventArgs e)  => FormManager.ShowForm(new frmMenuLanguage());
+        private void btnComm_Click(object sender, EventArgs e)      => FormManager.ShowForm(new frmMenuComm());
     }
 }

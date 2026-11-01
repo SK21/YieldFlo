@@ -167,6 +167,9 @@ namespace YieldFlo.Classes
         private static extern uint WlanConnect(IntPtr hClientHandle, ref Guid pInterfaceGuid,
             ref WLAN_CONNECTION_PARAMETERS pConnectionParameters, IntPtr pReserved);
 
+        [DllImport("wlanapi.dll")]
+        private static extern uint WlanDisconnect(IntPtr hClientHandle, ref Guid pInterfaceGuid, IntPtr pReserved);
+
         [DllImport("wlanapi.dll", CharSet = CharSet.Unicode)]
         private static extern uint WlanReasonCodeToString(uint dwReasonCode, uint dwBufferSize,
             StringBuilder pStringBuffer, IntPtr pReserved);
@@ -554,6 +557,26 @@ namespace YieldFlo.Classes
         }
 
         /// <summary>
+        /// Leaves whatever network the adapter is on. Used in tablet-hotspot mode when the
+        /// PC had no WiFi network of its own to go back to (internet over Ethernet, or none).
+        /// </summary>
+        public static bool Disconnect(Guid guid, out string error)
+        {
+            error = "";
+            IntPtr h = Open();
+            if (h == IntPtr.Zero) { error = "WLAN service unavailable"; return false; }
+            try
+            {
+                uint r = WlanDisconnect(h, ref guid, IntPtr.Zero);
+                if (r == ErrorSuccess) return true;
+                error = "error " + r;
+                return false;
+            }
+            catch (Exception ex) { error = ex.Message; return false; }
+            finally { Close(h); }
+        }
+
+        /// <summary>
         /// Connects and waits until the adapter reports itself associated to that
         /// SSID. The interface state alone is not enough — it says "connected", not
         /// "connected to the network you asked for", and on a failed join Windows
@@ -697,7 +720,10 @@ namespace YieldFlo.Classes
         public string ModuleSsid;           // the hotspot to configure
         public string ModuleKey = "";       // hotspot password; empty for an open hotspot
         public string HomeSsid;             // network the module should join
-        public string HomeProfile;          // Windows profile name for that network
+        public string HomeProfile;          // Windows profile name for that network; in
+                                            // hotspot mode, the PC's own WiFi to rejoin ("" = none)
+        public bool TabletHotspot;          // HomeSsid is this tablet's own Windows hotspot
+        public string UplinkSsid = "";      // hotspot mode: SSID of HomeProfile, the PC's own WiFi
         public string HomeKey = "";         // passphrase handed to the module
         public int HomeChannel;             // 0 if unknown; primes the module's channel cache
     }
@@ -723,15 +749,39 @@ namespace YieldFlo.Classes
         private const int GatewayTimeoutMs = 15000;
         private const int HttpTimeoutMs = 8000;
         private const int ScanSettleMs = 3500;      // driver needs a few seconds to finish a scan
-        private const int RebootWaitMs = 6000;      // SaveData() delays 3 s, then boots
-        // Long enough to outlast one backoff cycle. The module's retry interval stretches
-        // from 10 s to 60 s after three failures (StaRetrySlowMs), and its first three
-        // attempts all happen while the PC is away on its hotspot — so a shorter wait can
-        // expire in the gap between attempts on a network that is perfectly fine.
+        // The POST's response has already been read, so this only spaces the trip home
+        // from the module's restart (SaveData() waits 1 s since firmware 1116, 3 s before).
+        // Shorter means the tablet hotspot is back sooner for the module's first attempts.
+        private const int RebootWaitMs = 2000;
+        // Generous on purpose. Since firmware 1116 an idle module retries every 5-8 s for
+        // two minutes after booting, so it normally joins within seconds of the network
+        // appearing. Older firmware backs off from 10 s to 60 s after three failures, and
+        // its first attempts happen while the PC is away on its hotspot — a shorter wait
+        // could expire in the gap between attempts on a network that is perfectly fine.
         private const int PacketWaitMs = 60000;
         private const int NudgeWaitMs = 30000;      // second window, after forcing a retry
 
         public ProvisionResult Run(ProvisionRequest req)
+        {
+            // In hotspot mode the trip to the module's hotspot knocks the tablet hotspot
+            // off (bench-measured 2026-11-01), and the watchdog must not try to restart it
+            // while the PC is away. ReturnHome restarts it instead.
+            if (req.TabletHotspot) Core.Hotspot.Paused = true;
+            try
+            {
+                return RunSteps(req);
+            }
+            finally
+            {
+                if (req.TabletHotspot)
+                {
+                    Core.Hotspot.ResetWatch();
+                    Core.Hotspot.Paused = false;
+                }
+            }
+        }
+
+        private ProvisionResult RunSteps(ProvisionRequest req)
         {
             var result = new ProvisionResult();
 
@@ -771,8 +821,13 @@ namespace YieldFlo.Classes
             // attempt is a full scan and the firmware rations those to one per five
             // minutes while anything is on its hotspot. That is the state a firmware
             // update leaves behind.
-            int channel = req.HomeChannel;
-            int found = ScanForChannel(req);
+            //
+            // Not in hotspot mode: the PC can't see its own hotspot in a scan, and the trip
+            // here has usually knocked it off anyway. Its channel isn't known until it
+            // restarts, so the module does a full scan — with nothing left on its own
+            // hotspot it retries every 10 s, so that costs little.
+            int channel = req.TabletHotspot ? 0 : req.HomeChannel;
+            int found = req.TabletHotspot ? 0 : ScanForChannel(req);
             if (found > 0)
             {
                 channel = found;
@@ -801,7 +856,7 @@ namespace YieldFlo.Classes
                 body.Append("&pickssid=").Append(Uri.EscapeDataString(req.HomeSsid));
                 body.Append("&pickch=").Append(channel);
             }
-            else
+            else if (!req.TabletHotspot)
             {
                 Say("  no 2.4 GHz channel found — the module will scan for itself");
             }
@@ -821,7 +876,10 @@ namespace YieldFlo.Classes
             if (!ReturnHome(req))
             {
                 result.Outcome = ProvisionOutcome.HomeReturnFailed;
-                result.Detail = "could not rejoin " + req.HomeSsid;
+                result.Detail = req.TabletHotspot
+                    ? "The module has the details, but the tablet hotspot did not come back on. "
+                      + "Check it on the Comm page; the module joins once it is on."
+                    : "could not rejoin " + req.HomeSsid;
                 return result;
             }
 
@@ -909,6 +967,7 @@ namespace YieldFlo.Classes
 
         private bool ReturnHome(ProvisionRequest req)
         {
+            if (req.TabletHotspot) return ReturnToHotspot(req);
             if (string.IsNullOrEmpty(req.HomeProfile)) return false;
 
             var cur = Wlan.ConnectedNetwork(req.Adapter);
@@ -922,6 +981,44 @@ namespace YieldFlo.Classes
                 return false;
             }
             Wlan.WaitForGateway(req.Adapter, GatewayTimeoutMs);
+            return true;
+        }
+
+        /// <summary>
+        /// Hotspot mode: get the WiFi adapter off the module's hotspot — back onto the
+        /// PC's own WiFi if it had one (the internet the hotspot shares), otherwise just
+        /// disconnected — then make sure the tablet hotspot is On. It is the only thing
+        /// that counts as "home" here; failing to rejoin the PC's own WiFi only costs
+        /// internet, and the hotspot starts without internet (bench-measured).
+        /// </summary>
+        private bool ReturnToHotspot(ProvisionRequest req)
+        {
+            string error;
+            var cur = Wlan.ConnectedNetwork(req.Adapter);
+            if (!string.IsNullOrEmpty(req.HomeProfile))
+            {
+                if (cur == null || cur.Ssid != req.UplinkSsid)
+                {
+                    Say("Reconnecting this PC to " + req.UplinkSsid + " ...");
+                    if (Wlan.ConnectAndWait(req.Adapter, req.HomeProfile, req.UplinkSsid, JoinTimeoutMs, out error))
+                        Wlan.WaitForGateway(req.Adapter, GatewayTimeoutMs);
+                    else
+                        Say("  could not rejoin " + req.UplinkSsid + " (" + error + "), carrying on");
+                }
+            }
+            else if (cur != null && cur.Ssid == req.ModuleSsid)
+            {
+                if (!Wlan.Disconnect(req.Adapter, out error))
+                    Say("  could not leave the module's hotspot: " + error);
+            }
+
+            Say("Turning the tablet hotspot back on ...");
+            if (!Core.Hotspot.Run("start"))
+            {
+                Say("  the tablet hotspot did not start" + (Core.Hotspot.Result != "" ? ": " + Core.Hotspot.Result : ""));
+                return false;
+            }
+            Say("  tablet hotspot is on");
             return true;
         }
 

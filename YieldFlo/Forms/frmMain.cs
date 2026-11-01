@@ -368,9 +368,7 @@ namespace YieldFlo.Forms
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            var answer = MessageBox.Show(Lang.lgStopJobPrompt, Lang.lgStopJob,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (answer != DialogResult.Yes) return;
+            if (!frmMsgBox.Ask(this, Lang.lgStopJobPrompt, Lang.lgStopJob)) return;
 
             Core.Collector.StopJob();
             SetJobButtons(false);

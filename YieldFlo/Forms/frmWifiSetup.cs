@@ -18,6 +18,7 @@ namespace YieldFlo.Forms
         // renamed to something else will not appear in the list; the portal is still
         // there for that case.
         private const string ModulePrefix = "YieldFlo";
+        private const string DialogTitle = "Module WiFi Setup";
 
         private bool _dragging;
         private Point _dragStart;
@@ -27,6 +28,14 @@ namespace YieldFlo.Forms
         private string _homeSsid = "";
         private string _homeProfile = "";
         private int _homeChannel;
+
+        // Tablet hotspot mode: the module joins this tablet's own hotspot, whose name and
+        // password come from Windows, so there is nothing to type. _homeProfile/_uplinkSsid
+        // are then the PC's own WiFi (if any) to go back to afterwards.
+        private bool _hotspotMode;
+        private string _hotspotKey = "";
+        private string _uplinkSsid = "";
+        private readonly string _preselect = "";
 
         private sealed class ModuleItem
         {
@@ -42,6 +51,34 @@ namespace YieldFlo.Forms
         public frmWifiSetup()
         {
             InitializeComponent();
+        }
+
+        /// <summary>Opens with that module selected once the scan finds it.</summary>
+        public frmWifiSetup(string preselectSsid) : this()
+        {
+            _preselect = preselectSsid ?? "";
+        }
+
+        /// <summary>
+        /// autoStart: the user has already said yes (the "module in range" offer), so run
+        /// setup as soon as the module and the network are known, without asking again.
+        /// </summary>
+        public frmWifiSetup(string preselectSsid, bool autoStart) : this(preselectSsid)
+        {
+            _autoStart = autoStart && _preselect.Length > 0;
+        }
+
+        private bool _autoStart;
+
+        // Auto-start needs both the scan (the module) and the hotspot read (the network),
+        // which finish in either order, so both call this. Fires once.
+        private void TryAutoStart()
+        {
+            if (!_autoStart || _running || IsDisposed || !btnSend.Enabled) return;
+            var item = lstModules.SelectedItem as ModuleItem;
+            if (item == null || item.Ssid != _preselect) return;
+            _autoStart = false;
+            StartSetup(true);
         }
 
         private void frmWifiSetup_Load(object sender, EventArgs e)
@@ -70,11 +107,16 @@ namespace YieldFlo.Forms
 
             ReadHomeNetwork();
 
+            // the hotspot's name or password may have been changed in Windows since the
+            // app last read them
+            if (_hotspotMode && !Core.Hotspot.Busy)
+                Core.Hotspot.RefreshAsync(() => { if (!IsDisposed && !_running) { ReadHomeNetwork(); TryAutoStart(); } });
+
             // Only offer the stored password back when it belongs to the network the
             // PC is actually on. Prefilling it for a different network hands the
             // module a password that cannot work and makes the result read as a
             // refused password rather than as the wrong one being sent.
-            if (_homeSsid.Length > 0 && WifiStore.HomeSsid == _homeSsid)
+            if (!_hotspotMode && _homeSsid.Length > 0 && WifiStore.HomeSsid == _homeSsid)
                 txtKey.Text = WifiStore.HomeKey;
 
             if (Properties.Settings.Default.ModuleCommType == "CAN")
@@ -125,6 +167,15 @@ namespace YieldFlo.Forms
                 return;
             }
 
+            _hotspotMode = Core.Hotspot != null && Core.Hotspot.Enabled;
+            lblKey.Visible = !_hotspotMode;
+            txtKey.Visible = !_hotspotMode;
+            if (_hotspotMode)
+            {
+                ReadHotspotNetwork();
+                return;
+            }
+
             var net = Wlan.ConnectedNetwork(_adapter.Guid);
             if (net == null)
             {
@@ -151,8 +202,8 @@ namespace YieldFlo.Forms
             //
             // So let the module try. It is built for the attempt failing: with no
             // channel cached every retry is a full scan, and ServiceWifiStation()
-            // already rations those to 10 s, then 60 s, then 5 minutes once a client is
-            // on the hotspot. If it never joins, the run says so and names 5 GHz as a
+            // already rations those (8 s, then 30 s with the hotspot idle; 5 minutes once
+            // a client is on it). If it never joins, the run says so and names 5 GHz as a
             // possible reason — which is the right place for that guess, because by
             // then it is the answer to a question the user is actually asking.
             int channel = Wlan.CurrentChannel(_adapter.Guid);
@@ -162,6 +213,41 @@ namespace YieldFlo.Forms
             if (channel > 0) where += "   (channel " + channel + ")";
 
             lblHome.Text = where;
+            lblHome.ForeColor = Properties.Settings.Default.MainForeColour;
+            btnSend.Enabled = true;
+        }
+
+        private void ReadHotspotNetwork()
+        {
+            // The PC's own WiFi, if it is on one, is where to go back to afterwards — it is
+            // the internet the hotspot shares. Not if it is sitting on a module's hotspot.
+            var net = Wlan.ConnectedNetwork(_adapter.Guid);
+            if (net != null && !net.Ssid.StartsWith(ModulePrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                _uplinkSsid = net.Ssid;
+                _homeProfile = string.IsNullOrEmpty(net.ProfileName) ? net.Ssid : net.ProfileName;
+            }
+            else
+            {
+                _uplinkSsid = "";
+                _homeProfile = "";
+            }
+            _homeChannel = 0;
+
+            _homeSsid = Core.Hotspot.Ssid;
+            _hotspotKey = Core.Hotspot.Passphrase;
+            if (_homeSsid.Length == 0)
+            {
+                // not read yet; the refresh started in Load calls back here
+                lblHome.Text = Core.Hotspot.Busy
+                    ? "Reading the tablet hotspot ..."
+                    : "Could not read the tablet hotspot. Check it on the Comm page.";
+                lblHome.ForeColor = Core.Hotspot.Busy ? Properties.Settings.Default.MainForeColour : OkabeIto.Vermillion;
+                btnSend.Enabled = false;
+                return;
+            }
+
+            lblHome.Text = "Network for the module:  " + _homeSsid + "   (tablet hotspot)";
             lblHome.ForeColor = Properties.Settings.Default.MainForeColour;
             btnSend.Enabled = true;
         }
@@ -202,10 +288,20 @@ namespace YieldFlo.Forms
                         lstModules.Items.Add(new ModuleItem { Ssid = n.Ssid, Signal = n.SignalPercent, Secured = n.Secured });
                     }
                     if (lstModules.Items.Count == 0)
+                    {
                         lstModules.Items.Add("No modules found — is the module powered up?");
+                    }
                     else
+                    {
                         lstModules.SelectedIndex = 0;
+                        for (int i = 0; i < lstModules.Items.Count; i++)
+                        {
+                            if (lstModules.Items[i] is ModuleItem m && m.Ssid == _preselect)
+                                lstModules.SelectedIndex = i;
+                        }
+                    }
                     btnScan.Enabled = true;
+                    TryAutoStart();         // last: it disables the buttons if it starts
                 });
             });
             t.IsBackground = true;
@@ -214,43 +310,48 @@ namespace YieldFlo.Forms
 
         // ── Sending ───────────────────────────────────────────────────────────
 
-        private void btnSend_Click(object sender, EventArgs e)
+        private void btnSend_Click(object sender, EventArgs e) => StartSetup(false);
+
+        /// <summary>
+        /// alreadyConfirmed: the user said yes to the background offer, which told them it
+        /// takes about a minute — so skip the second question. The checks still apply.
+        /// </summary>
+        private void StartSetup(bool alreadyConfirmed)
         {
             if (_running) return;
 
             var item = lstModules.SelectedItem as ModuleItem;
             if (item == null)
             {
-                MessageBox.Show("Select a module first.", "Module WiFi Setup",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                frmMsgBox.Inform(this, "Select a module first.", DialogTitle);
                 return;
             }
             if (string.IsNullOrEmpty(_homeSsid))
             {
-                MessageBox.Show("This PC is not on a WiFi network.", "Module WiFi Setup",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                frmMsgBox.Inform(this, _hotspotMode ? "The tablet hotspot could not be read." : "This PC is not on a WiFi network.",
+                    DialogTitle);
                 return;
             }
-            if (txtKey.Text.Length == 0)
+            string key = _hotspotMode ? _hotspotKey : txtKey.Text;
+            if (key.Length == 0)
             {
-                MessageBox.Show("Enter the password for " + _homeSsid + ".", "Module WiFi Setup",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                frmMsgBox.Inform(this, "Enter the password for " + _homeSsid + ".", DialogTitle);
                 return;
             }
 
             // The firmware keeps 63 characters of passphrase and 32 of name, and
             // silently drops the rest. Better to say so than to send something that
             // will come back as "password refused".
-            if (txtKey.Text.Length > 63)
+            if (key.Length > 63)
             {
-                MessageBox.Show("That password is longer than 63 characters, which is more than the module can store.",
-                    "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                frmMsgBox.Inform(this, "That password is longer than 63 characters, which is more than the module can store.",
+                    DialogTitle);
                 return;
             }
             if (_homeSsid.Length > 32)
             {
-                MessageBox.Show("That network name is longer than 32 characters, which is more than the module can store.",
-                    "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                frmMsgBox.Inform(this, "That network name is longer than 32 characters, which is more than the module can store.",
+                    DialogTitle);
                 return;
             }
 
@@ -258,20 +359,24 @@ namespace YieldFlo.Forms
             // for about a minute, and on a phone hotspot that is also the NTRIP feed.
             if (Core.Collector != null && Core.Collector.IsRecording)
             {
-                MessageBox.Show("A job is recording. Stop recording before setting up WiFi.",
-                    "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                frmMsgBox.Inform(this, "A job is recording. Stop recording before setting up WiFi.", DialogTitle);
                 return;
             }
 
-            var answer = MessageBox.Show(
-                "Send the details of " + _homeSsid + " to " + item.Ssid + "?" + Environment.NewLine + Environment.NewLine
-                + "This PC leaves " + _homeSsid + " for about a minute, so anything using that network — including "
-                + "GPS corrections — stops until it is back.",
-                "Module WiFi Setup", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (answer != DialogResult.Yes) return;
+            string question = _hotspotMode
+                ? "Send the tablet hotspot's details to " + item.Ssid + "?" + Environment.NewLine + Environment.NewLine
+                  + "Module data stops for about a minute"
+                  + (_uplinkSsid.Length > 0 ? ", and so does anything using " + _uplinkSsid + ", including GPS corrections." : ".")
+                : "Send the details of " + _homeSsid + " to " + item.Ssid + "?" + Environment.NewLine + Environment.NewLine
+                  + "This PC leaves " + _homeSsid + " for about a minute, so anything using that network — including "
+                  + "GPS corrections — stops until it is back.";
+            if (!alreadyConfirmed && !frmMsgBox.Ask(this, question, DialogTitle)) return;
 
-            WifiStore.HomeSsid = _homeSsid;
-            WifiStore.HomeKey = txtKey.Text;
+            if (!_hotspotMode)
+            {
+                WifiStore.HomeSsid = _homeSsid;
+                WifiStore.HomeKey = key;
+            }
             WifiStore.ModuleKey = txtModuleKey.Text;
             WifiStore.Save();
 
@@ -282,8 +387,10 @@ namespace YieldFlo.Forms
                 ModuleKey = txtModuleKey.Text,
                 HomeSsid = _homeSsid,
                 HomeProfile = _homeProfile,
-                HomeKey = txtKey.Text,
-                HomeChannel = _homeChannel
+                HomeKey = key,
+                HomeChannel = _homeChannel,
+                TabletHotspot = _hotspotMode,
+                UplinkSsid = _uplinkSsid
             };
 
             SetRunning(true);
@@ -331,26 +438,25 @@ namespace YieldFlo.Forms
             switch (r.Outcome)
             {
                 case ProvisionOutcome.Success:
-                    MessageBox.Show("The module is on " + _homeSsid + " and sending data.",
-                        "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    frmMsgBox.Inform(this, "The module is on " + _homeSsid + " and sending data.", DialogTitle);
                     break;
 
                 case ProvisionOutcome.AuthRejected:
-                    MessageBox.Show(_homeSsid + " refused the password." + Environment.NewLine + Environment.NewLine
+                    frmMsgBox.Inform(this, _homeSsid + " refused the password." + Environment.NewLine + Environment.NewLine
                         + "Check it and try again. The module keeps trying in the background.",
-                        "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        DialogTitle);
                     break;
 
                 case ProvisionOutcome.HotspotFailed:
-                    MessageBox.Show("Could not get onto the module's hotspot." + Environment.NewLine + Environment.NewLine
+                    frmMsgBox.Inform(this, "Could not get onto the module's hotspot." + Environment.NewLine + Environment.NewLine
                         + r.Detail + Environment.NewLine + Environment.NewLine
                         + "If the hotspot has a password, enter it above.",
-                        "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        DialogTitle);
                     break;
 
                 default:
-                    MessageBox.Show(r.Detail.Length > 0 ? r.Detail : "Setup did not complete. See the log.",
-                        "Module WiFi Setup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    frmMsgBox.Inform(this, r.Detail.Length > 0 ? r.Detail : "Setup did not complete. See the log.",
+                        DialogTitle);
                     break;
             }
         }

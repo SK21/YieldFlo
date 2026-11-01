@@ -11,6 +11,8 @@ namespace YieldFlo.Classes
     {
         // Subsystems
         public static UDPComm UDPaog;                           // GPS from AOG       recv:17777 send:15555
+        public static clsModuleOffer ModuleOffer;
+        public static clsTabletHotspot Hotspot;                // Windows Mobile Hotspot as the module's network (WiFi mode)
         public static UDPComm UDPmodule;                        // YieldFlo module    recv:30100 (WiFi mode)
         public static CanModuleComm CanModule = new CanModuleComm(); // YieldFlo module    CAN mode
         public static clsGPS GPS = new clsGPS();
@@ -141,6 +143,13 @@ namespace YieldFlo.Classes
                 // CAN (only if configured)
                 if (Props.CanEnabled)
                     UseCanComm(true);
+
+                // Tablet hotspot (WiFi mode only). Windows doesn't keep it on across a
+                // reboot, so start it here; left running when the app exits
+                Hotspot = new clsTabletHotspot();
+                Hotspot.Enabled = Properties.Settings.Default.TabletHotspot && !Props.CanEnabled;
+                if (Hotspot.Enabled) Hotspot.StartAsync();
+                ModuleOffer = new clsModuleOffer();     // "module in range but not set up?" prompt
 
                 // 1-second status timer
                 MainTimer = new System.Timers.Timer(1000);
@@ -279,9 +288,7 @@ namespace YieldFlo.Classes
         {
             if (ModuleConnected)
             {
-                var answer = MessageBox.Show("Confirm Exit?", "Exit",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (answer != DialogResult.Yes) return;
+                if (!frmMsgBox.Ask(MainForm, "Confirm Exit?", "Exit")) return;
             }
             IsUserExitRequested = true;
             Application.Exit();

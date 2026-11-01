@@ -24,7 +24,10 @@ void DoSetup()
 	uint8_t ErrorCount = 0;
 	ResetReasonCode = MapResetReason();
 	Serial.begin(38400);
-	delay(5000);
+	// Was 5 s, to give a serial monitor time to attach. Cut to 0.5 s (2026-11-01):
+	// it delayed the first WiFi join after every reboot, which made module setup from
+	// the app slow. A monitor opened later misses only the first few boot lines.
+	delay(500);
 	Serial.println();
 	Serial.println();
 	Serial.println(InoDescription);
@@ -261,7 +264,9 @@ void SaveData()
 	EEPROM.put(10, MDL);
 	EEPROM.commit();
 
-	delay(3000);
+	// Long enough for the page already sent to reach the browser (or the app's POST
+	// to read its response) before the restart drops the connection. Was 3 s.
+	delay(1000);
 
 	ESP.restart();
 }

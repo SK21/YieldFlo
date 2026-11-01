@@ -28,13 +28,29 @@
 // hotspot airtime as one dropped UDP packet. A full scan costs ten times that,
 // so it is rationed separately below and suppressed entirely while anyone is
 // actually using the portal.
-const uint32_t StaRetryFastMs  = 10000;		// first failures, nobody on the hotspot
-const uint32_t StaRetrySlowMs  = 60000;		// persistent failure, nobody on the hotspot
+//
+// Idle hotspot (nobody associated) — revised 2026-11-01 for the tablet hotspot.
+// The August timings backed off to one attempt a minute after 30 s, and scanned only
+// every 5th attempt. With the tablet as the network, nobody is ever on this hotspot,
+// so that rationing protected no one and cost up to a minute after every outage (a
+// setup run, an app or PC restart), and minutes more when the tablet's hotspot came
+// back on a different channel. Now: fast for the first two minutes after the link is
+// lost or the module boots — when a reconnect is most likely to succeed — then a
+// steady slower pace, never giving up. Off-air time is the cost: someone joining this
+// hotspot while the station is searching can land in a gap and fail. A full scan (~2 s)
+// is the big gap, so full scans come no more than once every 15 s — the first build of
+// this (8 s while nothing was cached) made the hotspot noticeably harder to join. That
+// is ~13% off-air at worst in the fast window, under 10% after it.
+const uint32_t StaFastWindowMs     = 120000;	// fast pace this long after link loss / boot
+const uint32_t StaRetryFastMs      = 5000;		// idle, fast window, channel cached (full scan every 3rd = 15 s)
+const uint32_t StaRetrySlowMs      = 15000;		// idle, after the fast window, channel cached
+const uint32_t StaRetryScanFastMs  = 15000;		// idle, fast window, nothing cached (all full scans)
+const uint32_t StaRetryScanSlowMs  = 30000;		// idle, after the fast window, nothing cached
+const uint8_t  StaScanEveryFast    = 3;			// full scan every Nth attempt in the fast window
+const uint8_t  StaScanEverySlow    = 4;			// and after it (once a minute at StaRetrySlowMs)
 const uint32_t StaRetryBusyMs  = 120000;	// a client is associated but not using the portal
 const uint32_t StaRetryScanOnlyMs = 300000;	// client associated AND no channel cached, so every
 											// attempt is necessarily the expensive kind
-const uint8_t  StaFastAttempts = 3;			// attempts at the fast interval before backing off
-const uint8_t  StaScanEveryN   = 5;			// full scan every Nth attempt while the hotspot is idle
 const uint32_t StaScanEarnedMs = 1800000;	// 30 min of failed directed attempts earns one full scan
 const uint32_t PortalActiveMs  = 60000;		// the portal counts as in use this long after a request
 
@@ -50,7 +66,7 @@ const uint8_t  StaAuthFailLimit = 3;		// consecutive auth failures before believ
 
 bool     StaConnected = false;			// GOT_IP seen and not yet followed by a disconnect
 uint32_t StaLastAttemptMs = 0;			// millis() of the last WiFi.begin()
-uint32_t StaRetryMs = StaRetryFastMs;	// current retry interval
+uint32_t StaDownSinceMs = 0;			// millis() the link was lost / station started — starts the fast window
 uint8_t  StaFailCount = 0;				// consecutive failed attempts
 uint8_t  StaSinceScan = 0;				// directed attempts since the last full scan
 uint32_t StaDirectedFailMs = 0;			// millis() directed-only failures began; 0 = not failing
@@ -146,7 +162,9 @@ void StartWifiStation()
 {
 	if (!MDL.WifiModeUseStation) return;
 
-	delay(1000);
+	// No settling delay: the softAP came up in StartWifiAP() well before this, with the
+	// web server, OTA and CAN/Ethernet setup in between. The 1 s that used to sit here
+	// only pushed back the first join after every reboot — including after module setup.
 	WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 	WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 	WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
@@ -158,6 +176,7 @@ void StartWifiStation()
 	WiFi.setAutoReconnect(false);
 
 	StaLastAttemptMs = millis();
+	StaDownSinceMs = StaLastAttemptMs;		// boot opens the fast window
 	StaAttemptPending = true;
 	WiFi.begin(MDL.SSID, MDL.Password);
 	Serial.println();
@@ -225,7 +244,6 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
 
 	StaConnected = true;
 	StaFailCount = 0;
-	StaRetryMs = StaRetryFastMs;
 	StaSinceScan = 0;
 	StaDirectedFailMs = 0;
 	StaAuthFailCount = 0;
@@ -251,6 +269,10 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	// event dispatch and nothing here touches flash. The old handler did both:
 	// EEPROM.commit() followed by delay(3000) inside SaveData() stalled every
 	// WiFi and IP event for three seconds.
+	//
+	// Losing a working link opens the fast window. A failed attempt while already
+	// down does not — otherwise the window would never close.
+	if (StaConnected) StaDownSinceMs = millis();
 	StaConnected = false;
 
 	uint8_t reason = info.wifi_sta_disconnected.reason;
@@ -314,6 +336,7 @@ void NotePortalRequest()
 void RequestNetworkRetry()
 {
 	StaForceScan = true;
+	StaDownSinceMs = millis();		// and the fast pace again, as after a fresh loss
 
 	// A deliberate press earns a clean slate — the user may have just fixed
 	// something at the router end that this side cannot see.
@@ -392,13 +415,15 @@ void ServiceWifiStation()
 	// Not an exotic state either — it is what a mistyped SSID leaves behind, or
 	// ticking the box before the shed router is switched on.
 	bool canDirect = (StaChannel != 0);
+	bool fastWindow = (now - StaDownSinceMs) < StaFastWindowMs;
 
 	bool clientOnAp = (WiFi.softAPgetStationNum() > 0);
 	uint32_t interval;
 	if (StaAuthSuspect)                interval = StaRetryAuthMs;
 	else if (clientOnAp && !canDirect) interval = StaRetryScanOnlyMs;
 	else if (clientOnAp)               interval = StaRetryBusyMs;
-	else                               interval = StaRetryMs;
+	else if (!canDirect)               interval = fastWindow ? StaRetryScanFastMs : StaRetryScanSlowMs;
+	else                               interval = fastWindow ? StaRetryFastMs : StaRetrySlowMs;
 
 	if (!forced && (now - StaLastAttemptMs) < interval) return;
 
@@ -411,7 +436,7 @@ void ServiceWifiStation()
 	if (forced)          fullScan = true;		// user asked — find it wherever it moved to
 	else if (!canDirect) fullScan = true;		// nothing cached, no cheaper option exists
 	else if (clientOnAp) fullScan = (StaDirectedFailMs != 0 && (now - StaDirectedFailMs) >= StaScanEarnedMs);
-	else                 fullScan = (StaSinceScan >= StaScanEveryN);
+	else                 fullScan = (StaSinceScan + 1 >= (fastWindow ? StaScanEveryFast : StaScanEverySlow));
 
 	StaLastAttemptMs = now;
 	StaForceScan = false;
@@ -427,12 +452,6 @@ void ServiceWifiStation()
 		StaSinceScan++;
 		if (StaDirectedFailMs == 0) StaDirectedFailMs = now;
 	}
-
-	// Back off once the quick retries have not worked. The fast interval exists
-	// to ride out a router reboot or a brief drop out of range; past that, the
-	// network is genuinely absent and there is no reason to keep paying for it.
-	// Only applies when the hotspot is idle — StaRetryBusyMs governs otherwise.
-	StaRetryMs = (StaFailCount >= StaFastAttempts) ? StaRetrySlowMs : StaRetryFastMs;
 
 	Serial.print("WiFi retry #");
 	Serial.print(StaFailCount);

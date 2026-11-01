@@ -52,9 +52,10 @@ li { margin: 2px 0; }
 <li><a href="#10-yield-map">Yield Map</a></li>
 <li><a href="#11-job-report">Job Report</a></li>
 <li><a href="#12-settings">Settings</a></li>
-<li><a href="#13-language">Language</a></li>
-<li><a href="#14-module-web-portal">Module Web Portal</a></li>
-<li><a href="#15-troubleshooting">Troubleshooting</a></li>
+<li><a href="#13-comm">Comm</a></li>
+<li><a href="#14-language">Language</a></li>
+<li><a href="#15-module-web-portal">Module Web Portal</a></li>
+<li><a href="#16-troubleshooting">Troubleshooting</a></li>
 </ol>
 
 <hr>
@@ -87,7 +88,7 @@ li { margin: 2px 0; }
 <h3>Network</h3>
 
 <ul>
-<li><strong>WiFi mode:</strong> connect the PC to the same WiFi network as the YieldFlo module, or directly to the module's access point</li>
+<li><strong>WiFi mode:</strong> by default the tablet runs its own hotspot and the module joins it &mdash; see <a href="#13-comm">Comm</a>. The PC and module can also share an existing WiFi network.</li>
 <li>AOG must be running and broadcasting GPS/section data on the local network</li>
 </ul>
 
@@ -97,6 +98,7 @@ li { margin: 2px 0; }
 
 <ol>
 <li>Open <strong>Menu &rarr; Settings</strong> and select your preferred units (bu/ac or t/ha)</li>
+<li>Power the module and open <strong>Menu &rarr; Comm</strong>. Answer <strong>Yes</strong> to any questions it asks, and wait for <strong>Module: Connected</strong></li>
 <li>Open <strong>Menu &rarr; Profiles</strong> and enter your combine ID</li>
 <li>Open <strong>Menu &rarr; Crops</strong> and add or edit crops for your operation</li>
 <li>Open <strong>Menu &rarr; Headers</strong> and enter the correct cutting width</li>
@@ -686,22 +688,90 @@ li { margin: 2px 0; }
 
 <p>Changing units takes effect immediately. Historical data is stored internally in acres and bushels and converted for display.</p>
 
-<h3>Module communication</h3>
+<h3>Resume Job on Start</h3>
+
+<p>When enabled, YieldFlo automatically reloads the active job when the app starts. Useful if the PC is rebooted during a harvest day.</p>
+
+<h3>Saving settings</h3>
+
+<p>Press <strong>Save</strong> to store all settings and put them into effect immediately.</p>
+
+<p>Module communication is on its own page &mdash; see <a href="#13-comm">Comm</a>.</p>
+
+<p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
+<div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
+
+<h2 id="13-comm">13. Comm</h2>
+
+<p><strong>Menu: Menu &rarr; Comm</strong></p>
+
+<p>Sets how the module talks to the app. There is a tab for each connection type: <strong>WiFi / Ethernet</strong> and <strong>CAN</strong>. Tick <strong>Enabled</strong> on the tab you use &mdash; only one can be enabled. Press <strong>Save</strong> to apply. Changing the connection type, CAN driver or COM port asks to restart the app.</p>
+
+<p>Each tab shows <strong>Module: Connected</strong> (green) when module data is arriving, <strong>Not Connected</strong> (red) when it is not, or <strong>Not in use</strong> on the tab that is not enabled.</p>
+
+<p>If something is stopping module data from reaching the app, the page tells you when it opens &mdash; answer the question, or follow the steps it shows.</p>
+
+<h3>WiFi / Ethernet tab</h3>
 
 <table>
-<tr><th>Setting</th><th>Description</th></tr>
-<tr><td><strong>WiFi / Ethernet</strong></td><td>Module communicates over UDP on port 30100 &mdash; via the module's WiFi access point / a shared WiFi network, or via wired Ethernet (W5500 board on the module).</td></tr>
-<tr><td><strong>CAN</strong></td><td>Module communicates over CAN bus via a USB CAN interface.</td></tr>
-<tr><td><strong>CAN Driver</strong></td><td>Select the CAN interface driver (SLCAN, InnoMaker, or PCAN).</td></tr>
-<tr><td><strong>COM Port</strong></td><td>Serial/USB port for the CAN interface (SLCAN driver only).</td></tr>
-<tr><td>Rescan button</td><td>Beside <strong>COM Port</strong> (CAN mode only) &mdash; refreshes the list of connected serial ports.</td></tr>
+<tr><th>Item</th><th>Description</th></tr>
+<tr><td><strong>Enabled</strong></td><td>The module sends its data over WiFi or wired Ethernet.</td></tr>
+<tr><td><strong>Module</strong></td><td>Connection status, with the module's IP address when connected.</td></tr>
+<tr><td><strong>Set Up Module WiFi</strong></td><td>Sends the network name and password to a module. See <a href="#setting-up-module-wifi">Setting up a module's WiFi</a>.</td></tr>
+<tr><td><strong>Tablet Hotspot</strong></td><td><strong>On</strong> (default): the tablet runs its own WiFi hotspot and the module joins it. <strong>Off</strong>: the module and tablet share an existing WiFi network instead.</td></tr>
+<tr><td><strong>Hotspot</strong> status</td><td>The hotspot's name and state. Red text explains a problem and what to do.</td></tr>
 </table>
 
-<p>When <strong>CAN</strong> mode is selected, an <strong>Adapter: Connected</strong> / <strong>Not Connected</strong> indicator appears below the port settings, showing whether the CAN adapter that is actually running (from previously saved settings) is open and seeing bus traffic. It updates live and does not reflect the driver/port currently selected in the drop-downs until they are saved and applied.</p>
+<h3>Tablet hotspot</h3>
 
-<p>The module can also send the same UDP packets over <strong>wired Ethernet</strong> (W5500 board attached to the module). No app setting is needed &mdash; select Ethernet mode in the module's web portal and give the PC's wired adapter a static IP on the module's subnet (default <code>192.168.1.x</code>). The app receives WiFi and Ethernet packets on the same port.</p>
+<p>With <strong>Tablet Hotspot</strong> on, the app starts the Windows Mobile Hotspot on 2.4 GHz and keeps it on while the app runs. The module joins it like any WiFi network. Nothing depends on a phone or router being nearby.</p>
 
-<blockquote><strong>Module setup page:</strong> the module's own settings (communication mode, sensor signals, WiFi credentials, firmware update) are configured on its built-in web page at <code>http://192.168.200.1</code>, reached while connected to the module's WiFi hotspot &mdash; see <a href="#14-module-web-portal">Module Web Portal</a>.</blockquote>
+<p>The tablet can still get its internet (for GPS corrections) from Ethernet or from WiFi &mdash; the hotspot shares it.</p>
+
+<p>The first time, the app may ask:</p>
+
+<ul>
+<li><strong>Windows Firewall is blocking module data</strong> &mdash; press <strong>Yes</strong>, then <strong>Yes</strong> again in the Windows prompt.</li>
+<li><strong>A module is in range but not sending data</strong> &mdash; press <strong>Yes</strong> to set up its WiFi.</li>
+</ul>
+
+<h3 id="setting-up-module-wifi">Setting up a module's WiFi</h3>
+
+<ol>
+<li>Power the module and press <strong>Set Up Module WiFi</strong>.</li>
+<li>Select the module in the list. Press <strong>Scan</strong> if it is not there.</li>
+<li>Without the tablet hotspot, enter the password of the WiFi network the PC is on. With the hotspot, nothing needs typing.</li>
+<li>Press <strong>Set Up Module</strong> and confirm.</li>
+</ol>
+
+<p>Setup takes about a minute. The PC's WiFi leaves its network during that time, so do it when not harvesting &mdash; it cannot run while a job is recording. It is finished when the module's data arrives; if it fails, the message says why.</p>
+
+<h3 id="pc-wifi-on-5-ghz">PC WiFi on 5 GHz</h3>
+
+<p>The module only works on 2.4 GHz. If the tablet gets its internet from a WiFi network on 5 GHz, the hotspot may not be able to run on 2.4 GHz, and the Comm page says so in red. Set the phone or router to 2.4 GHz if it has that setting, or set the tablet:</p>
+
+<ol>
+<li>Press <strong>Windows+R</strong>, type <code>ncpa.cpl</code> and press <strong>Enter</strong>.</li>
+<li>Right-click <strong>Wi-Fi</strong> and choose <strong>Properties</strong>, then <strong>Configure</strong>, then the <strong>Advanced</strong> tab.</li>
+<li>Set <strong>Preferred Band</strong> to <strong>Prefer 2.4GHz band</strong>. On some PCs it is called <strong>Band</strong> or <strong>Wireless Mode</strong>.</li>
+<li>Press <strong>OK</strong> and wait for the PC to reconnect.</li>
+</ol>
+
+<h3>Wired Ethernet</h3>
+
+<p>The module can also send its data over <strong>wired Ethernet</strong> (W5500 board attached to the module). Leave <strong>WiFi / Ethernet</strong> enabled, select Ethernet mode in the module's web portal, and give the PC's wired adapter a static IP on the module's subnet (default <code>192.168.1.x</code>).</p>
+
+<blockquote><strong>Module setup page:</strong> the module's own settings (communication mode, sensor signals, WiFi credentials, firmware update) are configured on its built-in web page at <code>http://192.168.200.1</code>, reached while connected to the module's WiFi hotspot &mdash; see <a href="#15-module-web-portal">Module Web Portal</a>.</blockquote>
+
+<h3>CAN tab</h3>
+
+<table>
+<tr><th>Item</th><th>Description</th></tr>
+<tr><td><strong>Enabled</strong></td><td>The module sends its data over CAN bus through a USB CAN adapter.</td></tr>
+<tr><td><strong>CAN Driver</strong></td><td>The adapter's driver (SLCAN, InnoMaker, or PCAN).</td></tr>
+<tr><td><strong>COM Port</strong></td><td>Serial/USB port for the adapter (SLCAN driver only). The button beside it refreshes the list.</td></tr>
+<tr><td><strong>Adapter</strong></td><td><strong>Connected</strong> / <strong>Not Connected</strong> &mdash; for the saved driver and port.</td></tr>
+</table>
 
 <h4>Supported CAN adapters</h4>
 
@@ -714,18 +784,10 @@ li { margin: 2px 0; }
 
 <p>If CAN fails to start, the reason is written to the error log in <code>Documents\YieldFlo\Logs</code>.</p>
 
-<h3>Resume Job on Start</h3>
-
-<p>When enabled, YieldFlo automatically reloads the active job when the app starts. Useful if the PC is rebooted during a harvest day.</p>
-
-<h3>Saving settings</h3>
-
-<p>Press <strong>Save</strong> to store all settings and put them into effect immediately.</p>
-
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
 
-<h2 id="13-language">13. Language</h2>
+<h2 id="14-language">14. Language</h2>
 
 <p><strong>Menu: Menu &rarr; Language</strong></p>
 
@@ -758,7 +820,7 @@ li { margin: 2px 0; }
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
 
-<h2 id="14-module-web-portal">14. Module Web Portal</h2>
+<h2 id="15-module-web-portal">15. Module Web Portal</h2>
 
 <p>The YieldFlo module has a built-in settings page served from its own WiFi hotspot. Use it to configure the communication mode, the optical sensor signals, and WiFi credentials, and to update the module firmware.</p>
 
@@ -774,7 +836,7 @@ li { margin: 2px 0; }
 
 <table>
 <tr><th>Setting</th><th>Description</th></tr>
-<tr><td><strong>Communication &mdash; Mode</strong></td><td>WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the Module communication setting in the PC app &mdash; the app treats WiFi and Ethernet identically.</td></tr>
+<tr><td><strong>Communication &mdash; Mode</strong></td><td>WiFi (UDP), CAN bus, or Ethernet (UDP over a wired W5500 board). WiFi/Ethernet and CAN must match the tab enabled on the app's <a href="#13-comm">Comm</a> page &mdash; the app treats WiFi and Ethernet identically.</td></tr>
 <tr><td><strong>Communication &mdash; Ethernet subnet</strong></td><td>First three octets of the wired network (default <code>192.168.1</code>). The module takes IP <code>subnet.(50 + module ID)</code>; give the PC's wired adapter a static IP on the same subnet (e.g. <code>192.168.1.10</code>). In Ethernet mode the portal shows whether the W5500 board and cable link are detected.</td></tr>
 <tr><td><strong>Optical Sensor &mdash; Signals</strong></td><td><strong>Main + Comp</strong> (default): both receiver outputs are wired to the module. The module compares them on every edge and rejects electrical noise glitches. <strong>Main only</strong>: only the main signal wire is connected &mdash; for example, when sharing the elevator sensor with another yield monitor through a harness that does not carry the complementary wire. Noise rejection is disabled in this mode.</td></tr>
 <tr><td><strong>Optical Sensor &mdash; Polarity</strong></td><td><strong>PNP</strong> (default &mdash; output HIGH with beam clear, the common choice for this kind of sensor) or <strong>NPN</strong> (inverted logic). Select NPN if flow reads high with no grain and low with grain.</td></tr>
@@ -819,21 +881,29 @@ li { margin: 2px 0; }
 <p class="back-link"><a href="#table-of-contents">&#8593; Contents</a></p>
 <div style="page-break-before: always; height: 0; margin: 0; padding: 0;"></div>
 
-<h2 id="15-troubleshooting">15. Troubleshooting</h2>
+<h2 id="16-troubleshooting">16. Troubleshooting</h2>
 
 <h3>GPS indicator stays red</h3>
 <ul>
 <li>Confirm AgOpenGPS is running on the same PC or local network</li>
 <li>Check that both apps are on the same subnet</li>
-<li>Verify the network configuration in YieldFlo Settings</li>
 </ul>
 
 <h3>Module indicator stays off</h3>
 <ul>
+<li>Open <strong>Menu &rarr; Comm</strong> &mdash; it shows the module status and explains common problems when it opens</li>
 <li>Check the module is powered and the WiFi or CAN connection is active</li>
 <li>In WiFi mode, confirm the PC is connected to the correct network</li>
 <li>Check the module LED for status indication</li>
 <li>Restart the module and wait 10–15 seconds for it to connect</li>
+</ul>
+
+<h3>Module will not join the tablet hotspot</h3>
+<ul>
+<li>On <strong>Menu &rarr; Comm</strong>, check the hotspot status reads <strong>On</strong></li>
+<li>If the status says the PC is on 5 GHz, follow <a href="#pc-wifi-on-5-ghz">PC WiFi on 5 GHz</a></li>
+<li>If asked about the firewall, press <strong>Yes</strong> and allow the Windows prompt</li>
+<li>Press <strong>Set Up Module WiFi</strong> to send the hotspot details to the module again &mdash; needed after a firmware update that resets the module</li>
 </ul>
 
 <h3>Module will not join a WiFi network</h3>
