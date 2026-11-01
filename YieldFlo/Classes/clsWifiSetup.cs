@@ -711,7 +711,8 @@ namespace YieldFlo.Classes
         HotspotFailed,      // could not get onto the module's hotspot
         PortalFailed,       // hotspot fine, settings page did not answer
         HomeReturnFailed,   // credentials sent, but the PC did not get back
-        Aborted
+        Aborted,
+        Cancelled           // the user stopped it; the PC has been put back
     }
 
     public sealed class ProvisionRequest
@@ -741,6 +742,30 @@ namespace YieldFlo.Classes
         public ModuleProvisioner(Action<string> progress) { _say = progress; }
 
         private void Say(string s) { if (_say != null) _say(s); }
+
+        // Set from the UI thread, read by the worker at safe points only. A join or HTTP
+        // call already under way is not interrupted; the run stops at the next check.
+        private volatile bool _cancel;
+
+        /// <summary>Stops the run at the next safe point. The PC is always put back first.</summary>
+        public void Cancel() { _cancel = true; }
+
+        public bool CancelRequested => _cancel;
+
+        /// <summary>
+        /// Cancel while the PC is away on the module's hotspot: go home first, because
+        /// nothing else will once the run has returned.
+        /// </summary>
+        private ProvisionResult CancelAway(ProvisionRequest req)
+        {
+            bool home = ReturnHome(req);
+            return CancelDone(home ? "" : "Cancelled, but this PC could not get back onto " + req.HomeSsid + ".");
+        }
+
+        private static ProvisionResult CancelDone(string detail)
+        {
+            return new ProvisionResult { Outcome = ProvisionOutcome.Cancelled, Detail = detail ?? "" };
+        }
 
         // Timings. The hotspot join is the slow one: the module's radio is shared
         // between its hotspot and its own station attempts, so it can be briefly
@@ -811,8 +836,9 @@ namespace YieldFlo.Classes
                 return result;
             }
             Say("  module at " + gw);
+            if (_cancel) return CancelAway(req);
 
-            // 2 ── find the target network's 2.4 GHz channel, from here
+            // 2 ──find the target network's 2.4 GHz channel, from here
             //
             // Here specifically, because the driver will not report the bands of the
             // network it is itself joined to — and sitting on the module's hotspot is the
@@ -833,6 +859,7 @@ namespace YieldFlo.Classes
                 channel = found;
                 Say("  " + req.HomeSsid + " is on 2.4 GHz channel " + channel);
             }
+            if (_cancel) return CancelAway(req);    // last point before the module is changed
 
             // 3 ── send the credentials to the same form the phone submits
             string url = "http://" + gw + "/wifi";
@@ -871,8 +898,9 @@ namespace YieldFlo.Classes
             }
             Say("  saved — the module is restarting");
 
-            // 4 ── back to the network that carries NTRIP
-            Thread.Sleep(RebootWaitMs);
+            // 4 ── back to the network that carries NTRIP. Runs even when cancelled: the
+            // details are already sent, so the only thing left to undo is the PC's trip.
+            if (!_cancel) Thread.Sleep(RebootWaitMs);
             if (!ReturnHome(req))
             {
                 result.Outcome = ProvisionOutcome.HomeReturnFailed;
@@ -882,6 +910,7 @@ namespace YieldFlo.Classes
                     : "could not rejoin " + req.HomeSsid;
                 return result;
             }
+            if (_cancel) return CancelDone("");
 
             // 5 ── did it work? The only answer that counts is data arriving.
             Say("Waiting up to " + (PacketWaitMs / 1000) + " s for the module on " + req.HomeSsid + " ...");
@@ -890,6 +919,8 @@ namespace YieldFlo.Classes
                 result.Outcome = ProvisionOutcome.Success;
                 return result;
             }
+            // not worth a trip back to the module's hotspot that nobody is waiting for
+            if (_cancel) return CancelDone("");
 
             // 6 ── nothing arrived. "No packets" covers a refused password, a network
             // the module cannot see, and a firewall eating the traffic, and the user
@@ -900,6 +931,7 @@ namespace YieldFlo.Classes
             result.Outcome = ProvisionOutcome.NoPackets;
             result.Detail = Diagnose(req, out result.Outcome, out nudged);
             ReturnHome(req);
+            if (_cancel) return result;     // keep the diagnosis; the PC is home
 
             // The module was told to try again, so give it one more window. Worth doing
             // because the most likely reason for the first window coming up empty is
@@ -929,7 +961,7 @@ namespace YieldFlo.Classes
         {
             DateTime start = DateTime.UtcNow;
             int waited = 0;
-            while (waited < timeoutMs)
+            while (waited < timeoutMs && !_cancel)
             {
                 Thread.Sleep(500);
                 waited += 500;

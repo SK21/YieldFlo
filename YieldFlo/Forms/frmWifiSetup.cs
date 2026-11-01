@@ -23,6 +23,7 @@ namespace YieldFlo.Forms
         private bool _dragging;
         private Point _dragStart;
         private bool _running;
+        private ModuleProvisioner _provisioner;     // the run in progress, for Cancel
 
         private Wlan.Adapter _adapter;
         private string _homeSsid = "";
@@ -393,6 +394,8 @@ namespace YieldFlo.Forms
                 UplinkSsid = _uplinkSsid
             };
 
+            var p = new ModuleProvisioner(Log);
+            _provisioner = p;
             SetRunning(true);
             txtLog.Clear();
 
@@ -401,7 +404,6 @@ namespace YieldFlo.Forms
                 ProvisionResult result;
                 try
                 {
-                    var p = new ModuleProvisioner(Log);
                     result = p.Run(req);
                 }
                 catch (Exception ex)
@@ -425,9 +427,12 @@ namespace YieldFlo.Forms
             if (running) txtLog.Focus();
 
             _running = running;
+            if (!running) _provisioner = null;
             btnSend.Enabled = !running;
             btnScan.Enabled = !running;
-            btnClose.Enabled = !running;
+            // Never disabled by a run: while one is going it is the way out.
+            btnClose.Enabled = true;
+            btnClose.Text = running ? "Cancel" : "Close";
             lstModules.Enabled = !running;
             txtKey.Enabled = !running;
             txtModuleKey.Enabled = !running;
@@ -437,6 +442,12 @@ namespace YieldFlo.Forms
         {
             switch (r.Outcome)
             {
+                case ProvisionOutcome.Cancelled:
+                    // The user asked for it, so no dialog unless something is still wrong.
+                    Log("Cancelled.");
+                    if (r.Detail.Length > 0) frmMsgBox.Inform(this, r.Detail, DialogTitle);
+                    break;
+
                 case ProvisionOutcome.Success:
                     frmMsgBox.Inform(this, "The module is on " + _homeSsid + " and sending data.", DialogTitle);
                     break;
@@ -482,15 +493,36 @@ namespace YieldFlo.Forms
             });
         }
 
-        private void btnClose_Click(object sender, EventArgs e) => this.Close();
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            if (_running) RequestCancel();
+            else this.Close();
+        }
+
+        /// <summary>
+        /// Stops the run at its next safe point. The form stays open: the worker puts the
+        /// PC back on its network first, and the log is where that is reported.
+        /// </summary>
+        private void RequestCancel()
+        {
+            var p = _provisioner;
+            if (p == null || p.CancelRequested) return;
+            p.Cancel();
+            btnClose.Enabled = false;
+            btnClose.Text = "Cancelling ...";
+            Log(_hotspotMode
+                ? "Cancelling — turning the tablet hotspot back on if needed ..."
+                : "Cancelling — putting this PC back on " + _homeSsid + " if needed ...");
+        }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             // Closing mid-run would leave the PC on the module's hotspot with nothing
-            // left to put it back.
+            // left to put it back, so a close during a run means Cancel instead.
             if (_running && e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
+                RequestCancel();
                 return;
             }
             base.OnFormClosing(e);
